@@ -1,0 +1,142 @@
+<aura:component controller="InstantFeedbackServer" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <lightning:spinner aura:id="mySpinner" class="slds-hide" />
+    <aura:attribute name="jsDebug" type="Boolean" default="true" required="true" /> <!-- SOLO PER DEBUG -->
+    <aura:attribute name="origin" type="String"/>
+    <aura:attribute name="recordType" type="String" default="" />
+    <aura:attribute name="caseId" type="String" default="" />
+    <aura:attribute name="comment" type="String" default="" required="true" />
+    <aura:attribute name="ratingSpeed" type="String" default="0" required="true" />
+    <aura:attribute name="ratingCompleteness" type="String" default="0" required="true" />
+    <!-- OAVERSANO 05/03/2019 : NMA Enhancement VII - START -->
+    <aura:attribute name="overallRating" type="String" default="0" required="true" />
+    <!-- OAVERSANO 05/03/2019 : NMA Enhancement VII - END -->
+    <aura:attribute name="welcomeMessage" type="String" default="" required="true" />
+    <aura:attribute name="question1" type="String" default="" required="true" />
+    <aura:attribute name="question2" type="String" default="" required="true" />
+    <!--  <aura:attribute name="showError" type="String" /> -->
+    <aura:attribute name="showError" type="Boolean" default="true"/>
+    <aura:attribute name="error" type="String" default="" />
+    <aura:attribute name="MandatoryInputsMissing" type="Boolean" default="false" /> 
+    <aura:attribute name="OrgLink" type="String" default="" required="true" /> 
+    <aura:attribute name="isFeedbackToBeInsert" type="Boolean" default="true"/>
+    <aura:attribute name="isMobility" type="Boolean" default="false"/>
+    <aura:handler event="aura:waiting" action="{!c.showSpinner}"/>
+    <aura:handler event="aura:doneWaiting" action="{!c.hideSpinner}"/>
+    <!--create a component attributs -->
+    <aura:attribute name="Spinner" type="boolean" default="false"/>
+    <aura:attribute name="ErrorMsg" type="String" default=""/>
+    <aura:attribute name="UserTheme" type="String" default=""/>
+    <aura:attribute name="showWhite" type="Boolean" default="true" required="true" />    
+    <aura:attribute name="source" type="String" default=""/> <!--OAVERSANO 16/10/2018 : Fix Instant Feedback -->
+    <aura:attribute name="remainingCharacters" type="String" default="1000" /> <!-- OAVERSANO 30/10/2018 : Nuovo Modello di Assistenza ENHANCEMENT -->
+    
+    <!-- OAVERSANO 24/01/2019 : NMA Fix Mobile - START -->
+    <aura:registerEvent name="tabclosing" type="c:tabclosing" />
+    <!-- OAVERSANO 24/01/2019 : NMA Fix Mobile - END -->
+    
+    <!-- <aura:if isTrue="{! v.showError }">
+        <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error" role="alert">
+            <h3>Non è possibile compilare il feedback in quanto non è stata proposta una soluzione.</h3>
+        </div>
+    </aura:if> -->
+    
+    <aura:if isTrue="{!v.Spinner}">
+        <div aura:id="spinnerId" class="slds-spinner_container">
+            <div class="slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </aura:if>
+    
+    <aura:if isTrue="{! not(v.showWhite) }">
+        <div>        
+            <aura:if isTrue="{!v.showError}">
+                <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error" role="alert">
+                    <h3>{!v.ErrorMsg}</h3>
+                </div>              
+                
+                <aura:set attribute="else"> 
+                    
+                    <aura:if isTrue="{!v.isFeedbackToBeInsert}">
+                        <aura:if isTrue="{!not(v.isMobility)}">
+                            <div>
+                                <img src="{!$Resource.LogoAxaAssistenza}" style="width:257px;" />
+                            </div>
+                            <br></br>
+                        </aura:if>   
+            
+                        <div>
+                            <div class="slds-grid">
+                                <div class="slds-col">
+                                    <h1 class="slds-text-heading_medium" style="margin-top: 20px;">Invio feedback</h1>
+                                </div>
+                            </div>
+                        </div>
+                        <br></br>
+                        <div class="slds-form-element__label" style="margin-bottom: 20px;">{! v.welcomeMessage }</div>
+                        <form class="slds-form--stacked">
+                        	<!-- OAVERSANO 05/03/2019 : NMA Enhancement VII - START -->
+                        	<label class="slds-form-element__label slds-align_absolute-center">{! v.question1 }</label>
+                            <div class="slds-align_absolute-center">
+                                <c:Rating rating="{! v.overallRating }" />
+                            </div>
+                            <!-- label class="slds-form-element__label slds-align_absolute-center">{! v.question1 }</label>
+                            <div class="slds-align_absolute-center">
+                                <c:Rating rating="{! v.ratingSpeed }" />
+                            </div>
+                            <label class="slds-form-element__label slds-align_absolute-center" style="margin-top: 20px;">{! v.question2 }</label>
+                            <div class="slds-align_absolute-center">
+                                <c:Rating rating="{! v.ratingCompleteness }" />
+                            </div -->
+                            <lightning:textarea label="Lasciaci un commento sull'assistenza ricevuta:" value="{! v.comment }" style="margin-top: 20px; " maxlength="1000" onchange="{!c.countCharacters}"/> <!-- OAVERSANO 30/10/2018 : Nuovo Modello di Assistenza ENHANCEMENT -->
+                           	<div class="slds-text-font_monospace slds-text-align_right">Caratteri rimanenti : {!v.remainingCharacters}</div> <!-- OAVERSANO 30/10/2018 : Nuovo Modello di Assistenza ENHANCEMENT --> 
+                            <div class="slds-clearfix" style="margin-top: 5px;">
+                                <div class="slds-align_absolute-center" style="margin-bottom: 5px;">  
+                                    <lightning:button label="Chiudi" onclick="{!c.cancelBtn}" />
+                                    <!-- OAVERSANO 11/12/2018 : Enhancement NMA Biz - START -->
+                                    <!-- <lightning:button class="slds-button_brand" label="Invia Commento" onclick="{!c.clickCreate}" /> -->
+                                    <lightning:button class="slds-button_brand" label="Invia feedback" onclick="{!c.clickCreate}" />
+                                    <!-- OAVERSANO 11/12/2018 : Enhancement NMA Biz - END -->
+                                </div>
+                                <aura:if isTrue="{!v.MandatoryInputsMissing}" >  
+                                    <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error" role="alert">
+                                        <h3>{! v.error }</h3>
+                                    </div>
+                                </aura:if>
+                            </div>
+                        </form>
+                        
+                        <aura:set attribute="else">
+                        	<!-- OAVERSANO 28/01/2019 : NMA Fix Mobile - START -->
+                            <!-- div class="slds-align_absolute-center" style="margin-bottom: 10px; "-->
+                            <div class="slds-align_absolute-center" style="margin-bottom: 10px; display:grid;">
+	                            <aura:if isTrue="{!$Browser.formFactor =='DESKTOP'}">
+	                            	<label class="slds-form-element__label">Grazie per aver lasciato la tua valutazione in merito all'assistenza ricevuta.</label>
+	                              	<aura:set attribute="else">
+		                            	<aura:if isTrue="{!v.origin=='Chat'}">
+		                            		<p class="slds-text-heading_large">Grazie per aver lasciato la tua valutazione in merito all'assistenza ricevuta.</p>
+			                            	<br/>
+			                            	<p class="slds-text-heading_large">Ritorna all'app di Salesforce per aprire un'altra richiesta.</p>
+			                            	<aura:set attribute="else">
+			                            		<label class="slds-form-element__label">Grazie per aver lasciato la tua valutazione in merito all'assistenza ricevuta.</label>
+			                            	</aura:set>
+										</aura:if>
+									</aura:set>         
+								</aura:if>   
+								<!-- OAVERSANO 28/01/2019 : NMA Fix Mobile - END -->                
+                            </div>                
+                            <aura:if isTrue="{!v.origin!='Chat'}">
+                                <div class="slds-align_absolute-center" style="margin-bottom: 10px;"> 
+                                    <lightning:button label="Termina" onclick="{!c.closeFeedback}" />
+                                </div>
+                            </aura:if>
+                        </aura:set>
+                    </aura:if>        
+                </aura:set>     
+            </aura:if>    
+        </div>
+    </aura:if>
+</aura:component>

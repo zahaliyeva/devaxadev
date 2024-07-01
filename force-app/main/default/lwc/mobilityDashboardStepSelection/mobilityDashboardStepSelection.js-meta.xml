@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>52.0</apiVersion> 
+    <isExposed>true</isExposed>
+    <masterLabel>Select Navigate</masterLabel>
+    <targets>
+        <target>analytics__Dashboard</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="analytics__Dashboard">
+            <hasStep>true</hasStep>
+            <property name="targetPageName" type="String" label="Target Page" description="Name of page to navigate to on selection." />
+            <property name="targetPage" type="String" label="TargetPage - Deprecato" description="Deprecato"/>
+            <property name="stepValue" type="String" label="Step Value" description="Step Value"/>
+            <property name="dashboardName" type="String" label="Dashboard name" description="Developername of the current dashboard" />
+            <property name="stepNumber" type="String" label="Step number" description="Step Value to select" />
+            <property name="stepName" type="String" label="Step name" description="Step name for selection" />
+            <property name="stepLabel" type="String" label="Step Label" description="Step Label for selection" />
+            <property name="pageName" type="String" label="Page name" description="Current page name" />
+            <property name="profileName" type="String" label="Profile Name" description="User Profile Name" />
+            <property name="profileFilter" type="String" label="Profile filter" description="User Profile Filters" />
+            <property name="variant" type="String" label="Style variant" description="Style variant (primary, secondary, default)" />
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

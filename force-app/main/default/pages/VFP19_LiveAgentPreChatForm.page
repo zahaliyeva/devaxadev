@@ -1,0 +1,157 @@
+<!--
+*****************************************************************************************************************
+-----------------------------------------------------------------------------------------------------------------
+-- - Name          : VFP19_LiveAgentPreChatForm
+-- - Author        : Marco Moscatelli
+-- - Description   : Custom Page used to allow the customers to categorize their chat request in order to make 
+-- -                 SFDC forward the incoming chat to the right team of Advisors based on their skills
+--
+-- Maintenance History:
+--
+-- Date          Version  Remarks
+-- -----------  -------  ----------------------------------------------------------------------------------------
+-- 27-03-2017   1.0     
+-----------------------------------------------------------------------------------------------------------------
+*****************************************************************************************************************
+-->
+
+<apex:page controller="VFC19_LiveAgentPreChatForm" sidebar="false" standardStylesheets="false" showHeader="false" cache="false" >    
+    <script type='text/javascript' src='https://d.la1-c1cs-fra.salesforceliveagent.com/content/g/js/48.0/prechat.js'></script>
+    <script type="text/javascript">   
+        function detailCallback(details) {
+            for (var i = 0; i < details.customDetails.length; i++) {
+                if (details.customDetails[i].value!='' && details.customDetails[i].value!=null) {
+                    console.log(details.customDetails[i].label+'='+details.customDetails[i].value);       
+                }
+            }
+        }
+        liveagent.details.preChatInit('https://d.la1-c1cs-fra.salesforceliveagent.com/chat', 'detailCallback');
+        
+        (function() { 
+            function handlePageLoad() {
+                const endpointMatcher = new RegExp("[\\?\\&]endpoint=([^&#]*)");
+                document.getElementById('{!$Component.FormChat}').setAttribute('action', decodeURIComponent(endpointMatcher.exec(document.location.search)[1]));
+            } 
+            
+            if (window.addEventListener) {
+                window.addEventListener('load', handlePageLoad, false);
+            } else { 
+                window.attachEvent('onload', handlePageLoad, false);
+        }})();    
+    </script>
+    <head>
+        <apex:stylesheet value="{!URLFOR($Resource.Feedback,'rating/rating.css')}" />
+        <apex:includeScript value="{!URLFOR($Resource.Feedback,'rating/rating.js')}" />
+        <style>
+            .box{
+                border:1px solid #e9ecf3;
+                box-shadow: 2px 2px 2px #e7eaf2; 
+            }
+            
+            .header{
+                font-family:Arial,Tahoma,Sans-Serif;
+                border:1px solid #e9ecf3;
+                box-shadow: 1px 1px 1px #9da5b8;
+                margin:15px;
+                padding:3px 20px;
+                background: -webkit-linear-gradient(top, #fdfdfd, #e6ecf6);
+                background: -moz-linear-gradient(top, #fdfdfd, #e6ecf6);
+                background: -ms-linear-gradient(top, #fdfdfd, #e6ecf6);
+                color: #103184;
+                font-weight: bold;
+                font-size: 12px;
+            }
+            
+            .label{
+                text-align:right;
+                padding-right:40px;
+                font-family:Arial,Tahoma,Sans-Serif;
+                font-size:12px;
+                color: #464645;
+                font-weight:bold;
+            }
+            
+            .heightQuestions{
+                height:50px;
+            }
+            
+            .inputWidth{
+                width:310px;
+            }
+            
+            table.dataTable{
+                width:100%;
+            }           
+        </style>
+    </head>
+    <body>
+        <div style="height:125px;" class="box">
+            <apex:image value="{!IF(WebPortal=='Quadra',$Resource.Quadra_Logo,(IF(WebPortal=='AAI',$Resource.AAI_Logo,$Resource.AMPS_Logo)))}" style="padding:15px;" id="image"/>            
+        </div> 
+        <br/>
+        <div class="box" style="float:left;width:100%;">        
+            <apex:form style="float:left;width:100%;" rendered="{!isInOfOffice}">
+                <apex:messages /><br/><br/>
+                <span style="padding:15px;color: #103184;font-weight: bold;font-size: 17px;font-family:Arial,Tahoma,Sans-Serif;">
+                    {!$Label.VFP19_Title}
+                </span>
+                <br/><br/>              
+                <div class="header">
+                    {!$Label.VFP19_SubTitle}
+                </div>
+                
+                <apex:outputPanel id="CategoryPanel" rendered="{!isInOfOffice}">
+                    <table class="dataTable"  style="float:left;width:30%;">                    
+                        <tr>
+                            <td width="100%" class="label heightQuestions">{!$Label.VFP19_SelectCategory}</td>
+                            <td width="10%;">
+                                <apex:actionRegion >                    
+                                    <apex:selectList size="1" value="{!SelectedCategory}" id="Cat">  
+                                        <apex:actionSupport event="onchange" action="{!getSecondaryPickVals}" rerender="SubCat,ButtonPanel" /> 
+                                        <apex:selectOptions value="{!ListCategories}"/>
+                                    </apex:selectList>                        
+                                </apex:actionRegion>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="100%" class="label heightQuestions">{!$Label.VFP19_SelectSubCategory}</td>                            
+                            <apex:outputPanel >                                
+                                <td width="10%;">
+                                    <apex:actionRegion >                    
+                                        <apex:selectList size="1" value="{!SelectedSubCategory}" id="SubCat">  
+                                            <apex:actionSupport event="onchange" action="{!SelectButton}" rerender="ButtonPanel"/> 
+                                            <apex:selectOptions value="{!ListSubCategories}" />
+                                        </apex:selectList>                          
+                                    </apex:actionRegion>
+                                </td>                                
+                            </apex:outputPanel>
+                        </tr>            
+                    </table>                        
+                </apex:outputPanel>
+                <br/>
+            </apex:form>
+        
+            <apex:form Id="FormChat">
+                <apex:outputPanel id="ButtonPanel" rendered="{!isInOfOffice}"  style="width:50%;">  
+                    <input type="hidden" name="liveagent.prechat.buttons" value="{!SelectedButton}" id='button'/>
+                    <input type='hidden' name="liveagent.prechat:Categoria" value="{!SelectedCategory}" id="id_category" />
+                    <input type='hidden' name="liveagent.prechat:SottoCategoria" value="{!SelectedSubCategory}" id="id_category" />
+                    <input type='hidden' name="liveagent.prechat:TipoCase" value="{!CasRecTyp}" id="id_recordtype" /> 
+                    <input type='hidden' name="liveagent.prechat:Oggetto" value="{!CustomerComment}" id="id_oggetto" />
+                    <div align="center">
+                        <apex:commandButton value="{!$Label.VFP19_StartChat}" id="prechat_submit" disabled="{!!isButtonAvailable}"/>
+                    </div>
+                </apex:outputPanel>    
+            </apex:form>    
+            <br/>
+            
+            <apex:outputPanel id="OutOfOfficePanel" rendered="{!!isInOfOffice}">
+                <div style="text-align:center;padding:20px;font-family:Arial,Tahoma,Sans-Serif;font-size:12px;color: #464645;">
+                    <i>
+                        {!$Label.VFP19_OutOfOfficeMsg}
+                    </i>
+                </div>                
+            </apex:outputPanel> 
+        </div> 
+    </body>
+</apex:page>

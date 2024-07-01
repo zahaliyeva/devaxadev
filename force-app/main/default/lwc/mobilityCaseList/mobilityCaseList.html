@@ -1,0 +1,62 @@
+<template>
+    <c-mobility-spinner show={spinner} show-overlay={spinnerOverlay}></c-mobility-spinner>
+    <c-mobility-messages model={messages}></c-mobility-messages>
+
+    <template if:true={authorized}>
+
+        <template if:true={hasData}>
+            <h5 class="text-primary">
+                <div class="row justify-content-between">
+                    <div class="col-3 my-auto">{_label.case_header_description}</div>
+                    <div class="col-4 my-auto">{_label.case_header_category} / {_label.case_header_subcategory}
+                    </div>
+                    <div class="col-2 my-auto">{_label.case_header_date}</div>
+                    <div class="col-3 my-auto statusPadding text-right">{_label.case_header_status}</div>
+                </div>
+            </h5>
+            <div class="page-border mb-1"></div>
+        </template>
+
+        <c-mobility-no-data show={noData}></c-mobility-no-data>
+
+        <template for:each={allData} for:item="record">
+            <div key={record.Id} class="case-item">
+                <div class="row justify-content-between">
+                    <div class="col-3 my-auto">
+                        <h3 class="text-truncate">{record.Oggetto_Apertura_Case__c}</h3>
+                        <div class="detail">
+                            <span class="text-uppercase">{record.CreatedDateString}</span>
+                            <template if:true={record.User__r.Name}>
+                                <span> - {record.User__r.Name}</span>
+                            </template>
+                        </div>
+                    </div>
+                    <div class="col-4 my-auto text-truncate">
+                        <span class="text-uppercase">
+                            {record.Category__c}
+                        </span>
+                        <br />
+                        <span class="text-capitalize">
+                            {record.SubCategory__c}
+                        </span>
+                    </div>
+                    <div class="col-2 my-auto detail text-uppercase">
+                        {record.LastModifiedDateString}
+                    </div>
+                    <div class="col-3 my-auto detail text-right align-middle arrowContainer">
+                        <div class={record.statusClass}>{record.StatusLabel}</div>
+                        <div class="float-right arrow" onclick={openCallbackEvent} data-record-type='Campaign'
+                            data-type='OPEN_SECTION' data-record-id={record.Id}>
+                            <c-mobility-icon name="icon-arrow-right" width="15px" height="15px">
+                            </c-mobility-icon>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+    </template>
+    <template if:false={authorized}>
+        <c-mobility-unauthorized></c-mobility-unauthorized>
+    </template>
+</template>

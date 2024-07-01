@@ -1,0 +1,30 @@
+<template>
+	<c-mobility-spinner show={spinner} show-overlay="true"></c-mobility-spinner>
+	<c-mobility-messages model={messages} confirm-success-callback={sendComplete}></c-mobility-messages>
+
+	<template if:true={authorized}>
+		<div class="overload-contain overload-on-top" style="z-index: 10000;">
+			<div class="overload-contain-child">
+				<div class="overload-element">
+					<div class="row">
+						<div class="col-12">
+							<h2>Cerca Duplicati</h2>
+
+							<div class="row">
+								<div class="col-12">
+									<c-s-object-data-grid tabledata={records}></c-s-object-data-grid>
+								</div>
+							</div>
+						</div>
+						<div class="col-12 text-right">
+							<div class="btn" onclick={onClose}>Annulla</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</template>
+	<template if:false={authorized}>
+		<c-mobility-unauthorized></c-mobility-unauthorized>
+	</template>
+</template>

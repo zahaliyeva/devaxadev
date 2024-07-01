@@ -1,0 +1,70 @@
+<!--
+**********************************************************************************************
+----------------------------------------------------------------------------------------------
+-- - Name          : VFP11_CaseFindAssociatedPolicy
+-- - Author        : Marco Moscatelli
+-- - Description   : Page used to visualize all the policies associated to the Account
+-- -                 linked to the case and select the policy that has to be associated to the Case
+--
+-- Maintenance History:
+--
+-- Date          Version  Remarks
+-- -----------  -------  ---------------------------------------------------------------------
+-- 22-04-2016   1.0     
+----------------------------------------------------------------------------------------------
+**********************************************************************************************
+-->
+<apex:page standardController="Case" extensions="VFC11_CaseFindAssociatedPolicy" showHeader="false" sidebar="false">
+    <div id="errmgs"></div>   
+    <apex:form >
+        <apex:outputPanel id="blockCustomer" >
+            <apex:pageMessages />
+            <!--MOSCATELLI_M 10102016: Family Protect -- START-->
+                <!--<apex:pageBlock title="{!IF(!NoAccount,$Label.VFP11_Associated_Policies,$Label.VFP11_Associated_Account)}" rendered="{!AND(listPolicyResult.size>0,!transactionStatus,OR(!NoAccount,!NoPolicy))}"> -->
+            <apex:pageBlock title="{!IF(!NoAccount,$Label.VFP11_Associated_Policies,$Label.VFP11_Associated_Account)}" rendered="{!AND(OR(listPolicyResult.size>0,listPolicyResultAAF.size>0),!transactionStatus,OR(!NoAccount,!NoPolicy))}">
+            <!--MOSCATELLI_M 10102016: Family Protect -- END-->       
+                    <apex:variable var="polnum" value="{!0}" />
+                    <apex:pageBlockTable value="{!listPolicyResult}" var="pol" rendered="{!!isFamilyProtect}">
+                        <apex:column value="{!pol.Name}" headerValue="{!$ObjectType.InsurancePolicy__c.fields.Name.label}" style="width:20%!important;"/>   
+                        <apex:column value="{!pol.CUID__r.Name}" headerValue="{!$ObjectType.InsurancePolicy__c.fields.CUID__c.label}" style="width:20%!important;"/>    
+                        <apex:column value="{!pol.Policy_Holder_Fiscal_Id__c}" headerValue="{!$ObjectType.InsurancePolicy__c.fields.Policy_Holder_Fiscal_Id__c.label}" style="width:20%!important;"/> 
+                        <!--
+                        <apex:column value="{!pol.CCDATE__c}" headerValue="{!$ObjectType.InsurancePolicy__c.fields.CCDATE__c.label}" style="width:30%!important;"/> 
+                        <apex:column value="{!pol.EXPIRY_DATE__c}" headerValue="{!$ObjectType.InsurancePolicy__c.fields.EXPIRY_DATE__c.label}" style="width:30%!important;"/>  
+                        -->                        
+                        <apex:column value="{!pol.Product__c}" headerValue="{!$ObjectType.InsurancePolicy__c.fields.Product__c.label}" style="width:20%!important;"/>   
+                        <apex:column headerValue="Compagnia" style="width:20%!important;">
+                            <!--CAPOBIANCO_A 29/08/2017: EVO 87 -- START
+                            <apex:outputText value="{!IF(pol.TECH_Company__c=='AAI','Axa Assicurazioni',IF(pol.TECH_Company__c=='MPS','AXA MPS',pol.TECH_Company__c))}"/> -->
+                            <apex:outputText value="{!IF(pol.TECH_Company__c=='AAI','Axa Assicurazioni',IF(pol.TECH_Company__c=='MPS','AXA MPS',IF(pol.TECH_Company__c=='AMF','AMPS Financial',pol.TECH_Company__c)))}"/>
+                            <!--CAPOBIANCO_A 29/08/2017: EVO 87 -- END -->
+                        </apex:column>
+                        <apex:column >                            
+                            <apex:commandButton action="{!asociatePolicyToCase}" value="{!$Label.VFP11_Link_Policy_to_Case}" reRender="blockCustomer">
+                                <apex:param name="custome"
+                                            value="{!polnum}"
+                                            assignTo="{!selectedPolicyVal}"/>  
+                            </apex:commandButton>                            
+                            <apex:variable var="polnum" value="{!polnum + 1}" />
+                        </apex:column>                        
+                    </apex:pageBlockTable>
+                    <!--MOSCATELLI_M 10102016: Family Protect -- START-->
+					<apex:pageBlockTable value="{!listPolicyResultAAF}" var="pol" rendered="{!isFamilyProtect}">
+                        <apex:column value="{!pol.Name}" headerValue="{!$ObjectType.InsurancePolicy__c.fields.Name.label}" style="width:20%!important;"/>   
+                        <apex:column value="{!pol.Subscriber_national_identifier__r.Name}" headerValue="{!$ObjectType.InsurancePolicy__c.fields.CUID__c.label}" style="width:20%!important;"/>    
+                        <apex:column value="{!pol.Subscriber_national_identifier__r.Codice_Fiscale_AAF__c}" headerValue="{!$ObjectType.InsurancePolicy__c.fields.Policy_Holder_Fiscal_Id__c.label}" style="width:20%!important;"/>                   
+                        <apex:column value="{!pol.Product_code_ADP__c}" headerValue="{!$ObjectType.InsurancePolicy__c.fields.Product__c.label}" style="width:20%!important;"/>   
+                        <apex:column >                            
+                            <apex:commandButton action="{!asociatePolicyToCase}" value="{!$Label.VFP11_Link_Policy_to_Case}" reRender="blockCustomer">
+                                <apex:param name="custome"
+                                            value="{!polnum}"
+                                            assignTo="{!selectedPolicyVal}"/>  
+                            </apex:commandButton>                            
+                            <apex:variable var="polnum" value="{!polnum + 1}" />
+                        </apex:column>                        
+                    </apex:pageBlockTable>                    
+                    <!--MOSCATELLI_M 10102016: Family Protect -- END-->
+                </apex:pageBlock>   
+        </apex:outputPanel>  
+    </apex:form>
+</apex:page>

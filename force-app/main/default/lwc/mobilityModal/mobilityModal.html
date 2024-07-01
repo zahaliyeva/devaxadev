@@ -1,0 +1,11 @@
+<template>
+    <div class="mobility-modal__card">
+        <div class="mobility-modal__scroller">
+            <div if:false={hideCloseButton} class="text-right sticky-top" style="z-index: 1;">
+                <c-mobility-icon name="close_push" width="36px" heigth="36px" onclick={handleClose} class="closeButton overflow-hidden rounded-circle"></c-mobility-icon>
+            </div>
+            <slot>
+            </slot>
+        </div>
+    </div>
+</template>

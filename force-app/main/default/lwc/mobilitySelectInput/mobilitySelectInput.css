@@ -1,0 +1,14 @@
+.has-search .form-control-feedback {
+    position: absolute;
+    z-index: 5;
+    display: block;
+    line-height: 12px;
+    text-align: center;
+    pointer-events: none;
+    top: 15px;
+    right: 30px;
+}
+
+input[type="search"]::-webkit-search-cancel-button {
+    display: none;
+}

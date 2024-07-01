@@ -1,0 +1,3 @@
+<aura:component description="NFE_CrmAgencyCaseQueueManager" implements="forceCommunity:availableForAllPageTypes" access="global">
+    <c:agencyQueueManagerMainCmp queueType="Case" isMobility="true"/>
+</aura:component>

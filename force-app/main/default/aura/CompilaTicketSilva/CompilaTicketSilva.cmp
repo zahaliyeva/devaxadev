@@ -1,0 +1,131 @@
+<aura:component controller='SendCaseAutomaticQueueController'>
+    <!-- Attriute to show header Text -->
+    <aura:attribute name="caseId" type="Id" default="" />
+    <aura:attribute name="availableValues" type="List" default="[]" />
+    <aura:attribute name="sendToOwenerId" type="ID" default="" />
+    <aura:attribute name="selectedValue" type="String" />
+    <aura:attribute name="selectedLabel" type="String" />
+    <aura:attribute name="rT" type="String" />
+    <aura:attribute name="numberOfAttachment" type="String" />
+    <aura:attribute name="cmt" type="String" />
+    <aura:attribute name="attachmentList" type="String" />
+    <aura:attribute name="OrgUrl" type="String" />
+    <aura:attribute name="Label" type="String" />
+    <aura:attribute name="profileName" type="String" />
+    <aura:attribute name="userRole" type="String" />
+    <aura:attribute name="defectCheckbox" type="String" />
+    <aura:attribute name="motivoTrasferimento" type="String" />
+    <aura:attribute name="showToast" type="Boolean" default="false" />
+    <aura:attribute name="typeToast" type="String" />
+    <aura:attribute name="messageToast" type="String" />
+    <aura:attribute name="DataInvio" type="DateTime" />
+    <aura:attribute name="DettaglioInvio" type="String" />
+    <aura:attribute name="visibilities" type="Object" />
+    <aura:attribute name="ticketTypes" type="List" default="['Incident', 'Service Request']" />
+    <aura:attribute name="ReadOnly" type="Boolean" default="false" />
+    <aura:attribute name="ApplicationName" type="String"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+
+
+    <!-- Modal Code -->
+
+
+    <aura:if isTrue="{!!v.ReadOnly}">
+        <div class="demo-only" style="height: 600px;">
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+                aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <lightning:spinner aura:id="mySpinner" class="slds-hide" />
+                    <!-- Modal Header -->
+                    <header class="slds-modal__header">
+                        <lightning:buttonIcon iconName="utility:close" class="slds-modal__close" size="large"
+                            variant="bare" alternativeText="Close" onclick="{! c.closeModal }" />
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Compila Ticket SILVA
+                        </h2>
+                    </header>
+
+                    <!-- Main Body of Modal -->
+
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        <lightning:select name="mySelect" label="Tipologia Ticket" aura:id="mySelect"
+                            value="{!v.DettaglioInvio}">
+                            <option value="" text=""> --None-- </option>
+                            <option value="Incident" text="Incident" selected="{!v.DettaglioInvio == 'Incident'}">
+                            </option>
+                            <option value="Service Request" text="Service Request"
+                                selected="{!v.DettaglioInvio == 'Service Request'}"></option>
+                        </lightning:select>
+                        <lightning:select name="mySelect" label="Nome Applicazione" aura:id="mySelect"
+                            value="{!v.selectedValue}">
+                            <option value="" text=""> --None-- </option>
+                            <aura:iteration items="{!v.availableValues}" var="option">
+                                <option label="{!option.label}" value="{!option.value}"
+                                    selected="{!option.value == v.selectedValue}" />
+                            </aura:iteration>
+                        </lightning:select>
+                    </div>
+
+
+
+
+
+                    <!-- Footer of Modal -->
+                    <footer class="slds-modal__footer">
+
+                        <lightning:button label="Annulla" title="Annulla" onclick="{! c.closeModal }" />
+                        <lightning:button variant="brand" label="Conferma" title="Conferma"
+                            onclick="{! c.handleSave }" />
+                    </footer>
+                </div>
+            </section>
+        </div>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+        <aura:if isTrue="{! v.showToast }">
+            <div class="slds-notify_container slds-is-relative" style="position: fixed;margin-top: 10%;">
+                <div class="{!'slds-notify slds-notify_toast slds-theme_'+v.typeToast}" role="status"
+                    style="height: 3rem;">
+                    <span class="slds-assistive-text">warning</span>
+                    <span
+                        class="{!'slds-icon_container slds-m-right_small slds-no-flex slds-align-top slds-icon-utility-'+v.typeToast}"
+                        title="{!v.typeToast}">
+                        <lightning:icon iconName="{!'utility:'+v.typeToast}" alternativeText="Approved" size="small"
+                            class="whiteIcon" />
+                    </span>
+                    <div class="slds-notify__content">
+                        <h2 class="slds-text-heading_small ">{!v.messageToast}</h2>
+                    </div>
+
+                </div>
+            </div>
+        </aura:if>
+        <aura:set attribute="else">
+            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                <i>Verifica la corretta compilazione dei campi Tipologia Ticket e Nome Applicazione. Se corretti si prega di confermare la scelta, in alternativa si annulli e si selezioni il pulsante Compila Ticket Silva</i>
+                <lightning:select name="mySelect" label="Tipologia Ticket" aura:id="mySelect"
+                    value="{!v.DettaglioInvio}" disabled="true">
+                    <option value="" text=""> --None-- </option>
+                    <option value="Incident" text="Incident" selected="{!v.DettaglioInvio == 'Incident'}">
+                    </option>
+                    <option value="Service Request" text="Service Request"
+                        selected="{!v.DettaglioInvio == 'Service Request'}"></option>
+                </lightning:select>
+                <!--lightning:select name="mySelect" label="Nome Applicazione" aura:id="mySelect"
+                    value="{!v.selectedValue}" disabled="true">
+                    <option value="" text="">  </option>
+                    <aura:iteration items="{!v.availableValues}" var="option">
+                        <option label="{!option.label}" value="{!option.value}"
+                            selected="{!option.value == v.selectedValue}" />
+                    </aura:iteration>
+                </lightning:select-->
+                
+                <lightning:input label="Nome Applicazione" type = "text" value = "{!v.ApplicationName}" disabled = "true"></lightning:input>
+            </div>
+        </aura:set>
+    </aura:if>
+
+
+
+
+</aura:component>

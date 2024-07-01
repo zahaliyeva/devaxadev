@@ -1,0 +1,27 @@
+<aura:component controller="MobilityDeleteOpportunityController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name="ErrorMsg" type="String" default=""/> 
+    <aura:attribute name="showError" type="Boolean" default="false"/>
+    <aura:attribute name="WarningMsg" type="String" default=""/> 
+    <aura:attribute name="showConfirm" type="Boolean" default="false"/>
+    <aura:attribute name="opportunityInfo" type="Opportunity" default=""/> 
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <aura:if isTrue="{!v.showError}">
+        <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error" role="alert">
+            <h3>{!v.ErrorMsg}</h3>
+        </div>     
+        <center class="slds-m-top_large">
+            <lightning:button variant="Neutral" name="Torna_Indietro" iconPosition="right" label="Torna Indietro" title="Torna_Indietro" onclick="{! c.annulla }"/>
+        </center>
+    </aura:if>
+    
+    <aura:if isTrue="{!v.showConfirm}">
+        <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_info" role="alert">
+            <h3>{!v.WarningMsg}</h3>
+        </div>     
+        <center class="slds-m-top_large">
+            <lightning:button variant="Neutral" name="Conferma" iconPosition="right" label="Conferma" title="Conferma" onclick="{! c.conferma }"/>
+            <lightning:button variant="Neutral" name="Annulla" iconPosition="right" label="Annulla" title="Annulla" onclick="{! c.annulla }"/>
+        </center>
+    </aura:if>       
+</aura:component>

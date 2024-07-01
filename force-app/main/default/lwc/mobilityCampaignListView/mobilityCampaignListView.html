@@ -1,0 +1,74 @@
+<template>
+	<c-mobility-spinner show={spinner} show-overlay={spinnerOverlay}></c-mobility-spinner>
+	<c-mobility-messages model={messages}></c-mobility-messages>
+
+	<template if:true={authorized}>
+
+		<div class="row">
+			<div class="col-12">
+				<c-mobility-breadcrumb params={params} current={componentView}></c-mobility-breadcrumb>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-6">
+				<h1>{_label.campaignListPage_campaignList}</h1>
+			</div>
+			<!--<template if:true={isVenditeAvanzato}>
+				<div class="col-6 text-right">
+					<a onclick={navigateToEvent} data-component="mobilityCampaignNew">
+						<span>
+							{_label.campaignListPage_new}
+							<span class="new-icon">
+								<c-mobility-icon name='plus' width='10.5px' height='10.5px'></c-mobility-icon>
+							</span>
+						</span>
+					</a>
+				</div>
+			</template>-->
+</div>
+<div class="page-border"></div>
+
+<div class='row select nowrap justify-content-between mb-1'>
+    <div class='col-4 mr-left'>
+        <select data-id="Status_Campagna" class="empty" onchange={statusChange}>
+					<option value='' selected disabled>{_label.campaignListPage_statusCampaign}</option>
+					<template for:each={status} for:item='statusItem'>
+						<option key={statusItem.value} value={statusItem.value}>{statusItem.label}</option>
+					</template>
+				</select>
+    </div>
+
+    <div class="col-4 mr-auto">
+        <select data-id="Tipologia_Campagna" class="empty" onchange={TipologiaChange}>
+						<option value="ALL">Tipologia Campagna </option>
+						<template for:each={optionsTipologia} for:item="statusItem">
+							<option key={statusItem.value} value={statusItem.value}>{statusItem.label}</option>
+						</template>
+					</select>
+    </div>
+	
+    <!--IDCRM018 --0005.2--	eliminare il checkbox "liste intecentivazione" e inglobare la camapgna nel filtro "Tipologia Campagna" 
+			<div class="col-4">
+					<div class="row right-align">
+						<span class="pr-2" style="margin-top: 10px;">Lista clienti con stato certificazione DAC</span>
+						<div class="button r">
+							<input type="checkbox" class="form-control checkbox" onclick={onIncentive}>
+							<div class="knobs"></div>
+							<div class="layer"></div>
+						</div>
+					</div>
+				</div>
+			-->
+</div>
+
+<div class="shadow-bottom">
+    <c-mobility-campaign-data-grid params={params} tabledata={records} backgroud-color='#fff'></c-mobility-campaign-data-grid>
+</div>
+<div class="bottom-space"></div>
+</template>
+
+<template if:false={authorized}>
+		<c-mobility-unauthorized></c-mobility-unauthorized>
+	</template>
+</template>

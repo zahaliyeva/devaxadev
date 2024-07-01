@@ -1,0 +1,5 @@
+<aura:event type="APPLICATION" description="The event fires when Email from Recapiti section change">
+
+ <aura:attribute name="changedEmail" type="Map"/>
+
+</aura:event>

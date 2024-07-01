@@ -1,0 +1,70 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction"  access="global" controller="agencyHdChartsCTRL" >
+    <ltng:require
+                  scripts="{!join(',', 
+                            $Resource.ChartJS, 
+                            $Resource.ChartJS_Annotation)}"
+                  afterScriptsLoaded="{!c.afterScriptsLoaded}"/>
+    
+    <aura:attribute name="ready" type="Boolean" default="false"/>
+
+
+
+
+  <div id="chart_first" class="slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+        <!--div class="slds-section-title_divider">
+        <h2>
+            <span class="slds-text-heading_small">Case suddivisi per stato</span>
+        </h2>
+    </div-->
+    <!-- OAVERSANO 11/02/2019 : NMA Fix Mobile - START -->
+		<div class="slds-section-title_divider">
+        	<h2>
+	            <span class="slds-text-heading_small">Totale delle richieste per stato</span>
+	        </h2>
+	    </div>
+	    <br/>
+    <!-- OAVERSANO 11/02/2019 : NMA Fix Mobile - END -->
+    <div class="slds-form-element">
+		<!-- OAVERSANO 11/02/2019 : NMA Fix Mobile - START -->
+		<!-- canvas aura:id="chart" height="300"></canvas-->
+        <canvas aura:id="chart" height="400" ></canvas>
+		<!-- OAVERSANO 11/02/2019 : NMA Fix Mobile - END -->
+    </div> 
+        <!--div class="slds-form-element">
+                   <aura:if isTrue="true">
+            <div class="slds-text-color_error">Nessun contenuto trovato</div>
+            </aura:if>
+    </div--> 
+  </div>
+  <div id="chart_second" class="slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+      <!--div class="slds-section-title_divider">
+        <h2>
+            <span class="slds-text-heading_small">Tempi di lavorazione</span>
+        </h2>
+    </div-->    
+    <!-- OAVERSANO 11/02/2019 : NMA Fix Mobile - START -->
+	<div class="slds-section-title_divider">
+       	<h2>
+           <span class="slds-text-heading_small">Tempo medio lavorazione richieste chiuse</span>
+        </h2>
+    </div>
+    <br/>
+    <!-- OAVERSANO 11/02/2019 : NMA Fix Mobile - END -->
+    <div class="slds-form-element">
+    	<!-- OAVERSANO 11/02/2019 : NMA Fix Mobile - START -->
+    	<!-- canvas aura:id="chartTimes" height="300"></canvas-->
+        <canvas aura:id="chartTimes" height="400"></canvas>
+        <!-- OAVERSANO 11/02/2019 : NMA Fix Mobile - END -->
+    </div> 
+  </div>
+
+  <aura:attribute name="selectedYear" type="String" default="None"/>
+  <aura:attribute name="selectedMonth" type="String" default="None"/>
+  <aura:attribute name="selectedWeek" type="String" default="None"/>
+  <aura:attribute name="selectedLob" type="String" default="None"/>
+  <aura:attribute name="selectedCategory" type="String" default="None"/>
+  <aura:attribute name="selectedSubCategory" type="String" default="None"/>
+  <aura:attribute name="selectedOwnership" type="String" default="None" />
+
+    
+</aura:component>

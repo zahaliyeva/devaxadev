@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>Run Batch Hide Polizze</label>
+    <protected>false</protected>
+    <values>
+        <field>Daily_Hour_End__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Daily_Hour_Start__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>IsAutoSchedulable__c</field>
+        <value xsi:type="xsd:boolean">false</value>
+    </values>
+    <values>
+        <field>Limit__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>MinutesRange__c</field>
+        <value xsi:type="xsd:double">525960.0</value>
+    </values>
+    <values>
+        <field>Need_Information_Log__c</field>
+        <value xsi:type="xsd:boolean">false</value>
+    </values>
+    <values>
+        <field>Query__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>ScopeSize__c</field>
+        <value xsi:type="xsd:double">100.0</value>
+    </values>
+    <values>
+        <field>is_Testing_only__c</field>
+        <value xsi:type="xsd:boolean">false</value>
+    </values>
+</CustomMetadata>

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>c-004</label>
+    <protected>false</protected>
+    <values>
+        <field>AgentProfile__c</field>
+        <value xsi:type="xsd:string">AAI - Vendite Base;AAI - Vendite Avanzato;AAI - Vendite No Accordo Digitale;AAI - Vendite solo Assistenza;NFE - AAI - Vendite Avanzato;NFE - AAI - Vendite Base;NFE - AAI - Vendite solo Assistenza</value>
+    </values>
+    <values>
+        <field>Article_Type_Knolwedge__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>CRMAgenzieChatButtonId__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>CaseTriggerRecordType__c</field>
+        <value xsi:type="xsd:string">Assistenza_Agenti;DAC_AXA_Agenti;Assistenza_Applicativa;AXA_Caring_Salute;Axa_Assicurazioni</value>
+    </values>
+    <values>
+        <field>Categoria__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Category_Knowledge_API__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Category_Knowledge__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Coda_MdC__c</field>
+        <value xsi:type="xsd:string">HD2 Modulo di Calcolo;HD2 Modulo di Calcolo AXA;</value>
+    </values>
+    <values>
+        <field>Dettaglio__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Email_Template__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Gestito_con_TTP8__c</field>
+        <value xsi:type="xsd:boolean">false</value>
+    </values>
+    <values>
+        <field>HD1BIZProfile__c</field>
+        <value xsi:type="xsd:string">AAI - Supporto HD1 BIZ;AAI - Supporto HD1 BIZ - Buon Lavoro;AAI - Supervisor Supporto HD1 BIZ;AAI - Supervisor Supporto HD1 BIZ - Lightning;Caring Salute HD1;Caring Salute;AAI - Supporto HD1 BIZ - Lightning;AAI - Supporto HD1 BIZ - Buon Lavoro - Lightning;</value>
+    </values>
+    <values>
+        <field>HD1BIZQueue__c</field>
+        <value xsi:type="xsd:string">HD1 Biz Auto;HD1 Biz Famiglia;HD1 Biz Salute;HD1 BIZ DAC Agenzie;HD1 Biz Vita;</value>
+    </values>
+    <values>
+        <field>HD1Profile__c</field>
+        <value xsi:type="xsd:string">SmartCenter AMF Advisor;SmartCenter AMF Manager;SmartCenter Motor Advisor;SmartCenter Motor Manager;SmartCenter Non Motor Advisor;SmartCenter Non Motor Manager;AAI - Supporto HD1;AAI - Supervisor Supporto HD1;SmartCenter Non Motor Advisor - Lightning;SmartCenter Motor Advisor - Lightning;SmartCenter Buon Lavoro Advisor - Lightning;AAI - Supporto HD1 - Lightning;AAI - Supervisor Supporto HD2 - Lightning;AAI - Supervisor Supporto HD1 - Lightning;SmartCenter Motor Manager - Lightning;SmartCenter Non Motor Manager - Lightning;SmartCenter Atti giudiziari Advisor;SmartCenter Atti giudiziari Manager;</value>
+    </values>
+    <values>
+        <field>HD1Queue__c</field>
+        <value xsi:type="xsd:string">HD1 IT;HD1 Altri Contact Center</value>
+    </values>
+    <values>
+        <field>HD2BIZProfile__c</field>
+        <value xsi:type="xsd:string">AAI - Supporto HD2 BIZ;AAI - Supervisor Supporto HD2 BIZ;AAI - Supervisor Supporto HD2 BIZ - Lightning;Caring Salute HD2;
+HD2 BIZ DATA;HD2 BIZ Disdette P&amp;C AAI;HD2 BIZ DPO;HD2 BIZ Digital;HD2 BIZ Ecommerce;</value>
+    </values>
+    <values>
+        <field>HD2BIZQueue__c</field>
+        <value xsi:type="xsd:string">HD2 Biz Auto;HD2 Biz Famiglia;HD2 Biz Salute;HD2 Sorveglianza di Portafoglio;HD2 Biz Vita Assunzione;HD2 Biz Vita Sinistri Risp. e Prot.;HD2 Biz Vita Liquidazioni;HD2 Biz Vita Ptf Individuali Risp e Prot;HD2 Biz Vita Ptf Previdenza;HD2 Biz Vita Ptf Collettive;HD2 Biz Vita Contabilità Previdenza;</value>
+    </values>
+    <values>
+        <field>HD2Profile__c</field>
+        <value xsi:type="xsd:string">AAI - Supporto HD2;AAI - Supervisor Supporto HD2;</value>
+    </values>
+    <values>
+        <field>HD2Queue__c</field>
+        <value xsi:type="xsd:string">HD2 IT Anagrafica unica;HD2 IT Auto;HD2 IT Axa Planet Digital;HD2 IT Axa Planet Mondo Doc;HD2 IT Axa Planet (no Mondo Doc);HD2 IT CRM;HD2 IT EDM;HD2 IT Gmail;HD2 IT Incassi;HD2 IT La Mia Agenzia;HD2 Modulo di Calcolo;HD2 IT Paperless;HD2 IT Profilazione utenze;HD2 IT Quietanze;HD2 IT Rami Elementari;HD2 IT RE eCommerce;HD2 IT Sinistri;HD2 IT Sistema di assistenza (TTP8);HD2 IT Sistema di assistenza(Salesforce);HD2 IT TTP8;HD2 IT Vita;HD2 Mdc RE;HD2 IT Rami Elementari - QA;HD2 Modulo di Calcolo AXA;HD2 IT DIGITAL;HD2 IT ESG;HD2 IT ESB;HD2 IT BEAP;HD2 IT LOL</value>
+    </values>
+    <values>
+        <field>Id_Bottone_Chat__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Key__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Lob__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>OrgLink__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Pilota__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Record_type_name__c</field>
+        <value xsi:type="xsd:string">Assistenza_Agenti</value>
+    </values>
+    <values>
+        <field>Sotto_Categoria__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>StatusAgenti__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Status__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Value__c</field>
+        <value xsi:nil="true"/>
+    </values>
+</CustomMetadata>

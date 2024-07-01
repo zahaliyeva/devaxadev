@@ -1,0 +1,12 @@
+.com { color: gray }
+.lit { color: red }
+.pun { color: gray }
+.pln { color: rgb(51, 51, 51) }
+pre.prettyprint { border: 1px solid lightgray; background-color: rgb(252, 252, 252); padding: 5px; font-size: 10pt; line-height: 1.5em; font-family: monospace }
+ol.linenums { margin-top: 0; margin-bottom: 0 }
+li.L0, li.L1, li.L2, li.L3, li.L5, li.L6, li.L7, li.L8 { list-style: none }
+li.L1, li.L3, li.L5, li.L7, li.L9 { background: rgb(238, 238, 238) }
+.str, .atv { color: green }
+.kwd, .tag { color: rgb(43, 124, 233) }
+.typ, .atn, .dec { color: darkorange }
+@media print {.com { color: rgb(102, 0, 0); font-style: italic } .typ { color: rgb(68, 0, 68); font-weight: 700 } .lit { color: rgb(0, 68, 68) } .pun { color: rgb(68, 68, 0) } .pln { color: rgb(0, 0, 0) } .atn { color: rgb(68, 0, 68) } .str, .atv { color: rgb(0, 102, 0) } .kwd, .tag { color: rgb(0, 0, 102); font-weight: 700 } }

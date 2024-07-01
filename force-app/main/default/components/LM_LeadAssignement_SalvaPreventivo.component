@@ -1,0 +1,11 @@
+<apex:component controller="LM_LeadAssignement_eCommerce_CTRL" access="global" >
+    <apex:attribute name="LeadSessionId" type="String" description="Session id of the lead" assignTo="{!relatedToLeadSessionId}"/> 
+    <apex:attribute name="LeadId" type="Id" description="Id of the lead" assignTo="{!relatedToLeadId}"/>   
+    <p style="font-family: 'ITCFranklinGothicCondensedBook', sans-serif; color:#0e2e86; font-size:14px;">
+        <ul style="font-family: 'ITCFranklinGothicCondensedBook', sans-serif; color:#0e2e86; font-size:14px;">
+            <li>Numero preventivo: <apex:outputText value="{!PolicyNumber}" escape="false"></apex:outputText></li>
+            <li>Data di creazione del lead: <apex:outputText value="{!LeadDataCreation}" escape="false"></apex:outputText></li>
+            <li>Premio totale: <apex:outputText value="{!Premium}" escape="false"></apex:outputText></li>
+        </ul>
+    </p>
+</apex:component>

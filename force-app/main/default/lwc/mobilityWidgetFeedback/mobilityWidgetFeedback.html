@@ -1,0 +1,21 @@
+<template>
+    <div class={deviceType.type}>
+        <div class="counter text-center" onclick={openCallback}>
+            <h1 class="title-mobile">Gestione Feedback Cliente</h1>
+            <div class="section section-1">
+                <div class="counter-icon">
+                    <img src={iconPath}/>
+                </div>
+            </div>
+            <div class="section section-2">
+                <h1 class="title">Gestione Feedback Cliente</h1>
+                <div class="counters">
+                    <div class="counter-line">
+                        <span class="counter-item counter-number">{data.feedbacks}</span>
+                        <span class="counter-item counter-label">Feedback da lavorare</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

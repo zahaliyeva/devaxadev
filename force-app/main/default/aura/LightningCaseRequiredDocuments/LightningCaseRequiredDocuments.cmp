@@ -1,0 +1,61 @@
+<aura:component  implements="force:appHostable,flexipage:availableForAllPageTypes,force:lightningQuickAction,force:hasRecordId" access="global" controller="LightningCaseRequiredDocumentsController" >
+    <!-- table records are stored on the data attribute -->
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="data" type="List" access="global" />
+    <aura:attribute name="showSendEmailButton" type="Boolean" default="false" access="global" />
+    <aura:attribute name="spinner" type="Boolean" default="false" access="global" />
+    <aura:attribute name="VFC07_DocumentName" type="String" default="{!$Label.c.VFC07_DocumentName}" access="global" />
+    <aura:attribute name="VFC07_SendEmail" type="String" default="{!$Label.c.VFC07_SendEmail}" access="global" />
+    <aura:attribute name="VFC07_NoDocuments" type="String" default="{!$Label.c.VFC07_NoDocuments}" access="global" />
+
+
+    <!-- init method loads the data attribute values -->
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+    <aura:if isTrue="{!v.spinner}">
+        <lightning:spinner alternativeText="Loading" size="small" />
+    </aura:if>
+    <div class="slds-m-around_xx-small" id="LightningCaseRequiredDocuments" >
+        <aura:if isTrue="{!not(empty(v.data))}">
+        <table class="slds-table slds-table_bordered slds-max-medium-table_stacked-horizontal " role="grid">
+            <thead>
+                <tr class="slds-text-title_caps">
+                    <th class="" scope="col">  
+                        <!-- No title only action , for selection checkbox header -->
+                    </th>
+                    <th class="" scope="col">
+                        <div class="slds-truncate" title="Name">{!v.VFC07_DocumentName}</div>
+                    </th>                   
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Iterates the collection of records stored in the data attribute-->
+                <aura:iteration items="{!v.data}" var="row">
+                    <tr class="slds-hint-parent">
+                        <td data-label="" scope="row">  
+                            <!-- checkbox selection invokes the onCheckboxChange controller method-->
+                            <ui:inputCheckbox aura:id="rowSelectionCheckboxId" value="{!row.selected}" text="{!row.docName}"/>                  
+                        </td>
+                        <td data-label="Name">  
+                            <div class="slds-truncate" title="{!row.docName}">{!row.docName}</div>
+                        </td>                      
+                    </tr>
+                </aura:iteration>
+            </tbody>
+        </table>
+        <aura:if isTrue="{!v.showSendEmailButton}">
+          <button class="slds-button slds-button_neutral slds-align_absolute-center slds-m-top_medium" onclick="{!c.handleSendEmail}">{!v.VFC07_SendEmail}</button>
+        </aura:if>
+        <aura:set attribute="else">
+            <header class="slds-media slds-media--center slds-has-flexi-truncate">
+                <div class="slds-media__body slds-truncate">
+                    <div class="slds-section-title_divider">
+                        <h2>
+                            <span class="slds-text-heading--small">{!v.VFC07_NoDocuments}</span>
+                        </h2>
+                    </div>
+                </div>
+            </header>
+        </aura:set>
+    </aura:if>
+    </div>
+</aura:component>

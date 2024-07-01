@@ -1,0 +1,42 @@
+<template>
+	<c-mobility-spinner show={spinner} show-overlay={spinnerOverlay}></c-mobility-spinner>
+    <br>
+    <br>
+    <template if:true={showIniziativaDetail}>
+        <c-mobility-push-show-campaign-template 
+        title={title} 
+        description={description} 
+        url={iframeUrl} 
+        url-title={previewEmail} 
+        preview-title={previewShortMessage} 
+        preview-message={previewMessage} 
+        >
+        </c-mobility-push-show-campaign-template>
+        <br>
+        <div class="mobility-modal__actions">
+            <button type="button" class="btn btn-outline-primary" style="font-size:1rem" onclick={closePostMessage} >Torna indietro</button>
+            &nbsp;<button type="button" class="btn btn-primary" style="font-size:1rem" onclick={navigateSingleSumit} >CONFERMA</button>
+        </div>
+    </template>
+    <br>
+    <template if:true={showModalSecond}>
+        <lightning-modal-body >
+            <c-mobility-modal-dinamic-message
+            name-layout={modalType}
+            >
+            </c-mobility-modal-dinamic-message>
+        </lightning-modal-body>
+    </template>
+    <br>
+    <template if:true={showConfirmation}>
+        <br>
+        <br>
+        <c-mobility-modal-dinamic-message
+        name-layout="ModalConfermaInvioSingolo"
+        primary-callback={onProcedi}
+        back-callback={showMainModal}
+        >
+        </c-mobility-modal-dinamic-message>
+    </template>
+    <br>
+</template>

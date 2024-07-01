@@ -1,0 +1,88 @@
+<template>
+	<div class="row">
+		<div class={classRoot}>
+			<div class="datepicker">
+				<div class="form-group">
+					<div class="form-group has-search">
+						<div>
+							<input 
+								id={developerName}
+								onkeydown={keydownCallback} 
+								type="text" 
+								class="form-control" 
+								required={required} 
+								readonly={readonly}
+								name={developerName} 
+								onchange={changeData} 
+								onfocus={focusCallback} 
+								onblur={blurCallback}
+								value={dateString} 
+								autocomplete="off" 
+								disabled={disabled}
+							/>
+							<span class="form-control-feedback">
+								<c-mobility-icon name='calendar' width='12px' height='12px'></c-mobility-icon>
+							</span>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+		<template if:true={showTime}>
+			<div class="col-6">
+				<div class="row">
+					<div class="col-6">
+						<div class="datetime">
+							<div class="form-group">
+								<select onchange={changeTime} onkeydown={keydownCallback}>
+									<template for:each={timeValuesData} for:item='timeValue'>
+										<option key={timeValue.time} selected={timeValue.selected}
+											value={timeValue.time}>{timeValue.time}</option>
+									</template>
+								</select>
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</template>
+	</div>
+	<label for={developerName} class={classContainer}>
+		<template if:true={visibleMonths}>
+			<div class={classMonths} onmousedown={onPreventBlur}>
+				<div class="pika-single mobility-theme">
+					<div aria-live="assertive" role="heading" class="pika-title">
+						<div class="pika-label pika-show-year">{yearsRange.currentYear}</div>
+						<button type="button" class="pika-prev" onclick={onPrevYear}>Anno Precedente</button>
+						<button type="button" class="pika-next" onclick={onNextYear}>Anno Successivo</button>
+					</div>
+					<div class="row pika-row">
+						<template for:each={months} for:index="index" for:item='month'>
+							<div key={month} class="col-4 pika-month" onclick={onMonthSelect} data-value={index}>{month}</div>
+						</template>
+					</div>
+				</div>
+			</div>
+		</template>
+		<template if:true={visibleYears}>
+			<div class={classYears} onmousedown={onPreventBlur}>
+				<div class="pika-single mobility-theme">
+					<div aria-live="assertive" role="heading" class="pika-title">
+						<div class="pika-label pika-show-year">{yearsRange.start} - {yearsRange.end}</div>
+						<button type="button" class="pika-prev" onclick={onPrevYears}>Anni Precedenti</button>
+						<button type="button" class="pika-next" onclick={onNextYears}>Anni Successivi</button>
+					</div>
+					<div class="row pika-row">
+						<template for:each={years} for:item='year'>
+							<div key={year} class="col-3 pika-year" onclick={onYearSelect} data-value={year}>{year}</div>
+						</template>
+					</div>
+				</div>
+			</div>
+		</template>
+		<box class={classBox}></box>
+	</label>
+</template>

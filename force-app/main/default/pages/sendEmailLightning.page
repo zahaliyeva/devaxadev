@@ -1,0 +1,31 @@
+<apex:page standardController="Case" showHeader="false" standardStylesheets="false" sidebar="false" applyHtmlTag="true" applyBodyTag="false" docType="html-5.0" >
+    <style>
+        html {
+        background-color: white;
+        }
+    </style>
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>      
+    </head>
+    
+    <apex:includeScript value="/lightning/lightning.out.js" />
+    <apex:includeScript value="/soap/ajax/41.0/connection.js"/>
+    <apex:includeScript value="/soap/ajax/41.0/apex.js"/>
+    
+    <script>
+    var theme = "{!$User.UITheme}";
+    console.log('theme: ',theme);
+    console.log('url: ',window.location.href);  
+    var showHeader = false; //always false.
+    var isFeedView = 'true';
+    if( theme == "Theme4t") {
+        showHeader = false; 
+        isFeedView = 'false';    
+    }
+        window.location.href = "https://axaitalia.force.com/agenzie/apex/sendEmailCase?p3_lkid={!Case.Id}&p2_lkid={!Case.AccountId}&showHeader="+showHeader+'&isFeedView='+isFeedView;
+    
+    </script>
+    
+    <div id="theFeedback"></div>    
+    
+</apex:page>

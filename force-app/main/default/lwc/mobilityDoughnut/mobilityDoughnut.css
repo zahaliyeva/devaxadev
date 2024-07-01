@@ -1,0 +1,33 @@
+.content{ 
+	display: inline-block;
+	min-height: 200px;
+}
+
+.doughnut .info{
+	position: absolute;
+	text-align: center;
+	width: 100px;
+	/* height: 100px; */
+	padding-top: 0px;
+	margin-top: 75px;
+	margin-left: 75px;
+	border-radius: 150px;
+}
+
+.total{
+	position: absolute;
+	text-align: center;
+	/*top: 42%;
+	left: 50%;
+	transform: translate(-50%, -50%);*/
+	
+	/*font-size:180%;*/
+	z-index: 0
+	
+}
+.numberlead{
+	position: relative;
+	text-align: center;
+	justify-content: center; 
+	align-items: center;
+}

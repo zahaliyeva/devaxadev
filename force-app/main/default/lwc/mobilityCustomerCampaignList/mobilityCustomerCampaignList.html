@@ -1,0 +1,42 @@
+<template>
+    <c-mobility-spinner show={spinner} show-overlay={spinnerOverlay}></c-mobility-spinner>
+    <c-mobility-messages model={messages}></c-mobility-messages>
+    <template if:true={authorized}>
+
+        <!-- INIZIO CODICE WIDGET -->
+        <c-mobility-no-data show={noData}></c-mobility-no-data>
+        <template for:each={allData} for:item="record">
+            <div class="row customerCampaignItem justify-content-between" key={record.Id}>
+                <div class="col-12 customer-campaging-border">
+                    
+                    <div class="row">
+                        <div class="col-9">
+                            <div class="customerCampaignSubtitle text-uppercase">{record.CampaignType}</div>
+                            <div class="customerCampaignTitle text-uppercase">{record.Campaign.Name}</div>
+                            <div class="customerCampaignText">{record.EndDateString}</div>
+                            <div class={record.ColorLabel}>{record.StatusLabel}</div>
+                        </div>
+                        <div class="col-3" style="margin-top: 30px;text-align: right;">
+                            <span 
+                                class='arrow'
+                                onclick={openCallbackEvent}
+                                data-record-id={record.Campaign.Id}
+                                data-campaign-member-id={record.Id}
+                                data-ndg-id={params.ndgId}
+                                data-record-type='Campaign'
+                                data-type='OPEN_SECTION' 
+                            >  
+                                <c-mobility-icon name="icon-arrow-right" width="15px" height="15px"></c-mobility-icon>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+        <!-- FINE CODICE WIDGET -->
+
+    </template>
+    <template if:false={authorized}>
+        <c-mobility-unauthorized></c-mobility-unauthorized>
+    </template>
+</template>

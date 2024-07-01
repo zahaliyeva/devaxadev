@@ -1,0 +1,29 @@
+<apex:page standardController="Campaign" extensions="campaignKPI_CTRL" showHeader="true" standardStylesheets="false" sidebar="false" applyHtmlTag="true" applyBodyTag="false" docType="html-5.0">
+ <!--Start_Of_Session_Id{!$Api.Session_ID}End_Of_Session_Id
+ {!CampaignType}-->
+
+    <apex:includeScript value="/soap/ajax/35.0/connection.js"/>
+    <apex:includeScript value="/soap/ajax/35.0/apex.js"/>
+    <apex:includeScript value="/lightning/lightning.out.js" />
+    <apex:includeLightning />
+
+    <div id="lightning" />
+
+    <script>
+    var CampaignId = "{!mycurrentCampaignId}";
+    var CampType = "{!CampaignType}";
+   
+        $Lightning.use("c:campaignKPIapp", function() {
+          $Lightning.createComponent("c:campaignKPImaincmp",
+          {
+            "CampaignId" : CampaignId,
+            "CampType":CampType,
+          
+          },
+          "lightning",
+          function(cmp) {
+            // do some stuff
+          });
+        });
+    </script>
+</apex:page>

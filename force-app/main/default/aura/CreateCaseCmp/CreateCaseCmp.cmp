@@ -1,0 +1,606 @@
+<aura:component implements="flexipage:availableForAllPageTypes" access="global" controller="VFC26_AgentCreateCaseLightning" >
+    <aura:dependency resource="markup://force:navigateToSObject" type="EVENT"/>
+    <aura:dependency resource="force:navigateToURL" type="EVENT"/>    
+    <!--  <lightning:spinner aura:id="mySpinner" /> -->
+    <aura:attribute name="jsDebug" type="Boolean"/> 
+    <aura:attribute name="screenWidth" type="String" default="1920"/>
+    <aura:attribute name="messages" type="Aura.Component[]" access="GLOBAL"/>
+    <aura:attribute name="SelectedLOB" type="String" default=""/>
+    <aura:attribute name="NewCase" type="Case" default="{ 'sobjectType': 'Case'}"/>
+    <aura:attribute name="ShowCategories" type="Boolean" default="false"/>
+    <aura:attribute name="isCaringSalute" type="Boolean" default="false"/>
+    <aura:attribute name="LobValueMappingList" type="List" />
+    <aura:attribute name="DisableSubcategory" type="Boolean" default="false" />
+    <aura:attribute name="ShowTrattativeLM" type="Boolean" default="false" />
+    <aura:attribute name="Cpick" type="Object"/>
+    <aura:attribute name="ChatButtonId" type="String" default=""/>
+    <aura:attribute name="VisualizeButtons" type="Boolean" default="false"/>
+    <aura:attribute name="ShowTTP8Error" type="Boolean" default="false"/>
+    <aura:attribute name="ShowModal" type="Boolean" default="true"/>
+    <aura:attribute name="ShowCategoriesSection" type="Boolean" default="false"/>
+    <aura:attribute name="PoliciesFilter" type="String" default=" TECH_Company__c = 'AAI'"/>
+    <aura:attribute name="SelectedAccount" type="sObject" />
+    <!-- ORLANDO PICKLIST ENHANCEMENT -->
+    <!--<aura:attribute name="SelectedAccountQuery" type="sObject" />-->
+    <aura:attribute name="SelectedAccountQuery" type="Boolean" default="true"/>
+    <!-- ORLANDO PICKLIST ENHANCEMENT -->
+    <aura:attribute name="SelectedPolicy" type="sObject" />
+    <aura:attribute name="CaseIsCreated" type="Boolean" default="false"/>
+    <aura:attribute name="selectedLookUpRecord" type="sObject" default="{}"/>
+    <aura:handler name="oSelectedRecordEventToCreateCaseCmp" event="c:selectedsObjectRecordEvent" action="{!c.handleComponentEventCaseCmp}"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:registerEvent name="SendCategoryToFAQCmpEvent" type="c:SendCategoryToFAQCmpEvent"/>
+    <aura:attribute name="Attachments" type="List"/>
+    <aura:attribute name="ShowAttachmentModal" type="Boolean" default="false"/>
+    <aura:attribute name="IsAttachmentInsert" type="Boolean" default="false"/>
+    <aura:attribute name="attachmentList" type="List" /> 
+    <aura:attribute name="attachmentListFileNames" type="List"/> 
+    <aura:attribute name="showAttachmentList" type="boolean" default="false" /> 
+    <aura:attribute name="showLoadingSpinner" type="boolean" default="false" />
+    <aura:attribute name="fileName" type="String" default="Nessun file selezionato" /> 
+    <aura:handler name="change" value="{!v.attachmentListFileNames}" action="{!c.handleChangeList}"/>
+    <aura:attribute name="Bodymap" type="Map" default="{}"/>
+    <aura:attribute name="ReachedDimesion" type="Double" default="0"/>
+    <aura:attribute name="ChatorganizationId" type="String" default=""/>
+    <aura:attribute name="Chatendpoint" type="String" default=""/>
+    <aura:attribute name="ChatdeploymentUrl" type="String" default=""/>
+    <aura:attribute name="ChatdeploymentId" type="String" default=""/>
+    <aura:attribute name="ShowErrorMsg" type="Boolean" default="false"/>
+    <aura:attribute name="ErrorMsg" type="String" default=""/>
+    <aura:attribute name="BlockCreation" type="Boolean" default=""/>    
+    <!--loading spinner start... style=Brand Medium (blue dots)-->    
+    <aura:handler event="aura:waiting" action="{!c.showSpinner}"/>
+    <aura:handler event="aura:doneWaiting" action="{!c.hideSpinner}"/>
+    <aura:attribute name="Spinner" type="boolean" default="false"/>
+    <aura:attribute name="DisableCreateCase" type="boolean" default="false"/>    
+    <aura:attribute name="AgentName" type="String" default=""/>
+    <aura:attribute name="DeviceIsMobile" type="Boolean" default="false"/>
+    <aura:attribute name="AttachmentNumber" type="Integer" default="0"/>
+    <aura:attribute name="Theme" type="String"/> 
+    <aura:attribute name="colors" type="String[]" default="Red,Green,Blue"/><!--Orlando-->
+    <aura:attribute name="newfileadded" type="Boolean" default="false"/>
+    <aura:attribute name="displayCaseForm" type="String" default="display: block;"/> <!-- OAVERSANO 29/01/2019 : NMA Fix Mobile -->
+    
+    <!--cancellare-->
+    <aura:attribute name="AccountFilter" type="String" default=" Recordtype.Name in ('B2B Client','B2C Client')"/>
+    <aura:attribute name="SelectAccountByPolicy" type="Boolean" default="false" />
+    <!--cancellare-->
+    
+    <aura:if isTrue="{!v.Spinner}">
+        <div aura:id="spinnerId" class="slds-spinner_container">
+            <div role="status" class="slds-spinner slds-spinner_medium">
+                <span class="slds-assistive-text">Caricamento... </span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </aura:if>
+    <!-- Loading spinner end--> 
+    <!-- 
+    <aura:handler name="change" value="{!v.SelectedAccount}" action="{!c.passInfoToChat}"/>
+    <aura:handler name="change" value="{!v.SelectedPolicy}" action="{!c.passInfoToChat}"/>
+    <aura:handler name="change" value="{!v.NewCase.Targa__c}" action="{!c.passInfoToChat}"/>
+    <aura:handler name="change" value="{!v.NewCase.Subject}" action="{!c.passInfoToChat}"/>
+    <aura:handler name="change" value="{!v.NewCase.Description}" action="{!c.passInfoToChat}"/>-->
+    <aura:handler name="LiveChatButtonPressEvent" event="c:LiveChatButtonPressEvent" action="{!c.setPageToReadOnly}"/>
+    
+    
+    <!-- <aura:if isTrue="{!!or(v.ShowAttachmentModal,v.ShowErrorMsg)}"> -->
+    
+    
+    <aura:if isTrue="{!v.CaseIsCreated}">     
+        <div class="demo-only" style="height: 640px; -webkit-overflow-scrolling:touch;">
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_success">
+                        
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Operazione completata</h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium slds-text-align_center" id="modal-content-id-1">
+                        <p>La tua richiesta è stata inviata con successo</p>                    
+                    </div>
+                    <footer class="slds-modal__footer" style="display:flex;">
+                        <div class="slds-align_absolute-center" style="margin-right: 0;">
+                            <button class="slds-button slds-button_neutral custom_button_conferma" onclick="{!c.NewRequest}">Nuova richiesta</button>
+                        </div>
+                        <div class="slds-align_absolute-center" style="margin-left:1rem;">
+                            <button class="slds-button slds-button_neutral custom_button_conferma" onclick="{!c.chiudiTab}">Chiudi</button>
+                        </div>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </div>
+        
+        <aura:set attribute="else">      
+            <br/>
+            <!-- OAVERSANO 25/01/2019 : NMA Fix Mobile - START -->
+            <!-- aura:if isTrue="{!or(v.showCaseForm, not($Browser.isIOS) )}" -->
+            <div style="{!v.displayCaseForm}" >
+            <!-- OAVERSANO 25/01/2019 : NMA Fix Mobile - END -->
+            <div class="slds-align_absolute-center">                
+                <div class="slds-form-element ">
+                    <!--       <div class="slds-form-element__control slds-m-vertical_medium" style="display: -webkit-box;">-->
+                    <div class="slds-grid slds-wrap slds-grid--pull-padded" style="margin-left:1.25rem !important">   
+                        
+                        <aura:if isTrue="{!v.VisualizeButtons}"> 
+                            
+                            <div class="slds-p-around_xxx-small slds-size--1-of-2 slds-medium-size--1-of-4 slds-large-size--1-of-4" >
+                                <c:LiveAgentChatButton organizationId="{!v.ChatorganizationId}"
+                                                       deploymentUrl="{!v.ChatdeploymentUrl}"
+                                                       endpoint="{!v.Chatendpoint}"
+                                                       deploymentId="{!v.ChatdeploymentId}"
+                                                       chatButtontId="{!v.ChatButtonId}"
+                                                       onlineText="Entra in chat"
+                                                       offlineText="Chat offline"
+                                                       NewCase="{!v.NewCase}"
+                                                       AgentName="{!v.AgentName}"
+                                                       aura:id="chatCmp"></c:LiveAgentChatButton> 
+                                
+                            </div>
+                            
+                            
+                            <div class="slds-p-around_xxx-small slds-size--1-of-2 slds-medium-size--1-of-4 slds-large-size--1-of-4">
+                                
+                                <lightning:button label="Invia a Supporto"
+                                                  onclick="{!c.SendToSupport}"
+                                                  disabled="{!v.DisableCreateCase}"
+                                                  class="custom_button"/>
+                                
+                            </div>
+                            
+                            <div class="slds-p-around_xxx-small slds-size--1-of-2 slds-medium-size--1-of-4 slds-large-size--1-of-4">
+                                
+                                <lightning:button label="Aggiungi allegato"
+                                                  onclick="{!c.AttachmentModal}"
+                                                  disabled="{!v.DisableCreateCase}"
+                                                  class="custom_button"/> 
+                                
+                            </div>
+                             
+                        </aura:if>
+                        
+                        <!-- OAVERSANO 28/01/2019 : NMA Fix Mobile - START -->
+                        <aura:if isTrue="{!not(v.ShowTTP8Error)}" >
+                        <!-- OAVERSANO 28/01/2019 : NMA Fix Mobile - END -->
+                        <div class="slds-p-around_xxx-small slds-size--1-of-2 slds-medium-size--1-of-4 slds-large-size--1-of-4">
+                            
+                            <lightning:button label="Annulla"                                          
+                                              onclick="{!c.NewRequest}"
+                                              class="custom_button"/>
+                        </div>        
+                        <!-- OAVERSANO 28/01/2019 : NMA Fix Mobile - START -->
+						</aura:if>
+                        <!-- OAVERSANO 28/01/2019 : NMA Fix Mobile - END -->                
+                    </div>
+                </div>    
+            </div>    
+            
+            <div class="slds-p-horizontal--small">                
+                <aura:if isTrue="{!v.VisualizeButtons=='false'}">
+                    <label class="slds-form-element__label" for="LobSelection">
+                        <abbr class="slds-required" title="required">*</abbr> Area: </label>
+                    <div class="slds-form-element__control">
+                        <ui:inputSelect class="dynamic slds-input" aura:id="LobSelection" change="{!c.ChangeLob}" value="{!v.NewCase.LOB__c}">             
+                        </ui:inputSelect>
+                    </div>
+                    
+                </aura:if>           
+                
+                <aura:if isTrue="{!and(v.ShowModal,v.ShowTTP8Error)}" >      
+                    <div class="demo-only" style="height: 640px;">
+                        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                            <div class="slds-modal__container">
+                                <header class="slds-modal__header slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error">
+                                    
+                                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Attenzione !</h2>
+                                </header>
+                                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                                    <p>Per inoltrare una nuova richiesta della LOB selezionata è necessario utilizzare il ticketing tool su Axa Planet</p>                    
+                                </div>
+                                <footer class="slds-modal__footer">
+                                    <div class="slds-align_absolute-center">
+                                        <button class="slds-button slds-button_neutral" onclick="{!c.NewRequest}">Modifica richiesta</button>
+                                    </div>
+                                </footer>
+                            </div>
+                        </section>
+                        <div class="slds-backdrop slds-backdrop_open"></div>
+                    </div>
+                </aura:if>
+                
+                <aura:if isTrue="{!v.ShowCategoriesSection}">
+                    <br/>
+                    <aura:if isTrue="{!v.VisualizeButtons=='false'}">
+                        <label class="slds-form-element__label" for="CategorySelection">
+                            <abbr class="slds-required" title="required">*</abbr>Categoria: </label>                    
+                        <div class="slds-form-element__control">
+                            <ui:inputSelect class="dynamic slds-input" aura:id="CategorySelection" change="{!c.ChangeCategory}"  value="{!v.NewCase.Category__c}">             
+                            </ui:inputSelect>
+                        </div> 
+                        <aura:set attribute="else">
+                            <div class="slds-form-element">
+                                <label class="slds-form-element__label" for="CategorySelection_disabled">Categoria: </label>
+                                <div class="slds-form-element__control">
+                                    <input type="text" disabled="true" id="CategorySelection_disabled" class="slds-input" placeholder="{!v.NewCase.Category__c}" />
+                                </div>
+                            </div>                
+                        </aura:set>
+                    </aura:if>
+                    
+                    <br/>
+                    
+                    <aura:if isTrue="{!or(v.DisableSubcategory=='false',v.VisualizeButtons=='false')}">
+                        <label class="slds-form-element__label" for="Sub-CategorySelection">
+                            <abbr class="slds-required" title="required">*</abbr>Sotto-Categoria: </label>                        
+                        <div class="slds-form-element__control">
+                            <ui:inputSelect class="dynamic slds-input" aura:id="Sub-CategorySelection" change="{!c.SelectChatButton}" value="{!v.NewCase.SubCategory__c}" >             
+                            </ui:inputSelect>
+                        </div> 
+                        <aura:set attribute="else">
+                            <div class="slds-form-element">
+                                <label class="slds-form-element__label" for="Sub-CategorySelection_disabled">Sotto-Categoria: </label>
+                                <div class="slds-form-element__control">
+                                    <input type="text" disabled="true" id="Sub-CategorySelection_disabled" class="slds-input" placeholder="{!if(!v.DisableSubcategory,v.NewCase.SubCategory__c,'--Selezionare Sotto Categoria--')}" />
+                                </div>
+                            </div>
+                        </aura:set>
+                    </aura:if>
+                    <!--    <lightning:button label="Save Case" variant="brand" onclick="{!c.handleSaveContact}"/> -->
+                </aura:if>
+
+                <aura:if isTrue="{!v.VisualizeButtons}">
+                    <br/>
+                  <!--  <div id="Descriptions" onclick="{!c.hidelookupresults}"> -->
+                    <div id="Descriptions">
+                    <aura:if isTrue="{!v.DisableCreateCase}">
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label" for="CaseObject">Oggetto: </label>
+                            <div class="slds-form-element__control">
+                                <ui:inputText aura:id="CaseObject" class="field slds-input" value="{!v.NewCase.Subject}" placeholder="Inserire l'oggetto della richiesta.." disabled="true"/>
+                            </div>
+                        </div>                                                   
+                        <aura:set attribute="else">                            
+                            <div class="slds-form-element">
+                                <label class="slds-form-element__label" for="CaseObject"><abbr class="slds-required" title="required">*</abbr>Oggetto: </label>
+                                <div class="slds-form-element__control">
+                                    <ui:inputText aura:id="CaseObject" class="field slds-input" value="{!v.NewCase.Subject}" placeholder="Inserire l'oggetto della richiesta.."/>
+                                </div>
+                            </div>
+                        </aura:set>  
+                    </aura:if>
+                    <br/>                    
+                    <aura:if isTrue="{!v.DisableCreateCase}">
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label" for="CaseDescription">Descrizione: </label>
+                            <div class="slds-form-element__control">
+                                <ui:inputTextArea aura:id="CaseDescription" class="field slds-input" value="{!v.NewCase.Description}" placeholder="Inserire la descrizione della richiesta.." disabled="true"/>
+                            </div>
+                        </div>                                                   
+                        <aura:set attribute="else">                                            
+                            <div class="slds-form-element">
+                                <label class="slds-form-element__label" for="CaseDescription"><abbr class="slds-required" title="required">*</abbr>Descrizione: </label>
+                                <div class="slds-form-element__control">
+                                    <ui:inputTextArea class="slds-textarea field" aura:id="CaseDescription" value="{!v.NewCase.Description}" rows="3" placeholder="Inserire la descrizione della richiesta.." />
+                                </div>
+                            </div>
+                        </aura:set>
+                    </aura:if>
+                    <br/>
+                    
+                    <aura:if isTrue="{!v.DisableCreateCase}">
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label" for="CaseAccount">Cliente: </label>
+                            <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_left" style="color:#6b6d7a;">
+                                
+                                <lightning:icon iconName="standard:account" size="small" alternativeText="{!v.IconName}" class="slds-icon slds-input__icon slds-input__icon_left slds-icon-text-default icon_size"/>
+                                <ui:inputText aura:id="CaseAccount" class="field slds-input" value="{!v.SelectedAccount.Obj.Name}" placeholder="Inserire la descrizione della richiesta.." disabled="true"/>
+                            </div>
+                        </div> 
+                        <br/>
+                        <aura:set attribute="else"> 
+                            
+
+                            <aura:if isTrue="{!v.SelectAccountByPolicy}">
+                            
+
+                                	                            	<div class="slds-form-element">
+		                                <div class="slds-form-element__control">
+		                                    <c:customLookup aura:id="cmplookup" immediateQuery="true" objectAPIName="account" IconName="standard:account" selectedRecord="{!v.SelectedAccount}" label="Cliente: " SearchPlaceHolder="Inserire i primi tre caratteri del nome e cognome/ragione sociale.." QueryWhereCondition="{!v.AccountFilter}" QueryLimit="10" NoResultsFoundMsg="Nessun cliente trovato..."  QueryOutputField=" Name, Ndg__c, AAI_Codice_fiscale__c, AAI_Partita_IVA__c "/>            
+		                                </div>
+		                            </div> 
+                                
+                            <aura:set attribute="else">
+                                                           <div class="slds-form-element">
+                                <div class="slds-form-element__control">
+                                 <!--   <c:customLookup aura:id="cmplookup" objectAPIName="account" IconName="standard:account" selectedRecord="{!v.SelectedAccount}" label="Cliente: " SearchPlaceHolder="Inserire i primi tre caratteri del nome e cognome/ragione sociale.." QueryWhereCondition=" Recordtype.Name in ('B2B Client','B2C Client')" QueryLimit="10" NoResultsFoundMsg="Nessun cliente trovato..." QueryOutputField=" Name, Ndg__c, AAI_Codice_fiscale__c, AAI_Partita_IVA__c "/>   -->
+                                    <c:customLookup aura:id="cmplookup" objectAPIName="account" IconName="standard:account" selectedRecord="{!v.SelectedAccount}" label="Cliente: " SearchPlaceHolder="Inserire i primi tre caratteri del nome e cognome/ragione sociale.." QueryWhereCondition="{!v.AccountFilter}" QueryLimit="10" NoResultsFoundMsg="Nessun cliente trovato..." QueryOutputField=" Name, Ndg__c, AAI_Codice_fiscale__c, AAI_Partita_IVA__c "/>                                    
+                                </div>
+                            </div>
+                            
+                                
+                                </aura:set>
+                                </aura:if>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                        </aura:set>
+                    </aura:if>
+                    
+                    <aura:if isTrue="{!v.DisableCreateCase}">
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label" for="CasePolicy">Polizza: </label>
+                            <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_left" style="color:#6b6d7a;">
+                                
+                                <lightning:icon iconName="custom:custom50" size="small" alternativeText="{!v.IconName}" class="slds-icon slds-input__icon slds-input__icon_left slds-icon-text-default icon_size"/>
+                                <ui:inputText aura:id="CasePolicy" class="field slds-input" value="{!v.SelectedPolicy.Obj.Name}" placeholder="Inserire la descrizione della richiesta.." disabled="true"/>
+                            </div>
+                        </div>                                                   
+                        <aura:set attribute="else">  
+                        	<!-- ORLANDO PICKLIST ENHANCEMENT -->                   
+                          <!--  <aura:if isTrue="{!v.SelectedAccountQuery == null}">-->
+                           
+                            <aura:if isTrue="{!v.SelectedAccountQuery}">
+                            <!-- ORLANDO PICKLIST ENHANCEMENT -->
+	                            <br/>     
+	                                         
+	                            <div class="slds-form-element">
+	                                <div class="slds-form-element__control">
+	                                    <c:customLookup aura:id="cmplookup1" objectAPIName="InsurancePolicy__c" IconName="custom:custom50" selectedRecord="{!v.SelectedPolicy}" label="Polizza: " SearchPlaceHolder="Inserire le prime tre cifre del numero polizza.." QueryWhereCondition="{!v.PoliciesFilter}" QueryLimit="10" NoResultsFoundMsg="Nessuna polizza trovata.."  QueryOutputField=" Name, CUID__r.Name, Policy_Holder_Fiscal_Id__c, Product_Name__c "/>            
+	                                </div>
+	                            </div>
+                            <!-- ORLANDO PICKLIST ENHANCEMENT -->
+                            	<aura:set attribute="else">
+                            		<br/>                    
+	                            	<div class="slds-form-element">
+		                                <div class="slds-form-element__control">
+		                                    <c:customLookup aura:id="cmplookup1" immediateQuery="true" objectAPIName="InsurancePolicy__c" IconName="custom:custom50" selectedRecord="{!v.SelectedPolicy}" label="Polizza: " SearchPlaceHolder="Inserire le prime tre cifre del numero polizza.." QueryWhereCondition="{!v.PoliciesFilter}" QueryLimit="10" NoResultsFoundMsg="Nessuna polizza trovata.."  QueryOutputField=" Name, CUID__r.Name, Policy_Holder_Fiscal_Id__c, Product_Name__c "/>            
+		                                </div>
+		                            </div>
+                            	</aura:set>
+                            </aura:if>
+                            <!-- ORLANDO PICKLIST ENHANCEMENT -->
+                        </aura:set>
+                    </aura:if>
+                    
+                    <br/>
+                        <aura:if isTrue="{!v.isCaringSalute}">
+                         <aura:if isTrue="{!v.DisableCreateCase}">
+                        <div class="slds-form-element" style="margin-bottom:10px !important;">
+                            <label class="slds-form-element__label" for="Salute">Numero Sinistro Salute (opzionale): </label>
+                            <div class="slds-form-element__control">
+                                <ui:inputText aura:id="Salute" class="field slds-input" value="{!v.NewCase.Numero_Sinistro__c}" placeholder="Inserire il numero di sinistro.." disabled="true"/>
+                            </div>
+                        </div>                           
+                        
+                             <aura:set attribute="else">            
+                                 
+                                 <div class="slds-form-element" style="margin-bottom:10px !important;">
+                                     <label class="slds-form-element__label" for="Salute">Numero Sinistro Salute (opzionale): </label>
+                                     <div class="slds-form-element__control">
+                                         <ui:inputText aura:id="Salute" class="field slds-input" value="{!v.NewCase.Numero_Sinistro__c}" placeholder="Inserire il numero di sinistro.."/>                  
+                                     </div>
+                                 </div>
+                             </aura:set>
+                            </aura:if>     
+                            <aura:set attribute="else">     
+                                <aura:if isTrue="{!v.DisableCreateCase}">
+                                    <div class="slds-form-element" style="margin-bottom:10px !important;">
+                                        <label class="slds-form-element__label" for="Targa">Numero di Targa (opzionale): </label>
+                                        <div class="slds-form-element__control">
+                                            <ui:inputText aura:id="Targa" class="field slds-input" value="{!v.NewCase.Targa__c}" placeholder="Inserire il numero di targa del cliente.." disabled="true"/>
+                                        </div>
+                                    </div>                           
+                                    
+                                       <aura:set attribute="else">            
+                                           
+                                           <div class="slds-form-element" style="margin-bottom:10px !important;">
+                                               <label class="slds-form-element__label" for="Targa">Numero di Targa (opzionale): </label>
+                                               <div class="slds-form-element__control">
+                                                   <ui:inputText aura:id="Targa" class="field slds-input" value="{!v.NewCase.Targa__c}" placeholder="Inserire il numero di targa del cliente.."/>                  
+                                               </div>
+                                           </div>
+                                       </aura:set>
+                                 </aura:if>  
+                            </aura:set>                        
+                        </aura:if> 
+                        
+                        <aura:if isTrue="{!v.ShowTrattativeLM}">
+                         <aura:if isTrue="{!v.DisableCreateCase}">
+                        <div class="slds-form-element" style="margin-bottom:10px !important;">
+                            <label class="slds-form-element__label" for="denominazionesocieta">Denominazione Società: </label>
+                            <div class="slds-form-element__control">
+                                <ui:inputText aura:id="denominazionesocieta" class="field slds-input" value="{!v.NewCase.Nome_Societa__c}" placeholder="Inserire la denominazine della società.." disabled="true"/>
+                            </div>
+                        </div>                           
+                        
+                        <aura:set attribute="else">            
+                            
+                            <div class="slds-form-element" style="margin-bottom:10px !important;">
+                                <label class="slds-form-element__label" for="denominazionesocieta"><abbr class="slds-required" title="required">*</abbr>Denominazione Società: </label>
+                                <div class="slds-form-element__control">
+                                    <ui:inputText aura:id="denominazionesocieta" class="field slds-input" value="{!v.NewCase.Nome_Societa__c}" placeholder="Inserire la denominazine della società.."/>                  
+                                </div>
+                            </div>
+                        </aura:set>
+                    </aura:if>    
+                        
+                             <aura:if isTrue="{!v.DisableCreateCase}">
+                        <div class="slds-form-element" style="margin-bottom:10px !important;">
+                            <label class="slds-form-element__label" for="piva">Partita Iva Società: </label>
+                            <div class="slds-form-element__control">
+                                <ui:inputText aura:id="piva" class="field slds-input" value="{!v.NewCase.P_Iva__c}" placeholder="Inserire la partita iva della società.." disabled="true"/>
+                            </div>
+                        </div>                           
+                        
+                        <aura:set attribute="else">            
+                            
+                            <div class="slds-form-element" style="margin-bottom:10px !important;">
+                                <label class="slds-form-element__label" for="piva"><abbr class="slds-required" title="required">*</abbr>Partita Iva Società: </label>
+                                <div class="slds-form-element__control">
+                                    <ui:inputText aura:id="piva" class="field slds-input" value="{!v.NewCase.P_Iva__c}" placeholder="Inserire la partita iva della società.."/>                  
+                                </div>
+                            </div>
+                        </aura:set>
+                    </aura:if> 
+                             <aura:if isTrue="{!v.DisableCreateCase}">
+                        <div class="slds-form-element" style="margin-bottom:10px !important;">
+                            <label class="slds-form-element__label" for="broker">Broker Coinvolto: </label>
+                            <div class="slds-form-element__control">
+                                <ui:inputText aura:id="broker" class="field slds-input" value="{!v.NewCase.Broker_Coinvolto__c}" placeholder="Inserire broker.." disabled="true"/>
+                            </div>
+                        </div>                           
+                        
+                        <aura:set attribute="else">            
+                            
+                            <div class="slds-form-element" style="margin-bottom:10px !important;">
+                                <label class="slds-form-element__label" for="broker"><abbr class="slds-required" title="required">*</abbr>Broker Coinvolto: </label>
+                                <div class="slds-form-element__control">
+                                    <ui:inputText aura:id="broker" class="field slds-input" value="{!v.NewCase.Broker_Coinvolto__c}" placeholder="Inserire broker.."/>                  
+                                </div>
+                            </div>
+                        </aura:set>
+                    </aura:if> 
+                        
+                         <aura:if isTrue="{!v.DisableCreateCase}">
+                        <div class="slds-form-element" style="margin-bottom:130px !important;">
+                            <label class="slds-form-element__label" for="datascadenza">Data Scadenza: </label>
+                            <div class="slds-form-element__control">
+                                <ui:inputText aura:id="datascadenza" class="field slds-input" value="{!v.NewCase.Data_Scadenza__c}" placeholder="Inserire data scadenza.." disabled="true"/>
+                         
+                            </div>
+                        </div>                           
+                        
+                        <aura:set attribute="else">            
+                            
+                            <div class="slds-form-element" style="margin-bottom:130px !important;">                             
+                                <div class="slds-form-element__control">
+                                    <lightning:input type="date" name="Data Scadenza" label="Data scadenza" value="{!v.NewCase.Data_Scadenza__c}"/>                               
+                                </div>
+                            </div>
+                        </aura:set>
+                    </aura:if> 
+                   </aura:if>
+                        
+                </div>                     
+                </aura:if>                 
+            </div>
+            <!-- OAVERSANO 25/01/2019 : NMA Fix Mobile - START -->
+            </div>
+            <!-- OAVERSANO 25/01/2019 : NMA Fix Mobile - END -->
+        </aura:set>         
+    </aura:if> 
+      
+   <!--  <aura:set attribute="else">  -->
+        
+    <aura:if isTrue="{!v.ShowAttachmentModal}">         
+        <div class="demo-only" style="height: 640px; -webkit-overflow-scrolling:touch;">
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_shade">
+                        
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate slds-text-color_default">Allega file</h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium slds-text-align_center" id="modal-content-id-1">
+                        <lightning:input aura:id="fileId" onchange="{!c.handleFilesChange}" type="file" name="file" label="Aggiungi allegato" multiple="false"/>
+                        <div class="slds-text-body_small slds-text-color_error">{!v.fileName} </div>
+                        
+                        <!--use aura:if for show-hide the loading spinner image--> 
+                        <aura:if isTrue="{!v.showLoadingSpinner}">
+                            <div class="slds-text-body_small slds-text-color_error">Caricamento... 
+                                <img src="/auraFW/resources/aura/images/spinner.gif" class="spinner-img" alt="Loading"/>'
+                            </div>
+                        </aura:if>                        
+                        <br/>                        
+                        <br/>                        
+                        <button class="slds-button slds-button_brand" onclick="{!c.doSave}">Allega</button>
+                        <br/>
+                        <br/>
+                        <aura:if isTrue="{!v.showAttachmentList}">
+                            <!--<lightning:formattedText linkify="true" value="File allegati:" />
+                            <br/>
+                            <p>
+                                <aura:iteration var="r" items="{!v.attachmentListFileNames}" >
+                                    <lightning:formattedText linkify="true" value="{!r+'\n'}" />
+                                </aura:iteration>
+                            </p>-->
+                            <!-- SALVADOR ATTACHMENT ENHANCEMENT -->    
+                            <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                                <thead>
+                                    <tr class="slds-text-title">
+                                     <th scope="col">
+                                            <div class="slds-truncate" title="Cancel label"></div>
+                                        </th>
+                                        <th scope="col">
+                                            <div class="slds-truncate" title="Attachment name label">File</div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <aura:iteration var="r" items="{!v.attachmentListFileNames}" >
+                                        <tr>    
+                                            <td>
+                                                <lightning:button class="slds-button slds-align_absolute-center" onclick="{!c.doCancel}" value="{!r}">Cancella</lightning:button>
+                                            </td>
+                                            <td>
+                                                <div class="slds-truncate" title="Attachment name"><lightning:formattedText linkify="true" value="{!r+'\n'}" /></div>
+                                            </td>
+                                        </tr>
+                                    </aura:iteration>
+                                </tbody>
+                            </table>
+                            <!-- SALVADOR ATTACHMENT ENHANCEMENT -->
+                        </aura:if>                         
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <div class="slds-align_absolute-center">
+                            <button class="slds-button slds-button_neutral" onclick="{!c.CloseAttachmentModal}">Chiudi</button>
+                        </div>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </div>    
+    </aura:if>
+    
+    <aura:if isTrue="{!v.ShowErrorMsg}" >      
+        <div class="demo-only" style="height: 640px;">
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error">
+                        
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Attenzione !</h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1" style="white-space:pre-line;">
+                        <p>{!v.ErrorMsg}</p>                    
+                    </div>
+                    <footer class="slds-modal__footer">
+                        
+                        <div class="slds-align_absolute-center">
+                            <aura:if isTrue="{!v.BlockCreation}">
+                                <button class="slds-button slds-button_neutral" onclick="{!c.NewRequest}">Annulla</button>                                                                                            
+                                <aura:set attribute="else">
+                                    <button class="slds-button slds-button_neutral" onclick="{!c.CloseMissingInputsModal}">Ritorna alla richiesta</button>                                              
+                                </aura:set>
+                            </aura:if>
+                        </div>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </div>
+    </aura:if>
+        
+        
+      <!--   </aura:set>
+    </aura:if>-->
+    
+</aura:component>

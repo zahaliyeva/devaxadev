@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>National Mobile Phone RegEx</label>
+    <protected>false</protected>
+    <values>
+        <field>Active__c</field>
+        <value xsi:type="xsd:boolean">true</value>
+    </values>
+    <values>
+        <field>RegEx__c</field>
+        <value xsi:type="xsd:string">^(38[03890]|34[1-90]|36[123680]|33[13-90]|32[034789]|39[01237]|37[01379]|35[013])\d{6,7}$</value>
+    </values>
+</CustomMetadata>

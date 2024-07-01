@@ -1,0 +1,48 @@
+<apex:page controller="javascriptIntegrationInit" 
+    sidebar="false" 
+    showHeader="false" 
+    standardStylesheets="false"
+    cache="true"
+> 
+    <apex:includeLightning />
+
+    <div id="lightning" />
+
+    <script>
+        const params = {!parameters};
+        const counters = {!counters};
+		
+		console.log('Home Page Counters', counters);
+
+        window.parent.postMessage({
+            action: "AUTH_CONFIRM",
+            id: params.id, 
+            params: counters
+        }, '*');
+
+        const callbackComponents = {};
+
+        function bindComponent(componentName, callback){
+            callbackComponents[componentName] = callback;
+        }
+
+        function displayMessage (evt) {
+            for(let componentId in callbackComponents){
+                callbackComponents[componentId](evt.data);
+            }
+        }
+
+        if (window.addEventListener) {
+            // For standards-compliant web browsers
+            window.addEventListener("message", displayMessage, false);
+        }else {
+            window.attachEvent("onmessage", displayMessage);
+        }
+
+        $Lightning.use(`c:javascriptPageStyle`, function() {
+            if(params && params.component){
+                $Lightning.createComponent("c:" + params.component, {postMessage: bindComponent, params: params}, "lightning")
+            }
+        });
+    </script>
+</apex:page>

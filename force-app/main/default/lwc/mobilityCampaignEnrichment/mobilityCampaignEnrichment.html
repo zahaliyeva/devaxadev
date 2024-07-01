@@ -1,0 +1,255 @@
+<template>
+	<c-mobility-spinner show={spinner} show-overlay="true"></c-mobility-spinner>
+	<c-mobility-messages 
+		model={messages}
+		confirm-success-callback={closeCallbackReload}
+	></c-mobility-messages>
+
+
+	<template if:true={authorized}>
+		<div class="overload-contain overload-on-top" style="z-index: 10000;">
+			<div class="overload-contain-child">
+				<div class="overload-element">
+					<form onchange={onChange} autocomplete='off'>
+						<div class="row">
+							<div class="col-12">
+								<h1>Data Enrichment</h1>
+							</div>
+							<template if:true={fieldsDefinition}>
+								<div class="col-12">
+									<div class="row">
+										<div class="col-2"></div>
+										<div class="col-1"></div>
+										<div class="col-2"></div>
+										<div class="col-2">Propaga Omnia</div>
+										<div class="col-2">Opposizione</div>
+										<div class="col-3">Motivo Opposizione</div>
+									</div>
+									<!-- ROW 1 - Tel. Principale -->
+									<div class="row">
+										<div class="col-2">
+											Tel. Principale
+										</div>
+										<div class="col-1">
+											<div class="form-group">
+												<input type="text" class="form-control" autocomplete="off" name='CIF_Phone_IntPrefix__c' value={accountData.CIF_Phone_IntPrefix__c}>
+											</div>
+										</div>
+										<div class="col-2">
+											<div class="form-group">
+												<input type="text" class="form-control" autocomplete="off" name='CIF_Phone__c' readonly={checkPrefix.CIF_Phone_IntPrefix__c} value={accountData.CIF_Phone__c}>
+											</div>
+										</div>
+										<div class="col-2">
+											<div class="form-group">
+												<c-mobility-checkbox name='CIF_Propaga_OMNIA_Phone__c' disabled={checkContact.CIF_Phone__c} checked={accountData.CIF_Propaga_OMNIA_Phone__c} change-callback={onChange}></c-mobility-checkbox>
+											</div>
+										</div>
+										<div class="col-2">
+											<div class="form-group">
+												<c-mobility-checkbox name='Flag_Opposizione_Tel_Princ__c' disabled={checkContact.CIF_Phone__c} checked={accountData.Flag_Opposizione_Tel_Princ__c} change-callback={onChange}></c-mobility-checkbox>
+											</div>
+										</div>
+										<div class="col-3">
+											<div class="form-group">
+												<select class="form-control" name='Motivo_opposizione_Tel_Princ__c' disabled={checkMotivation.Flag_Opposizione_Tel_Princ__c}>
+													<template for:each={picklistValues.Motivo_opposizione_Tel_Princ__c} for:item='itemValue'>
+														<option key={itemValue.value} value={itemValue.value} selected={itemValue.selected}>{itemValue.label}</option>
+													</template> 
+												</select>
+											</div>
+										</div>
+									</div>
+									<!-- ROW 1 - END -->
+
+									<!-- ROW 2 - Tel. Cellulare -->
+									<div class="row">
+										<div class="col-2">
+											Tel. Cellulare
+										</div>
+										<div class="col-1">
+											<div class="form-group">
+												<input type="text" class="form-control" autocomplete="off" name='CIF_PersonMobilePhone_IntPrefix__c' readonly={checkOpenTask.CIF_PersonMobilePhone__c} value={accountData.CIF_PersonMobilePhone_IntPrefix__c}>
+											</div>
+										</div>
+										<div class="col-2">
+											<div class="form-group">
+												<input type="text" class="form-control" autocomplete="off" name='CIF_PersonMobilePhone__c' readonly={checkPrefix.CIF_PersonMobilePhone_IntPrefix__c} value={accountData.CIF_PersonMobilePhone__c}>
+											</div>
+										</div>
+										<div class="col-2">
+											<div class="form-group">
+												<c-mobility-checkbox name='CIF_Propaga_OMNIA_PersonMobilePhone__c' disabled={checkContact.CIF_PersonMobilePhone__c} checked={accountData.CIF_Propaga_OMNIA_PersonMobilePhone__c} change-callback={onChange}></c-mobility-checkbox>
+											</div>
+										</div>
+										<div class="col-2">
+											<div class="form-group">
+												<c-mobility-checkbox name='Flag_Opposizione_Tel_Cell_B2C__c' disabled={checkContact.CIF_PersonMobilePhone__c} checked={accountData.Flag_Opposizione_Tel_Cell_B2C__c} change-callback={onChange}></c-mobility-checkbox>
+											</div>
+										</div>
+										<div class="col-3">
+											<div class="form-group">
+												<select class="form-control" name='Motivo_opposizione_Tel_Cell_B2C__c' disabled={checkMotivation.Flag_Opposizione_Tel_Cell_B2C__c}>
+													<template for:each={picklistValues.Motivo_opposizione_Tel_Cell_B2C__c} for:item='itemValue'>
+														<option key={itemValue.value} value={itemValue.value} selected={itemValue.selected}>{itemValue.label}</option>
+													</template> 
+												</select>
+											</div>
+										</div>
+									</div>
+									<!-- ROW 2 - END -->
+
+									<!-- ROW 3 - Fax -->
+									<div class="row">
+										<div class="col-2">
+											Fax
+										</div>
+										<div class="col-1">
+											<div class="form-group">
+												<input type="text" class="form-control" autocomplete="off" name='Fax_IntPrefix__c' value={accountData.Fax_IntPrefix__c}>
+											</div>
+										</div>
+										<div class="col-2">
+											<div class="form-group">
+												<input type="text" class="form-control" autocomplete="off" name='Fax' readonly={checkPrefix.Fax_IntPrefix__c} value={accountData.Fax}>
+											</div>
+										</div>
+										<div class="col-2">
+											<div class="form-group">
+												<c-mobility-checkbox name='CIF_Propaga_OMNIA_Fax__c' disabled={checkContact.Fax} checked={accountData.CIF_Propaga_OMNIA_Fax__c} change-callback={onChange}></c-mobility-checkbox>
+											</div>
+										</div>
+										<div class="col-2">
+											<div class="form-group">
+												<c-mobility-checkbox name='Flag_Opposizione_Fax__c' disabled={checkContact.Fax} checked={accountData.Flag_Opposizione_Fax__c} change-callback={onChange}></c-mobility-checkbox>
+											</div>
+										</div>
+										<div class="col-3">
+											<div class="form-group">
+												<select class="form-control" name='Motivo_opposizione_Fax__c' disabled={checkMotivation.Flag_Opposizione_Fax__c}>
+													<template for:each={picklistValues.Motivo_opposizione_Fax__c} for:item='itemValue'>
+														<option key={itemValue.value} value={itemValue.value} selected={itemValue.selected}>{itemValue.label}</option>
+													</template> 
+												</select>
+											</div>
+										</div>
+									</div>
+									<!-- ROW 3 - END -->
+
+									<!-- ROW 4 - Tel. Ufficio -->
+									<div class="row">
+										<div class="col-2">
+											Tel. Ufficio
+										</div>
+										<div class="col-1">
+											<div class="form-group">
+												<input type="text" class="form-control" autocomplete="off" name='CIF_Work_phone_IntPrefix__c' value={accountData.CIF_Work_phone_IntPrefix__c}>
+											</div>
+										</div>
+										<div class="col-2">
+											<div class="form-group">
+												<input type="text" class="form-control" autocomplete="off" name='CIF_Work_phone__c' readonly={checkPrefix.CIF_Work_phone_IntPrefix__c} value={accountData.CIF_Work_phone__c}>
+											</div>
+										</div>
+										<div class="col-2">
+											<div class="form-group">
+												<c-mobility-checkbox name='CIF_Propaga_OMNIA_Work_Phone__c' disabled={checkContact.CIF_Work_phone__c} checked={accountData.CIF_Propaga_OMNIA_Work_Phone__c} change-callback={onChange}></c-mobility-checkbox>
+											</div>
+										</div>
+										<div class="col-2">
+											<div class="form-group">
+												<c-mobility-checkbox name='Flag_Opposizione_Tel_Uff__c' disabled={checkContact.CIF_Work_phone__c} checked={accountData.Flag_Opposizione_Tel_Uff__c} change-callback={onChange}></c-mobility-checkbox>
+											</div>
+										</div>
+										<div class="col-3">
+											<div class="form-group">
+												<select class="form-control" name='Motivo_opposizione_Tel_Uff__c' disabled={checkMotivation.Flag_Opposizione_Tel_Uff__c}>
+													<template for:each={picklistValues.Motivo_opposizione_Tel_Uff__c} for:item='itemValue'>
+														<option key={itemValue.value} value={itemValue.value} selected={itemValue.selected}>{itemValue.label}</option>
+													</template> 
+												</select>
+											</div>
+										</div>
+									</div>
+									<!-- ROW 4 - END -->
+
+									<!-- ROW 5 - Email -->
+									<div class="row">
+										<div class="col-2">
+											Email
+										</div>
+										<div class="col-3">
+											<div class="form-group">
+												<input type="text" class="form-control" autocomplete="off" name='CIF_PersonEmail__c' readonly={checkOpenTask.CIF_PersonEmail__c} value={accountData.CIF_PersonEmail__c}>
+											</div>
+										</div>
+										<div class="col-2">
+											<div class="form-group">
+												<c-mobility-checkbox name='CIF_Propaga_OMNIA_PersonEmail__c' disabled={checkContact.CIF_PersonEmail__c} checked={accountData.CIF_Propaga_OMNIA_PersonEmail__c} change-callback={onChange}></c-mobility-checkbox>
+											</div>
+										</div>
+										<div class="col-2">
+											<div class="form-group">
+												<c-mobility-checkbox name='Flag_Opposizione_Email_Pers_B2C__c' disabled={checkContact.CIF_PersonEmail__c} checked={accountData.Flag_Opposizione_Email_Pers_B2C__c} change-callback={onChange}></c-mobility-checkbox>
+											</div>
+										</div>
+										<div class="col-3">
+											<div class="form-group">
+												<select class="form-control" name='Motivo_opposizione_Email_Pers_B2C__c' disabled={checkMotivation.Flag_Opposizione_Email_Pers_B2C__c}>
+													<template for:each={picklistValues.Motivo_opposizione_Email_Pers_B2C__c} for:item='itemValue'>
+														<option key={itemValue.value} value={itemValue.value} selected={itemValue.selected}>{itemValue.label}</option>
+													</template> 
+												</select>
+											</div>
+										</div>
+									</div>
+									<!-- ROW 5 - END -->
+
+									<!-- ROW 6 - Email Ufficio -->
+									<div class="row">
+										<div class="col-2">
+											Email Ufficio
+										</div>
+										<div class="col-3">
+											<div class="form-group">
+												<input type="text" class="form-control" autocomplete="off" name='CIF_Work_email__c' readonly={checkOpenTask.CIF_Work_email__c} value={accountData.CIF_Work_email__c}>
+											</div>
+										</div>
+										<div class="col-2">
+											<div class="form-group">
+												<c-mobility-checkbox name='CIF_Propaga_OMNIA_Work_Email__c' disabled={checkContact.CIF_Work_email__c} checked={accountData.CIF_Propaga_OMNIA_Work_Email__c} change-callback={onChange}></c-mobility-checkbox>
+											</div>
+										</div>
+										<div class="col-2">
+											<div class="form-group">
+												<c-mobility-checkbox name='Flag_Opposizione_Email_Uff__c' disabled={checkContact.CIF_Work_email__c} checked={accountData.Flag_Opposizione_Email_Uff__c} change-callback={onChange}></c-mobility-checkbox>
+											</div>
+										</div>
+										<div class="col-3">
+											<div class="form-group">
+												<select class="form-control" name='Motivo_opposizione_Email_Uff__c' disabled={checkMotivation.Flag_Opposizione_Email_Uff__c}>
+													<template for:each={picklistValues.Motivo_opposizione_Email_Uff__c} for:item='itemValue'>
+														<option key={itemValue.value} value={itemValue.value} selected={itemValue.selected}>{itemValue.label}</option>
+													</template> 
+												</select>
+											</div>
+										</div>
+									</div>
+									<!-- ROW 6 - END -->
+								</div>
+							</template>
+							<div class="col-12 text-right">
+								<div class="btn" onclick={onClose}>{_label.task_cancel}</div>
+								<div class="btn btn-primary" onclick={onSave}>{_label.task_saveEdit}</div>
+							</div>
+						</div>
+					</form>
+
+				</div>
+			</div>
+		</div>
+	</template>
+	<template if:false={authorized}>
+		<c-mobility-unauthorized></c-mobility-unauthorized>
+	</template>
+</template>

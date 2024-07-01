@@ -1,0 +1,57 @@
+<aura:component controller="MobilityAssociatesPropostaController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name="opportunityInfo" type="Opportunity"/> 
+    <aura:attribute name="ErrorMsg" type="String" default=""/> 
+    <aura:attribute name="showError" type="Boolean" default="false"/>
+    <aura:attribute name="showTable" type="Boolean" default="false"/>
+    <aura:attribute name="displaySuccess" type="Boolean" default="false"/>
+    <aura:attribute name="ProposteList" type="Object[]" /> 
+    <aura:attribute name="PropostaCreated" type="Object" /> 
+    <aura:attribute name="selectedRowsCodiceProposta" type="String" /> 
+    <aura:attribute name="selectedRowsCount" type="Integer" default="0"/>
+    <aura:attribute name="maxRowSelection" type="Integer" default="1"/>
+    <aura:attribute name="columns" type="List"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <div  class="slds-m-top_large">
+    <aura:if isTrue="{!v.showError}">
+        <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error" role="alert">
+            <h3>{!v.ErrorMsg}</h3>
+        </div>     
+    </aura:if>
+    <aura:if isTrue="{!v.showTable}">
+        
+        <!-- the container element determine the height of the datatable -->
+        <div>
+            
+            <lightning:datatable
+                                 aura:id="PropostaTable"
+                                 columns="{! v.columns }"
+                                 data="{! v.ProposteList }"
+                                 keyField="id"
+                                 maxRowSelection="{! v.maxRowSelection }"
+                                 onrowselection="{! c.getSelectedRow }"/>
+        </div>
+        
+        <center class="slds-m-top_large">  
+            <lightning:button  class="slds-m-right_large"  variant="brand" label="Conferma" title="Conferma" onclick="{! c.goToConfirm }"/>  
+           <lightning:button   class="slds-m-right_large" variant="brand" name="Annulla" iconPosition="right" label="Annulla" title="Annulla" onclick="{! c.goToOpportunity }"/>
+
+        </center> 
+        
+        
+    </aura:if>
+    
+    <aura:if isTrue="{!v.displaySuccess}">
+        <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_success" role="alert">
+            <h3>Operazione riuscita: Proposta associata con successo</h3>
+        </div>
+        
+        
+        <center  class="slds-m-top_large"> 
+            <lightning:button class="slds-m-right_large" variant="brand" label="Vai a proposta" title="Proposta" onclick="{! c.goToProposta }"/>  
+            <lightning:button  class="slds-m-right_large"  variant="brand" label="Vai a opportunità" title="Opportunità" onclick="{! c.goToOpportunity }"/>  
+        </center> 
+    </aura:if> 
+        </div>
+</aura:component>

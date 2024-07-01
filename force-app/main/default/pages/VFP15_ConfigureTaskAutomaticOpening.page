@@ -1,0 +1,135 @@
+<!--
+**********************************************************************************************
+----------------------------------------------------------------------------------------------
+-- - Name          : VFP15_ConfigureTaskAutomaticOpening
+-- - Author        : Marco Moscatelli
+-- - Description   : Custom Page used to configure rules to trigger the automatic opening of 
+--                   new tasks to Technical Office users when a new Case, having proper 
+--                   characteristics, is created
+--
+-- Maintenance History:
+--
+-- Date          Version  Remarks
+-- -----------  -------  ---------------------------------------------------------------------
+-- 01-09-2016   1.0     
+----------------------------------------------------------------------------------------------
+**********************************************************************************************
+-->
+
+<apex:page standardController="Apertura_automatica_Task__c" tabStyle="Apertura_automatica_Task__c" extensions="VFC15_ConfigureTaskAutomaticOpening" showHeader="true" sidebar="true">    
+    <div class="bPageTitle">
+        <div class="ptBody">
+            <div class="content">
+                <img src="/img/icon/custom51_100/gears32.png" alt="Apertura automatica Task" class="pageTitleIcon" title="Apertura automatica Task"/>
+                <h1 class="pageType">{!$Label.VFP15_Title}<span class="titleSeparatingColon">:</span></h1>                    
+                <h2 class="pageDescription"> {!$Label.VFP15_Sub_Title} </h2>
+                <div class="blank">&nbsp;</div>
+            </div>
+        </div>
+    </div>   
+    <apex:form >        
+        <apex:outputPanel id="MessagePanel">
+            <apex:pageMessages />
+            <div align="center">
+                <apex:commandButton action="{!cancel}" value="{!$Label.Cancel}" immediate="true" rendered="{!ShowConfirmation}"/>                
+            </div>            
+        </apex:outputPanel>        
+        <apex:outputPanel id="RuleCreation">        
+            <apex:pageBlock title="{!$Label.VFP15_Title}" rendered="{!!ShowConfirmation}">                 
+                <apex:pageBlockButtons location="top" >
+                    <apex:outputPanel id="buttonpanel">                        
+                        <div align="left" draggable="false" >
+                            <apex:commandButton action="{!cancel}" value="{!$Label.Cancel}" immediate="true"/>                            
+                            <apex:commandButton action="{!CreateAutomaticTaskRule}" value="{!IF(ShowEditFields,$Label.Update_Rule,$Label.CreateRule)}" reRender="RuleCreation,MessagePanel" disabled="{!!EnableButton}"/>
+                        </div>    
+                    </apex:outputPanel>                                                                                                                                                        
+                </apex:pageBlockButtons>                   
+                <apex:pageBlockSection columns="2" title="{!$Label.VFP15_CaseTypologySection}">
+                    <apex:inputField value="{!InvolvedCase.Case_Record_Type__c}">
+                        <apex:actionSupport event="onchange" action="{!ResetValues}" reRender="CaseTypSection,TechnicalOfficeRuleSection,EmployeeSelectionSection,buttonpanel" />
+                    </apex:inputField>    
+                    <apex:inputField value="{!InvolvedCase.Distribution_Network__c}">
+                        <apex:actionSupport event="onchange" action="{!CheckAllInputs}" reRender="TechnicalOfficeRuleSection,MessagePanel,EmployeeSelectionSection,buttonpanel"/>
+                    </apex:inputField>                       
+                </apex:pageBlockSection>                
+                <apex:outputPanel id="CaseTypSection">
+                    <apex:pageBlockSection columns="2">
+                        <apex:inputField value="{!ExampleCase.LOB__c}">
+                            <apex:actionSupport event="onchange" action="{!CheckAllInputs}" reRender="TechnicalOfficeRuleSection,MessagePanel,EmployeeSelectionSection,buttonpanel"/>
+                         </apex:inputField>
+                        <apex:inputField value="{!ExampleCase.Category__c}">
+                            <apex:actionSupport event="onchange" action="{!CheckAllInputs}" reRender="TechnicalOfficeRuleSection,MessagePanel,EmployeeSelectionSection,buttonpanel"/>
+                        </apex:inputField>                                            
+                    </apex:pageBlockSection>
+                    <apex:pageBlockSection columns="2">
+                        <apex:inputField value="{!ExampleCase.SubCategory__c}">
+                            <apex:actionSupport event="onchange" action="{!CheckAllInputs}" reRender="TechnicalOfficeRuleSection,MessagePanel,EmployeeSelectionSection,buttonpanel"/>
+                        </apex:inputField>  
+                        <apex:inputField value="{!InvolvedCase.Case_Origin__c}">
+                            <apex:actionSupport event="onchange" action="{!CheckAllInputs}" reRender="TechnicalOfficeRuleSection,MessagePanel,EmployeeSelectionSection,buttonpanel"/>
+                        </apex:inputField>                                               
+                    </apex:pageBlockSection>
+                    <apex:pageBlockSection columns="1">
+                    <apex:inputField value="{!InvolvedCase.Rule_Active__c}" rendered="{!ShowEditFields}"/>
+                    </apex:pageBlockSection>
+                </apex:outputPanel>
+                <div></div>                
+                <apex:outputPanel id="TechnicalOfficeRuleSection">
+                    <apex:pageBlockSection id="TechnicalOfficeSelection" rendered="{!ShowTaskConfigSection}" title="{!$Label.VFP15_AutomaticTaskSection}" columns="2">                        
+                        
+
+
+                        <!--MOSCATELLI_M 07/06/2018: Inoltro Task Interni --START-->
+                        <apex:selectList size="1" label="{!$Label.VFP01_2ndSupportType}" multiselect="false" value="{!IsInternalTask}">
+                            <apex:actionSupport event="onchange" action="{!changeDisplayedField}"  rerender="TechnicalOfficeSelection,EmployeeSelectionSection,buttonpanel"/>                                     
+                            <apex:selectOptions value="{!TaskType}"/>
+                        </apex:selectList>
+                        <!--MOSCATELLI_M 07/06/2018: Inoltro Task Interni --END-->
+
+
+
+
+
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel value="{!$ObjectType.User.fields.HierarchyLevel1__c.label}" for="Hierarchy1"/>                
+                            <apex:actionRegion >
+                                <apex:selectList size="1" value="{!TechnicalOfficeUser.HierarchyLevel1__c}" id="Hierarchy1" rendered="{!!Hierarchy1Selected}">
+                                    <apex:actionSupport event="onchange" action="{!setflag}"  rerender="TechnicalOfficeSelection"/>
+                                    <apex:selectOptions value="{!ListHierarchyLevel}"/>
+                                </apex:selectList>                                  
+                                <apex:inputfield value="{!TechnicalOfficeUser.HierarchyLevel1__c}" rendered="{!Hierarchy1Selected}" id="Hierarchy1_1">                
+                                    <apex:actionSupport event="onclick" action="{!changeDisplayedField}" rerender="TechnicalOfficeSelection,EmployeeSelectionSection,buttonpanel"/>
+                                </apex:inputfield>                                                
+                            </apex:actionRegion>
+                        </apex:pageBlockSectionItem>                        
+                        <apex:inputField value="{!TechnicalOfficeUser.HierarchyLevel2__c}" rendered="{!Hierarchy1Selected}">
+                            <apex:actionSupport event="onchange" action="{!ResetUserList}" reRender="TechnicalOfficeSelection,EmployeeSelectionSection,buttonpanel"/>                            
+                        </apex:inputField>
+                        <apex:inputField value="{!TechnicalOfficeUser.HierarchyLevel3__c}" rendered="{!Hierarchy1Selected}">
+                            <apex:actionSupport event="onchange" action="{!GetListOfEmployees}" reRender="EmployeeSelectionSection,MessagePanel,buttonpanel"/>
+                        </apex:inputField>                        
+                        <apex:inputField value="{!InvolvedCase.Task_Subject__c}" rendered="{!Hierarchy1Selected}" />                                                
+                    </apex:pageBlockSection>   
+                </apex:outputPanel>
+                <div></div>
+                <apex:outputPanel id="EmployeeSelectionSection" >
+                    <apex:pageBlockSection id="EmpSectItem" title="{!$Label.VFP15_UserSelectionSection}" rendered="{!AND(listEmp.size > 0,Hierarchy1Selected)}" columns="1">                       
+                        <apex:pageBlockSectionItem >
+                            <apex:pageBlockTable value="{!listEmp}" var="employee">
+                                <apex:column >
+                                    <apex:inputCheckbox value="{!employee.selected}">
+                                        <apex:actionSupport event="onclick" reRender="buttonpanel" action="{!CheckSelected}">                                            
+                                        </apex:actionSupport>
+                                    </apex:inputCheckbox>                                        
+                                </apex:column>                       
+                                <apex:column value="{!employee.emp.name}"/>
+                                <apex:column value="{!employee.emp.Phone}"/>
+                                <apex:column value="{!employee.emp.Email}"/>                        
+                            </apex:pageBlockTable>
+                        </apex:pageBlockSectionItem>                                                
+                    </apex:pageBlockSection>
+                </apex:outputPanel>                
+            </apex:pageBlock>
+        </apex:outputPanel>
+    </apex:form>           
+</apex:page>

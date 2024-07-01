@@ -1,0 +1,549 @@
+<aura:component>
+    <aura:attribute name="wrapper" type="Object" />
+
+    <div class="slds-p-around_small">
+        
+        <div class="title">
+            <strong>Dati personali</strong>
+        </div>    
+        <!-- B2C Client  -->
+        <aura:if isTrue="{!and (v.wrapper.isAAI, v.wrapper.isPerson)}">
+            <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_x-small">               
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Cognome</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.LastName}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Nome</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.FirstName}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Professione</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.CIF_Job__c}</div>
+                        </div>
+                    </div>
+                </div>                 
+            </div>
+
+            <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_x-small">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Data di Nascita</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static"><ui:outputDate value="{!v.wrapper.account.PersonBirthdate}" format="DD/MM/YYYY"/></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Luogo di Nascita</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Place_of_birth__c}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Provincia di nascita</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Provincia_di_nascita__c}</div>
+                        </div>
+                    </div>
+                </div>  
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Sesso</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Gender__c}</div>
+                        </div>
+                    </div>
+                </div>                              
+            </div>     
+
+            <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_x-small">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Codice Fiscale</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Codice_fiscale_ListView__c}</div>
+                        </div>
+                    </div>
+                </div>                
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Età</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Age__c}</div>
+                        </div>
+                    </div>
+                </div>                 
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Stato Civile</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.CIF_Marital_Status__c}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Titolo di studio</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Cdesc_Titolo_Studio__c}</div>
+                        </div>
+                    </div>
+                </div> 
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Cittadinanza</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Ccittadinanza__c}</div>
+                        </div>
+                    </div>
+                </div>                
+            </div>   
+            
+            <div class="title slds-m-top_xx-large">
+                <strong>Dati Accesso Area Clienti</strong>
+            </div>     
+            <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_x-small">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12">
+                    <div dir="rtl">
+                        <div class="slds-form-element slds-float_left">
+                        <label class="slds-checkbox_toggle slds-grid">
+                          <span class="slds-form-element__label slds-m-bottom_none">Registrazione Area Clienti</span>
+                          <lightning:input type="toggle"
+                            aura:id="registrazioneAreaClienti"
+                            label=""
+                            name="registrazioneAreaClienti"
+                            checked="{!v.wrapper.account.Flag_registrazione_area_privata__c}"
+                            messageToggleActive=""
+                            messageToggleInactive=""
+                            disabled="true"/>
+                        </label>
+                    </div> 
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Ultimo accesso Area Clienti</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Last_Private_Area_Access__c}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Mail Registrazioni Area Clienti</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Mail_Registrazione_Area_Clienti__c}</div>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+            
+            <div class="slds-grid slds-gutters slds-m-bottom_x-small">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Accessi ultimi 30gg</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.customerPrivateAreaAccessCounter}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="title slds-m-top_xx-large">
+                <strong>Note</strong>
+            </div>      
+            <div class="slds-grid slds-gutters slds-wrap">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Note</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Notes__c}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>                   
+                              
+        </aura:if>
+
+        <!-- B2B Client  -->
+        <aura:if isTrue="{!and (v.wrapper.isAAI, !v.wrapper.isPerson)}">
+            <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_x-small">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Partita IVA</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.AAI_Partita_IVA__c}</div>
+                        </div>
+                    </div>
+                </div>     
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Forma Societaria</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Cdesc_Forma_Societaria__c}</div>
+                        </div>
+                    </div>
+                </div> 
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Settore Attività</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Cdesc_Settore_Attivita__c}</div>
+                        </div>
+                    </div>
+                </div>  
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Codice Ateco</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Cdesc_Codice_Ateco__c}</div>
+                        </div>
+                    </div>
+                </div>  
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Dipendenti</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Cdesc_Dipendenti__c}</div>
+                        </div>
+                    </div>
+                </div>  
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Fatturato</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Cdesc_Fatturato__c}</div>
+                        </div>
+                    </div>
+                </div>             
+            </div>
+
+            <div class="title slds-m-top_xx-large">
+                <strong>Dati Accesso Area Clienti</strong>
+            </div>     
+            <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_x-small">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12">
+                    <div class="slds-form-element slds-form-element-align-center">
+                        <label class="slds-checkbox_toggle slds-grid">
+                          <span class="slds-form-element__label slds-m-bottom_none">Registrazione Area Clienti</span>
+                          <lightning:input type="toggle"
+                            aura:id="registrazioneAreaClienti"
+                            label=""
+                            name="registrazioneAreaClienti"
+                            checked="{!v.wrapper.account.Flag_registrazione_area_privata__c}"
+                            messageToggleActive=""
+                            messageToggleInactive=""
+                            disabled="true"/>
+                        </label>
+                    </div> 
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Ultimo accesso Area Clienti</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Last_Private_Area_Access__c}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Mail Registrazioni Area Clienti</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Mail_Registrazione_Area_Clienti__c}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>  
+            <div class="slds-grid slds-gutters slds-m-bottom_x-small">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Accessi ultimi 30gg</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.customerPrivateAreaAccessCounter}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>  
+            <div class="title slds-m-top_xx-large">
+                <strong>Note</strong>
+            </div>      
+            <div class="slds-grid slds-gutters slds-wrap">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Note</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Notes__c}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>                
+                        
+        </aura:if>
+
+        <!-- Individual  -->
+        <aura:if isTrue="{!and (!v.wrapper.isAAI, v.wrapper.isPerson)}">
+            <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_x-small">               
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Cognome</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.LastName}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Nome</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.FirstName}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Professione</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.CIF_Job__c}</div>
+                        </div>
+                    </div>
+                </div>                 
+            </div>
+
+            <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_x-small">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Sesso</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Gender__c}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Data di Nascita</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.PersonBirthdate}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Luogo di Nascita</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Place_of_birth__c}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Provincia di nascita</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Provincia_di_nascita__c}</div>
+                        </div>
+                    </div>
+                </div>                             
+            </div>     
+
+            <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_x-small">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Codice Fiscale</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Codice_fiscale_ListView__c}</div>
+                        </div>
+                    </div>
+                </div>    
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Età</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Age__c}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Stato Civile</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.CIF_Marital_Status__c}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Titolo di studio</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Cdesc_Titolo_Studio__c}</div>
+                        </div>
+                    </div>
+                </div>            
+            </div> 
+            
+            <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_x-small">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Cittadinanza</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Ccittadinanza__c}</div>
+                        </div>
+                    </div>
+                </div>            
+            </div>   
+            
+            <div class="title slds-m-top_xx-large">
+                <strong>Dati Accesso Area Clienti</strong>
+            </div>     
+            <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_x-small">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12">
+                    <div class="slds-form-element slds-form-element-align-center">
+                        <label class="slds-checkbox_toggle slds-grid">
+                          <span class="slds-form-element__label slds-m-bottom_none">Cliente registrato sul PCC</span>
+                          <lightning:input type="toggle"
+                            aura:id="registrazionePCC"
+                            label=""
+                            name="registrazionePCC"
+                            checked="{!v.wrapper.account.Flag_registrazione_area_privata__c}"
+                            messageToggleActive=""
+                            messageToggleInactive=""
+                            disabled="true"/>
+                        </label>
+                    </div> 
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Accessi ultimi 30gg</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.customerPrivateAreaAccessCounter}</div>
+                        </div>
+                    </div>
+                </div>                
+            </div>   
+            <div class="title slds-m-top_xx-large">
+                <strong>Note</strong>
+            </div>      
+            <div class="slds-grid slds-gutters slds-wrap">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Note</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Notes__c}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>                     
+        </aura:if>
+
+        <!-- Corporate  -->
+        <aura:if isTrue="{!and (!v.wrapper.isAAI, !v.wrapper.isPerson)}"> 
+            <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_x-small">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Partita IVA</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Partita_IVA__c}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Forma Societaria</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Cdesc_Forma_Societaria__c}</div>
+                        </div>
+                    </div>
+                </div> 
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Settore Attività</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Cdesc_Settore_Attivita__c}</div>
+                        </div>
+                    </div>
+                </div>  
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Codice Ateco</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Cdesc_Codice_Ateco__c}</div>
+                        </div>
+                    </div>
+                </div>  
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Dipendenti</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Cdesc_Dipendenti__c}</div>
+                        </div>
+                    </div>
+                </div>  
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Fatturato</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Cdesc_Fatturato__c}</div>
+                        </div>
+                    </div>
+                </div>                     
+            </div>   
+            
+            <div class="title slds-m-top_xx-large">
+                <strong>Dati Accesso Area Clienti</strong>
+            </div>     
+            <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_x-small">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12">
+                    <div class="slds-form-element slds-form-element-align-center">
+                        <label class="slds-checkbox_toggle slds-grid">
+                          <span class="slds-form-element__label slds-m-bottom_none">Cliente registrato sul PCC</span>
+                          <lightning:input type="toggle"
+                            aura:id="registrazionePCC"
+                            label=""
+                            name="registrazionePCC"
+                            checked="{!v.wrapper.account.Flag_registrazione_area_privata__c}"
+                            messageToggleActive=""
+                            messageToggleInactive=""
+                            disabled="true"/>
+                        </label>
+                    </div> 
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Accessi ultimi 30gg</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.customerPrivateAreaAccessCounter}</div>
+                        </div>
+                    </div>
+                </div>                
+            </div>
+            <div class="title slds-m-top_xx-large">
+                <strong>Note</strong>
+            </div>      
+            <div class="slds-grid slds-gutters slds-wrap">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Note</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Notes__c}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>                  
+        </aura:if>
+    </div>
+
+
+
+
+</aura:component>

@@ -1,0 +1,49 @@
+<apex:component controller="QAdVEmailTemplateController" access="global">
+<apex:attribute type="id" name="mycaseId" description="" assignTo="{!caseId}"/>
+<style type="text/css">
+    .table { font-family: sans-serif ; font-weight: normal ; font-size: medium}
+</style>
+<apex:slds />
+<div class = "a slds-scope" style = "font-family: 'ITCFranklinGothicCondensedBook', sans-serif; color:#0e2e86; font-size:14px; margin-left:30px; margin-right:30px">
+<apex:outputText value="Gentile {!DocumentAccountRichiedente.FirstName__c} {!DocumentAccountRichiedente.SurnameCompanyName__c},"></apex:outputText><br/><br/>
+<apex:outputText value="ti informiamo che per poter dare seguito alla richiesta di {!ThisCase.Tipo_Operazione__c} per la polizza n. {!ThisCase.NumeroPolizza__c}{!ThisCase.NumeroPolizzaFiglia__c}, abbiamo bisogno dei seguenti documenti per tutti i soggetti coinvolti."></apex:outputText>
+<br/><br/> 
+<apex:repeat value="{!DocumentAccounts}" var="da" id="daLoop">
+    <apex:outputText style="font-weight:bold" value="{!da.FirstName__c} {!da.SurnameCompanyName__c}"></apex:outputText>
+    <br/><br/>
+    <table style = "font-family: 'ITCFranklinGothicCondensedBook', sans-serif;  font-size:14px; border-collapse: collapse" value="{!da.Document_Checklist_Items__r}" var="dc_item">
+         <tr>
+            <th style = "border: 1px solid #dddddd; text-align: left; padding: 8px;">Tipo Documento</th>
+            <th style = "border: 1px solid #dddddd; text-align: left; padding: 8px;">Stato Documento</th>
+            <th style = "border: 1px solid #dddddd; text-align: left; padding: 8px;">Commento</th>
+        </tr>
+        <apex:repeat value="{!da.Document_Checklist_Items__r}" var="dc" id="dcLoop">
+            <tr> 
+                <td style = "border: 1px solid #dddddd; text-align: left; padding: 8px;"><apex:outputText value="{!dc.Document_Type__c}"></apex:outputText></td>
+                    <td style = "border: 1px solid #dddddd; text-align: left; padding: 8px;"><apex:outputText value="{!dc.SelfStatus__c}"></apex:outputText></td>
+                        <td style = "border: 1px solid #dddddd; text-align: left; padding: 8px;"><apex:outputText value="{!dc.RejectComment__c}"></apex:outputText></td>
+            </tr>
+        </apex:repeat>
+    </table>
+    <br/>
+    <apex:outputText value="La documentazione può essere caricata accedendo al link sottostante."></apex:outputText>
+    <br/><br/>
+    <apex:outputLink value="{!da.Digital_Link__c}" id="theLink">Link</apex:outputLink>
+    <br/><br/><br/><br/>
+</apex:repeat>
+<apex:outputText value="Ti ricordiamo che l’utenza da utilizzare per l’accesso al link è {!ThisCase.SuppliedEmail}"></apex:outputText>
+<br/><br/>
+<apex:outputText value="Precisiamo che la normativa in materia di antiriciclaggio e contrasto al terrorismo (in particolare il D. Lgs. 231/07 e il Reg.IVASS 44/2019), richiede la costante ed attenta valutazione delle operazioni eseguite nell’ambito dei rapporti finanziari, quali quelli assicurativi, mediante informazioni sempre aggiornate fornite direttamente dal cliente. Informiamo che qualora la valutazione non sia possibile per assenza di tali informazioni, la suddetta normativa stabilisce l’impossibilità di instaurare nuovi rapporti assicurativi, eseguire le operazioni richieste, effettuare modifiche contrattuali, accettare i versamenti aggiuntivi non contrattualmente obbligatori nonché dare seguito alla designazione di nuovi beneficiari."></apex:outputText>
+<br/><br/>
+<apex:outputText value="La presente comunicazione viene trasmessa da AXA ITALIA Servizi S.c.p.A. per conto delle Imprese del Gruppo AXA ITALIA in base al dato di contatto fornito, nel rispetto della normativa vigente in materia di protezione dei dati personali, per la sola finalità di gestione del servizio da te richiesto. 
+Per esercitare i tuoi diritti (accedere, aggiornare, integrare, rettificare, cancellare i dati, chiederne il blocco, opporti al trattamento e, per il processo di decisione automatizzata, ottenere l’intervento umano da parte del titolare del trattamento, esprimere la tua opinione e contestare la decisione, ottenere la limitazione al trattamento e chiedere la portabilità dei dati) puoi scrivere a: privacy@axa.it. Infine, puoi proporre reclamo al Garante per la protezione dei dati personali."></apex:outputText>
+<br/><br/>
+<apex:outputText value="Se sei un cliente AXA Assicurazioni S.p.A. consulta l'Informativa privacy completa qui: https://www.axa.it/privacy"></apex:outputText>
+<br/><br/>
+<apex:outputText value="Se sei un cliente AXA MPS Assicurazioni Vita S.p.A. o AXA MPS Assicurazioni Danni S.p.A. consulta le Informative privacy complete qui: https://www.axa-mps.it/privacy"></apex:outputText>
+<br/><br/>
+<apex:outputText value="Team Liquidazioni Gruppo AXA"></apex:outputText>
+<br/><br/>
+<apex:outputText value="La presente email è stata generata automaticamente da un indirizzo di posta elettronica di solo invio, si chiede pertanto di non rispondere al messaggio."></apex:outputText>
+</div>
+</apex:component>

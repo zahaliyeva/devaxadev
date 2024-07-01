@@ -1,0 +1,13 @@
+<aura:component controller="MobilityCaseListController" implements="forceCommunity:availableForAllPageTypes" access="global">
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+	<aura:attribute name="show" type="Boolean" />
+	<aura:attribute name="UserMainNode" type="String" />
+	<aura:attribute name="ProfileName" type="String" />
+	
+	<aura:if isTrue="{!v.show}">
+		<c:ModelloAssistenza UserMainNode="{!v.UserMainNode}" ProfileName="{!v.ProfileName}" isMobility="true"/>
+		<!-- {!v.UserMainNode} -->
+		<!-- {!v.ProfileName} -->
+	</aura:if>
+	
+</aura:component>

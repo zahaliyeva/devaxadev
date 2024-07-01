@@ -1,0 +1,24 @@
+.link-button {
+    height: 1.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.link-button > span {
+    color: inherit;
+    font-family: 'Source Sans Pro', Helvetica;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 12px;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    padding-top: 0.1em;
+}
+
+.link-button--primary {
+    color: var(--uiaxa-blue, var(--primary, #00008F)) !important;
+}
+
+.link-button--secondary {
+    color: var(--ui-burnt-sienna, var(--secondary, #F07662)) !important;
+}

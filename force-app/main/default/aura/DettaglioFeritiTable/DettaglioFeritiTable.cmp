@@ -1,0 +1,29 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction,lightning:actionOverride" access="global" >
+	<!--Parent Lightning Compomemt-->
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/> 
+    
+ <!--Event handler for Add and Delete Row Event which is fire from Child Component-->    
+    <aura:handler name="DeleteRowEvt" event="c:deleteRowEvt" action="{!c.removeDeletedRow}"/>
+    <aura:handler name="AddRowEvt" event="c:AddNewRowEvt" action="{!c.addNewRow}"/>
+    
+<!--Aura Attribute for store Feriti Object List as Array-->    
+<aura:attribute name="testimoniFeritiList" type="Testimone_Ferito__c[]"/> 
+<aura:attribute name="RecordType" type="String"/>
+<!--Table Part-->          
+<table class="slds-table slds-table_bordered slds-table_cell-buffer">
+    
+       <tbody>
+          <!--Iterate the child Component for display Table rows
+              with pass the List Item Index for track the Every child Component
+              and pass each List Feriti Instance -->        
+           <aura:iteration items="{!v.testimoniFeritiList}" var="item" indexVar="index">
+               <c:DettaglioFeritiRowItem TestimoniFeritiInstance="{!item}" rowIndex="{!index}" />
+           </aura:iteration>
+       </tbody>
+  
+    </table>
+   <br/>
+   <!--Save Button which is call Save js function on click -->
+   <button class="slds-button slds-button_brand" onclick="{!c.Save}">Salva dati</button>
+</aura:component>

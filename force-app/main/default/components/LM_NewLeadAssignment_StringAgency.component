@@ -1,0 +1,8 @@
+<apex:component controller="LM_Email_CTRL" access="global" >
+    <apex:attribute name="LeadId" type="Id" description="Id of the lead" assignTo="{!relatedToLeadId}"/>
+
+ {!AgencyString} 
+
+
+
+</apex:component>

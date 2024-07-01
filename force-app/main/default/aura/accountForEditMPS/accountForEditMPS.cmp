@@ -1,0 +1,40 @@
+<aura:component implements="flexipage:availableForAllPageTypes" access="global" controller="AccountForEditMPSApexController" >
+<aura:attribute name="recordId" type="String" />
+<aura:attribute name="FirstName" type="String" />
+<aura:attribute name="Name" type="String" />
+<aura:attribute name="LastName" type="String" />
+<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+<lightning:spinner aura:id="mySpinner" class="slds-hide" style="slds-spinner"/>
+
+ <!-- /****/ -->
+    <!-- PAGE HEADER -->
+
+<div class="slds-page-header" role="banner" >
+    <div class="slds-grid">
+        <div class="slds-col">
+            <p class="slds-text-heading_label">Modifica cliente</p>
+            <h1 class="slds-text-heading_medium">
+                {!v.Name} </h1>
+        </div>
+    </div>
+</div>
+
+
+<div id="container_recapiti" class="slds-col_padded  slds-p-bottom_x-small slds-m-top_small  slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1 slds-grid_align-center">
+    <h3 class="slds-section-title_divider"> Smart Center Contacts </h3> 
+</div>
+
+    <lightning:recordEditForm aura:id="recordEditForm" recordId="{!v.recordId}"
+                           objectApiName="Account" onsuccess="{!c.handleSuccess}" onsubmit="{!c.handleSubmit}">
+        <lightning:messages />
+        <lightning:inputField fieldName="Additional_Phone__c" />
+        <lightning:inputField fieldName="Additional_Email__c" />
+        <lightning:inputField fieldName="Additional_Comments__c" />
+        
+        <lightning:button class="slds-m-top_small slds-button slds-button-brand " type="submit" name="update" label="Salva"  />
+        <lightning:button label="Annulla"
+                                   class="slds-m-top_small slds-button slds-button-brand "
+                                   onclick="{!c.gotoURL}"/>
+    </lightning:recordEditForm>
+
+</aura:component>

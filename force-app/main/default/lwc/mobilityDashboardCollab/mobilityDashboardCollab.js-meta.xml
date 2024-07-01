@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>58.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>Navigate To Dashboard</masterLabel>
+    <targets>
+        <target>analytics__Dashboard</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="analytics__Dashboard">
+           
+            <property name="iddash" type="String" label="Id Dashboard" description="Dashboard da aprire" />
+            <property name="label" type="String" label="Label" description="Label da visualizzare" />
+            <property name="componentName" type="String" label="Nome Componente" description="Nome Componente da aprire"/>
+            <property name="altezza" type="String" label="Altezza pulsante" description="Altezza del pulsante" />
+            <property name="larghezza" type="String" label="Larghezza del pulsante" description="Larghezza del pulsante" />
+            <property name="colorepuls" type="String" label="Colore pulsante" description="Colore del pulsante" />
+            <property name="colorelab" type="String" label="Colore label" description="Colore label" />
+            <property name="font" type="String" label="Font" description="Font del testo" />
+            <property name="fontdim" type="String" label="Dimensione Font" description="Dimensione Font del testo" />
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

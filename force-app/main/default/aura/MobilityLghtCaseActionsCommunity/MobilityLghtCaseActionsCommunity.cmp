@@ -1,0 +1,39 @@
+<aura:component controller="MobLghtActionsCommunityController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:hasRecordId" access="global">
+<aura:attribute name="recordId" type="String" />
+<aura:attribute name="caseObj" type="Object" />
+
+<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+<aura:if isTrue="{!$Browser.isTablet}">
+<article>
+    <div class="slds-align_absolute-center">
+
+        <aura:if isTrue="{!v.caseObj.RecordType.DeveloperName == 'Axa_Assicurazioni'}">
+            <!-- CHIUDI CASE-->
+            <a class="slds-button slds-button_neutral" href="{!$Label.c.NFE_ChiudiCase_Fallback + v.recordId}" target="_self" style="text-decoration:none;">Chiudi Case</a> 
+            <!-- CHIUDI CASE-->
+        </aura:if>
+        <aura:if isTrue="{!v.caseObj.RecordType.DeveloperName == 'Axa_Assicurazioni' || v.caseObj.RecordType.DeveloperName == 'Close_the_loop' }">
+            <a class="slds-button slds-button_neutral" href="{!$Label.c.NFE_PrendiInCaricoPath_Fallback + v.recordId}" target="_self" style="text-decoration:none;">Prendi in carico</a> 
+         
+            <a class="slds-button slds-button_neutral" href="{!$Label.c.NFE_ChiudiCasePath_Fallback + v.recordId}" target="_self" style="text-decoration:none;">Inserisci Commento</a> 
+
+        </aura:if>
+        <aura:if isTrue="{!v.caseObj.RecordType.DeveloperName == 'Assistenza_Agenti'}">
+                
+                <a class="slds-button slds-button_neutral" href="{!$Label.c.NFE_AccettaSoluzionePath_Fallback + v.recordId}" target="_self" style="text-decoration:none;">Accetta Soluzione</a> 
+         
+                <a class="slds-button slds-button_neutral" href="{!$Label.c.NFE_RifiutaSoluzionePath_Fallback + v.recordId}" target="_self" style="text-decoration:none;">Rifiuta Soluzione</a> 
+          
+                <a class="slds-button slds-button_neutral" href="{!$Label.c.NFE_AnnullaRichiestaPath_Fallback + v.recordId}" target="_self" style="text-decoration:none;">Annulla Richiesta</a> 
+                <a class="slds-button slds-button_neutral" href="{!$Label.c.NFE_InserisciCommentoPath_Fallback + v.recordId}" target="_self" style="text-decoration:none;">Inserisci Commento/allegato</a> 
+         
+        </aura:if>
+        <!-- PRINTABLE VIEW -->
+        <a class="slds-button slds-button_neutral" href="{!$Label.c.NFE_PrintableView_Fallback + v.recordId}" target="_self" style="text-decoration:none;">Stampa</a> 
+        <!-- PRINTABLE VIEW -->
+    </div>
+
+</article>
+</aura:if>
+
+</aura:component>

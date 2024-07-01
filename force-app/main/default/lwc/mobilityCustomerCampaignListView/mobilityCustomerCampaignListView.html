@@ -1,0 +1,40 @@
+<template>
+	<c-mobility-spinner show={spinner} show-overlay={spinnerOverlay}></c-mobility-spinner>
+	<c-mobility-messages model={messages}></c-mobility-messages>
+
+	<template if:true={authorized}>
+
+		<div class="row">
+			<div class="col-12">
+				<c-mobility-breadcrumb params={params} redirect-params={redirectParams} current={componentView}></c-mobility-breadcrumb>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-12">
+				<h1>{_label.campaignListPage_campaignList}</h1>
+			</div>
+		</div>
+		<div class="page-border"></div>
+
+		<div class='row select nowrap justify-content-between mb-1'>
+			<div class='col-4 mr-auto'>
+				<select class="empty" onchange={statusChange}>
+					<option value='' selected disabled>{_label.campaignListPage_statusCampaign}</option>
+					<template for:each={status} for:item='statusItem'>
+						<option key={statusItem.value} value={statusItem.value}>{statusItem.label}</option>
+					</template>
+				</select>
+			</div>
+		</div>
+
+		<div class="shadow-bottom">
+			<c-mobility-campaign-data-grid params={params} tabledata={records} backgroud-color='#fff' navigate-callback={onNavigateContext}></c-mobility-campaign-data-grid>
+		</div>
+		<div class="bottom-space"></div>
+	</template>
+
+	<template if:false={authorized}>
+		<c-mobility-unauthorized></c-mobility-unauthorized>
+	</template>
+</template>

@@ -1,0 +1,43 @@
+<aura:component controller="accountEditLightningCTRL">
+    
+    <aura:attribute name="Contatti_SmartCenter" type="Account"/>
+
+    
+    <div id="container_ContattiSmart" class="slds-col--padded  slds-p-bottom--x-small slds-m-top--small  slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--1-of-1 slds-grid--align-center">
+        <h3 class="slds-section-title--divider"> Contatti Smart Center</h3> 
+    </div>
+    
+    
+    <div id="container_Telefono_Addizionale" class="slds-container--large slds-form--horizontal slds-col--padded slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">    
+        <label class="slds-form-element__label" for="Telefono addizionale:">Telefono addizionale:</label> 
+        <div id="container_AddTel" class="slds-form-element__control">
+            <!-- <ui:inputPhone aura:id="Additional_Phone"  class="slds-input" value="{!v.Contatti_SmartCenter.Additional_Phone__c}"/>  -->
+            <ui:inputPhone aura:id="Additional_Phone"/> <lightning:clickToDial value="{!v.Contatti_SmartCenter.Additional_Phone__c}"/>
+            <br/>
+            
+        </div>
+    </div>
+    
+    
+    <div id="container_Email_Addizionale" class="slds-container--large slds-form--horizontal slds-col--padded slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">    
+        <label class="slds-form-element__label" for="Email addizionale:">Email addizionale:</label> 
+        <div id="container_AddEmail" class="slds-form-element__control">
+            <ui:inputEmail aura:id="Additional_Email"  class="slds-input" value="{!v.Contatti_SmartCenter.Additional_Email__c}"/>  
+            <br/>
+            
+        </div>
+    </div>
+
+    <div id="container_Commenti_Addizionale" class="slds-form--horizontal slds-col--padded slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+        <div class="slds-form-element"> 
+         <label class="inputStyle slds-form-element__label"  for="Commenti addizionali:">Commenti addizionali:</label> 
+               <div class="slds-form-element__control">
+                  <ui:inputTextarea aura:id="Additional_Comments" class="slds-textarea" value="{!v.Contatti_SmartCenter.Additional_Comments__c}" /><br/>
+                </div> 
+            </div> 
+     </div>
+    
+    
+
+    
+</aura:component>

@@ -1,0 +1,255 @@
+<apex:page standardStylesheets="true" applyBodyTag="False" docType="html-5.0" sidebar="false" id="page" standardController="Opportunity" extensions="OpportunityInsertCtrl" action="{!NewOpportunityfromAccount}">
+    
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" lang="en" ng-app="AccountLookup">            
+        
+        <style type="text/css"> 
+            .myheight{
+            min-height: 10px!important;
+            height:20px!important;
+            line-height: 0.875rem!important;
+            }
+        </style>
+        
+        
+        <head>
+            <apex:stylesheet value="{!URLFOR($Resource.SLDS, '/assets/styles/salesforce-lightning-design-system-vf.css')}" />      
+        </head>
+        
+        
+        <apex:includescript value="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular.min.js"/>
+        <apex:includescript value="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"/>
+
+        
+        <script>
+        // Resizing the Account search result list
+        function resizeResults() {
+            var inputWidth = document.getElementById('lu_input').offsetWidth;
+            document.getElementById('lu_result').setAttribute("style","width:"+inputWidth+"px; right:"+12+"px; margin-top:" + 0 + "px");
+        }   
+        </script>
+         
+        
+        <script>
+        // AngularJs
+        var groupEventApp = angular.module('AccountLookup', []);
+        groupEventApp.controller('HomeController',['$log','$scope',function($log,$scope){
+            
+            $scope.showAccountListSearch = false;
+            resizeResults();
+            
+            // Fetch Account Object Key 
+            $scope.accountObjectKey = {!AccountObjectKey};
+            $scope.accountName = '';
+            
+            //below function will make Remote Action call to Fetch accounts based on searched text 
+            $scope.searchAccounts = function(){
+                
+                $scope.accountList = [];
+                deleteAccountId();
+                
+                if($scope.accountName != undefined && $scope.accountName.length > 3){
+                    Visualforce.remoting.Manager.invokeAction(
+                        '{!$RemoteAction.OpportunityInsertCtrl.searchAccount}',
+                        $scope.accountName,
+                        function(result, event){
+                            if (event.status) {
+                                $scope.showAccountListSearch = true;
+                                $scope.accountList = result;
+                            }
+                            else if (event.type === 'exception')
+                                console.log('got an exception');
+                            $scope.$apply();
+                        }, 
+                        {escape: true}
+                    );
+                }
+                else
+                    $scope.showAccountListSearch = false;
+            }
+            
+            
+            // Selected Account
+            $scope.selectedAccount = function(account){
+                $scope.showAccountListSearch = false;
+                $scope.accountName = account.Name;
+                $scope.accountList = [];
+                saveAccountId(account.Id);
+            }
+            
+            
+            $(function(){
+                var $win = $(window);
+                var $box = $(".inputDiv");
+                
+                $win.on("click.Bst", function(event){
+                    if($box.has(event.target).length == 0 && !$box.is(event.target))
+                        $scope.showAccountListSearch = false;
+                    else
+                        if($scope.accountName != undefined && $scope.accountName.length > 3)
+                            $scope.showAccountListSearch = true;
+                    $scope.$apply();
+                });
+                
+            });
+            
+            
+            /*// Below function will be useful for navigating to new layout when create new account is selected on UI    
+            $scope.openNewAccountScreen = function(){
+                if((typeof sforce != 'undefined') && (sforce != null) ){
+                    sforce.one.createRecord('Account');
+                }else{
+                    window.open('/'+$scope.accountObjectKey+'/e','_self');
+                }
+                
+            }*/
+            
+        }]);
+        </script>
+        
+
+        <body ng-controller = "HomeController" onresize="resizeResults()">
+            
+            <div class="slds">
+                
+                <!-- SPINNER -->    
+                <apex:actionStatus id="status_spinner">
+                    <apex:facet name="start">
+                        <div style="position:fixed; top:0; left:0; right:0; bottom:0; opacity:0.75; z-index:999; background-color:white;">
+                            <div class="slds-spinner--medium" style="position:absolute; top:0; bottom:0; left:0; right:0; margin:auto;" >
+                                <img src="{!URLFOR($Resource.SLDS, '/assets/images/spinners/slds_spinner_brand.gif')}" />
+                            </div>
+                        </div>
+                    </apex:facet>
+                </apex:actionStatus>
+                
+                
+                <div class="slds-page-header" role="banner">
+                    <div class="slds-grid">
+                        <div class="slds-col">
+                            <p class="slds-text-heading--label">INSERISCI TRATTATIVA</p>
+                            <h1 class="slds-text-heading--medium">Nuova trattativa</h1>
+                        </div>
+                    </div>
+                </div>
+                
+                
+                <!-- ERROR MESSAGE -->
+                <apex:form id="MessageForm" html-ng-non-bindable="true">
+                    <br/>
+                    <apex:outputPanel styleClass="myCustomMessage" rendered="{!showMessage}" id="ErrMsg">
+                        <div class="slds-notify_container">
+                            <div class="slds-notify slds-notify--alert slds-theme--error slds-theme--alert-texture" role="alert">
+                                <span class="slds-assistive-text">Error</span>
+                                <h2><apex:outputtext value="{!pageMessage}" escape="false"/></h2>
+                            </div>
+                        </div>
+                    </apex:outputPanel>
+                </apex:form>
+                
+                
+                <apex:form id="MainForm">
+
+                    <br/>
+                    <!-- Buttons -->
+                    <div class="slds-align--absolute-center">
+                        <div class="slds-text-align--center" role="group">
+                            <apex:commandButton action="{!SaveOpportunity}" value="Salva" id="btnsalva1" styleClass="slds-button slds-button--neutral" reRender="ErrMsg,MessageForm" status="status_spinner"/>
+                            <apex:commandButton action="{!Cancel}" value="Annulla" id="btnannulla1" styleClass="slds-button slds-button--neutral"/>
+                        </div>
+                    </div>
+                    
+                    <br/>
+                    <!-- INPUT FORM -->
+                    <div class="slds-grid slds-wrap slds-grid--pull-padded slds-p-right--small slds-p-left--small slds-p-top--small">
+                        
+                        <div id="Informazioni" class="slds-col--padded slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--1-of-1 slds-m-left--xx-small slds-p-right--large">
+                            <h3 class="slds-section-title--divider">Informazioni Principali</h3>
+                        </div>
+                        
+                        <div id="AccountName" class=" slds-form--horizontal slds-form-element slds-col--padded slds-container--large slds-lookup slds-size--1-of-1">
+                            
+                            <!-- Lookup Input Field -->
+                            <div class="slds-lookup" data-select="multi" data-scope="single" data-typeahead="true">
+                                <label class="slds-form-element__label" for="lookupAcc">
+                                    <abbr class="slds-required" title="Required" style="vertical-align: middle">*</abbr> Nome Cliente:
+                                </label>
+                                <div id="lu_input" class="slds-form-element__control slds-input-has-icon slds-input-has-icon--right">
+                                    <svg aria-hidden="true" class="slds-input__icon slds-icon-text-default">
+                                        <use xlink:href="{!URLFOR($Resource.SLDS,'assets/icons/utility-sprite/svg/symbols.svg#search')}" ></use>
+                                    </svg>
+                                    <input id="lookupAcc" class="inputDiv slds-input myheight" type="text" name="accountName" ng-model="accountName" placeholder="Inserire almeno 4 caratteri"
+                                           aria-autocomplete="list" role="combobox" ng-keyup="searchAccounts()"/>
+                                </div>
+                            </div>
+                            
+                            <!-- Lookup Result Field -->
+                            <div id="lu_result" class="slds-lookup__menu" style="right: 12px; margin-top: 0px;" role="listbox" ng-show="showAccountListSearch">
+                                <div class="slds-lookup__item">
+                                    <button class="slds-button">
+                                        <svg aria-hidden="true" class="slds-icon slds-icon-text-default slds-icon--small">
+                                            <use xlink:href="{!URLFOR($Resource.SLDS,'assets/icons/utility-sprite/svg/symbols.svg#search')}"></use>
+                                        </svg>&quot;{{accountName}}&quot; in Clienti
+                                    </button>
+                                </div>
+                                <ul class="slds-lookup__list" role="presentation">
+                                    <li class="slds-lookup__item" ng-repeat="accountName in accountList">
+                                        <a role="option" ng-click="selectedAccount(accountName)">
+                                            <svg aria-hidden="true" class="slds-icon slds-icon-standard-account slds-icon--small">
+                                                <use xlink:href="{!URLFOR($Resource.SLDS,'assets/icons/utility-sprite/svg/symbols.svg#user')}"></use>
+                                            </svg>{{accountName.Name}}
+                                        </a>
+                                    </li>
+                                </ul>
+                                
+                                <!-- Code to navigate to new page (Add account layout) ->
+                                <div class="slds-lookup__item">
+                                    <button class="slds-button" ng-click="openNewAccountScreen()">
+                                        <svg aria-hidden="true" class="slds-icon slds-icon-text-default slds-icon--small">
+                                            <use xlink:href="{!URLFOR($Resource.SLDS,'assets/icons/utility-sprite/svg/symbols.svg#add')}"></use>
+                                        </svg>Add Account
+                                    </button>
+                                </div>
+                                -->
+                            </div>
+                        </div> 
+                        
+                        <div id="ASA" class="slds-form--horizontal slds-col--padded slds-container--large slds-form-element slds-size--1-of-1">
+                            <label class="slds-form-element__label" for="asa">
+                                <abbr class="slds-required" title="Required" style="vertical-align: middle">*</abbr> ASA:
+                            </label>
+                            <div class="slds-form-element" style="display:inline">
+                                <div class="slds-form-element__control">
+                                    <apex:selectlist styleClass="slds-input myheight"  id="asa" value="{!OppToInsert.ASA_Description__c}" multiselect="false" size="1">  
+                                        <apex:selectOptions value="{!ASAList}"/>
+                                    </apex:selectlist>
+                                </div>
+                            </div>
+                        </div>
+ 
+                    </div>
+                    
+                    <apex:actionFunction name="saveAccountId" action="{!saveAccountId}" reRender="">
+                        <apex:param name="myAccountId" value="" />
+                    </apex:actionFunction>
+                    
+                    <apex:actionFunction name="deleteAccountId" action="{!deleteAccountId}" reRender=""/>
+                    
+                    
+                    <br/>
+                    <!-- Buttons -->
+                    <div class="slds-align--absolute-center">
+                        <div class="slds-text-align--center" role="group">
+                            <apex:commandButton action="{!SaveOpportunity}" value="Salva" id="btnsalva2" styleClass="slds-button slds-button--neutral" reRender="ErrMsg,MessageForm" status="status_spinner"/>
+                            <apex:commandButton action="{!Cancel}" value="Annulla" id="btnannulla2" styleClass="slds-button slds-button--neutral"/>
+                        </div> 
+                    </div>
+                    
+                </apex:form>
+                
+            </div>
+            
+        </body>
+        
+    </html>
+    
+</apex:page>

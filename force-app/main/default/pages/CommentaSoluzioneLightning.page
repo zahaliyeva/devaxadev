@@ -1,0 +1,28 @@
+<apex:page standardController="Case" showHeader="false" standardStylesheets="false" sidebar="false" applyHtmlTag="true" applyBodyTag="false" docType="html-5.0" >
+    <style>
+        html {
+            background-color: white;
+        }
+    </style>
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>      
+    </head>
+    
+    <apex:includeScript value="/lightning/lightning.out.js" />
+    <apex:includeScript value="/soap/ajax/41.0/connection.js"/>
+    <apex:includeScript value="/soap/ajax/41.0/apex.js"/>
+ 
+    <script>
+  		var theme = "{!$User.UITheme}";
+      	console.log('theme: ',theme);
+    	var showHeader = true;
+		if( theme == "Theme4t") {
+	   		showHeader = false;		
+		}
+       	window.location.href = "apex/CommentToSolution?scontrolCaching=1&id={!Case.Id}&showHeader="+showHeader;
+ 
+    </script>
+    
+    <div id="theFeedback"></div>    
+    
+</apex:page>

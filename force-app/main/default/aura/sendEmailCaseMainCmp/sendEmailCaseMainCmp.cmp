@@ -1,0 +1,246 @@
+<aura:component implements="flexipage:availableForAllPageTypes" access="global" controller="sendEmailCaseCTRL" >
+    <aura:dependency resource="markup://force:navigateToSObject" type="EVENT"/>
+    <lightning:spinner aura:id="mySpinner" class="slds-hide" />
+    <!-- Init Attributes from the VF page -->
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="toAddresses" type="String" />
+    <aura:attribute name="CCAddresses" type="String" />
+    <aura:attribute name="BCCAddresses" type="String" />    
+    <aura:attribute name="senderAddress" type="String" default=""/>
+    <aura:attribute name="defaultTemplate" type="String" default=""/>
+    <aura:attribute name="screenWidth" type="String" default="1920"/>    
+    <aura:attribute name="jsDebug" type="Boolean"/> 
+    <!-- Init attributes end--> 
+    <aura:attribute name="isError" type="Boolean" default="false"/> 
+    <aura:attribute name="errorTitle" type="String" default="Errore"/>
+    <aura:attribute name="errorMsg" type="String" default=""/>
+    <aura:attribute name="isFinish" type="Boolean" default="false"/> 
+    <aura:attribute name="messages" type="Aura.Component[]" access="GLOBAL"/>
+    <aura:handler name="init" action="{!c.Initialize}" value="{!this}"/>
+    <aura:dependency resource="force:navigateToURL" type="EVENT"/>
+    <aura:attribute name="showTemplateBox" type="Boolean" default="false"/> 
+    <aura:attribute name="showAttachmentBox" type="Boolean" default="false"/>
+    <aura:attribute name ="isFeedView" type="Boolean"/>
+    
+    <!--Template handling -->
+    <aura:attribute name="foldersList" type="List" />
+    <aura:attribute name="templatesList" type="List" />
+    <aura:attribute name="selectedFolder" type="String" default=""/>
+    <aura:handler name="change" value="{!v.selectedFolder}" action="{!c.handleChangeFolder}"/>
+    <aura:attribute name="selectedTemplate" type="String" default=""/>
+    <aura:handler name="change" value="{!v.selectedTemplate}" action="{!c.handleChangeTemplate}"/>
+    <!--From handling -->
+    <aura:attribute name="fromList" type="List" />
+    <aura:attribute name="selectedFrom" type="String" default=""/>
+    <!--Attachment handling -->
+    <aura:attribute name="attachmentList" type="List" /> 
+    <aura:attribute name="attachmentListFileNames" type="List"/>    
+    <aura:attribute name="subject" type="string"/>
+    <aura:attribute name="body" type="string"/>
+    <aura:attribute name="mailStatus" type="boolean" default="false"/>
+    <!--MMOSCATELLI 25022019: ICF CR — START -->
+    <aura:attribute name="isAgentUser" type="Boolean" default="false"/>
+    <aura:attribute name="displayAttachmentForm" type="String" default="display: block;"/>
+    
+    
+    <aura:registerEvent name="tabclosing" type="c:tabclosing" />
+    <!--<div style="{!'max-width:'+v.screenWidth+'px'}"> -->
+    <div style="{!'max-width:'+v.screenWidth+'px;'+v.displayAttachmentForm}">
+    <!--MMOSCATELLI 25022019: ICF CR — END -->
+        
+        <div class="slds-page-header" role="banner" >
+            <div class="slds-grid">
+                <div class="slds-col">
+                    <p class="slds-text-heading_label">Email</p>
+                    <h1 class="slds-text-heading_medium">
+                        Invio nuova email</h1>
+                </div>
+            </div>
+        </div>
+        <!-- TOP ERROR BOX -->
+        <aura:if isTrue="{!v.isError}">
+            <ui:message title="{!v.errorTitle}" severity="error" closable="true">
+                <ui:outputText value="{!v.errorMsg}" />
+                
+            </ui:message>
+        </aura:if>
+        
+        
+        <div class="slds-align_absolute-center">
+            
+            <div class="slds-form-element ">
+                <div class="slds-form-element__control slds-m-vertical_medium">
+                    <lightning:button class="marginTop" variant="neutral" label="Seleziona modello" onclick="{!c.openSelectTemplate}" />
+                    <lightning:button class="marginTop" variant="neutral" label="Allega file" onclick="{!c.openAddAttachment}" />
+                    <aura:if isTrue="{!$Browser.formFactor == 'DESKTOP'}" >
+                    <lightning:button class="marginTop" variant="brand" label="Invia" onclick="{!c.sendMail}" />
+                    <aura:if isTrue="{!v.isFeedView!='true'}">
+                        <lightning:button class="marginTop" variant="brand" label="Annulla" onclick="{!c.cancel}" />
+                    	</aura:if>
+                        <aura:set attribute="else">
+                    		<center>
+                    			<lightning:button class="marginTop" variant="brand" label="Invia" onclick="{!c.sendMail}" />
+                    			<lightning:button class="marginTop" variant="brand" label="Annulla" onclick="{!c.cancel}" />
+                    		</center>
+                    	</aura:set>
+                    </aura:if>
+                </div>
+            </div>    
+        </div> 
+        
+        <div class="slds-grid">
+            <!--div class="slds-card__body"--> 
+            <div class="slds-col">
+                
+                <div class="slds-form-element">
+                    <lightning:select name="fromSelect" label="Da" aura:id="fromSelect" value="{!v.selectedFrom}" required="true" disabled="{!v.isAgentUser}">
+                        <aura:iteration items="{!v.fromList}" var="from">
+                            <option text="{!from.label}" value="{!from.value}" selected="{!from.selected}"/>
+                        </aura:iteration>
+                    </lightning:select>
+                </div>
+                
+                <div class="slds-form-element">
+                    <div class="slds-form-element__control">
+                        <lightning:input type="email" multiple="true" label="A" aura:id="toAddresses" name="emailTo" value="{!v.toAddresses}"  messageWhenTypeMismatch="E' stata inserita una email in formato non valido" required="true"/>
+                    </div>
+                    
+                </div>
+                
+                <div class="slds-form-element">
+                    <div class="slds-form-element__control">
+                        <lightning:input type="email" label="Cc" multiple="true" messageWhenTypeMismatch="E' stata inserita una email in formato non valido" aura:id="CCAddresses" name="CC" value="{!v.CCAddresses}" />
+                    </div>
+                </div>
+                
+                <div class="slds-form-element">
+                    <div class="slds-form-element__control">
+                        <lightning:input type="email" multiple="true" messageWhenTypeMismatch="E' stata inserita una email in formato non valido" aura:id="BCCAddresses" label="Ccn" name="BCC" value="{!v.BCCAddresses}" />
+                    </div>
+                </div>            
+
+                <div class="slds-form-element">
+                    <div class="slds-form-element__control">
+                        <lightning:input type="text" label="Oggetto" name="subject" value="{!v.subject}" required="true"/>
+                    </div>
+                </div>
+                
+                <div class="slds-form-element">
+                    <div class="slds-form-element__control">
+                        <label lightning-input_input="" for="input-6" class="slds-form-element__label slds-no-flex"><abbr lightning-input_input="" title="required" class="slds-required">*</abbr>Corpo</label>
+                        <lightning:inputRichText aura:id="body"  value="{!v.body}" />
+                    </div>
+                </div>
+            </div>
+            <!--/div-->
+        </div>
+        
+        
+        
+        <div class="slds-align_absolute-center">
+            
+            <div class="slds-form-element ">
+                <div class="slds-form-element__control slds-m-vertical_medium">
+                    <lightning:button class="marginTop" variant="neutral" label="Seleziona modello" onclick="{!c.openSelectTemplate}" />
+                    <lightning:button class="marginTop" variant="neutral" label="Allega file" onclick="{!c.openAddAttachment}" />
+                    <aura:if isTrue="{!$Browser.formFactor == 'DESKTOP'}" >
+                    <lightning:button class="marginTop" variant="brand" label="Invia" onclick="{!c.sendMail}" />
+                    <aura:if isTrue="{!v.isFeedView!='true'}">
+                        <lightning:button class="marginTop" variant="brand" label="Annulla" onclick="{!c.cancel}" />
+                        </aura:if>	
+                        <aura:set attribute="else">
+                    		<center>
+                    			<lightning:button class="marginTop" variant="brand" label="Invia" onclick="{!c.sendMail}" />
+                    			<lightning:button class="marginTop" variant="brand" label="Annulla" onclick="{!c.cancel}" />
+                    		</center>
+                    	</aura:set>
+                    </aura:if>
+                </div>
+            </div>    
+        </div> 
+        <!-- BOTTOM ERROR BOX -->
+        <aura:if isTrue="{!v.isError}">
+            <ui:message title="{!v.errorTitle}" severity="error" closable="true">
+                <ui:outputText  value="{!v.errorMsg}" />
+            </ui:message>
+        </aura:if>
+        
+    </div>
+    
+    <aura:if isTrue="{!v.showTemplateBox}">
+        <div role="alertdialog" tabindex="-1" aria-labelledby="prompt-heading-id" aria-describedby="prompt-message-wrapper" class="slds-modal slds-fade-in-open slds-modal_prompt">
+            <div class="slds-modal__container">
+                <div class="slds-modal__header">
+                    <h2 class="slds-text-heading_medium" id="prompt-heading-id">Seleziona modello</h2>
+                </div>
+                <div class="slds-modal__content slds-p-around_medium">
+                    <lightning:select name="folderSelect" label="Cartella email" aura:id="folderSelect" value="{!v.selectedFolder}">
+                        <aura:iteration items="{!v.foldersList}" var="folder">
+                            <option text="{!folder.label}" value="{!folder.value}" selected="{!folder.selected}"/>
+                        </aura:iteration>
+                    </lightning:select>
+                    <lightning:select name="templateSelect" label="Modello email" aura:id="templateSelect" value="{!v.selectedTemplate}">
+                        <aura:iteration items="{!v.templatesList}" var="template">
+                            <option text="{!template.label}" value="{!template.value}" selected="{!template.selected}"/>
+                        </aura:iteration>
+                    </lightning:select> 
+                </div>
+                <div class="slds-modal__footer slds-theme_default">
+                    <lightning:button variant="brand" label="Chiudi" onclick="{!c.closeSelectTemplate}" />
+                </div>
+            </div>
+        </div>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+    
+    <aura:if isTrue="{!v.showAttachmentBox}">
+        <div role="alertdialog" tabindex="-1" aria-labelledby="prompt-heading-id" aria-describedby="prompt-message-wrapper" class="slds-modal slds-fade-in-open slds-modal_prompt">
+            <div class="slds-modal__container">
+                <div class="slds-modal__header">
+                    <h2 class="slds-text-heading_medium" id="prompt-heading-id">Allega file</h2>
+                </div>
+                <div class="slds-modal__content slds-p-around_medium">
+                    <!--MMOSCATELLI 25022019: ICF CR — START
+                    <c:fileUpload parentId="{!v.recordId}" attachmentList="{!v.attachmentList}" attachmentListFileNames="{!v.attachmentListFileNames}"/>-->
+                	<c:fileUpload parentId="{!v.recordId}" attachmentList="{!v.attachmentList}" attachmentListFileNames="{!v.attachmentListFileNames}" showShareFile_Flag="{!!v.isAgentUser}" stoConvRT="Agente"/>
+                    <!--MMOSCATELLI 25022019: ICF CR — END-->
+                </div>
+                <div class="slds-modal__footer slds-theme_default">
+                    <lightning:button variant="brand" label="Chiudi" onclick="{!c.closeAddAttachment}" />
+                </div>
+            </div>
+        </div>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+    
+    <aura:if isTrue="{!v.isFinish == true}">
+        <div role="alertdialog" tabindex="-1" aria-labelledby="prompt-heading-id" aria-describedby="prompt-message-wrapper" class="slds-modal slds-fade-in-open slds-modal_prompt">
+            <div class="slds-modal__container">
+                <div class="slds-modal__header slds-theme_success slds-theme_alert-texture">
+                    <h2 class="slds-text-heading_medium" id="prompt-heading-id">Email inviata</h2>
+                </div>
+                <div class="slds-modal__content slds-p-around_medium slds-text-align_center">
+                    <p class="slds_paragraph">L' email è stata inviata con successo</p>
+                </div>
+                <div class="slds-modal__footer slds-theme_default">
+                    <aura:if isTrue="{!v.isFeedView!='true'}">
+                    <lightning:button class="slds-button slds-button__neutral" onclick="{!c.finish}">Torna al case</lightning:button>
+                    <aura:set attribute="else">
+                    <lightning:button class="slds-button slds-button__neutral" onclick="{!c.refresh}">Invia una nuova Email</lightning:button>
+                        
+                        </aura:set>
+                    </aura:if>
+                        <!--lightning:button class="slds-button slds-button__neutral" onclick="{!c.gotoEdit}">Continua</lightning:button-->
+                </div>
+            </div>
+        </div>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if> 
+    <div class="slds-m-around_large">
+        <div class="slds-container_large">
+            <div class="slds-form_stacked">
+                
+            </div>
+        </div>
+    </div>
+</aura:component>

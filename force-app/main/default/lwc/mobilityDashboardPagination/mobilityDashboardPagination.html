@@ -1,0 +1,72 @@
+<template>
+    <c-mobility-spinner show={spinner} show-overlay={spinnerOverlay}></c-mobility-spinner>
+    <template if:false={waitCallback}>
+        <div class="row">
+            <div class="col-12 mt-2" style={tableStyle}>
+                <div class="row justify-content-between pt-3">
+                    <div class="col-4">
+                        <div class="table-pages">
+                            {_pagerData.pagination.startPageString}-{_pagerData.pagination.endPageString}
+                            <span class="dropdown mx-1">
+                                <a class="dropdown" onclick={toggleTooltip} onmouseout={toggleOutTooltip}>
+                                    <c-mobility-icon name='chevron' width='10px' height='10px'></c-mobility-icon>
+                                </a>
+                                <div class={tooltipClass}>
+                                    <template for:each={_pagerData.perPages} for:item='perPage'>
+                                        <a class='dropdown-item text-center' key={perPage} data-value={perPage} onclick={changeNumberView}>{perPage}</a>
+                                    </template>
+                                </div>
+                            </span>
+                            <span class="table-pages-result">{_label.dataGrid_of}
+                                {_pagerData.pagination.total} {_label.dataGrid_results}
+                            </span>
+                            <template if:true={_pagerData.hasSelected}>
+                                <span> {_pagerData.selectedLength} {_label.dataGrid_selected}</span>
+                            </template>
+                        </div>
+                    </div>
+    
+                    <div class="col">
+                        <form class="table-search" onsubmit={submitForm}>
+                            <template if:true={_pagerData.isVisibleSearch}>
+                                <span class="link-primary" onclick={onUpdatePage}>
+                                    <span class="align-middle">{_label.dataGrid_update} </span>
+                                    <span class="align-middle">
+                                        <c-mobility-icon name='reload' width='16px' height='16px'></c-mobility-icon>
+                                    </span>
+                                </span>
+                                <div class="form-group">
+                                    <div class="form-group has-search">
+                                        <div class='col'>
+                                            <input type="search" class="form-control" placeholder="Cerca"
+                                                oninput={changeSearch} value = {filtroRicerca}>
+                                            <span class="form-control-feedback">
+                                                <c-mobility-icon name='search' width='12px' height='12px'></c-mobility-icon>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </form>
+                    </div>
+                </div>
+                <template for:each={allData} for:item="record">
+                    <lightning-card key={record.Name} title={record.Name}>
+                        <p class="slds-var-p-horizontal_small" > {record.Description}  </p>
+                        <lightning-button variant="brand" label="Seleziona e procedi" title="Seleziona e procedi" onclick={handleClick} slot="footer" value={record.Name}></lightning-button>
+                    </lightning-card>
+                </template>
+                <template if:false={noData}>
+                    <div class="row">
+                        <div class="col-12">
+                            <c-mobility-pagination pagination={_pagerData.pagination} change-page={changePage}>
+                            </c-mobility-pagination>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+
+    </template>
+</template>

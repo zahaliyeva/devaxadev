@@ -1,0 +1,74 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction,lightning:actionOverride" access="global" >
+    
+    <aura:html tag="style">
+        .slds-scope .slds-path__nav .slds-is-complete, .slds-scope .slds-path__nav .slds-is-complete:hover:before, .slds-scope .slds-path__nav .slds-is-complete:hover:after ,  .slds-scope .slds-path__nav .slds-is-complete:before, .slds-scope .slds-path__nav .slds-is-complete:after, .slds-scope .slds-path__nav .slds-is-complete:hover, {
+        background: #005fb2 !important;
+        }
+        
+        .slds-scope .slds-path__link {
+        cursor: default !important;
+        }
+        
+        .slds-path__title  {
+        font-size: smaller !important;
+        }
+        
+    </aura:html>
+    
+    
+    <aura:attribute name="steps" type="Object[]" default="[]"/>
+    <aura:attribute name="mapLabelStepBar"  type="Object[]" /> 
+    
+    
+    
+    
+    <div class="slds-m-top_medium slds-m-bottom_large" >        
+        <ul class="slds-path__nav" role="listbox" aria-orientation="horizontal">
+            <aura:iteration items="{!v.steps}" var="item">
+                <aura:if isTrue="{!item.hide=='N'}">
+                    <aura:if isTrue="{!item.isCurr=='Y'}">
+                        <li class="slds-path__item slds-is-current" id="{! item.value}">                        
+                            <div class="slds-path__link"   role="option" >
+                                <span class=" slds-path__title">
+                                    <aura:iteration items="{!v.mapLabelStepBar}" var="mapI" >                                
+                                        <aura:if isTrue="{!item.value == mapI.key  }">
+                                            <aura:unescapedHtml value="{!mapI.label}"  />                 
+                                        </aura:if>                                         
+                                    </aura:iteration>        
+                                </span>
+                            </div>
+                        </li>
+                        <aura:set attribute="else">
+                            <aura:if isTrue="{!item.completed=='Y'}">
+                                <li  class="slds-path__item slds-is-complete  slds-is-active" id="{! item.value}">
+                                    <div class="slds-path__link"   role="option" >
+                                        <span class=" slds-path__title">
+                                            <aura:iteration items="{!v.mapLabelStepBar}" var="mapI" >                                
+                                                <aura:if isTrue="{!item.value == mapI.key  }">
+                                                    <aura:unescapedHtml value="{!mapI.label}"  />                 
+                                                </aura:if>                                         
+                                            </aura:iteration>        
+                                        </span>
+                                    </div>
+                                </li>
+                                <aura:set attribute="else">
+                                    <li class="slds-path__item slds-is-incomplete" id="{! item.value}">
+                                        <div class="slds-path__link"   role="option" >
+                                            <span class=" slds-path__title">                                        
+                                                <aura:iteration items="{!v.mapLabelStepBar}"  var="mapI" >                                
+                                                    <aura:if isTrue="{!item.value == mapI.key  }">
+                                                        <aura:unescapedHtml value="{!mapI.label}"  />                                  
+                                                    </aura:if>                                         
+                                                </aura:iteration> 
+                                            </span>
+                                        </div>
+                                    </li>
+                                </aura:set>
+                            </aura:if>
+                        </aura:set>
+                    </aura:if> 
+                </aura:if> 
+            </aura:iteration>
+        </ul>
+    </div>       
+</aura:component>

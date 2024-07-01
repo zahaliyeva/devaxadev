@@ -1,0 +1,24 @@
+<aura:component controller="MobilityEventController" implements="force:lightningQuickActionWithoutHeader,force:hasRecordId">
+	
+	<aura:attribute name="spinner" type="Boolean"/>
+
+	<aura:if isTrue="{!v.spinner }">
+		<lightning:spinner alternativeText="Loading" size = "medium"/>
+	</aura:if>
+
+	<div class="modal-header slds-modal__header">
+		<h2 class="title slds-text-heading--medium slds-hyphenate slds-text-align_center">
+			Elimina Evento
+		</h2>
+	</div>
+	<div class="modal-body scrollable slds-modal__content slds-p-around--medium">
+		<div class="slds-p-top_x-large slds-p-bottom_x-large">		
+			Eliminare questo Evento?
+		</div>
+	</div>
+	<footer>
+		<div class="slds-text-align_right">
+			<button class="slds-button slds-button_neutral" onclick="{!c.onClick}">Conferma</button>
+		</div>
+	</footer>
+</aura:component>

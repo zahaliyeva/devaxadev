@@ -1,0 +1,10 @@
+.THIS .leftPaddingClass {
+    padding-left: 2rem !important;
+}
+ 
+.THIS .pillSize{
+ width:100%;
+}
+.THIS .TopButton{
+	top: -0.4rem;
+}

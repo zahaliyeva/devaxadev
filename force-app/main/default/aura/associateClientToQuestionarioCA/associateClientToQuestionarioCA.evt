@@ -1,0 +1,5 @@
+<aura:event type="COMPONENT">
+    <aura:attribute name="client" type="sObject"/>
+    <aura:attribute name="type" type="String"/>
+    <aura:attribute name="persona" type="String"/>
+</aura:event>

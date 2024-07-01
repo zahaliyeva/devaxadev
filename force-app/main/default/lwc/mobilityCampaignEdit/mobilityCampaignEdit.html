@@ -1,0 +1,58 @@
+<template>
+    <div class="edit">
+        <c-mobility-spinner show={spinner} show-overlay={spinnerOverlay}></c-mobility-spinner>
+        <c-mobility-messages model={messages}></c-mobility-messages>
+
+        <template if:true={authorized}>
+            <div class="edit-header shadow-bottom">
+                <div class="row">
+                    <div class="col-12">
+                        <c-mobility-breadcrumb params={params} current={componentView}></c-mobility-breadcrumb>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <c-mobility-layout type-layout='edit' object-name='Campaign' record-id={params.recordId}
+                            ready-callback={readyCallback} save-callback={saveCallback} params={params}>
+                        </c-mobility-layout>
+                    </div>
+                </div>
+            </div>
+            <div class="bottom-space"></div>
+
+            <!-- Inizio Footer -->
+            <div class="footer row justify-content-between fixed-bottom">
+                <div class="col-2 up">
+                    <a onclick={scroll} onmouseout={onOutScrollTop} onmouseover={onOverScrollTop}>
+                        {_label.campaignDetail_up}
+                        <span class="pl-2">
+                            <c-mobility-icon name='arrow-up' width='10.5px' height='10.5px'>
+                            </c-mobility-icon>
+                        </span>
+                    </a>
+                </div>
+                <div class="col-4 action ml-auto text-right">
+                    <div class="row" style="flex-flow: nowrap;">
+                        <div class="btn-box-action" onclick={navigateToEvent} data-component="mobilityCampaignDetail"
+                            data-record-id={params.recordId}>
+                            <div class="btn btn-outline-primary btn-action">
+                                {_label.leadEdit_cancel}
+                            </div>
+                        </div>
+                        <div class="btn-box-action" onclick={save}>
+                            <div class="btn btn-primary btn-action">
+                                {_label.leadEdit_save}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Fine Footer -->
+
+        </template>
+        <template if:false={authorized}>
+            <c-mobility-unauthorized></c-mobility-unauthorized>
+        </template>
+    </div>
+</template>

@@ -1,0 +1,114 @@
+<aura:component controller="FileUploadController">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <!-- 'parentId' Aura Attribute for store the Id for Parent Record where we are attach our file -->  
+    <aura:attribute name="parentId" type="Id" default="" />
+    <aura:attribute name="attachmentList" type="List" /> 
+    <aura:attribute name="attachmentListFileNames" type="List"/> 
+    <aura:attribute name="showAttachmentList" type="boolean" default="" /> 
+    <!-- 'showLoadingSpinner' attribute for show/hide the uploading image and msg in aura:if-->
+    <aura:attribute name="showLoadingSpinner" type="boolean" default="false" />
+    <!-- OAVERSANO 17/12/2018 : Enhancement NMA Biz III - START -->
+    <aura:attribute name="showFileAttached" type="boolean" default="false" />
+    <aura:attribute name="showShareFile_Flag" type="boolean" default="false" /> <!-- Passed from parent component -->
+    <aura:attribute name="stoConvRT" type="String" />
+    <aura:attribute name="shareToAllUsers" type="boolean" default="false" />
+    <!-- OAVERSANO 17/12/2018 : Enhancement NMA Biz III - END -->
+    <!-- 'fileName' attribute for display the selected file name -->  
+    <aura:attribute name="fileName" type="String" default="Nessun file selezionato" />
+    <!-- Lightning Input with file type and on file change call the 'handleFilesChange' controller --> 
+    <aura:registerEvent name="uploadaction" type="c:fileuploadevt"/>
+    <aura:attribute name="isNewAttachment" type="Boolean" default="false"/>
+    <aura:handler name="change" value="{!v.attachmentList}" action="{!c.handleChangeList}"/>   
+    <div class="slds-align_absolute-center">    
+        <lightning:input aura:id="fileId" onchange="{!c.handleFilesChange}" type="file" name="file" label="Aggiungi allegato" multiple="false"/>
+    </div>
+    <!-- OAVERSANO 17/12/2018 : Enhancement NMA Biz III - START -->
+    <!-- div class="slds-align_absolute-center"> 
+        <div class="slds-text-body_small slds-text-color_error">{!v.fileName}</div>  
+    </div-->
+    <aura:if isTrue="{!v.showFileAttached}">
+        <br/>
+        <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+            <thead>
+                <tr class="slds-text-title_caps">
+                    <th scope="col">
+                        <div class="slds-truncate slds-align_absolute-center" title="Attachment name label" >NOME FILE DA ALLEGARE</div>
+                    </th>
+                    <!-- OAVERSANO 17/12/2018 : Enhancement NMA Biz III - START -->
+                    <aura:if isTrue="{!v.showShareFile_Flag}" >
+	                    <th scope="col">
+	                        <div class="slds-align_absolute-center" title="Rendi allegato visibile all'agente">Rendi allegato visibile all'agente</div>
+	                    </th>
+	                </aura:if>
+                    <!-- OAVERSANO 17/12/2018 : Enhancement NMA Biz III - END -->
+                </tr>
+            </thead>
+            <tbody>
+	            <tr>    
+	                <td>
+	                    <div class="slds-truncate slds-align_absolute-center" title="Attachment name"><lightning:formattedText linkify="false" value="{!v.fileName+'\n'}" /></div>
+	                </td>
+	                <!-- OAVERSANO 17/12/2018 : Enhancement NMA Biz III - START -->
+	                <aura:if isTrue="{!v.showShareFile_Flag}" >
+		                <td>
+		                	<center>
+		                		<lightning:input type="checkbox" label="" name="isVisibleAllUsers" checked="{!v.shareToAllUsers}" class="slds-align_absolute-center"/>
+		                	</center>
+		                </td>
+		            </aura:if>
+	                <!-- OAVERSANO 17/12/2018 : Enhancement NMA Biz III - END -->
+	            </tr>
+            </tbody>
+        </table>  
+        <aura:set attribute="else">
+			<div class="slds-align_absolute-center"> 
+        		<div class="slds-text-body_small slds-text-color_error">{!v.fileName}</div>  
+    		</div>	
+   		</aura:set>
+        
+    </aura:if>    
+    <!-- OAVERSANO 17/12/2018 : Enhancement NMA Biz III - END -->
+    <!--use aura:if for show-hide the loading spinner image--> 
+    <aura:if isTrue="{!v.showLoadingSpinner}">
+        <div class="slds-text-body_small slds-text-color_error">Caricamento... 
+            <img src="/auraFW/resources/aura/images/spinner.gif" class="spinner-img" alt="Loading"/>
+        </div>
+    </aura:if>
+    
+    <br/>
+    
+    <br/>
+    
+    <button class="slds-button slds-button_brand slds-align_absolute-center" onclick="{!c.doSave}">Allega</button>
+    <br/>
+    <br/>
+    <aura:if isTrue="{!v.showAttachmentList}">
+        <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+            <thead>
+                <tr class="slds-text-title_caps">
+                    <th scope="col">
+                        <div class="slds-truncate" title="Cancel label"></div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Attachment name label">NOME ALLEGATO</div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <aura:iteration var="r" items="{!v.attachmentListFileNames}" >
+                    <tr>    
+                        <td>
+                            <lightning:button class="slds-button slds-align_absolute-center" onclick="{!c.doCancel}" value="{!r}">Cancella</lightning:button>
+                        </td>
+                        <td>
+                            <!-- OAVERSANO 17/12/2018 : Enhancement NMA Biz III - START -->
+                            <!-- div class="slds-truncate" title="Attachment name"><lightning:formattedText linkify="true" value="{!r+'\n'}" /></div-->
+                            <div class="slds-truncate" title="Attachment name"><lightning:formattedText linkify="false" value="{!r+'\n'}" /></div>
+                        	<!-- OAVERSANO 17/12/2018 : Enhancement NMA Biz III - END -->
+                        </td>
+                    </tr>
+                </aura:iteration>
+            </tbody>
+        </table>  
+    </aura:if>    
+</aura:component>

@@ -1,0 +1,119 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes" access="global" controller="LightningProponiSoluzioneCTRL" >
+    
+    <aura:attribute name="currentCase" type="Case" />
+    <aura:attribute name="CaseId" type="String" />
+    <aura:attribute name="solutionDetails" type="String" />
+    <aura:attribute name="caseStatus" type="String" />
+    <aura:attribute name="caseNumber" type="String" />
+    <aura:attribute name="emptySolution" type="Boolean" default="false"/>
+    <aura:attribute name="WrongSolution" type="String" />
+    <aura:attribute name="isLoading" type="Boolean" default="false" />
+    <aura:attribute name="errorFromServer" type="Boolean" default="false" />
+    <aura:attribute name="errorDetails" type="String" />
+    <aura:attribute name="caseisClosed" type="Boolean" />
+    <aura:attribute name="OwnerIsQueue" type="Boolean"/>
+    <aura:attribute name="lghtMode" type="Boolean" default="false"/>
+    <aura:attribute name="parent" type="Aura.Component"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler event="c:ModalConfirmFunctionEvent" action="{!c.handleModalConfirmFunctionEvent}"/>
+    <aura:attribute name="showShareFile_Flag" type="Boolean" default="true"/>
+    <aura:attribute name="remainingCharacters" type="String" default="1000" /> <!-- OAVERSANO 30/10/2018 : Nuovo Modello di Assistenza ENHANCEMENT -->
+    <!-- OAVERSANO 18/12/2018 : Enhancement NMA Biz III - START -->
+    <aura:attribute name="attachmentList" type="List" /> 
+    <aura:attribute name="attachmentListFileNames" type="List"/>
+    <aura:attribute name="showAttachmentBox" type="Boolean" default="false"/>
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <!-- OAVERSANO 18/12/2018 : Enhancement NMA Biz III - END -->   
+    
+    <aura:if isTrue="{!v.OwnerIsQueue}">
+        <div style="text-align: center;">
+            <ui:message severity="error" >
+                Attenzione ! per proporre una soluzione è necessario prendere in carico la richiesta tramite il pulsante dedicato.
+            </ui:message>
+        </div>    
+        
+        <aura:set attribute="else">
+            <aura:if isTrue="{!v.currentCase.Status != 'Soluzione proposta'}">
+                <aura:if isTrue="{!v.currentCase.IsClosed}">
+                    <div style="text-align: center;">
+                        <ui:message severity="error" >
+                            Attenzione ! non è possibile proporre una soluzione per richieste già evase.
+                        </ui:message>
+                    </div>          
+                    
+                    <aura:set attribute="else"> 
+                        <!-- OAVERSANO 18/12/2018 : Enhancement NMA Biz III - START -->
+                        <aura:if isTrue="{! not(v.showAttachmentBox)}">
+                        <!-- OAVERSANO 18/12/2018 : Enhancement NMA Biz III - END -->
+                            <div id="spazio_vuoto" class="slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1">
+                                <div class="slds-form-element">
+                                    &nbsp;
+                                </div>
+                                <div class="slds-form-element slds-p-bottom_large">
+                                    <lightning:textarea name="textAreaSolution" label="Dettaglio della soluzione" value="{!v.solutionDetails}" maxlength="1000" onchange="{!c.countCharacters}" class="dettaglioSoluzione"/> <!-- OAVERSANO 30/10/2018 : Nuovo Modello di Assistenza ENHANCEMENT -->
+                                    <div class="slds-text-font_monospace slds-text-align_right">Caratteri rimanenti : {!v.remainingCharacters}</div> <!-- OAVERSANO 30/10/2018 : Nuovo Modello di Assistenza ENHANCEMENT -->
+                                </div>
+                            </div>
+                            <!-- OAVERSANO 18/12/2018 : Enhancement NMA Biz III - START --> <!-- added button to add attachments -->
+                            <div class="slds-clearfix" style="margin-top: 20px;">
+                                <div class="slds-align_absolute-center" style="margin-bottom: 10px;">  
+                                    <lightning:button class="slds-align-left" label="Aggiungi allegato" onclick="{!c.openAddAttachment}" />
+                                    <aura:if isTrue="{!v.lghtMode == true}">
+                                        <lightning:button variant="Neutral" label="Conferma" title="Conferma" onclick="{! c.handleModalConfirmFunctionEvent }"/>
+                                    </aura:if>
+                                </div>
+                            </div>    
+                            <!-- OAVERSANO 18/12/2018 : Enhancement NMA Biz III - END -->        
+                            <div class="slds-align_absolute-center">
+                                <aura:if isTrue="{!v.emptySolution == true}"> 
+                                    <ui:message severity="error" >
+                                        Attenzione! Non è stato inserito alcun commento.
+                                        {!v.WrongSolution}
+                                    </ui:message>
+                                </aura:if>
+                            </div>
+                            <div class="slds-align_absolute-center" style="white-space:pre-wrap; text-align: center;">
+                                <aura:if isTrue="{!v.errorFromServer}"> 
+                                    <ui:message severity="error" >
+                                        {!v.errorDetails}
+                                    </ui:message>
+                                </aura:if>
+                            </div>
+                            <!-- OAVERSANO 18/12/2018 : Enhancement NMA Biz III - START -->
+                            <aura:set attribute="else">
+                                <h1 class="slds-text-heading_medium" title="Allega file" style="margin-top: 20px;">Allega file</h1>
+                                <br></br>
+                                <c:fileUpload showShareFile_Flag="{!v.showShareFile_Flag}" stoConvRT="Agente" parentId="{!v.CaseId}" attachmentList="{!v.attachmentList}" attachmentListFileNames="{!v.attachmentListFileNames}"/>
+                                <br></br>
+                                <div class="slds-align_absolute-center" style="margin-bottom: 10px;">  
+                                    <lightning:button variant="brand" class="slds-align_absolute-center" label="Chiudi" onclick="{!c.closeAddAttachment}" />
+                                </div>
+                            </aura:set>
+                        </aura:if>
+                        <!-- OAVERSANO 18/12/2018 : Enhancement NMA Biz III - END -->
+                    </aura:set>
+                </aura:if>
+                
+                <aura:set attribute="else">
+                    <div style="text-align: center;">
+                        <ui:message severity="error" >
+                            Attenzione ! è possibile proporre una nuova soluzione solamente una volta ricevuto un feedback da parte dell'agente.
+                        </ui:message>
+                    </div>                
+                </aura:set>
+            </aura:if>
+        </aura:set>
+    </aura:if>    
+    
+    <aura:if isTrue="{! v.isLoading }">
+        <div class="slds-spinner_container slds-is-fixed spinnerWholeScreen">
+            <div role="status" class="slds-is-fixed slds-spinner slds-spinner_medium Orlando">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </aura:if>
+    
+    
+</aura:component>

@@ -1,0 +1,183 @@
+<template>
+	<c-mobility-spinner show={spinner} show-overlay={spinnerOverlay}></c-mobility-spinner>
+	<c-mobility-messages model={messages}></c-mobility-messages>
+
+	<template if:false={authorized}>
+		<c-mobility-unauthorized></c-mobility-unauthorized>
+	</template>
+	<template if:true={authorized}>
+		<form onchange={onChangeAccount}>
+			<div class='row'>
+				<div class='col-12 text-left'>
+					<h2><strong>Blacklist Campagne</strong></h2>
+				</div>
+			</div>
+			<div class='row justify-content-center'>
+				<div class='col-4 text-left'>
+					<div style="display: inline-block">
+						<div class="form-check text-right">
+							<label class="checkbox-button">
+								<span class="form-check-label checkbox-button__label">{_label.blacklist_dwelling}</span>
+								<input type="checkbox" class="form-check-input checkbox-button__input"
+									name="BlackList_Abitazione__c" checked={account.BlackList_Abitazione__c}>
+								<span class="checkbox-button__control"></span>
+							</label>
+						</div>
+						<div class="form-check text-right">
+							<label class="checkbox-button">
+								<span class="form-check-label checkbox-button__label">{_label.blacklist_car}</span>
+								<input type="checkbox" class="form-check-input checkbox-button__input"
+									name="BlackList_Auto__c" checked={account.BlackList_Auto__c}>
+								<span class="checkbox-button__control"></span>
+							</label>
+						</div>
+						<div class="form-check text-right">
+							<label class="checkbox-button">
+								<span
+									class="form-check-label checkbox-button__label">{_label.blacklist_companies}</span>
+								<input type="checkbox" class="form-check-input checkbox-button__input"
+									name="BlackList_Aziende__c" checked={account.BlackList_Aziende__c}>
+								<span class="checkbox-button__control"></span>
+							</label>
+						</div>
+						<div class="form-check text-right">
+							<label class="checkbox-button">
+								<span
+									class="form-check-label checkbox-button__label">{_label.blacklist_accidents}</span>
+								<input type="checkbox" class="form-check-input checkbox-button__input"
+									name="BlackList_Infortuni__c" checked={account.BlackList_Infortuni__c}>
+								<span class="checkbox-button__control"></span>
+							</label>
+						</div>
+						<div class="form-check text-right">
+							<label class="checkbox-button">
+								<span class="form-check-label checkbox-button__label">{_label.blacklist_disease}</span>
+								<input type="checkbox" class="form-check-input checkbox-button__input"
+									name="BlackList_Malattia__c" checked={account.BlackList_Malattia__c}>
+								<span class="checkbox-button__control"></span>
+							</label>
+						</div>
+						<div class="form-check text-right">
+							<label class="checkbox-button">
+								<span
+									class="form-check-label checkbox-button__label">{_label.blacklist_protection}</span>
+								<input type="checkbox" class="form-check-input checkbox-button__input"
+									name="BlackList_Protection__c" checked={account.BlackList_Protection__c}>
+								<span class="checkbox-button__control"></span>
+							</label>
+						</div>
+						<div class="form-check text-right">
+							<label class="checkbox-button">
+								<span class="form-check-label checkbox-button__label">{_label.blacklist_saving}</span>
+								<input type="checkbox" class="form-check-input checkbox-button__input"
+									name="BlackList_Saving__c" checked={account.BlackList_Saving__c}>
+								<span class="checkbox-button__control"></span>
+							</label>
+						</div>
+					</div>
+				</div>
+				<div class='col-4 text-right'>
+					<div class='text-right' style="display: inline-block">
+						<div class="form-check">
+							<label class="checkbox-button">
+								<span class="form-check-label checkbox-button__label">{_label.blacklist_service}</span>
+								<input type="checkbox" class="form-check-input checkbox-button__input"
+									name="BlackList_Servizio__c" checked={account.BlackList_Servizio__c}>
+								<span class="checkbox-button__control"></span>
+							</label>
+						</div>
+						<div class="form-check">
+							<label class="checkbox-button">
+								<span class="form-check-label checkbox-button__label">{_label.blacklist_renewal}</span>
+								<input type="checkbox" class="form-check-input checkbox-button__input"
+									name="BlackList_Rinnovo__c" checked={account.BlackList_Rinnovo__c}>
+								<span class="checkbox-button__control"></span>
+							</label>
+						</div>
+						<div class="form-check">
+							<label class="checkbox-button">
+								<span
+									class="form-check-label checkbox-button__label">{_label.blacklist_commercial}</span>
+								<input type="checkbox" class="form-check-input checkbox-button__input"
+									name="BlackList_Commerciale__c" checked={account.BlackList_Commerciale__c}>
+								<span class="checkbox-button__control"></span>
+							</label>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+		<form onchange={onChange}>
+			<div class='row justify-content-center'>
+				<div class="col-4"></div>
+				<div class='col-4 text-right form-two'>
+					<div class='text-right' style="display: inline-block">
+						<div class="form-check">
+							<label class="checkbox-button">
+								<span class="form-check-label
+                                    checkbox-button__label">{_label.blacklist_include_all_campaigns}</span>
+								<input type="checkbox" class="form-check-input checkbox-button__input"
+									name="includeInAllCampaign" checked={includeInAllCampaign}>
+								<span class="checkbox-button__control"></span>
+							</label>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+		<form onchange={onChangeProccess} style="margin-top: 40px;">
+			<div class='row'>
+				<div class='col-12 text-left'>
+					<h2><strong>Blacklist Processi</strong></h2>
+				</div>
+			</div>
+			<div class='row justify-content-center'>
+				<div class='col-4 text-left'>
+					<div style="display: inline-block">
+						<template for:each={processOptions} for:item="option">
+							<div class="form-check text-right" style="padding-left: 34px;" key={option.value}>
+								<label class="checkbox-button">
+									<span class="form-check-label checkbox-button__label">{option.label}</span>
+									<input type="checkbox" class="form-check-input checkbox-button__input"
+										name="Blacklist_Processi__c" checked={option.checked} data-value={option.value}>
+									<span class="checkbox-button__control"></span>
+								</label>
+							</div>
+						</template>
+					</div>
+				</div>
+				<div class="col-4 text-right"></div>
+			</div>
+		</form>
+
+		<br><br> <!--blank space-->
+
+		<template if:true={showSave}>
+			<div class='row'>
+				<div class='col-12 text-left'>
+					<h2><strong>Informazioni Blacklist</strong></h2>
+				</div>
+			</div>
+			<div class='row justify-content-center'>
+				<div class='col-4 text-left'>
+					<div style="display: inline-block">
+						<div>
+							<label class="checkbox-button">
+								<span class="checkbox-button__label">{_label.blacklist_last_edit}</span>
+								<span class="endDate__label">{account.lastModifiedDateBlackList}</span>
+							</label>
+						</div>
+					</div>
+				</div>
+				<div class="col-4 text-right"></div>
+			</div>
+			<div class='row justify-content-center'>
+				<div class="col-12 pt-5 text-center">
+					<div class="btn btn-primary" onclick={onClick}>
+						{_label.blacklist_save}
+					</div>
+				</div>
+			</div>
+		</template>
+	</template>
+</template>

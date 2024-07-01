@@ -1,0 +1,98 @@
+<aura:component controller='SendCaseAutomaticQueueController'>
+    <!-- Attriute to show header Text -->
+    <aura:attribute name="caseId" type="Id" default="" />
+    <aura:attribute name="availableValues" type="List" default="[]"/>    
+    <aura:attribute name="sendToOwenerId" type="ID" default=""/>
+    <aura:attribute name="selectedValue" type="String"  />
+    <aura:attribute name="selectedLabel" type="String"  />
+    <aura:attribute name="rT" type="String" />    
+    <aura:attribute name="numberOfAttachment" type="String" />
+    <aura:attribute name="cmt" type="String" />
+    <aura:attribute name="attachmentList" type="String" />
+    <aura:attribute name="OrgUrl" type="String" />
+    <aura:attribute name="Label" type="String" />
+    <aura:attribute name="profileName" type="String" />
+    <aura:attribute name="userRole" type="String" />
+    <aura:attribute name="motivoTrasferimento" type="String" />
+    <aura:attribute name="choiseSelectSend" type="String" />
+    <aura:attribute name="defect_MdC" type="Boolean" default="false" />
+    <aura:attribute name="showToast" type="Boolean" default="false" />
+    <aura:attribute name="typeToast" type="String"  />
+    <aura:attribute name="messageToast" type="String"  />
+    <aura:attribute name="visibilities" type="Object"/>
+    <aura:attribute name="showModal" type="Boolean" default="false" />
+    <!-- DARIO -->
+    <aura:attribute name="tagRichiesta" type="String"/>
+    <aura:attribute name="tagRichiestaValues" type="List"/>
+    <aura:attribute name="block1LevelButton" type="boolean" default="false" />
+    <aura:attribute name="nomeApplicazioneSilva" type="String"/>
+    <aura:attribute name="tipologiaTicketSilva" type="String"/>
+    <aura:attribute name="tagRNeedSilva" type="List"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:if isTrue="{!v.showModal}">
+        <div class="demo-only" style="height: 600px;">
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+                aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <lightning:spinner aura:id="mySpinnerModal" class="slds-hide" />
+                    <!-- Modal Header -->
+                    <header class="slds-modal__header">
+                        <lightning:buttonIcon iconName="utility:close" class="slds-modal__close" size="large"
+                            variant="bare" alternativeText="Close" onclick="{! c.closeModal }" />
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate"> Ritorna al primo
+                            livello
+                        </h2>
+
+                    </header>
+
+                    <!-- Main Body of Modal -->
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <c:CompilaTicketSilva caseId="{!v.caseId}" ReadOnly="true"></c:CompilaTicketSilva>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <lightning:select aura:id="mySelect" required="true" name="Tag Richiesta" label="Tag Richiesta" value="{!v.tagRichiesta}">
+                            <option value="{! tagRichiesta }">{! option }</option>    
+                        <aura:iteration var="option" items="{!v.tagRichiestaValues}">
+                                <option value="{! option }">{! option }</option>
+                            </aura:iteration>
+                        </lightning:select>
+                    </div>
+                    </div>
+                    <!-- Footer of Modal -->
+                    <footer class="slds-modal__footer">
+
+                        <lightning:button label="Annulla" title="Annulla" onclick="{! c.closeModal }" />
+                        <lightning:button variant="brand" label="Conferma" title="Conferma"
+                            onclick="{! c.saveQueue }" />
+                    </footer>
+                </div>
+            </section>
+    
+        </div>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+    <lightning:spinner aura:id="mySpinner" class="slds-hide" alternativeText="Spinner" />
+    <aura:if isTrue="{! v.showToast }">
+        <div class="slds-notify_container slds-is-relative" style="position: fixed;margin-top: 10%;">
+            <div class="{!'slds-notify slds-notify_toast slds-theme_'+v.typeToast}" role="status" style="height: 3rem;">
+                <span class="slds-assistive-text">warning</span>
+                <span
+                    class="{!'slds-icon_container slds-m-right_small slds-no-flex slds-align-top slds-icon-utility-'+v.typeToast}"
+                    title="{!v.typeToast}">
+                    <lightning:icon iconName="{!'utility:'+v.typeToast}" alternativeText="Approved" size="small"
+                        class="whiteIcon" />
+                </span>
+                <div class="slds-notify__content">
+                    <h2 class="slds-text-heading_small ">{!v.messageToast}</h2>
+                </div>
+                
+            </div>
+        </div>
+    </aura:if>
+    
+    
+    
+    
+    
+                       
+</aura:component>

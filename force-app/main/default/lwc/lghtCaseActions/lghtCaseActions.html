@@ -1,0 +1,191 @@
+<template>
+    <template if:true={spinner}>
+        <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+    </template>
+ 
+    <article class="slds-card">
+        
+    	<div class="slds-card__header">
+            <template if:true={visibilities.AccountEdit}>
+                <button class="slds-button slds-button_neutral" onclick={onAccountEdit}>Modifica Account</button>
+            </template>
+            <template if:true={visibilities.Reopen}>
+                <button class="slds-button slds-button_neutral" onclick={onReopen}>Riapri</button>
+            </template>
+            <template if:true={visibilities.TakeOver}>
+                <button class="slds-button slds-button_neutral" onclick={onTakeOver}>Prendi in Carico</button>
+            </template>
+            <template if:true={visibilities.FindAssociateAccount}>
+                <button class="slds-button slds-button_neutral" onclick={onFindAssociateAccount}>Associa Cliente</button>
+            </template>
+            <template if:true={visibilities.FindAssociateIntermediary}>
+                <button class="slds-button slds-button_neutral" onclick={onFindAssociateManager}>Associa Gestore</button>
+            </template>
+            <template if:true={visibilities.FindAssociateAgent}>
+                <button class="slds-button slds-button_neutral" onclick={onFindAssociateAgent}>Associa Agente</button>
+            </template>
+            <template if:true={visibilities.AllClaims}>
+                <button class="slds-button slds-button_neutral" onclick={onAllClaims}>Visualizza Sinistri</button>
+            </template>
+            <template if:true={visibilities.NewCommentAndAttachment}>
+                <button class="slds-button slds-button_neutral" onclick={onNewCommentAndAttachment}>Inserisci nuovo commento / allegato</button>
+            </template>
+            <template if:true={visibilities.Survey}>
+                <button class="slds-button slds-button_neutral" onclick={onSurvey}>Nuovo questionario</button>
+            </template>
+            <template if:true={visibilities.Close}>
+                <button class="slds-button slds-button_neutral" onclick={onCaseClose}>Chiudi</button>
+            </template>
+            <template if:true={visibilities.SolutionProposal}>
+                <button class="slds-button slds-button_neutral" onclick={onProponiSoluzione}>Proponi Soluzione</button>
+            </template>
+            <template if:true={visibilities.FindAssociatePolicy}>
+                <button class="slds-button slds-button_neutral" onclick={onFindAssociatePolicy}>Associa Polizza</button>
+            </template>
+            <template if:true={visibilities.SendEmail}>
+                <button class="slds-button slds-button_neutral" onclick={onSendEmail}>Send Email</button>
+            </template>
+            <template if:true={visibilities.SummaryPage}>
+                <button class="slds-button slds-button_neutral" onclick={onSummaryPage}>Pagina di riepilogo</button>
+            </template>
+            <template if:true={visibilities.MakeAppointment}>
+                <button class="slds-button slds-button_neutral" onclick={onMakeAppointment}>Fissa Appuntamento</button>
+            </template>
+            <template if:true={visibilities.ShowDocuments}>
+                <button class="slds-button slds-button_neutral" onclick={onShowDocuments}>Visualizza Documenti</button>
+            </template>
+            <template if:true={visibilities.SendDocumentValidation}>
+                <button class="slds-button slds-button_neutral" onclick={onSendDocumentValidation}>Valida documenti e chiudi case</button>
+            </template>
+            <template if:true={visibilities.SendSMS}>
+                <button class="slds-button slds-button_neutral" onclick={onSendSMS}>Invio SMS</button>
+            </template> 
+            <template if:true={visibilities.SendSMSCA}>
+                <button class="slds-button slds-button_neutral" onclick={onSendSMSCA}>Invio SMS</button>
+            </template>
+            <template if:true={visibilities.SendWhatsappOutbound}>
+                <button class="slds-button slds-button_neutral" onclick={onSendWhatsappOutbound}>Contatta Cliente via Whatsapp</button>
+            </template>
+            <template if:true={visibilities.SendBackToQueue}>
+                <button class="slds-button slds-button_neutral" onclick={onBackToQueue}>Ritorna in coda</button>
+            </template>
+            <!-- <template if:true={visibilities.CreateBooking}>
+                <button class="slds-button slds-button_neutral" onclick={onCreateBooking}>Nuova Prenotazione DHP</button>
+            </template> -->
+            <template if:true={debugMode}>
+                <button class="slds-button slds-button_neutral" onclick={onTest}>Storm Test</button>
+                <button class="slds-button slds-button_neutral" onclick={onSendEmail}>Send Email</button>
+            </template>
+
+            <template if:true={visibilities.CreateSelfQAdVWizard}>
+                <button class="slds-button slds-button_neutral" onclick={onConfirmQAdV}>Gestione Pratica Documentale</button>
+            </template>
+
+             <!--22112023 - Daniel Torchia START-->
+             <template if:true={visibilities.SurveyIP}>
+                <button class="slds-button slds-button_neutral" onclick={onNewSurveyIP} >Nuovo questionario</button>
+            </template>
+            <!--22112023 - Daniel Torchia STOP-->
+
+            <!--18112023 - Nikolas Capalbo START-->
+            <template if:true={visibilities.SendSMSIP}>
+                <button class="slds-button slds-button_neutral" onclick={onSendSMSIP}>Invio SMS</button>
+            </template>
+            <!--18112023 - Nikolas Capalbo STOP-->
+
+<!--             <template if:true={visibilities.SendEmail}>
+                <button class="slds-button slds-button_neutral" onclick={onSendMail}>Send Email</button>
+            </template> -->
+
+    		<!-- <button class="slds-button slds-button_neutral" onclick={onFindAssociatePolicy}>Find & Associate Policy</button> -->
+    		<!--- <button class="slds-button slds-button_neutral" onclick={onNewCase}>Nuovo Caso</button> -->
+            <!-- <button class="slds-button slds-button_neutral" onclick={onTest}>Test</button>-->
+    		<!-- <button class="slds-button slds-button_neutral" onclick={onSendDocumentValidation}>Send Document Validation</button> -->
+    	</div>
+    </article>
+
+    <template if:true={visibilities.lghtCaseFindAssociateCustomer}>
+        <c-lght-case-find-associate-modal
+            record-id={recordId}
+            type="customer"
+            case-record-type={caseRecordTypeId}
+            close-callback={onFindAssociateAccountClose}>
+        </c-lght-case-find-associate-modal>
+    </template>
+
+    <template if:true={visibilities.lghtCaseFindAssociateManager}>
+        <c-lght-case-find-associate-modal
+            record-id={recordId}
+            case-record-type={caseRecordTypeId}
+            close-callback={onFindAssociateManagerClose}>
+        </c-lght-case-find-associate-modal>
+    </template>
+
+    <template if:true={visibilities.lghtCaseFindAssociatePolicy}>
+        <c-lght-case-find-associate-policy-modal
+            case-data={caseData}
+            close-callback={onFindAssociatePolicyClose}>
+        </c-lght-case-find-associate-policy-modal>
+    </template>
+
+    <template if:true={visibilities.lghtSendEmailManageModal}>
+        <c-lght-send-email-manage-modal
+            case-data={caseData}
+            record-id={recordId}
+            case-record-type={caseRecordTypeId}
+            close-callback={onSendEmailClose}>
+        </c-lght-send-email-manage-modal>
+    </template>
+
+    <template if:true={visibilities.lghtCaseClose}>
+        <c-lght-case-close-modal
+            case-data={caseData}
+            record-id={recordId}
+            s-object-name={sObjectName}
+            case-record-type={caseRecordTypeId}
+            close-callback={onCaseCloseCallback}>
+        </c-lght-case-close-modal>
+    </template>
+
+    <template if:true={visibilities.lghtCaseSendSmsModal}>
+        <c-lght-case-send-sms-modal
+            case-data={caseData}
+            close-callback={onSendSMSClose}>
+        </c-lght-case-send-sms-modal>
+    </template>
+
+    <template if:true={visibilities.lghtSendWhatsappOutbound}>
+        <c-lght-send-whatsapp-outbound-modal
+            case-data={caseData}
+            record-id={recordId}
+            s-object-name={sObjectName}
+            case-record-type={caseRecordTypeId}
+            close-callback={onSendWhatsappOutboundCloseCallback}>
+        </c-lght-send-whatsapp-outbound-modal>
+    </template>
+
+    <template if:true={visibilities.selfQAdVWizard}>
+        <c-lght-confirmation-modal
+        text={qadvConfirmModalTest}
+        case-data={caseData}
+        record-id={recordId}
+        close-callback={onselfQAdVWizardCloseCallback}
+        confirm-callback={onQAdV}
+        >
+        </c-lght-confirmation-modal>
+    </template>
+
+    <!--18112023 - Nikolas Capalbo START-->
+    <template if:true={visibilities.lghtCaseSubFlow}>
+        <c-lght-send-sms-hallmarks-modal
+          record-id={recordId}
+          label-button="Invio SMS"
+          sub-flow-api-name="sendSMSHallmarks"
+          close-callback={onSendSmsHallmarksCloseCallback}
+        >
+        </c-lght-send-sms-hallmarks-modal>
+    </template>
+    <!--18112023 - Nikolas Capalbo STOP-->
+ 
+
+</template>

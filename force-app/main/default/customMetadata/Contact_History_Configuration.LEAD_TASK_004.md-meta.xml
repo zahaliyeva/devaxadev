@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>LEAD_TASK_004</label>
+    <protected>false</protected>
+    <values>
+        <field>Communication_Direction__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Date_Unsubscribed__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Date_and_Time_Link__c</field>
+        <value xsi:type="xsd:string">§ActivityDate§</value>
+    </values>
+    <values>
+        <field>Date_and_Time__c</field>
+        <value xsi:type="xsd:string">§ActivityDate§</value>
+    </values>
+    <values>
+        <field>Detail_1_Link_NFE__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Detail_1_Link__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Detail_1__c</field>
+        <value xsi:type="xsd:string">§Type__c§</value>
+    </values>
+    <values>
+        <field>Detail_2_Link_NFE__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Detail_2_Link__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Detail_2__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Detail_3_Link_NFE__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Detail_3_Link__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Detail_3__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Detail_4_Link_NFE__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Detail_4_Link__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Detail_4__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Detail_5_Link_NFE__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Detail_5_Link__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Detail_5__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Field_Type__c</field>
+        <value xsi:type="xsd:string">Lead</value>
+    </values>
+    <values>
+        <field>Filter_SOQL_Field__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Filter_SOQL_Operator__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Filter_SOQL_Values__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Flag_Click_Field__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Flag_Click_Operator__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Flag_Click_Parameter__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Flag_Hard_Bounce_Field__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Flag_Hard_Bounce_Operator__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Flag_Hard_Bounce_Parameter__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Flag_Mouseover_Bounce__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Flag_Mouseover_Click__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Flag_Mouseover_Open__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Flag_Mouseover_Sent__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Flag_Open_Field__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Flag_Open_Operator__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Flag_Open_Parameter__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Flag_Sent_Field__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Flag_Sent_Operator__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Flag_Sent_Parameter__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Flag_Soft_Bounce_Field__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Flag_Soft_Bounce_Operator__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Flag_Soft_Bounce_Parameter__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>HideFieldsInNFE__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>HideInNFE__c</field>
+        <value xsi:type="xsd:boolean">false</value>
+    </values>
+    <values>
+        <field>IconSVG_Component__c</field>
+        <value xsi:type="xsd:string">/IconeSchedaCliente/phone_blue.svg#phone_blue</value>
+    </values>
+    <values>
+        <field>Icon_Component__c</field>
+        <value xsi:type="xsd:string">standard:call</value>
+    </values>
+    <values>
+        <field>Icon__c</field>
+        <value xsi:type="xsd:string">Telefonata da agenzia</value>
+    </values>
+    <values>
+        <field>Query2_Field_Id__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Query2_Object__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Query2__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Query__c</field>
+        <value xsi:type="xsd:string">SELECT Id, CreatedDate, ActivityDate, Call__c, Type__c, Subject, WhoId FROM Task WHERE TaskSubtype = &apos;Call&apos; AND WhoId IN :§leadIds§ AND (ActivityDate = LAST_N_DAYS:730 OR ActivityDate &gt;= TODAY)</value>
+    </values>
+    <values>
+        <field>Title_Link__c</field>
+        <value xsi:type="xsd:string">§Id§</value>
+    </values>
+    <values>
+        <field>Title__c</field>
+        <value xsi:type="xsd:string">Contatto telefonico da agenzia</value>
+    </values>
+</CustomMetadata>

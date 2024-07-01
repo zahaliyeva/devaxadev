@@ -1,0 +1,339 @@
+<aura:component implements="flexipage:availableForAllPageTypes" access="global" controller="accountEditLightningCTRL" >
+    <aura:dependency resource="markup://force:navigateToSObject" type="EVENT"/>
+    <lightning:spinner aura:id="mySpinner" style="slds-spinner"/>
+    <aura:attribute name="accountId" type="String" />
+    <aura:attribute name="currentAccount" type="Account" default="{ 'sobjectType': 'Account' }"/> 
+    <aura:attribute name="telephoneWithPrefix" type="object"/>
+    <aura:attribute name="oldAccountInfo" type="Map"/>
+    <aura:attribute name="jsDebug" type="Boolean"/> 
+    <aura:attribute name="screenWidth" type="String" default="1920"/>
+    <aura:attribute name="messages" type="Aura.Component[]" access="GLOBAL"/>
+    <aura:handler name="init" action="{!c.Initialize}" value="{!this}"/>
+    <aura:registerEvent name="accountFound" type="c:AccountEvent"/>
+    <aura:dependency resource="force:navigateToURL" type="EVENT"/>
+    <aura:attribute name="ValidazioniOK" type="Boolean"/>
+    <!-- conversione lead -->
+    <aura:handler name="sendInfoFromLead" event="c:infoFromLead" action="{!c.handleInfoFromLead}"/>
+    <aura:attribute name="OpenTask" type="Boolean" default="false"/>
+    <aura:attribute name="isSuccess" type="Boolean" default="true"/>
+    <aura:attribute name="Consensimodificabili" type="Boolean"/>
+    <aura:attribute name="UserInfo" type="Map"/>
+    <aura:attribute name="isPrivacy1populated" type="Boolean" default="true"/>
+    <!--blacklist extra flags -->    
+    <!--MOSCATELLI_M 31/07/2017: Data Enrichment - START-->
+    <aura:attribute name="CampMemberId" type="String"/>
+    <aura:attribute name="CampaignId" type="String"/>
+    <aura:attribute name="EnrichmentMsg" type="String"/>
+    <aura:attribute name="EnrichError" type="Boolean" default="false"/>
+    <aura:attribute name="AvoidEnrichmentCheck" type="Boolean"/>
+    <aura:attribute name="ListString" type="String[]"/>
+    <aura:attribute name="ListRecapiti" type="String[]"/>
+    <aura:attribute name="ListConsensi" type="String[]"/>
+    <aura:attribute name="ListAltriDati" type="String[]"/>
+    <!--MOSCATELLI_M 29/09/2017: Data Enrichment Enhancement-START-->
+    <aura:attribute name="ListStringREL" type="String[]"/>    
+    <aura:attribute name="ListRecapitiREL" type="String[]"/>
+    <aura:attribute name="ListConsensiREL" type="String[]"/>
+    <aura:attribute name="ListAltriDatiREL" type="String[]"/>
+    <aura:attribute name="ListPopulated" type="Boolean"/>
+    <aura:attribute name="ListRELPopulated" type="Boolean"/>    
+    <!--MOSCATELLI_M 29/09/2017: Data Enrichment Enhancement-END-->
+    <aura:attribute name="esitoElaborazione" type="String[]"/>
+    
+    <!--MOSCATELLI_M 29/11/2017: Data enrichment SmartCenter Fase 1- START -->
+    <aura:attribute name="UserIsAdvisor" type="Boolean" default="false"/>
+    <aura:attribute name="PhoneCallId" type="String"/>
+    <aura:attribute name="MPSEnrichment" type="Boolean" default="false"/>
+    <aura:attribute name="oldAccountInfoSC" type="Map"/>
+    <!--MOSCATELLI_M 29/11/2017: Data enrichment SmartCenter Fase 1 - END -->
+    
+    <!--MOSCATELLI_M 12/04/2018: Enhancement Data Enrichment contatti START-->
+    <aura:attribute name="CaseId" type="String" default=""/>
+
+     <!--FM 30/04/2018: GDPR - START -->
+    <aura:attribute name="IsGDPRCase" type="Boolean" default="false"/>
+    <aura:attribute name="ContactDPO" type="Boolean" default="false"/>
+    <aura:attribute name="SearchonCCIR" type="Boolean" default="false"/>
+    <aura:attribute name="IsCall" type="Boolean" default="false"/>
+	 <aura:attribute name="showWarning" type="Boolean" default="false"/>
+
+    <!-- FM 05/06/2018: OTP START -->
+    <aura:attribute name="isDAOLAgency" type="Boolean" default="true"/>
+    <!-- FM 05/06/2018: OTP END -->
+    
+    <!-- ANASTASI_S 22072019: Email and Phone Validation START -->
+    <aura:attribute name="regEx" type="Object" />
+    <!-- ANASTASI_S 22072019: Email and Phone Validation END -->
+    
+     <aura:if isTrue="{!and(v.UserIsAdvisor==true,v.ContactDPO==true)}">
+    <div class="slds-backdrop slds-backdrop_open"></div>
+        <div role="alertdialog" tabindex="-1" aria-labelledby="prompt-heading-id" aria-describedby="prompt-message-wrapper" class="slds-modal slds-fade-in-open slds-modal_prompt">
+        <div class="slds-modal__container">
+            <div class="slds-modal__header slds-theme_error slds-theme_alert-texture">
+                <h2 class="slds-text-heading_medium" id="prompt-heading-id">Attenzione !</h2>
+            </div>
+            <div class="slds-modal__content slds-p-around_medium">
+                <p class="slds_paragraph">La scheda del cliente non è modificabile. Comunicare al cliente di contattare il DPO.</p>
+                 </div>
+            <div class="slds-modal__footer slds-theme_default">
+                        <lightning:button class="slds-button slds-button_neutral" onclick="{!c.gotoURL}">Continua</lightning:button>
+            </div>
+           
+        </div>
+    </div>
+    </aura:if>
+    
+    <aura:if isTrue="{!and(v.UserIsAdvisor==true,v.SearchonCCIR==true)}">
+     <div class="slds-backdrop slds-backdrop_open"></div>
+        <div role="alertdialog" tabindex="-1" aria-labelledby="prompt-heading-id" aria-describedby="prompt-message-wrapper" class="slds-modal slds-fade-in-open slds-modal_prompt">
+        <div class="slds-modal__container">
+            <div class="slds-modal__header slds-theme_warning slds-theme_alert-texture">
+                <h2 class="slds-text-heading_medium" id="prompt-heading-id">Attenzione!</h2>
+            </div>
+            <div class="slds-modal__content slds-p-around_medium">
+                <p class="slds_paragraph">Ricercare su CCIR gli altri NDG riconducibili al cliente in lavorazione al fine di effettuare le modifiche necessarie anche sulle altre anagrafiche</p>
+            </div>
+            <div class="slds-modal__footer slds-theme_default">
+                        <lightning:button class="slds-button slds-button_neutral" onclick="{!c.setGoToCCIR}">Continua</lightning:button>
+            </div>
+        </div>
+    </div>
+    </aura:if>
+    <!--FM 30/04/2018: GDPR - END -->
+	 <aura:if isTrue="{!v.showWarning==true}">
+     <div class="slds-backdrop slds-backdrop_open"></div>
+        <div role="alertdialog" tabindex="-1" aria-labelledby="prompt-heading-id" aria-describedby="prompt-message-wrapper" class="slds-modal slds-fade-in-open slds-modal_prompt">
+        <div class="slds-modal__container">
+            <div class="slds-modal__header slds-theme_warning slds-theme_alert-texture">
+                <h2 class="slds-text-heading_medium" id="prompt-heading-id">Attenzione!</h2>
+            </div>
+            <div class="slds-modal__content slds-p-around_medium">
+                <p class="slds_paragraph">{!$Label.c.Warning_Edit_Account}</p>
+            </div>
+            <div class="slds-modal__footer slds-theme_default">
+                        <lightning:button class="slds-button slds-button_neutral" onclick="{!c.setShowWarning}">Continua</lightning:button>
+            </div>
+        </div>
+    </div>
+    </aura:if>
+    
+    <aura:if isTrue="{!and(v.CaseId=='',v.UserIsAdvisor==true,v.ContactDPO==false)}">
+    <div class="slds-backdrop slds-backdrop_open"></div>
+        <div role="alertdialog" tabindex="-1" aria-labelledby="prompt-heading-id" aria-describedby="prompt-message-wrapper" class="slds-modal slds-fade-in-open slds-modal_prompt">
+        <div class="slds-modal__container">
+            <div class="slds-modal__header slds-theme_error slds-theme_alert-texture">
+                <h2 class="slds-text-heading_medium" id="prompt-heading-id">Attenzione !</h2>
+            </div>
+            <div class="slds-modal__content slds-p-around_medium">
+                <p class="slds_paragraph">E' necessario creare un Case di tracciamento prima di procedere con la modifica del cliente. Chiudere il tab, quindi tornare alla scheda della telefonata.</p>
+            </div>
+        </div>
+    </div>
+    </aura:if>
+    <!--MOSCATELLI_M 12/04/2018: Enhancement Data Enrichment contatti END-->
+      
+    
+    <!-- /****/ -->
+    <!-- PAGE HEADER -->
+    <!--force:inputField aura:id="FirstName" value="{!v.currentAccount.FirstName}"/-->   
+    <div class="slds" style="margin-top:10px;margin-left:10px;"> 
+            
+            <aura:if isTrue="{!v.currentAccount.IsPersonAccount==true}">
+                <div class="slds-page-header" role="banner" >
+                    <div class="slds-grid">
+                        <div class="slds-col">
+                            <p class="slds-text-heading_label">Modifica cliente</p>
+                            <h1 class="slds-text-heading_medium">
+                                {!v.currentAccount.FirstName} &nbsp;{!v.currentAccount.LastName} </h1>
+                        </div>
+                    </div>
+                </div>
+                
+                <!--MOSCATELLI_M 29/11/2017: Data enrichment SmartCenter Fase 1 - START-->
+                <aura:if isTrue="{!v.UserIsAdvisor == true}">
+                    <div class="slds-grid slds-wrap slds-grid_pull-padded">
+                        <c:Recapiti_RO_SmartCenter Recapiti_RO_SmartCenter="{!v.currentAccount}" telephoneWithPrefix="{!v.telephoneWithPrefix}" MPSEnrichment="{!v.MPSEnrichment}" ContactDPO="{!v.ContactDPO}" OpenTask="{!v.OpenTask}"/>
+                        <c:Contatti_SmartCenter Contatti_SmartCenter="{!v.currentAccount}"/>
+                        <aura:if isTrue="{!v.Consensimodificabili == false}"> 
+                                <c:ConsensiErrore Consensi="{!v.currentAccount}" OpenTask="{!v.OpenTask}" isSuccess="{!v.isSuccess}" Consensimodificabili="{!v.Consensimodificabili}"/> 
+                                <aura:set attribute="else">
+                                    <c:Consensi Consensi="{!v.currentAccount}" MPSEnrichment="{!v.MPSEnrichment}" ContactDPO="{!v.ContactDPO}" OpenTask="{!v.OpenTask}" isSuccess="{!v.isSuccess}" Consensimodificabili="{!v.Consensimodificabili}" UserIsAdvisor="{!v.UserIsAdvisor}"/>
+                                </aura:set> 
+                        </aura:if> 
+                    </div>
+                    <aura:set attribute="else">                        
+                        <div class="slds-grid slds-wrap slds-grid_pull-padded">                       
+                            <c:Recapiti_B2C Recapiti_B2C="{!v.currentAccount}" telephoneWithPrefix="{!v.telephoneWithPrefix}" OpenTask="{!v.OpenTask}"/>
+                            <aura:if isTrue="{!v.Consensimodificabili == false}"> 
+                                <c:ConsensiErrore Consensi="{!v.currentAccount}"  OpenTask="{!v.OpenTask}" isSuccess="{!v.isSuccess}" Consensimodificabili="{!v.Consensimodificabili}"/> 
+                                <aura:set attribute="else">
+                                    <c:Consensi Consensi="{!v.currentAccount}"  OpenTask="{!v.OpenTask}" isSuccess="{!v.isSuccess}" Consensimodificabili="{!v.Consensimodificabili}" isDAOLAgency="{!v.isDAOLAgency}" UserIsAdvisor="{!v.UserIsAdvisor}"/>
+                                </aura:set> 
+                            </aura:if>                                                       
+                        </div> 
+                    </aura:set>
+                </aura:if>
+                
+                <aura:set attribute="else">
+                    
+                    
+                    <div class="slds-page-header" role="banner">
+                        <div class="slds-grid">
+                            <div class="slds-col">
+                                <p class="slds-text-heading_label">Modifica cliente</p>
+                                <h1 class="slds-text-heading_medium">{!v.currentAccount.Name} </h1>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="slds-grid slds-wrap slds-grid_pull-padded">
+                        
+                        <!--MOSCATELLI_M 29/11/2017: Data enrichment SmartCenter Fase 1 - START-->
+                        <aura:if isTrue="{!v.UserIsAdvisor == true}">
+                            <c:RecapitiB2B_RO_SmartCenter RecapitiB2B_RO_SmartCenter="{!v.currentAccount}" telephoneWithPrefix="{!v.telephoneWithPrefix}" MPSEnrichment="{!v.MPSEnrichment}" ContactDPO="{!v.ContactDPO}" OpenTask="{!v.OpenTask}"/>
+                            <c:Contatti_SmartCenter Contatti_SmartCenter="{!v.currentAccount}"/>
+                            <aura:if isTrue="{!v.Consensimodificabili == false}"> 
+                                <c:ConsensiErrore Consensi="{!v.currentAccount}" OpenTask="{!v.OpenTask}" isSuccess="{!v.isSuccess}" Consensimodificabili="{!v.Consensimodificabili}"/> 
+                                <aura:set attribute="else">
+                                    <c:Consensi Consensi="{!v.currentAccount}" MPSEnrichment="{!v.MPSEnrichment}" ContactDPO="{!v.ContactDPO}" OpenTask="{!v.OpenTask}" isSuccess="{!v.isSuccess}" Consensimodificabili="{!v.Consensimodificabili}" UserIsAdvisor="{!v.UserIsAdvisor}"/>
+                                </aura:set> 
+                            </aura:if>
+                            <aura:set attribute="else">                                
+                                <c:Recapiti_B2B Recapiti_B2B="{!v.currentAccount}" telephoneWithPrefix="{!v.telephoneWithPrefix}" OpenTask="{!v.OpenTask}"/>
+                                <aura:if isTrue="{!v.Consensimodificabili == false}"> 
+                                    <c:ConsensiErrore Consensi="{!v.currentAccount}"  OpenTask="{!v.OpenTask}" isSuccess="{!v.isSuccess}" Consensimodificabili="{!v.Consensimodificabili}"/> 
+                                    <aura:set attribute="else">
+                                        <c:Consensi Consensi="{!v.currentAccount}"  OpenTask="{!v.OpenTask}" isSuccess="{!v.isSuccess}" Consensimodificabili="{!v.Consensimodificabili}" isDAOLAgency="{!v.isDAOLAgency}" UserIsAdvisor="{!v.UserIsAdvisor}"/>
+                                    </aura:set> 
+                                </aura:if>
+                            </aura:set>
+                        </aura:if>
+                        
+                    </div> 
+                    
+                    
+                    
+                    
+                </aura:set> 
+                
+                
+                
+            </aura:if>    
+                        
+            <!--  PAGE ERRORS -->
+            <aura:if isTrue="{!v.ValidazioniOK == false}"> 
+                <div aura:id="messages">
+                    {!v.messages}
+                </div>
+            </aura:if>    
+            
+            <!-- / PAGE ERRORS -->
+                        
+            <div class="slds-align_absolute-center slds-m-bottom_xx-large">
+                
+                <div class="slds-form-element ">
+                    <div class="slds-form-element__control  slds-m-top_medium slds-m-bottom_xx-large">
+                        <ui:button aura:id="Salva" label="Salva"
+                                   class="slds-button slds-button-brand "
+                                   press="{!c.clickUpdateAccount}"/> 
+                        <ui:button label="Annulla"
+                                   class="slds-button slds-button-brand "
+                                   press="{!c.gotoURL}"/>
+                    </div>
+                </div>    
+            </div>
+        
+        <!--MOSCATELLI_M 31/07/2017: Data Enrichment - START-->
+        <aura:if isTrue="{!v.EnrichError == true}">
+            <div style="min-height: 600px">   
+                <div role="alertdialog" tabindex="-1" aria-labelledby="prompt-heading-id" aria-describedby="prompt-message-wrapper" class="slds-modal slds-fade-in-open slds-modal_prompt">
+                    <div class="slds-modal__container">
+                        <div class="slds-modal__header slds-theme_warning slds-theme_alert-texture">
+                            
+                            <h2 class="slds-text-heading_medium" id="prompt-heading-id">Attenzione!</h2>
+                        </div>
+                        <div class="slds-modal__content slds-p-around_medium">
+                            <p>{!v.EnrichmentMsg}</p>
+                            <aura:if isTrue="{!v.ListRELPopulated}">                         
+                                <p class="slds_thick">I seguenti input risultano infatti non modificati:</p>
+                                <br/>
+                                <!--MOSCATELLI_M 29/09/2017: Data Enrichment Enhancement-START-->
+                                <aura:if isTrue="{!v.ListRecapitiREL.length>0}">
+                                    <p>
+                                        
+                                        <aura:iteration items="{!v.ListRecapitiREL}" var="fieldsREL" >
+                                            <li class="slds_thick">{!fieldsREL}</li>
+                                        </aura:iteration>
+                                    </p>
+                                    <br/>
+                                </aura:if>
+                                <aura:if isTrue="{!v.ListConsensiREL.length>0}">
+                                    <p>
+                                        <aura:iteration items="{!v.ListConsensiREL}" var="fieldsREL">
+                                            <li class="slds_thick">Consenso {!fieldsREL}</li>
+                                        </aura:iteration>
+                                    </p>
+                                    <br/>
+                                </aura:if>
+                                <aura:if isTrue="{!v.ListAltriDatiREL.length>0}">                
+                                    <p>
+                                        <aura:iteration items="{!v.ListAltriDatiREL}" var="fieldsREL" >
+                                            <li class="slds_thick">{!fieldsREL}</li>
+                                        </aura:iteration>
+                                    </p>
+                                    <br/>
+                                </aura:if>
+                            </aura:if> 
+                            <aura:if isTrue="{!v.ListPopulated}">               
+                                <p class="slds_small">Ti ricordiamo che hai la possibilità di modificare anche le seguenti informazioni:</p>  
+                                <br/>
+                                
+                                <!--MOSCATELLI_M 29/09/2017: Data Enrichment Enhancement-END-->
+                                
+                                <aura:if isTrue="{!v.ListRecapiti.length>0}">
+                                    <p>
+                                        <aura:iteration items="{!v.ListRecapiti}" var="fields" >
+                                            <li class="slds_small">{!fields}</li>
+                                        </aura:iteration>
+                                    </p>
+                                    <br/>
+                                </aura:if> 
+                                <aura:if isTrue="{!v.ListConsensi.length>0}">          
+                                    <p>
+                                        <aura:iteration items="{!v.ListConsensi}" var="fields" >
+                                            <li class="slds_small">Consenso {!fields}</li>
+                                        </aura:iteration>
+                                    </p>
+                                    <br/>
+                                </aura:if>
+                                <aura:if isTrue="{!v.ListAltriDati.length>0}">                  
+                                    <p>
+                                        <aura:iteration items="{!v.ListAltriDati}" var="fields" >
+                                            <li class="slds_small">{!fields}</li>
+                                        </aura:iteration>
+                                    </p>
+                                    <br/>
+                                </aura:if>
+                            </aura:if>       
+                        </div>
+                        
+                        <div class="slds-modal__footer slds-theme_default">
+                            <!-- <aura:if isTrue="{!v.currentLead.Account_referente__c != null}"> -->
+                            <ui:button label="Torna a modificare"
+                                       class="slds-button slds-button-brand"
+                                       press="{!c.goBacktoModify}"/>
+                            <!--</aura:if> -->
+                            <ui:button label="Procedi comunque"
+                                       class="slds-button slds-button-brand"
+                                       press="{!c.goFinishUpdate}"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </div>
+        </aura:if>   
+        <!--MOSCATELLI_M 31/07/2017: Data Enrichment - END-->
+    </div> 
+    
+</aura:component>

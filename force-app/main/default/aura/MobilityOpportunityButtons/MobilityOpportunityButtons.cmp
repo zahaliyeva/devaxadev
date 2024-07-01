@@ -1,0 +1,6 @@
+<aura:component  implements="forceCommunity:availableForAllPageTypes" access="global">
+ 
+    <div style="text-align:right;">
+        <a class="slds-button slds-button_neutral" href="/crm/s/nuova-trattativa" target="_self" style="text-decoration:none;">Nuova</a> 
+    </div>
+</aura:component>

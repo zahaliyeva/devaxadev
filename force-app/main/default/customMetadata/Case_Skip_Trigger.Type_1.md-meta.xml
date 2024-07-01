@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>Type_1</label>
+    <protected>false</protected>
+    <values>
+        <field>TECH_Queue_Destination__c</field>
+        <value xsi:type="xsd:string">AXA Caring Banca PIC;AXA Caring Banca Info;AXA Caring Clienti AAI Info;AXA Caring Clienti AAI PIC;AXA Caring Dipendenti PIC;AXA Caring Dipendenti Info;AXA Caring Medical Concierge;AXA Caring Centri Convenzionati;HD1 VOICE AGENTI AXA CARING;Info Sinistri Non Auto;Info Sinistri Auto;Denuncia Sinistri Auto;Denuncia Sinistri Non Auto;Salute AAI PIC Bot</value>
+    </values>
+    <values>
+        <field>Use_Logic__c</field>
+        <value xsi:type="xsd:boolean">true</value>
+    </values>
+</CustomMetadata>

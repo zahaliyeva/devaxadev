@@ -1,0 +1,221 @@
+<template> 
+	<template if:true={_pagerData.hasLimitWarning}>
+		<div class="row">
+			<div class="col-12 datagrid-alert">
+				<div class="datagrid-alert-heading">
+					<span class="mr-1 align-bottom">
+						<c-mobility-icon name='alert-counter' width='18px' height='18px'></c-mobility-icon>
+					</span> Attenzione i filtri applicati non sono abbastanza stringenti
+				</div>
+			</div>
+		</div>
+	</template>
+
+	<template if:true={showFilter}>
+		<div class="row">
+			<div class="col-12">
+				<div class="row flex-wrap">
+					<template for:each={_pagerData.filtersVariables} for:item='filter'>
+						<div key={filter.DeveloperName} class="col-auto m-1 filterBox text-nowrap align-middle">
+							{filter.label}: {filter.filtersString}
+							<a onclick={onRemoveFilter} data-name={filter.DeveloperName} class="pl-2">
+								<span>
+									<c-mobility-icon name='close-tab' width='8px' height='8px'></c-mobility-icon>
+								</span>
+							</a>
+						</div>
+					</template>
+				</div>
+			</div>
+		</div>
+	</template>
+	<div class="row">
+		<div class="col-12 mt-2" style={tableStyle}>
+			<div class="row justify-content-between pt-3">
+				<div class="col-4" if:false={hideTooltip}>
+					<div class="table-pages">
+						{_pagerData.pagination.startPageString}-{_pagerData.pagination.endPageString}
+						<span class="dropdown mx-1">
+							<a class="dropdown" onclick={toggleTooltip} onmouseout={toggleOutTooltip}>
+								<c-mobility-icon name='chevron' width='10px' height='10px'></c-mobility-icon>
+							</a>
+							<div class={tooltipClass}>
+								<template for:each={_pagerData.perPages} for:item='perPage'>
+									<a class='dropdown-item text-center' key={perPage} data-value={perPage} onclick={changeNumberView}>{perPage}</a>
+								</template>
+							</div>
+						</span>
+						<span class="table-pages-result">{_label.dataGrid_of}
+							{_pagerData.pagination.total} {_label.dataGrid_results}
+						</span>
+						<template if:true={_pagerData.hasSelected}>
+							<span> {_pagerData.selectedLength} {_label.dataGrid_selected}</span>
+						</template>
+					</div>
+				</div>
+
+				<div class="col">
+					<form class="table-search" onsubmit={submitForm}>
+						<template if:true={_pagerData.isVisibleSearch}>
+							<span class="link-primary" onclick={onUpdatePage}>
+								<span class="align-middle">{_label.dataGrid_update} </span>
+								<span class="align-middle">
+									<c-mobility-icon name='reload' width='16px' height='16px'></c-mobility-icon>
+								</span>
+							</span>
+							<div class="form-group">
+								<div class="form-group has-search">
+									<div class='col'>
+										<input type="search" class="form-control" placeholder="Cerca"
+											oninput={changeSearch} value = {filtroRicerca}>
+										<span class="form-control-feedback">
+											<c-mobility-icon name='search' width='12px' height='12px'></c-mobility-icon>
+										</span>
+									</div>
+								</div>
+							</div>
+						</template>
+					</form>
+				</div>
+			</div>
+			<div class="table-responsive" style={_pagerData.containerStyle}>
+				<template if:false={noData}>
+					<table class="table" style={tableStyle}>
+						<thead>
+							<tr>
+								<template for:each={tabledata.header} for:index="index" for:item="record">
+									<th key={record.Id} class={record.class}>
+										<template if:false={_pagerData.singleSelect}>
+											<template if:true={record.viewSelectRow}>
+												<template if:false={hideSelectAll}>
+												<label class="checkbox-button">
+													<input type="checkbox" onchange={_onSelectAll}
+														checked={_pagerData.selectedAll}
+														class="checkbox-button__input" />
+													<span class="checkbox-button__control"></span>
+												</label>
+											</template>
+										</template>
+										</template>
+										<template if:false={record.viewSelectRow}>
+											<template if:false={record.header}>
+												<span class="text-nowrap" data-field={record.key} onclick={_onToggle}
+													style='cursor:pointer'>
+													{record.label}
+													<template if:true={_pagerData.isVisibleFilter}>
+														<span class="align-middle">
+															<c-mobility-icon name={record.icon} width="10px"
+																height="10px">
+															</c-mobility-icon>
+														</span>
+													</template>
+												</span>
+											</template>
+										</template>
+									</th>
+								</template>
+							</tr>
+						</thead>
+						<tbody>
+							<template for:each={tabledata.data} for:item="rowElement">
+								<tr key={rowElement.Id} class={rowElement.class}>
+									<template for:each={rowElement.row} for:item="cell">
+										<td key={cell.Id} class={cell.class} style={cell.labelStyle}>
+											<template if:true={cell.type}>
+												<template if:true={cell.isTypeSelect}>
+													<label class="checkbox-button">
+														<input 
+															type="checkbox" 
+															data-record-id={cell.element.Id}
+															onchange={_onChangeSelect} 
+															checked={cell.selected}
+															class="checkbox-button__input" 
+														/>
+														<span class="checkbox-button__control"></span>
+													</label>
+												</template>
+												<template if:true={cell.isTypeCheckbox}>
+													<label class="checkbox-button">
+														<input 
+															type="checkbox" 
+															data-record-id={cell.element.Id}
+															readonly 
+															disabled 
+															checked={cell.checked}
+															class="checkbox-button__input" 
+														/>
+														<span class="checkbox-button__control"></span>
+													</label>
+												</template>
+												<template if:true={cell.isTypeUrl}>
+													<a href={cell.valueUrlLink}><u>{cell.value}</u></a>
+												</template>
+												<template if:true={cell.isTypeRedirect}>
+													<a onclick = {cell.onclick}><u>{cell.valueRedirect}</u></a>
+												</template>
+												<template if:true={cell.isTypeAction}>
+													<div class="float-right">
+														<template for:each={cell.data} for:item="action">
+															<template if:true={action.isVisible}>
+																<span key={action.Id} class={action.class}>
+																	<a onclick={action.actionClick} style='cursor:pointer'>
+																		{action.label}
+																		<span class="icon-span">
+																			<c-mobility-icon name={action.icon} width="16px"
+																				height="16px">
+																			</c-mobility-icon>
+																		</span>
+																	</a>
+																</span>
+															</template>
+														</template>
+													</div>
+												</template>
+												<template if:true={cell.isTypeDropdown}>
+													<c-mobility-drop-down icon={cell.icon} label={cell.label}
+														select-callback={cell.dropdownCallback}
+														values={cell.dropdownData}>
+													</c-mobility-drop-down>
+												</template>
+												<template if:true={cell.isTypeBadge}>
+													<span class="badge badge-pill style-badge" style={cell.badgeStyle}>
+														{cell.valueBadgeLabel}
+													</span>
+												</template>
+												<template if:true={cell.isTypeColoredLabel}>
+													
+														<b style = "color:Black;">{cell.ColoredLabelValue}</b>
+													
+													
+												</template>
+												<template if:true={cell.isTypeDate}>
+													{cell.valueDate}
+												</template>
+												<template if:true={cell.isTypeDateTime}>
+													{cell.valueDateTime}
+												</template>
+											</template>
+											
+											<template if:false={cell.type}>
+												{cell.valueString}
+											</template>
+										</td>
+									</template>
+								</tr>
+							</template>
+						</tbody>
+					</table>
+				</template>
+				<c-mobility-no-data show={noData} no-image='true'></c-mobility-no-data>
+			</div>
+			<template if:false={noData}>
+				<div class="row">
+					<div class="col-12">
+						<c-mobility-pagination pagination={_pagerData.pagination} change-page={changePage}>
+						</c-mobility-pagination>
+					</div>
+				</div>
+			</template>
+		</div>
+	</div>
+</template>

@@ -1,0 +1,320 @@
+<template>
+    <div class="slds-page-header">
+        <div class="slds-page-header__row">
+            <div class="slds-page-header__col-title">
+                <div class="slds-media">
+                    <div class="slds-media__figure">
+                        <lightning-icon icon-name="standard:campaign_members" size="big"></lightning-icon>
+                    </div>
+                    <div class="slds-page-header__name-title">
+                        <h1>
+                            <span class="slds-page-header__title slds-truncate"
+                                title="Svalidazione Campagne">Svalidazione Campagne</span>
+                        </h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <template if:true={spinner}>
+        <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+        Caricamento in corso
+    </template>
+
+    <template if:false={spinner}>
+
+        <!-- begin of filters-->
+        <div class="slds-box slds-theme--shade slds-m-vertical--medium">
+
+            <div class="slds-grid slds-gutters">
+                <div class="slds-col--padded slds-m-left_medium">
+                    <h2 style="font: size 16px;">
+                        <p>In questa pagina potrai escludere i clienti che non vorrai far partecipare alla Campagna
+                            selezionata:
+                            tramite l'apposito filtro seleziona la Campagna, spunta i clienti a cui vuoi modificare
+                            l’adesione e clicca sul tasto “Modifica Adesione”.</p>
+                        <p></p>Per re-includere i clienti esclusi segui la stessa procedura.</p>
+                        <p>Ricordati di cliccare sempre su Modifica Adesione prima di cambiare pagina per selezionare
+                            ulteriori clienti in lista.</p>
+                    </h2>
+                </div>
+            </div>
+            <br>
+            <!--campagne filters-->
+            <div class="slds-grid slds-gutters">
+                <div class="slds-col slds-size_1-of-2">
+                    <span>
+                        <div class="slds-col--padded" title="Campagne Commerciali">
+                            <label class="slds-form-element__label">
+                                <span class="">Campagne Commerciali</span>
+                            </label>
+                            <select data-id="CampagneCommercialiSelect" class="slds-select" onchange={handleChange}>
+                                <option value="None">-</option>
+                                <template for:each={optionsCampagneComerciali} for:item="option">
+                                    <option key={option.Id} value={option.Id}>{option.Name}</option>
+                                </template>
+                            </select>
+                        </div>
+                    </span>
+                </div>
+                <div class="slds-col slds-size_1-of-2">
+                    <span>
+                        <div class="slds-col--padded" title="Campagne Informative">
+                            <label class="slds-form-element__label">
+                                <span class="">Campagne Informative</span>
+                            </label>
+                            <select data-id="CampagneInformativeSelect" class="slds-select" onchange={handleChange}>
+                                <option value="None">-</option>
+                                <template for:each={optionsCampagneinformative} for:item="option">
+                                    <option key={option.Id} value={option.Id}>{option.Name}</option>
+                                </template>
+                            </select>
+                        </div>
+                    </span>
+                </div>
+            </div>
+            <!-- Nodes filters-->
+            <div class="slds-grid slds-gutters">
+                <div class="slds-col slds-size_1-of-2">
+                    <span>
+                        <div class="slds-col--padded">
+                            <label class="slds-form-element__label">
+                                <span class="">Nodo</span>
+                            </label>
+                            <select data-id="NodidiVisibilitaSelect" class="slds-select" onchange={handleChange}
+                                disabled>
+                                <option value="None">-</option>
+                                <template for:each={optionsNodiVisibilita} for:item="option">
+                                    <option key={option.Name} value={option.codeUnique}>{option.Name}</option>
+                                </template>
+                            </select>
+                        </div>
+                    </span>
+                </div>
+                <div class="slds-col slds-size_1-of-2">
+                    <span>
+                        <div class="slds-col--padded">
+                            <label class="slds-form-element__label">
+                                <span class="">Nominativo Omnia</span>
+                            </label>
+                            <select data-id="NodoOmniaSelect" class="slds-select" onchange={handleChange} disabled>
+                                <option value="None">-</option>
+                                <template for:each={optionsNodoOmnia} for:item="option">
+                                    <option key={option.codeUnique} value={option.codeUnique}>{option.agencyHolder}
+                                    </option>
+                                </template>
+                            </select>
+                        </div>
+                    </span>
+                </div>
+            </div>
+            <!-- Privacy filters-->
+            <div class="slds-grid slds-gutters">
+                <div class="slds-col slds-size_1-of-2">
+                    <span>
+                        <div class="slds-col--padded">
+                            <label class="slds-form-element__label">
+                                <span class="">Privacy</span>
+                            </label>
+                            <select data-id="privacySelect" class="slds-select" onchange={handleChange} disabled>
+                                <option value="None">-</option>
+                                <option value="Sì">Sì</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+                    </span>
+                </div>
+            </div>
+            <br>
+            <!-- data filters-->
+            <div class="slds-grid slds-gutters">
+                <div class="slds-col slds-size_1-of-4">
+                    <span>
+                        <div class="slds-col--padded">
+                            <lightning-input data-id="dataini" type="date" label="Data Creazione Cliente da:"
+                                value="1900-01-01" onchange={handleChange} disabled></lightning-input>
+                        </div>
+                    </span>
+                </div>
+                <div class="slds-col slds-size_1-of-4">
+                    <span>
+                        <div class="slds-col--padded">
+                            <lightning-input data-id="dataend" type="date" label="a:" value="2100-12-12"
+                                onchange={handleChange} disabled></lightning-input>
+                        </div>
+                    </span>
+                </div>
+            </div>
+            <br>
+            <!-- bottone filters-->
+            <div class="slds-button-group slds-align_absolute-center" role="group">
+                <button class="slds-button slds-button_neutral" onclick={resetAll}>Reset filtri</button>
+            </div>
+
+        </div>
+        <!-- End of filters-->
+
+        <div class="slds-box slds-theme--shade slds-m-vertical--medium">
+            <div class="slds-button-group slds-align_absolute-center" role="group">
+
+             
+
+                <div style="position: relative;">
+                    <template if:true={showPopL}>
+                        <section aria-describedby="dialog-body-id-107" aria-label="Dialog Title"
+                            class="slds-popover_large slds-popover_walkthrough slds-popover slds-nubbin_right-top" role="dialog"
+                            style="position: absolute;left: -26.0rem">
+                            <div class="slds-popover__body" id="dialog-body-id-107">
+                                <div class="slds-media">
+                                    <div class="slds-media__body">
+                                        <lightning-formatted-rich-text class='message' value="L’attuale stato di adesione sarà modificato per i soli clienti selezionati nella pagina visualizzata (da incluso a escluso, da escluso a incluso)">       
+                                        </lightning-formatted-rich-text>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </template>
+                    <button class="slds-button slds-button_neutral"  onmouseover={onHoverL} onmouseout={onOut} onclick={getSelectedRec}
+                        title="Modifica">Modifica
+                        Adesione</button>
+                </div>
+                <div  style="position: relative;">
+                    <template if:true={showPopR}>
+                        <section aria-describedby="dialog-body-id-108" aria-label="Dialog Title"
+                            class="slds-popover_large slds-popover_walkthrough slds-popover slds-nubbin_left-top" role="dialog"
+                            style="position: absolute;left: 8.0rem">
+                            <div class="slds-popover__body" id="dialog-body-id-108">
+                                <div class="slds-media">
+                                    <div class="slds-media__body">
+                                        <lightning-formatted-rich-text class='message' value="Per tutti i clienti nella pagina visualizzata sarà impostata come data di ultima lavorazione la data odierna. Questo permetterà di tenere traccia delle pagine e dei clienti già visionati (con o senza modifica dello stato di adesione)">       
+                                        </lightning-formatted-rich-text>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </template>
+                    <button class="slds-button slds-button_neutral" onmouseover={onHoverR} onmouseout={onOut} onclick={validaPagina}
+                        title="Valida">Valida
+                        Pagina</button>
+                </div>
+            </div>
+            <br>
+            <template if:true={Nondata}>
+                <span style="color: red;" class="slds-align_absolute-center">No Data</span>
+            </template>
+            <br>
+            <template if:true={spinnerTable}>
+                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+                Caricamento in corso
+            </template>
+            <template if:false={spinnerTable}>
+                <lightning-datatable data-id="table-campagne" columns={columns} data={recordsToDisplay} key-field="id"
+                    sorted-by={sortBy} sorted-direction={sortDirection} onsort={doSorting}
+                    selected-rows={selectedIdsAfter}>
+                </lightning-datatable>
+            </template>
+        </div>
+
+        <!-- Pagination ALL-->
+
+        <div class="slds-grid slds-grid_vertical-align-center slds-grid_align-spread" style="padding-top: 0.5em;">
+            <!--RECORDS PER PAGE-->
+            <div class="slds-col">
+                <div class="slds-list_inline slds-p-bottom_xx-small">
+                    <label class="slds-text-color_weak slds-p-horizontal_x-small" for="recordsPerPage">Page
+                        Size:</label>
+                    <div class="slds-select_container">
+                        <select class="slds-select" data-id="pageSizeOptID" id="recordsPerPage"
+                            onchange={handleRecordsPerPage}>
+                            <template for:each={pageSizeOptions} for:item="option">
+                                <option key={option} value={option}>{option}</option>
+                            </template>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <!--PAGE NAVIGATION-->
+            <div class="slds-align_absolute-center" style="height:5rem">
+                <lightning-button disabled={bDisableFirst} icon-name="utility:jump_to_left" label="First"
+                    class="slds-p-horizontal_x-small" alternative-text="first page" onclick={firstPage}>
+                </lightning-button>
+
+                <lightning-button disabled={bDisableFirst} icon-name="utility:chevronleft" label="Previous"
+                    alternative-text="Previous" onclick={previousPage}></lightning-button>
+                &nbsp;
+                <span class="slds-badge">Mostra {pageNumber} &nbsp;of&nbsp; {totalPages} &nbsp;&nbsp;Page(s)</span>
+                &nbsp;
+                <lightning-button disabled={bDisableLast} icon-name="utility:chevronright" label="Next"
+                    alternative-text="Next" onclick={nextPage} class="slds-p-horizontal_x-small" icon-position="right">
+                </lightning-button>
+
+                <lightning-button disabled={bDisableLast} icon-name="utility:jump_to_right" label="Last"
+                    alternative-text="last page" onclick={lastPage} icon-position="right"></lightning-button>
+            </div>
+            <!--TOTAL RECORDS-->
+            <div class="slds-clearfix">
+                <div class="slds-float_right">
+                    <span class="slds-badge"> Totale Records: {totalRecords}</span>
+                </div>
+            </div>
+        </div>
+
+        <!--ERRORE just in case -->
+        <div if:true={ShowError} class="Modal">
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+                aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                            title="Close" onclick={closeError}>
+                            <lightning-icon icon-name="utility:close" size="medium">
+                            </lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                        <lightning-icon icon-name="utility:warning" size="medium">
+                        </lightning-icon>
+                        <div class="slds-text-heading_medium slds-hyphenate">{HeadingText}</div>
+                    </header>
+                    <span class="slds-text-heading_medium slds-box "
+                        style="background-color: white;text-align: center;">
+                        {Textbody}
+                    </span>
+                    <footer class="slds-modal__footer">
+                        <lightning-button label="OK" variant="neutral" onclick={closeError}></lightning-button>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                    </footer>
+                </div>
+            </section>
+        </div>
+        <!--INFO just in case -->
+        <div if:true={Showinfo} class="Modal">
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+                aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                            title="Close" onclick={closeError}>
+                            <lightning-icon icon-name="utility:close" size="medium">
+                            </lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                        <lightning-icon icon-name="action:change_owner" size="medium">
+                        </lightning-icon>
+                        <h2 class="slds-text-heading_medium slds-hyphenate">{HeadingText}</h2>
+                    </header>
+                    <span class="slds-text-heading_medium slds-box "
+                        style="background-color: white;text-align: center;">
+                        {Textbody}
+                    </span>
+                    <footer class="slds-modal__footer">
+                        <lightning-button label="Si" variant="neutral" onclick={closeOK}></lightning-button>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <lightning-button label="Annulla" variant="neutral" onclick={closeError}></lightning-button>
+                    </footer>
+                </div>
+            </section>
+        </div>
+
+    </template>
+</template>

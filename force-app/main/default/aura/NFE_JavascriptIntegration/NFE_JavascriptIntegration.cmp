@@ -1,0 +1,15 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes" access="global">
+    <aura:attribute name="postMessage" type="object" />
+    <aura:attribute name="params" type="object" />
+    <aura:attribute name="message" type="string" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    HELLO BY LIGHTNING COMPONENT
+
+    <hr/>
+    <button onclick="{!c.onClick}">Test</button>
+    <hr/>
+
+    {!v.message}
+</aura:component>

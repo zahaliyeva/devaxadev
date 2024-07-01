@@ -1,0 +1,52 @@
+<template>
+    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open slds-modal_medium">
+		<div class="slds-modal__container">
+            <div class="slds-card">
+                <header class="slds-modal__header">
+                    <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Valida Polizza</h2>
+                </header>
+                
+                    <div class="list-container slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        <template if:true={spinner}>
+                            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+                        </template>
+                        <template if:true={ready}>
+                            <c-form-generate
+                                form-name="dh-validate-policy"
+                                record-id={caseId}
+                                record-type="*"
+                                record-type-id={recordTypeId}
+                                s-object-name="Case"
+                                change-callback={onChange}
+                                validate-callback={onValidate}
+                                hide-header="true"
+                                disable-all={disableInputs}
+                                current-data={caseData}
+                                cols="4"
+                            ></c-form-generate>
+                            <div class="slds-card__body slds-card__body_inner">
+                                <div class="slds-grid">
+                                    <div class="form-field slds-col slds-size_3-of-12">
+                                        <lightning-input type="text" disabled={disableCodiceTariffa} label="Codice Tariffa" value={context.Case.CodiceTariffa__c} onchange={handleChangeCodice}></lightning-input>
+                                    </div>
+                                    <div class="form-field slds-col slds-size_3-of-12">
+                                        <lightning-input type="text" disabled="true" label="Descrizione Tariffa" value={context.Case.DescrizioneTariffa__c}></lightning-input>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                
+            </div>
+            <footer class="slds-modal__footer">
+                <template if:true={isDisabledValida}>
+                    <p style="color:red;font-weight: bold;">{disableValidaHelpText}</p>
+                </template>
+                <button class="slds-button slds-button_brand" onclick={handleValidate} disabled={isDisabledValida}>Valida</button>
+                <button class="slds-button slds-button_brand" onclick={handleConfirm} disabled={isDisabledConferma}>Conferma</button>
+                <button class="slds-button slds-button_neutral" onclick={handleClose}>Annulla</button>
+            </footer>
+        </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+</template>

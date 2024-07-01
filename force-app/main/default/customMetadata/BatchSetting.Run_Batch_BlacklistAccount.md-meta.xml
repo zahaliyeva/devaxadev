@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>Run_Batch_BlacklistAccount</label>
+    <protected>false</protected>
+    <values>
+        <field>Daily_Hour_End__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Daily_Hour_Start__c</field>
+        <value xsi:type="xsd:double">5.0</value>
+    </values>
+    <values>
+        <field>IsAutoSchedulable__c</field>
+        <value xsi:type="xsd:boolean">true</value>
+    </values>
+    <values>
+        <field>Limit__c</field>
+        <value xsi:type="xsd:double">10000.0</value>
+    </values>
+    <values>
+        <field>MinutesRange__c</field>
+        <value xsi:type="xsd:double">1440.0</value>
+    </values>
+    <values>
+        <field>Need_Information_Log__c</field>
+        <value xsi:type="xsd:boolean">false</value>
+    </values>
+    <values>
+        <field>Query__c</field>
+        <value xsi:type="xsd:string">SELECT id, OwnerId,Contact_Master_Id__c,Data_Contact_Master_ID__c ,Peferred_way_of_contact__c,AAI_Codice_fiscale__c,AAI_Partita_IVA__c,Codice_fiscale_ListView__c, BlackList_Broker__c, BlackList_Abitazione__c,BlackList_Auto__c,BlackList_Aziende__c,BlackList_Commerciale__c,BlackList_Infortuni__c,BlackList_Malattia__c,BlackList_Protection__c,BlackList_Rinnovo__c,BlackList_Saving__c,BlackList_Servizio__c,NDG__c,Nodes__c,Ultima_modifica_blacklist__c,AAI_Agency_Reference_Code__c FROM Account WHERE RecordType.DeveloperName in (&apos;B2C_Client&apos;,&apos;B2B_Client&apos;)</value>
+    </values>
+    <values>
+        <field>ScopeSize__c</field>
+        <value xsi:type="xsd:double">100.0</value>
+    </values>
+    <values>
+        <field>is_Testing_only__c</field>
+        <value xsi:type="xsd:boolean">false</value>
+    </values>
+</CustomMetadata>

@@ -1,0 +1,33 @@
+.THIS.borderNone{
+	border: none;
+}
+.THIS .headerForm{
+	margin: 3% 0% 0% 2%;
+    font-weight: bold; 
+}
+.THIS.spinnerFixed{
+	position: fixed;
+}
+.THIS .whiteIcon svg {
+    fill : white;
+}
+.THIS .marginLeft5{
+	margin-left:5%;
+}
+.THIS .marginTOPAssociaCliente{
+	margin-top:1%;
+}
+
+.THIS .slds-card__header{
+    padding:0;
+    margin:0;
+}
+
+.THIS .slds-textarea {
+
+		height:100px !important;
+	}
+
+.THIS .slds-datepicker{
+		position: fixed !important;
+}

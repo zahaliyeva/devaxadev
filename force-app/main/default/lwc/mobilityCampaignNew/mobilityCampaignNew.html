@@ -1,0 +1,44 @@
+<template>
+    <div class="new">
+        <c-mobility-spinner show={spinner} show-overlay={spinnerOverlay}></c-mobility-spinner>
+        <c-mobility-messages model={messages}></c-mobility-messages>
+
+        <template if:true={authorized}>
+            <div class="new-header shadow-bottom">
+                <div class="row">
+                    <div class="col-12">
+                        <c-mobility-breadcrumb params={params} current={componentView}></c-mobility-breadcrumb>
+                    </div>
+                </div>
+
+                <c-mobility-layout type-layout='edit' object-name='Campaign' record-type="Agency_campaign"
+                    ready-callback={readyCallback} save-callback={saveCallback} params={params}>
+                </c-mobility-layout>
+            </div>
+            <div class="bottom-space"></div>
+
+            <!-- Inizio Footer -->
+            <div class="footer row justify-content-between fixed-bottom">
+                <div class="col-4 action ml-auto text-right">
+                    <div class="row" style="flex-flow: nowrap;">
+                        <div class="btn-box-action" onclick={navigateToEvent} data-component="mobilityCampaignListView">
+                            <div class="btn btn-outline-primary btn-action">
+                                {_label.leadNew_cancel}
+                            </div>
+                        </div>
+                        <div class="btn-box-action" onclick={save}>
+                            <div class="btn btn-primary btn-action">
+                                {_label.leadNew_create}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Fine Footer -->
+
+        </template>
+        <template if:false={authorized}>
+            <c-mobility-unauthorized></c-mobility-unauthorized>
+        </template>
+    </div>
+</template>

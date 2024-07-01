@@ -1,0 +1,30 @@
+<aura:component>
+    <aura:attribute name="wrapper" type="Object" />
+
+    <div class="slds-tabs_default slds-tabs_card">
+        <ul class="slds-tabs_default__nav" role="tablist">
+          <li data-id="tab-1" aura:id="tab-1" class="slds-tabs_default__item slds-is-active" title="Item One" role="presentation" onclick="{!c.onTabClick}">
+            <a class="slds-tabs_default__link" href="javascript:void(0);" role="tab" tabindex="0" aria-selected="true" aria-controls="tab-default-1" id="tab-default-1__item">Pagina Principale</a>
+          </li>
+          <li data-id="tab-2" aura:id="tab-2" class="slds-tabs_default__item" title="Item Two" role="presentation" onclick="{!c.onTabClick}">
+            <a class="slds-tabs_default__link" href="javascript:void(0);" role="tab" tabindex="-1" aria-selected="false" aria-controls="tab-default-2" id="tab-default-2__item">Dati Personali</a>
+          </li>
+          <li data-id="tab-3" aura:id="tab-3" class="slds-tabs_default__item" title="Item Three" role="presentation" onclick="{!c.onTabClick}">
+            <a class="slds-tabs_default__link" href="javascript:void(0);" role="tab" tabindex="-2" aria-selected="false" aria-controls="tab-default-3" id="tab-default-3__item">Indirizzi e Contatti</a>
+          </li>
+          <li data-id="tab-4" aura:id="tab-4" class="slds-tabs_default__item" title="Item Three" role="presentation" onclick="{!c.onTabClick}">
+            <a class="slds-tabs_default__link" href="javascript:void(0);" role="tab" tabindex="-3" aria-selected="false" aria-controls="tab-default-4" id="tab-default-4__item">Privacy e Consensi</a>
+          </li> 
+          <aura:if isTrue="{!v.wrapper.isAAI}">     
+            <li data-id="tab-5" aura:id="tab-5" class="slds-tabs_default__item" title="Item Three" role="presentation" onclick="{!c.onTabClick}">
+              <a class="slds-tabs_default__link" href="javascript:void(0);" role="tab" tabindex="-4" aria-selected="false" aria-controls="tab-default-6" id="tab-default-5__item">Blacklist</a>
+            </li>
+          </aura:if>
+        </ul> 
+        <div aura:id="tabcontent-1" id="tab-default-1" class="slds-tabs_default__content slds-show" role="tabpanel" aria-labelledby="tab-default-1__item"><c:schedaClientePaginaPrincipale wrapper="{!v.wrapper}" /></div>
+        <div aura:id="tabcontent-2" id="tab-default-2" class="slds-tabs_default__content slds-hide" role="tabpanel" aria-labelledby="tab-default-2__item"><c:schedaClienteDatiPersonaliOld wrapper="{!v.wrapper}"/></div>
+        <div aura:id="tabcontent-3" id="tab-default-3" class="slds-tabs_default__content slds-hide" role="tabpanel" aria-labelledby="tab-default-3__item"><c:schedaClienteIndirizziEContattiOld wrapper="{!v.wrapper}"/></div>
+        <div aura:id="tabcontent-4" id="tab-default-4" class="slds-tabs_default__content slds-hide" role="tabpanel" aria-labelledby="tab-default-4__item"><c:schedaClientePrivacyEConsensiOld wrapper="{!v.wrapper}"/></div>
+        <div aura:id="tabcontent-5" id="tab-default-5" class="slds-tabs_default__content slds-hide" role="tabpanel" aria-labelledby="tab-default-5__item"><c:schedaClienteBlacklist wrapper="{!v.wrapper}"/></div>
+    </div>
+</aura:component>

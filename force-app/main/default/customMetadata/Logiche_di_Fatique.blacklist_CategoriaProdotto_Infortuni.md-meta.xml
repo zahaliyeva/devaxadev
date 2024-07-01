@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>blacklist_CategoriaProdotto_Infortuni</label>
+    <protected>false</protected>
+    <values>
+        <field>Active__c</field>
+        <value xsi:type="xsd:boolean">false</value>
+    </values>
+    <values>
+        <field>AllYear__c</field>
+        <value xsi:type="xsd:boolean">false</value>
+    </values>
+    <values>
+        <field>ApiName_fieldToFound__c</field>
+        <value xsi:type="xsd:string">BlackList_Infortuni__c;</value>
+    </values>
+    <values>
+        <field>Key__c</field>
+        <value xsi:type="xsd:string">Infortuni</value>
+    </values>
+    <values>
+        <field>LastDaysLiteral__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>LastDays__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>MaxCommunicationCreated__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>TypeBaseGiuridica__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Type_Base_Giuridica_toDelete__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Type_IER_Text_toDelete__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>typeFilter__c</field>
+        <value xsi:type="xsd:string">Blacklist</value>
+    </values>
+    <values>
+        <field>usedByIndividualEmailR__c</field>
+        <value xsi:type="xsd:boolean">false</value>
+    </values>
+    <values>
+        <field>where_condition_used__c</field>
+        <value xsi:nil="true"/>
+    </values>
+</CustomMetadata>

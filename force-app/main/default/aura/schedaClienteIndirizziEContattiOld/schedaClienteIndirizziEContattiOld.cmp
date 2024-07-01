@@ -1,0 +1,964 @@
+<aura:component>
+    <aura:attribute name="wrapper" type="Object" />
+    <aura:attribute name="fullAddress" type="string" />
+    <aura:attribute name="fullAddressShipping" type="string" />
+    
+    <aura:handler name="init" value="{! this }" action="{! c.doInit }"/> 
+
+    <!-- AAI e Persona Fisica -->
+    <aura:if isTrue="{!and (v.wrapper.isAAI, v.wrapper.isPerson)}">    
+
+    <div class="slds-p-around_small">
+        <div class="title">
+            <strong>Residenza</strong>
+        </div>  
+        <div class="slds-m-top_small slds-text-color_weak">Indirizzo di Residenza/Sede Legale</div>
+        <div class="box-address">
+           <aura:unescapedHtml value="{!v.fullAddress}" />
+        </div>
+
+        <hr />
+
+        <div class="title slds-m-top_xx-large">
+            <strong>Contatti Telefonici PassAnagrafe</strong>
+        </div>       
+        <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_small">
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12 slds-large-size_3-of-12">                
+                <div class="slds-form-element slds-form-element_readonly">
+                    <span class="slds-form-element__label">Telefono cellulare Pers. Fis</span>
+                    <div class="slds-form-element__control">
+                        <div class="slds-form-element__static"> <!-- <a href="{'tel'+!v.wrapper.account.CIF_PersonMobilePhone__c}">{!v.wrapper.account.CIF_PersonMobilePhone__c}</a> --> 
+                            <lightning:clickToDial value="{!v.wrapper.account.CIF_PersonMobilePhone__c}"/> </div>
+                    </div>
+                </div>                                          
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12 slds-large-size_3-of-12">                
+                <div class="slds-form-element slds-form-element_readonly">
+                    <span class="slds-form-element__label">Telefono principale</span>
+                    <div class="slds-form-element__static"> <!-- <a
+                        href="{'tel'+!v.wrapper.account.CIF_Phone__c}">{!v.wrapper.account.CIF_Phone__c}</a> -->
+                        <lightning:clickToDial value="{!v.wrapper.account.CIF_Phone__c}"/>
+                    </div>
+                </div>                                          
+            </div> 
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12 slds-large-size_3-of-12">                
+                <div class="slds-form-element slds-form-element_readonly">
+                    <span class="slds-form-element__label">Telefono ufficio</span>
+                    <div class="slds-form-element__control">
+                        <div class="slds-form-element__static"> <!-- <a
+                            href="{'tel'+!v.wrapper.account.CIF_Work_phone__c}">{!v.wrapper.account.CIF_Work_phone__c}</a> -->
+                            <lightning:clickToDial value="{!v.wrapper.account.CIF_Work_phone__c}"/>
+                    </div>
+                    </div>
+                </div>                                          
+            </div> 
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12 slds-large-size_3-of-12">                
+                <div class="slds-form-element slds-form-element_readonly">
+                    <span class="slds-form-element__label">Fax</span>
+                    <div class="slds-form-element__control">
+                        <div class="slds-form-element__static"><a
+                            href="{'tel'+!v.wrapper.account.Fax}">{!v.wrapper.account.Fax}</a></div>
+                    </div>
+                </div>                                          
+            </div>                                              
+        </div>      
+
+        <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_small">
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                <div dir="rtl">
+                <div class="slds-form-element slds-float_left">
+                    <label class="slds-checkbox_toggle slds-grid">
+                      <span class="slds-form-element__label slds-m-bottom_none">Propaga ad OMNIA cellulare Pers. Fis</span>
+                      <lightning:input type="toggle"
+                        aura:id="propagaOminiaCellPF"
+                        label=""
+                        name="propagaOminiaCellPF"
+                        checked="{!v.wrapper.account.CIF_Propaga_OMNIA_PersonMobilePhone__c}"
+                        messageToggleActive=""
+                        messageToggleInactive=""
+                        disabled="true"/>
+                    </label>
+                </div> 
+                </div> 
+            </div> 
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                <div dir="rtl">
+                    <div class="slds-form-element slds-float_left">
+                    <label class="slds-checkbox_toggle slds-grid">
+                      <span class="slds-form-element__label slds-m-bottom_none">Propaga ad OMNIA telefono principale</span>
+                      <lightning:input type="toggle"
+                        aura:id="propagaOminiaCellPri"
+                        label=""
+                        name="propagaOminiaCellPri"
+                        checked="{!v.wrapper.account.CIF_Propaga_OMNIA_Phone__c}"
+                        messageToggleActive=""
+                        messageToggleInactive=""
+                        disabled="true"/>
+                    </label>
+                </div>  
+                </div>
+            </div> 
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                <div dir="rtl">
+                    <div class="slds-form-element slds-float_left">
+                    <label class="slds-checkbox_toggle slds-grid">
+                      <span class="slds-form-element__label slds-m-bottom_none">Propaga ad OMNIA tel. ufficio</span>
+                      <lightning:input type="toggle"
+                        aura:id="propagaOminiaCellUff"
+                        label=""
+                        name="propagaOminiaCellUff"
+                        checked="{!v.wrapper.account.CIF_Propaga_OMNIA_Work_Phone__c}"
+                        messageToggleActive=""
+                        messageToggleInactive=""
+                        disabled="true"/>
+                    </label> 
+                </div>
+                </div>
+            </div> 
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                <div dir="rtl">
+                    <div class="slds-form-element slds-float_left">
+                    <label class="slds-checkbox_toggle slds-grid">
+                      <span class="slds-form-element__label slds-m-bottom_none">Propaga ad OMNIA fax</span>
+                      <lightning:input type="toggle"
+                        aura:id="propagaOminiaFax"
+                        label=""
+                        name="propagaOminiaFax"
+                        checked="{!v.wrapper.account.CIF_Propaga_OMNIA_Fax__c}"
+                        messageToggleActive=""
+                        messageToggleInactive=""
+                        disabled="true"/>
+                    </label>
+                </div>  
+                </div>
+            </div>                                                            
+        </div> 
+        
+        <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_small">
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                <div dir="rtl">
+                    <div class="slds-form-element slds-float_left">
+                    <label class="slds-checkbox_toggle slds-grid">
+                      <span class="slds-form-element__label slds-m-bottom_none">Opposizione cellulare Pers. Fis</span>
+                      <lightning:input type="toggle"
+                        aura:id="OppoCellPF"
+                        label=""
+                        name="OppoCellPF"
+                        checked="{!v.wrapper.account.Flag_Opposizione_Tel_Cell_B2C__c}"
+                        messageToggleActive=""
+                        messageToggleInactive=""
+                        disabled="true"/>
+                    </label>
+                </div>  
+                </div>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                <div dir="rtl">
+                    <div class="slds-form-element slds-float_left">
+                    <label class="slds-checkbox_toggle slds-grid">
+                      <span class="slds-form-element__label slds-m-bottom_none">Opposizione telefono principale</span>
+                      <lightning:input type="toggle"
+                        aura:id="OppoCellPrin"
+                        label=""
+                        name="OppoCellPrin"
+                        checked="{!v.wrapper.account.Flag_Opposizione_Tel_Princ__c}"
+                        messageToggleActive=""
+                        messageToggleInactive=""
+                        disabled="true"/>
+                    </label>
+                </div>  
+                </div>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                <div dir="rtl">
+                    <div class="slds-form-element slds-float_left">
+                    <label class="slds-checkbox_toggle slds-grid">
+                      <span class="slds-form-element__label slds-m-bottom_none">Opposizione telefono ufficio</span>
+                      <lightning:input type="toggle"
+                        aura:id="OppoCellUff"
+                        label=""
+                        name="OppoCellUff"
+                        checked="{!v.wrapper.account.Flag_Opposizione_Tel_Uff__c}"
+                        messageToggleActive=""
+                        messageToggleInactive=""
+                        disabled="true"/>
+                    </label>
+                </div>  
+                </div>
+            </div> 
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                <div dir="rtl">
+                    <div class="slds-form-element slds-float_left">
+                    <label class="slds-checkbox_toggle slds-grid">
+                      <span class="slds-form-element__label slds-m-bottom_none">Opposizione Fax</span>
+                      <lightning:input type="toggle"
+                        aura:id="OppoCellUff"
+                        label=""
+                        name="OppoCellUff"
+                        checked="{!v.wrapper.account.Flag_Opposizione_Fax__c}"
+                        messageToggleActive=""
+                        messageToggleInactive=""
+                        disabled="true"/>
+                    </label>
+                </div>  
+                </div>
+            </div>                                                                                                 
+        </div> 
+        
+        <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_small">
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">                
+                <div class="slds-form-element slds-form-element_readonly">
+                    <span class="slds-form-element__label">Motivo opposizione cellulare Pers. Fis</span>
+                    <div class="slds-form-element__control">
+                        <div class="slds-form-element__static">{!v.wrapper.account.Motivo_opposizione_Tel_Cell_B2C__c}</div>
+                    </div>
+                </div>                                          
+            </div>            
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">                
+                <div class="slds-form-element slds-form-element_readonly">
+                    <span class="slds-form-element__label">Motivo opposizione telefono principale</span>
+                    <div class="slds-form-element__control">
+                        <div class="slds-form-element__static">{!v.wrapper.account.Motivo_opposizione_Tel_Princ__c}</div>
+                    </div>
+                </div>                                          
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">                
+                <div class="slds-form-element slds-form-element_readonly">
+                    <span class="slds-form-element__label">Motivo opposizione telefono ufficio</span>
+                    <div class="slds-form-element__control">
+                        <div class="slds-form-element__static">{!v.wrapper.account.Motivo_opposizione_Tel_Uff__c}</div>
+                    </div>
+                </div>                                          
+            </div>   
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">                
+                <div class="slds-form-element slds-form-element_readonly">
+                    <span class="slds-form-element__label">Motivo opposizione fax</span>
+                    <div class="slds-form-element__control">
+                        <div class="slds-form-element__static">{!v.wrapper.account.Motivo_opposizione_Fax__c}</div>
+                    </div>
+                </div>                                          
+            </div>                                                                              
+        </div> 
+
+        <div class="title slds-m-top_xx-large">
+            <strong>Contatti Email PassAnagrafe</strong>
+        </div>   
+        <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_small">
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">                
+                <div class="slds-form-element slds-form-element_readonly">
+                    <span class="slds-form-element__label">Email Pers. Fis</span>
+                    <div class="slds-form-element__control">
+                        <div class="slds-form-element__static">{!v.wrapper.account.CIF_PersonEmail__c}</div>
+                    </div>
+                </div>                                                    
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">                
+                <div class="slds-form-element slds-form-element_readonly">
+                    <span class="slds-form-element__label">Email ufficio</span>
+                    <div class="slds-form-element__control">
+                        <div class="slds-form-element__static">{!v.wrapper.account.CIF_Work_email__c}</div>
+                    </div>
+                </div>                                                    
+            </div>                   
+        </div> 
+
+        <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_small">
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                <div dir="rtl">
+                    <div class="slds-form-element slds-float_left">
+                    <label class="slds-checkbox_toggle slds-grid">
+                    <span class="slds-form-element__label slds-m-bottom_none">Propaga ad OMNIA email Pers. Fis</span>
+                    <lightning:input type="toggle"
+                        aura:id="propagaOmniaEmailPF"
+                        label=""
+                        name="propagaOmniaEmailPF"
+                        checked="{!v.wrapper.account.CIF_Propaga_OMNIA_PersonEmail__c}"
+                        messageToggleActive=""
+                        messageToggleInactive=""
+                        disabled="true"/>
+                    </label>
+                </div> 
+                </div>
+            </div> 
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                <div dir="rtl">
+                    <div class="slds-form-element slds-float_left">
+                    <label class="slds-checkbox_toggle slds-grid">
+                    <span class="slds-form-element__label slds-m-bottom_none">Propaga ad OMNIA email ufficio</span>
+                    <lightning:input type="toggle"
+                        aura:id="propagaOmniaEmailUff"
+                        label=""
+                        name="propagaOmniaEmailUff"
+                        checked="{!v.wrapper.account.CIF_Propaga_OMNIA_Work_Email__c}"
+                        messageToggleActive=""
+                        messageToggleInactive=""
+                        disabled="true"/>
+                    </label>
+                </div> 
+                </div>
+            </div>     
+        </div>   
+        
+        <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_small">
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                <div dir="rtl">
+                    <div class="slds-form-element slds-float_left">
+                    <label class="slds-checkbox_toggle slds-grid">
+                      <span class="slds-form-element__label slds-m-bottom_none">Opposizione email Pers. Fis</span>
+                      <lightning:input type="toggle"
+                        aura:id="OppEmailPF"
+                        label=""
+                        name="OppEmailPF"
+                        checked="{!v.wrapper.account.Flag_Opposizione_Email_Pers_B2C__c}"
+                        messageToggleActive=""
+                        messageToggleInactive=""
+                        disabled="true"/>
+                    </label>
+                </div> 
+                </div>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                <div dir="rtl">
+                    <div class="slds-form-element slds-float_left">
+                    <label class="slds-checkbox_toggle slds-grid">
+                      <span class="slds-form-element__label slds-m-bottom_none">Opposizione email ufficio</span>
+                      <lightning:input type="toggle"
+                        aura:id="OppEmailUff"
+                        label=""
+                        name="OppEmailUff"
+                        checked="{!v.wrapper.account.Flag_Opposizione_Email_Uff__c}"
+                        messageToggleActive=""
+                        messageToggleInactive=""
+                        disabled="true"/>
+                    </label>
+                </div> 
+                </div>
+            </div>             
+        </div>
+
+        <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_small">
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">                
+                <div class="slds-form-element slds-form-element_readonly">
+                    <span class="slds-form-element__label">Motivo opposizione email Pers. Fis</span>
+                    <div class="slds-form-element__control">
+                        <div class="slds-form-element__static">{!v.wrapper.account.Motivo_opposizione_Email_Pers_B2C__c}</div>
+                    </div>
+                </div>                                                    
+            </div>           
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">                
+                <div class="slds-form-element slds-form-element_readonly">
+                    <span class="slds-form-element__label">Motivo opposizione email ufficio</span>
+                    <div class="slds-form-element__control">
+                        <div class="slds-form-element__static">{!v.wrapper.account.Motivo_opposizione_Email_Uff__c}</div>
+                    </div>
+                </div>                                                    
+            </div>                    
+        </div>   
+        
+        <div class="title slds-m-top_xx-large">
+            <strong>Contatti Close the loop</strong>
+        </div>   
+        <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_small">
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">                
+                <div class="slds-form-element slds-form-element_readonly">
+                    <span class="slds-form-element__label">Telefono cellulare</span>
+                    <div class="slds-form-element__control">
+                        <lightning:clickToDial value="{!v.wrapper.account.Claim_PersonalMobile__c}"/>
+                      <!--  <div class="slds-form-element__static">{!v.wrapper.account.Claim_PersonalMobile__c}</div> -->
+                    </div>
+                </div>                                                    
+            </div> 
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">                
+                <div class="slds-form-element slds-form-element_readonly">
+                    <span class="slds-form-element__label">Email</span>
+                    <div class="slds-form-element__control">
+                        <div class="slds-form-element__static">{!v.wrapper.account.Claim_PersonalEmail__c}</div>
+                    </div>
+                </div>                                                    
+            </div>                              
+        </div>
+
+    </div>
+    </aura:if>
+    <!-- AAI e Persona Fisica -->
+
+    <!-- AAI e Persona Giuridica -->
+    <aura:if isTrue="{!and (v.wrapper.isAAI, !v.wrapper.isPerson)}">    
+
+    <div class="slds-p-around_small">
+        <div class="title">
+            <strong>Residenza</strong>
+        </div>  
+        <div class="slds-m-top_small slds-text-color_weak">Indirizzo di Residenza/Sede Legale</div>
+        <div class="box-address">
+            <aura:unescapedHtml value="{!v.fullAddress}" />
+        </div>
+
+        <hr />       
+
+        <div class="title slds-m-top_xx-large">
+            <strong>Contatti Telefonici PassAnagrafe</strong>
+        </div>       
+        <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_small">
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12 slds-large-size_3-of-12">                
+                <div class="slds-form-element slds-form-element_readonly">
+                    <span class="slds-form-element__label">Telefono cellulare Pers. Giur.</span>
+                    <div class="slds-form-element__control">
+                        <div class="slds-form-element__static"> <!-- <a href="{'tel'+!v.wrapper.account.CIF_MobilePhone__c}">{!v.wrapper.account.CIF_MobilePhone__c}</a> --> 
+                            <lightning:clickToDial value="{!v.wrapper.account.CIF_MobilePhone__c}"/></div>
+                    </div>
+                </div>                                          
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12 slds-large-size_3-of-12">                
+                <div class="slds-form-element slds-form-element_readonly">
+                    <span class="slds-form-element__label">Telefono principale</span>
+                    <div class="slds-form-element__control">
+                        <div class="slds-form-element__static"> <!-- <a href="{'tel'+!v.wrapper.account.CIF_Phone__c}">{!v.wrapper.account.CIF_Phone__c}</a> -->
+                            <lightning:clickToDial value="{!v.wrapper.account.CIF_Phone__c}"/></div>
+                    </div>
+                </div>                                          
+            </div> 
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12 slds-large-size_3-of-12">                
+                <div class="slds-form-element slds-form-element_readonly">
+                    <span class="slds-form-element__label">Telefono ufficio</span>
+                    <div class="slds-form-element__control">
+                        <div class="slds-form-element__static"> <!-- <a href="{'tel'+!v.wrapper.account.CIF_Work_phone__c}">{!v.wrapper.account.CIF_Work_phone__c}</a> --> 
+                            <lightning:clickToDial value="{!v.wrapper.account.CIF_Work_phone__c}"/></div>
+                    </div>
+                </div>                                          
+            </div> 
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12 slds-large-size_3-of-12">                
+                <div class="slds-form-element slds-form-element_readonly">
+                    <span class="slds-form-element__label">Fax</span>
+                    <div class="slds-form-element__control">
+                        <div class="slds-form-element__static"> <a href="{'tel'+!v.wrapper.account.Fax}">{!v.wrapper.account.CIF_Work_phone__c}</a></div>
+                    </div>
+                </div>                                          
+            </div>                                              
+        </div>      
+
+        <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_small">
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                <div dir="rtl">
+                    <div class="slds-form-element slds-float_left">
+                    <label class="slds-checkbox_toggle slds-grid">
+                      <span class="slds-form-element__label slds-m-bottom_none">Propaga ad OMNIA cellulare Pers. Giur.</span>
+                      <lightning:input type="toggle"
+                        aura:id="propagaOminiaCellPG"
+                        label=""
+                        name="propagaOminiaCellPG"
+                        checked="{!v.wrapper.account.CIF_Propaga_OMNIA_Mobile_Phone__c}"
+                        messageToggleActive=""
+                        messageToggleInactive=""
+                        disabled="true"/>
+                    </label>
+                </div> 
+                </div> 
+            </div> 
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                <div dir="rtl">
+                    <div class="slds-form-element slds-float_left">
+                    <label class="slds-checkbox_toggle slds-grid">
+                      <span class="slds-form-element__label slds-m-bottom_none">Propaga ad OMNIA telefono principale</span>
+                      <lightning:input type="toggle"
+                        aura:id="propagaOminiaCellPriPG"
+                        label=""
+                        name="propagaOminiaCellPriPG"
+                        checked="{!v.wrapper.account.CIF_Propaga_OMNIA_Phone__c}"
+                        messageToggleActive=""
+                        messageToggleInactive=""
+                        disabled="true"/>
+                    </label>
+                </div>  
+                </div>
+            </div> 
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                <div dir="rtl">
+                    <div class="slds-form-element slds-float_left">
+                    <label class="slds-checkbox_toggle slds-grid">
+                      <span class="slds-form-element__label slds-m-bottom_none">Propaga ad OMNIA tel. ufficio</span>
+                      <lightning:input type="toggle"
+                        aura:id="propagaOminiaCellUffPG"
+                        label=""
+                        name="propagaOminiaCellUffPG"
+                        checked="{!v.wrapper.account.CIF_Propaga_OMNIA_Work_Phone__c}"
+                        messageToggleActive=""
+                        messageToggleInactive=""
+                        disabled="true"/>
+                    </label>
+                </div>  
+                </div>
+            </div> 
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                <div dir="rtl">
+                    <div class="slds-form-element slds-float_left">
+                    <label class="slds-checkbox_toggle slds-grid">
+                      <span class="slds-form-element__label slds-m-bottom_none">Propaga ad OMNIA fax</span>
+                      <lightning:input type="toggle"
+                        aura:id="propagaOminiaFaxPG"
+                        label=""
+                        name="propagaOminiaFaxPG"
+                        checked="{!v.wrapper.account.CIF_Propaga_OMNIA_Fax__c}"
+                        messageToggleActive=""
+                        messageToggleInactive=""
+                        disabled="true"/>
+                    </label>
+                </div>
+                </div>  
+            </div>                                                            
+        </div> 
+        
+        <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_small">
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                <div dir="rtl">
+                    <div class="slds-form-element slds-float_left">
+                    <label class="slds-checkbox_toggle slds-grid">
+                      <span class="slds-form-element__label slds-m-bottom_none">Opposizione cellulare Pers. Giur.</span>
+                      <lightning:input type="toggle"
+                        aura:id="OppoCellPG"
+                        label=""
+                        name="OppoCellPG"
+                        checked="{!v.wrapper.account.Flag_Opposizione_Tel_Cell_B2B__c}"
+                        messageToggleActive=""
+                        messageToggleInactive=""
+                        disabled="true"/>
+                    </label>
+                </div>  
+                </div>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                <div dir="rtl">
+                    <div class="slds-form-element slds-float_left">
+                    <label class="slds-checkbox_toggle slds-grid">
+                      <span class="slds-form-element__label slds-m-bottom_none">Opposizione telefono principale</span>
+                      <lightning:input type="toggle"
+                        aura:id="OppoCellPrinPG"
+                        label=""
+                        name="OppoCellPrinPG"
+                        checked="{!v.wrapper.account.Flag_Opposizione_Tel_Princ__c}"
+                        messageToggleActive=""
+                        messageToggleInactive=""
+                        disabled="true"/>
+                    </label>
+                </div>  
+                </div>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                <div dir="rtl">
+                    <div class="slds-form-element slds-float_left">
+                    <label class="slds-checkbox_toggle slds-grid">
+                      <span class="slds-form-element__label slds-m-bottom_none">Opposizione telefono ufficio</span>
+                      <lightning:input type="toggle"
+                        aura:id="OppoCellUffPG"
+                        label=""
+                        name="OppoCellUffPG"
+                        checked="{!v.wrapper.account.Flag_Opposizione_Tel_Uff__c}"
+                        messageToggleActive=""
+                        messageToggleInactive=""
+                        disabled="true"/>
+                    </label>
+                </div>  
+                </div>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                <div dir="rtl">
+                    <div class="slds-form-element slds-float_left">
+                    <label class="slds-checkbox_toggle slds-grid">
+                      <span class="slds-form-element__label slds-m-bottom_none">Opposizione Fax</span>
+                      <lightning:input type="toggle"
+                        aura:id="OppoCellUffPG"
+                        label=""
+                        name="OppoCellUffPG"
+                        checked="{!v.wrapper.account.Flag_Opposizione_Fax__c}"
+                        messageToggleActive=""
+                        messageToggleInactive=""
+                        disabled="true"/>
+                    </label>
+                </div>  
+                </div>
+            </div>                                                                                                 
+        </div> 
+        
+        <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_small">
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">                
+                <div class="slds-form-element slds-form-element_readonly">
+                    <span class="slds-form-element__label">Motivo opposizione cellulare Pers. Giur.</span>
+                    <div class="slds-form-element__control">
+                        <div class="slds-form-element__static">{!v.wrapper.account.Motivo_opposizione_Tel_Cell_B2B__c}</div>
+                    </div>
+                </div>                                          
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">                
+                <div class="slds-form-element slds-form-element_readonly">
+                    <span class="slds-form-element__label">Motivo opposizione telefono principale</span>
+                    <div class="slds-form-element__control">
+                        <div class="slds-form-element__static">{!v.wrapper.account.Motivo_opposizione_Tel_Princ__c}</div>
+                    </div>
+                </div>                                          
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">                
+                <div class="slds-form-element slds-form-element_readonly">
+                    <span class="slds-form-element__label">Motivo opposizione telefono ufficio</span>
+                    <div class="slds-form-element__control">
+                        <div class="slds-form-element__static">{!v.wrapper.account.Motivo_opposizione_Tel_Uff__c}</div>
+                    </div>
+                </div>                                          
+            </div>  
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">                
+                <div class="slds-form-element slds-form-element_readonly">
+                    <span class="slds-form-element__label">Motivo opposizione fax</span>
+                    <div class="slds-form-element__control">
+                        <div class="slds-form-element__static">{!v.wrapper.account.Motivo_opposizione_Fax__c}</div>
+                    </div>
+                </div>                                          
+            </div>                                                                               
+        </div> 
+        
+        <div class="title slds-m-top_xx-large">
+            <strong>Contatti Email</strong>
+        </div>      
+        <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_x-small">
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                <div class="slds-form-element slds-form-element_readonly">
+                    <span class="slds-form-element__label">Email</span>
+                    <div class="slds-form-element__control">
+                        <div class="slds-form-element__static">{!v.wrapper.account.Account_email__c}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                <div class="slds-form-element slds-form-element_readonly">
+                    <span class="slds-form-element__label">Email Aggiuntiva</span>
+                    <div class="slds-form-element__control">
+                        <div class="slds-form-element__static">{!v.wrapper.account.Additional_Email__c}</div>
+                    </div>
+                </div>
+            </div>                                   
+        </div>         
+
+        <div class="title slds-m-top_xx-large">
+            <strong>Contatti Email PassAnagrafe</strong>
+        </div>   
+        <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_small">
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">                
+                <div class="slds-form-element slds-form-element_readonly">
+                    <span class="slds-form-element__label">Email Pers. Giur.</span>
+                    <div class="slds-form-element__control">
+                        <div class="slds-form-element__static">{!v.wrapper.account.CIF_Personalemail__c}</div>
+                    </div>
+                </div>                                                    
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">                
+                <div class="slds-form-element slds-form-element_readonly">
+                    <span class="slds-form-element__label">Email ufficio</span>
+                    <div class="slds-form-element__control">
+                        <div class="slds-form-element__static">{!v.wrapper.account.CIF_Work_email__c}</div>
+                    </div>
+                </div>                                                    
+            </div>                   
+        </div> 
+
+        <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_small">
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                <div dir="rtl">
+                    <div class="slds-form-element slds-float_left">
+                    <label class="slds-checkbox_toggle slds-grid">
+                      <span class="slds-form-element__label slds-m-bottom_none">Propaga ad OMNIA email Pers. Giur.</span>
+                      <lightning:input type="toggle"
+                        aura:id="propagaOmniaEmailPG"
+                        label=""
+                        name="propagaOmniaEmailPG"
+                        checked="{!v.wrapper.account.CIF_Propaga_OMNIA_Personal_Email__c}"
+                        messageToggleActive=""
+                        messageToggleInactive=""
+                        disabled="true"/>
+                    </label>
+                </div> 
+                </div>
+            </div> 
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                <div dir="rtl">
+                    <div class="slds-form-element slds-float_left">
+                    <label class="slds-checkbox_toggle slds-grid">
+                      <span class="slds-form-element__label slds-m-bottom_none">Propaga ad OMNIA email ufficio</span>
+                      <lightning:input type="toggle"
+                        aura:id="propagaOmniaEmailUffPG"
+                        label=""
+                        name="propagaOmniaEmailUffPG"
+                        checked="{!v.wrapper.account.CIF_Propaga_OMNIA_Work_Email__c}"
+                        messageToggleActive=""
+                        messageToggleInactive=""
+                        disabled="true"/>
+                    </label>
+                </div> 
+                </div>
+            </div> 
+        </div>
+
+        <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_small">
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                <div dir="rtl">
+                    <div class="slds-form-element slds-float_left">
+                    <label class="slds-checkbox_toggle slds-grid">
+                      <span class="slds-form-element__label slds-m-bottom_none">Opposizione email Pers. Giur.</span>
+                      <lightning:input type="toggle"
+                        aura:id="OppEmailPG"
+                        label=""
+                        name="OppEmailPG"
+                        checked="{!v.wrapper.account.Flag_Opposizione_Email_Pers_B2B__c}"
+                        messageToggleActive=""
+                        messageToggleInactive=""
+                        disabled="true"/>
+                    </label>
+                </div> 
+                </div>
+            </div> 
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                <div dir="rtl">
+                    <div class="slds-form-element slds-float_left">
+                    <label class="slds-checkbox_toggle slds-grid">
+                      <span class="slds-form-element__label slds-m-bottom_none">Opposizione email ufficio</span>
+                      <lightning:input type="toggle"
+                        aura:id="OppEmailUffPG"
+                        label=""
+                        name="OppEmailUffPG"
+                        checked="{!v.wrapper.account.Flag_Opposizione_Email_Uff__c}"
+                        messageToggleActive=""
+                        messageToggleInactive=""
+                        disabled="true"/>
+                    </label>
+                </div> 
+                </div>
+            </div> 
+        </div>
+
+        <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_small">
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">                
+                <div class="slds-form-element slds-form-element_readonly">
+                    <span class="slds-form-element__label">Motivo opposizione email Pers. Giur.</span>
+                    <div class="slds-form-element__control">
+                        <div class="slds-form-element__static">{!v.wrapper.account.Motivo_opposizione_Email_Pers_B2B__c}</div>
+                    </div>
+                </div>                                                    
+            </div>           
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">                
+                <div class="slds-form-element slds-form-element_readonly">
+                    <span class="slds-form-element__label">Motivo opposizione email ufficio</span>
+                    <div class="slds-form-element__control">
+                        <div class="slds-form-element__static">{!v.wrapper.account.Motivo_opposizione_Email_Uff__c}</div>
+                    </div>
+                </div>                                                    
+            </div>                    
+        </div>                                                          
+
+    </div>
+    </aura:if>
+    <!-- AAI e Persona Giuridica --> 
+
+    <!-- NON AAI e Persona Fisica -->     
+    <aura:if isTrue="{!and (!v.wrapper.isAAI, v.wrapper.isPerson)}">    
+
+    <div class="slds-p-around_small">
+        <div class="title">
+            <strong>Residenza</strong>
+        </div>  
+        <div class="slds-m-top_small slds-text-color_weak">Indirizzo di Residenza/Sede Legale</div>
+        <div class="box-address">
+            <aura:unescapedHtml value="{!v.fullAddress}" />
+        </div>
+
+        <hr />                
+        
+        <div class="title slds-m-top_xx-large">
+            <strong>Contatti Email PassAnagrafe</strong>
+        </div>      
+        <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_x-small">
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                <div class="slds-form-element slds-form-element_readonly">
+                    <span class="slds-form-element__label">Email</span>
+                    <div class="slds-form-element__control">
+                        <div class="slds-form-element__static">{!v.wrapper.account.PersonEmail}</div>
+                    </div>
+                </div>
+            </div>                                  
+        </div>         
+
+        <div class="title slds-m-top_xx-large">
+            <strong>Contatti Smart Center</strong>
+        </div>   
+        <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_small">
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">                
+                <div class="slds-form-element slds-form-element_readonly">
+                    <span class="slds-form-element__label">Telefono Aggiuntivo</span>
+                    <div class="slds-form-element__control">
+                        <lightning:clickToDial value="{!v.wrapper.account.Additional_Phone__c}"/>
+                       <!-- <div class="slds-form-element__static">{!v.wrapper.account.Additional_Phone__c}</div>-->
+                    </div>
+                </div>                                                    
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">                
+                <div class="slds-form-element slds-form-element_readonly">
+                    <span class="slds-form-element__label">Email Aggiuntiva</span>
+                    <div class="slds-form-element__control">
+                        <div class="slds-form-element__static">{!v.wrapper.account.Additional_Email__c}</div>
+                    </div>
+                </div>                                                    
+            </div>  
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_12-of-12 slds-large-size_6-of-12">                
+                <div class="slds-form-element slds-form-element_readonly">
+                    <span class="slds-form-element__label">Commenti Aggiuntivi</span>
+                    <div class="slds-form-element__control">
+                        <div class="slds-form-element__static">{!v.wrapper.account.Additional_Comments__c}</div>
+                    </div>
+                </div>                                                    
+            </div>                               
+        </div>      
+              
+
+        <div class="title slds-m-top_xx-large">
+            <strong>Contatti Close the loop</strong>
+        </div>   
+        <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_small">
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">                
+                <div class="slds-form-element slds-form-element_readonly">
+                    <span class="slds-form-element__label">Telefono cellulare</span>
+                    <div class="slds-form-element__control">
+                        <lightning:clickToDial value="{!v.wrapper.account.Claim_PersonalMobile__c}"/>
+                      <!--  <div class="slds-form-element__static">{!v.wrapper.account.Claim_PersonalMobile__c}</div> -->
+                    </div>
+                </div>                                                    
+            </div> 
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">                
+                <div class="slds-form-element slds-form-element_readonly">
+                    <span class="slds-form-element__label">Email</span>
+                    <div class="slds-form-element__control">
+                        <div class="slds-form-element__static">{!v.wrapper.account.Claim_PersonalEmail__c}</div>
+                    </div>
+                </div>                                                    
+            </div>                              
+        </div>          
+
+    </div>
+    </aura:if>
+    <!-- NON AAI e Persona Fisica -->     
+
+    <!-- NON AAI e Persona Giuridica -->     
+    <aura:if isTrue="{!and (!v.wrapper.isAAI, !v.wrapper.isPerson)}">    
+
+    <div class="slds-p-around_small">
+        <div class="title">
+            <strong>Residenza</strong>
+        </div>  
+        <div class="slds-m-top_small slds-text-color_weak">Indirizzo di Residenza/Sede Legale</div>
+        <div class="box-address">
+            <aura:unescapedHtml value="{!v.fullAddress}" />
+        </div>
+
+        <div class="title slds-m-top_medium">
+            <strong>Indirizzo spedizioni</strong>
+        </div>  
+        <div class="slds-m-top_small slds-text-color_weak">Indirizzo di Spedizioni</div>
+        <div class="box-address">
+            <aura:unescapedHtml value="{!v.fullAddressShipping}" />
+        </div>        
+
+        <hr />
+
+        <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_x-small">
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                <div class="slds-form-element slds-form-element_readonly">
+                    <span class="slds-form-element__label">Telefono (abit.)</span>
+                    <div class="slds-form-element__control">
+                        <div class="slds-form-element__static">{!v.wrapper.account.PersonHomePhone}</div>
+                    </div>
+                </div>
+            </div>                                                                      
+        </div>                          
+        
+        <div class="title slds-m-top_xx-large">
+            <strong>Contatti Email</strong>
+        </div>      
+        <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_x-small">
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                <div class="slds-form-element slds-form-element_readonly">
+                    <span class="slds-form-element__label">Email</span>
+                    <div class="slds-form-element__control">
+                        <div class="slds-form-element__static">{!v.wrapper.account.Account_email__c}</div>
+                    </div>
+                </div>
+            </div>                                  
+        </div>         
+
+        <div class="title slds-m-top_xx-large">
+            <strong>Contatti Smart Center</strong>
+        </div>   
+        <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_small">
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">                
+                <div class="slds-form-element slds-form-element_readonly">
+                    <span class="slds-form-element__label">Telefono Aggiuntivo</span>
+                    <div class="slds-form-element__control">
+                        <lightning:clickToDial value="{!v.wrapper.account.Additional_Phone__c}"/>
+                       <!-- <div class="slds-form-element__static">{!v.wrapper.account.Additional_Phone__c}</div>-->
+                    </div>
+                </div>                                                    
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">                
+                <div class="slds-form-element slds-form-element_readonly">
+                    <span class="slds-form-element__label">Email Aggiuntiva</span>
+                    <div class="slds-form-element__control">
+                        <div class="slds-form-element__static">{!v.wrapper.account.Additional_Email__c}</div>
+                    </div>
+                </div>                                                    
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_12-of-12 slds-large-size_6-of-12">                
+                <div class="slds-form-element slds-form-element_readonly">
+                    <span class="slds-form-element__label">Commenti Aggiuntivi</span>
+                    <div class="slds-form-element__control">
+                        <div class="slds-form-element__static">{!v.wrapper.account.Additional_Comments__c}</div>
+                    </div>
+                </div>                                                    
+            </div>                              
+        </div>                    
+
+        <div class="title slds-m-top_xx-large">
+            <strong>Contatti Close the loop</strong>
+        </div>   
+        <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_small">
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">                
+                <div class="slds-form-element slds-form-element_readonly">
+                    <span class="slds-form-element__label">Telefono cellulare</span>
+                    <div class="slds-form-element__control">
+                      <!--  <div class="slds-form-element__static">{!v.wrapper.account.Claim_PersonalMobile__c}</div> -->
+                        <lightning:clickToDial value="{!v.wrapper.account.Claim_PersonalMobile__c}"/> 
+                    </div>
+                </div>                                                    
+            </div> 
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">                
+                <div class="slds-form-element slds-form-element_readonly">
+                    <span class="slds-form-element__label">Email</span>
+                    <div class="slds-form-element__control">
+                        <div class="slds-form-element__static">{!v.wrapper.account.Claim_PersonalEmail__c}</div>
+                    </div>
+                </div>                                                    
+            </div>                              
+        </div>
+        
+        <div class="title slds-m-top_xx-large">
+            <strong>Contatti Aggiuntivi</strong>
+        </div>   
+        <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_small"> 
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">                
+                <div class="slds-form-element slds-form-element_readonly">
+                    <span class="slds-form-element__label">Email</span>
+                    <div class="slds-form-element__control">
+                        <div class="slds-form-element__static">{!v.wrapper.account.Claim_PersonalEmail__c}</div>
+                    </div>
+                </div>                                                    
+            </div>                              
+        </div>  
+
+    </div>
+    </aura:if>
+    <!-- NON AAI e Persona Giuridica -->     
+
+</aura:component>

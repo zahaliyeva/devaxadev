@@ -1,0 +1,41 @@
+.box{
+    position: absolute;
+    margin-top: -10px;
+}
+
+.box-hidden {
+    display: none;
+}
+
+.calendar {
+    margin-left: -20px;
+    margin-top: 12px;
+    z-index: 2;
+}
+
+.form-group input {
+    height: 40px;
+    background: #FFFFFF;
+    border: 1px solid #CCCCCC;
+
+    text-align: left;
+    font-weight: 400;
+    font-size: 16px;
+    color: #333333;
+}
+
+.form-group input:read-only {
+    background: #FAFAFA;
+    border: 1px solid #CCCCCC;
+}
+
+.form-group input:hover {
+    background: #ffffff;
+    border: 1px solid #00008F;
+}
+
+a,
+.btn,
+button {
+    cursor: pointer;
+}

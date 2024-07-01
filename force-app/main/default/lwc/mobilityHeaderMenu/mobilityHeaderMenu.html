@@ -1,0 +1,57 @@
+<template>
+    <div class="slds-scope">
+        <header>
+            <div class="slds-grid slds-gutters">
+                <div class="slds-col">
+                    <ul class="comm-navigation__list slds-list_horizontal slds-has-flexi-truncate">
+                        <li class="slds-is-relative slds-list__item">            
+                            <span title="Logo" data-type="logo" class="slds-container_fluid slds-truncate logo">
+                                <c-mobility-icon name="axaLogo" width='40px' height='40px'></c-mobility-icon>
+                            </span>
+                        </li>
+                        <li class="slds-is-relative slds-list__item slds-hide_x-large">
+                            <a href="#" onclick={onShowMenu} class="slds-container_fluid slds-truncate slds-is-active">
+                                Menu
+                            </a>
+                        </li>
+                        <template for:each={allData} for:item="record">
+                            <template if:true={record.authorizedValue}>
+                                <li key={record.label} class="slds-show_x-large slds-is-relative slds-list__item">
+                                    <a href={record.href} title={record.label} class="slds-container_fluid slds-truncate slds-is-active">
+                                        <span>{record.label}</span>
+                                    </a>
+                                </li>
+                            </template>
+                        </template>
+                    </ul>
+                </div>
+                <div class="slds-col slds-size_1-of-12 slds-hide_x-large">
+                    <ul class="comm-navigation__list slds-list_horizontal slds-has-flexi-truncate">
+                        
+                    </ul>
+                </div>
+            </div>
+        </header>
+        <!-- MOBILE MENU START -->
+        <template if:true={showMenu}>
+            <nav class="slds-nav-vertical slds-hide_x-large" aria-label="Sub page">
+                <div class="slds-nav-vertical__section">
+                    <ul aria-describedby="entity-header">
+                        <template for:each={allData} for:item="record">
+                            <template if:true={record.authorizedValue}>
+                                <li key={record.label} class="slds-nav-vertical__item">
+                                    <a href={record.href} style="padding-left: 10px;" title={record.label} class="slds-nav-vertical__action">
+                                        <span>{record.label}</span>
+                                    </a>
+                                </li>
+                            </template>
+                        </template>
+                    </ul>
+                </div>
+            </nav>
+        </template>
+        <!-- MOBILE MENU END-->
+
+        <div class="margin-bottom"></div>
+    </div>
+</template>

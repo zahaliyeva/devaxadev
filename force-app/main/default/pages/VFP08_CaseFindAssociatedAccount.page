@@ -1,0 +1,228 @@
+<apex:page standardController="Case" extensions="VFC08_CaseFindAssociatedAccount" showHeader="false" sidebar="false">
+    <script type="text/javascript">
+        function verifyEmail(xemail) {
+            alert('dxxxd');
+            if(xemail != '0') {
+            alert('dd1');
+                return confirm('That is zero');
+                alert('dd2');
+            }
+            alert('dd3');
+            return confirm('That is zero1');
+            return true;
+        }
+    </script>
+    
+    <div id="errmgs"></div>
+    <apex:pageMessages />
+    <apex:form >   
+        <apex:outputPanel id="blockCustomer" >
+            <apex:pageBlock rendered="{!!transactionStatus}">  
+                <script>
+                    function setStatus(mgs){
+                        var str ='<div class="message infoM3" role="alert">'+
+                                '<table border="0" cellpadding="0" cellspacing="0" class="messageTable" style="padding:0px;margin:0px;">'+
+                                    '<tbody><tr valign="top">'+
+                                        '<td>'+
+                                            '<img alt="INFO" class="msgIcon" src="/s.gif" title="INFO">'+
+                                        '</td>'+
+                                        '<td class="messageCell"><div id="" class="messageText"><span id="">'+
+                                                        '<h4></h4></span>'+mgs+'<br></div>'+
+                                        '</td>'+
+                                    '</tr>'+
+                                    '<tr>'+
+                                        '<td></td>'+
+                                        '<td>'+
+                                        '</td>'+
+                                    '</tr>'+
+                                '</tbody></table>'+
+                            '</div>';
+                            document.getElementById('errmgs').innerHTML = str;
+                    }
+                    function updateAssociateStatus(status,error){
+                        console.log('transactionStatus :{!transactionStatus}');
+                        console.log('transactionError : {!transactionError}');
+                        console.log('transactionStatus : '+status);
+                        console.log('transactionError : '+error);
+                        if(status == 'false'){
+                            setStatus(error);
+                        }else if(status && error == 'success'){                
+                            console.log('transactionClose');
+                            setStatus('Transaction successful.');
+                            window.parent.location.reload();
+                            console.log('transactionClose');
+                        }
+                    }
+                </script>
+                <apex:inputhidden value="{!Case.SuppliedEmail}"/>
+            
+                <apex:pageBlockSection title="{!if(isAgent,'Agente','Cliente')}" columns="2">  
+
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="{!$ObjectType.Account.fields.FirstName.label}" for="firstname"/>
+                        <apex:inputText value="{!customer.firstname}" id="firstname"/>
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="{!$ObjectType.Account.fields.LastName.label}" for="lastname"/>
+                        <apex:inputText value="{!customer.lastname}" id="lastname"/>
+                    </apex:pageBlockSectionItem>
+                    <apex:inputfield value="{!customer.Fiscal_ID__c}" rendered="{!!isAgent}"/>
+                    <apex:inputfield value="{!customer.Matricola__c}" rendered="{!isAgent}"/>
+                  <!--   <apex:inputfield value="{!customer.PersonBirthdate}" rendered="{!!isAgent}"/> -->
+                </apex:pageBlockSection>
+                <apex:pageBlockSection title="Azienda" columns="2" rendered="{!!isAgent}">  
+                    <apex:inputfield value="{!customer.Name}" rendered="{!!isAgent}" required="false"/>
+                    <apex:inputfield value="{!customer.Partita_IVA__c}" rendered="{!!isAgent}" required="false"/>
+                    
+                </apex:pageBlockSection>
+                <center>
+                    <apex:commandButton action="{!searchCustomer}" value="Cerca"/>&nbsp;&nbsp;
+                    <apex:commandButton action="{!newCustomer}" value="Nuovo" rendered="{!listCustomerResult.size>0}"/>
+                </center>
+             
+                <apex:pageBlockSection title="Results" columns="1" rendered="{!listCustomerResult.size>0 && isNew==false}" showHeader="false">
+                    <apex:variable var="accnum" value="{!0}" />
+                    <apex:pageBlockTable value="{!listCustomerResult}" var="cust">
+                        <apex:column value="{!cust.lastname}" rendered="{!!isCorporate}"/>
+                        <!-- MOSCATELLI_M 14072015: CR-10 -->
+                       <!-- <apex:column value="{!cust.lastname}" rendered="{!!isCorporate}"/> -->    
+                        <apex:column value="{!cust.firstname}" rendered="{!!isCorporate}"/>    
+                        <!-- <apex:column value="{!cust.Fiscal_ID__c}" rendered="{!AND(!isAgent,!isCorporate)}"/> -->
+                        <!--SPINELLI_F 04022016: EVO-18----START -->
+                        <!--<apex:column value="{!cust.Fiscal_ID__c}" rendered="{!AND(!isAgent,!isCorporate,!isAAI)}"/> 
+                        <apex:column value="{!cust.AAI_Codice_fiscale__c}" rendered="{!AND(!isAgent,!isCorporate,isAAI)}"/> -->
+                        <apex:column value="{!cust.Fiscal_ID__c}" headerValue="{!$ObjectType.Account.fields.Fiscal_ID__c.label}" style="width:10%!important;" rendered="{!AND(!isCorporate,cust.RecordType.Name=='Individual',!isAgent)}"/>                        
+                        <!--MOSCATELLI_M 10102016: Family Protect -- START
+                        <apex:column value="{!cust.AAI_Codice_fiscale__c}" headerValue="{!$ObjectType.Account.fields.Fiscal_ID__c.label}" style="width:10%!important;" rendered="{!AND(!isCorporate,cust.RecordType.Name<>'Individual',!isAgent)}"/> 
+                        -->
+                        <apex:column value="{!cust.AAI_Codice_fiscale__c}" headerValue="{!$ObjectType.Account.fields.Fiscal_ID__c.label}" style="width:10%!important;" rendered="{!AND(!isCorporate,cust.RecordType.Name<>'Individual',cust.recordtype.name<>'AAF_B2C',!isAgent)}"/>
+                        <apex:column value="{!cust.Codice_Fiscale_AAF__c}" headerValue="{!$ObjectType.Account.fields.Fiscal_ID__c.label}" style="width:10%!important;" rendered="{!AND(!isCorporate,cust.RecordType.Name=='AAF_B2C',!isAgent)}"/>
+                        <!--MOSCATELLI_M 10102016: Family Protect -- END-->
+                        <!--SPINELLI_F 04022016: EVO-18----END -->
+                        <apex:column value="{!cust.Matricola__c}" rendered="{!AND(isAgent,!isCorporate)}"/>
+                        <!--MOSCATELLI_M 13/02/2018: Aggiornamento gestori -- START-->
+                        <apex:column value="{!cust.State__c}" rendered="{!AND(isAgent,!isCorporate)}"/>
+                        <!--MOSCATELLI_M 13/02/2018: Aggiornamento gestori -- END--> 
+                        <!-- <apex:column value="{!cust.personemail}" rendered="{!!isCorporate}"/> -->
+                        <!--SPINELLI_F 04022016: EVO-18----START -->
+                        <apex:column value="{!cust.PersonEmail}"  headerValue="{!$ObjectType.Account.fields.PersonEmail.label}" style="width:10%!important;" rendered="{!or(AND(!isCorporate,cust.RecordType.Name=='Individual'),isAgent)}"/> 
+                        <apex:column value="{!cust.Additional_Email__c}"  headerValue="{!$ObjectType.Account.fields.PersonEmail.label}" style="width:10%!important;" rendered="{!AND(!isCorporate,cust.RecordType.Name<>'Individual',!isAgent)}"/> 
+                        <!--SPINELLI_F 04022016: EVO-18----END -->
+                        <apex:column value="{!cust.name}" rendered="{!isCorporate}"/>
+                        <!-- <apex:column value="{!cust.Partita_IVA__c}"  rendered="{!isCorporate)}"/> -->                     
+                        <!--SPINELLI_F 04022016: EVO-18----START -->
+                        <!--<apex:column value="{!cust.Partita_IVA__c}"  rendered="{!AND(isCorporate,!isAAI)}"/> 
+                        <apex:column value="{!cust.AAI_Partita_IVA__c}"  rendered="{!AND(isCorporate,isAAI)}"/> -->
+                        <apex:column value="{!cust.Partita_IVA__c}"  headerValue="{!$ObjectType.Account.fields.Partita_IVA__c.label}" style="width:10%!important;" rendered="{!AND(isCorporate,cust.RecordType.Name=='Corporate')}"/> 
+                        <apex:column value="{!cust.AAI_Partita_IVA__c}"  headerValue="{!$ObjectType.Account.fields.Partita_IVA__c.label}" style="width:10%!important;" rendered="{!AND(isCorporate,cust.RecordType.Name<>'Corporate')}"/> 
+                        <apex:column value="{!cust.Account_email__c}"  headerValue="{!$ObjectType.Account.fields.Account_email__c.label}" style="width:10%!important;" rendered="{!AND(isCorporate,cust.RecordType.Name=='Corporate')}"/> 
+                        <apex:column value="{!cust.Additional_Email__c}"  headerValue="{!$ObjectType.Account.fields.Account_email__c.label}" style="width:10%!important;" rendered="{!AND(isCorporate,cust.RecordType.Name<>'Corporate')}"/> 
+                        <!--<apex:column value="{!cust.Account_email__c}" rendered="{(!isCorporate)}"/>-->
+                         <!--MOSCATELLI_M 10102016: Family Protect -- START
+                        <apex:column value="{!$Label.VFP06_AAICustomer}" headerValue="{!$Label.VFP06_CustTypology}" style="width:10%!important;" rendered="{!AND(!isAgent,!(or(cust.RecordType.Name=='Individual',cust.RecordType.Name=='Corporate')))}"/>
+                        -->
+                        <apex:column value="{!$Label.VFP06_AAICustomer}" headerValue="{!$Label.VFP06_CustTypology}" style="width:10%!important;" rendered="{!AND(!isAgent,cust.RecordType.Name<>'AAF_B2C',cust.RecordType.Name<>'Individual',cust.RecordType.Name<>'Corporate')}"/>
+                        <apex:column value="{!$Label.VFP06_Family_Protect}" headerValue="{!$Label.VFP06_CustTypology}" style="width:10%!important;" rendered="{!AND(!isAgent,cust.RecordType.Name=='AAF_B2C')}"/>
+                        <!--MOSCATELLI_M 10102016: Family Protect -- END-->
+
+                        <!--CAPOBIANCO_A 30/08/2017 EVO 87: AMF -- START
+                        <apex:column value="{!$Label.VFP06_AMPSCustomer}" headerValue="{!$Label.VFP06_CustTypology}" style="width:10%!important;" rendered="{!AND(!isAgent,or(cust.RecordType.Name=='Individual',cust.RecordType.Name=='Corporate'))}"/> -->
+
+                        <apex:column value="{!$Label.VFP06_AMPSCustomer}" headerValue="{!$Label.VFP06_CustTypology}" style="width:10%!important;" rendered="{!AND(!isAgent,or(cust.RecordType.Name=='Individual',cust.RecordType.Name=='Corporate'),(cust.TECH_Company__c<>'AMF'))}"/>
+                        <apex:column value="{!$Label.VFP06_AMFCustomer}" headerValue="{!$Label.VFP06_CustTypology}" style="width:10%!important;" rendered="{!AND(!isAgent,or(cust.RecordType.Name=='Individual',cust.RecordType.Name=='Corporate'),(cust.TECH_Company__c=='AMF'))}"/>
+                        <!--CAPOBIANCO_A 30/08/2017 EVO 87: AMF -- END -->
+                        <!--SPINELLI_F 04022016: EVO-18----END -->
+                        <apex:column rendered="{!AND(case.SuppliedEmail<>null,!isAgent)}" headerValue="Aggiorna" style="text-align: center;"><apex:inputcheckbox value="{!cust.Tech_Flag__c}" title="{!$Label.VFP08_OverwriteEmail} '{!case.SuppliedEmail}'"/></apex:column>
+                        <apex:column >
+                            <!-- <apex:commandButton action="{!asociateCustomerToCase}" value="Aggiorna e Inserisci" rerender="blockCustomer"  onComplete="updateAssociateStatus('{!transactionStatus}', '{!transactionError}');">
+                                <apex:param name="custome"
+                                    value="{!cust.id}"
+                                    assignTo="{!selectedCustomer.id}"/>   
+                            </apex:commandButton> -->
+                            <!--MOSCATELLI_M 13/02/2018: Aggiornamento gestori -- START-->
+                            <apex:commandButton action="{!asociateCustomerToCase}" value="{!IF(!isAgent,'Aggiorna e Inserisci','Inserisci')}" rerender="blockCustomer"  onComplete="updateAssociateStatus('{!transactionStatus}', '{!transactionError}');" disabled="{!and(isAgent,cust.State__c=='Inactive Bank Agent')}">
+                                <apex:param name="custome"
+                                    value="{!accnum}"
+                                    assignTo="{!selectedCustomerVal}"/>  
+                                <!--SPINELLI_F 09022016: EVO-18----START-->
+                                <apex:param name="AAI" 
+                                    value="{!IF(OR(cust.RecordType.Name=='Individual',cust.RecordType.Name=='Corporate',cust.RecordType.Name=='Intermediary'),'false','true')}"
+                                    assignTo="{!AIISelected}"/> 
+                                <!--SPINELLI_F 09022016: EVO-18----END-->
+                            </apex:commandButton>  
+                            <!--
+                            <apex:commandButton action="{!asociateCustomerToCase}" value="Inserisci" rerender="blockCustomer"  onComplete="updateAssociateStatus('{!transactionStatus}', '{!transactionError}');">
+                                <apex:param name="custome"
+                                    value="{!accnum}"
+                                    assignTo="{!selectedCustomerVal}"/>  
+                                
+                                <apex:param name="AAI" 
+                                    value="{!IF(OR(cust.RecordType.Name=='Individual',cust.RecordType.Name=='Corporate',cust.RecordType.Name=='Intermediary'),'false','true')}"
+                                    assignTo="{!AIISelected}"/> 
+                                
+                            </apex:commandButton>                              
+                            -->
+                            <!--MOSCATELLI_M 13/02/2018: Aggiornamento gestori -- END-->                          
+                        <apex:variable var="accnum" value="{!accnum + 1}" />
+                        </apex:column>                        
+                    </apex:pageBlockTable> 
+                </apex:pageBlockSection> 
+                <br/>
+                <apex:outputPanel layout="block" rendered="{!(listCustomerResult.size<=0 &&  transactionError != 'firstLoad') || isNew}">
+                    <apex:outputText rendered="{!listCustomerResult.size<=0 &&  transactionError != 'firstLoad'}">
+                    <script>
+                        setStatus('Nessun nominativo trovato');
+                    </script>
+                    </apex:outputText>
+                    <apex:pageBlockSection title="Results" columns="2" showHeader="false" rendered="{!!isCorporate}">
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel value="{!$ObjectType.Account.fields.FirstName.label}" for="firstname"/>
+                            <apex:outputpanel >
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <apex:inputText value="{!selectedCustomer.firstname}" id="firstname"/>
+                                </div>
+                            </apex:outputpanel>
+                        </apex:pageBlockSectionItem>
+                        <apex:pageBlockSectionItem >                        
+                            <apex:outputLabel value="{!$ObjectType.Account.fields.LastName.label}" for="lastname"/>
+                            <apex:outputpanel >
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <apex:inputText value="{!selectedCustomer.lastname}" id="lastname"/>
+                                </div>
+                            </apex:outputpanel>
+                        </apex:pageBlockSectionItem>
+                        <apex:inputfield value="{!selectedCustomer.PersonBirthdate}" rendered="{!!isAgent}"/>
+                        <apex:inputfield value="{!selectedCustomer.Matricola__c}" rendered="{!isAgent}"/>
+                        <apex:inputfield value="{!selectedCustomer.Fiscal_ID__c}" rendered="{!!isAgent}"/>
+                        <apex:inputfield value="{!selectedCustomer.Type}" rendered="{!isAgent}"/>                       
+                        <apex:inputfield value="{!selectedCustomer.PersonEmail}" />
+                        <apex:inputfield value="{!selectedCustomer.PersonHomePhone}" rendered="{!!isAgent}"/>
+                        <apex:inputfield value="{!selectedCustomer.Phone}" rendered="{!isAgent}"/>          
+                        <apex:inputfield value="{!selectedCustomer.PersonMobilePhone}"/>
+                        <apex:inputfield value="{!selectedCustomer.CAB__pc}"  rendered="{!isAgent}"/>                       
+                        <apex:inputfield value="{!selectedCustomer.CLTSEX__pc}" rendered="{!!isAgent}"/>
+                    </apex:pageBlockSection>
+                    <apex:pageBlockSection title="Results" columns="2" showHeader="false" rendered="{!isCorporate}">
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel value="{!$ObjectType.Account.fields.Name.label}" for="firstname"/>
+                            <apex:outputpanel >
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <apex:inputText value="{!selectedCorporateCustomer.name}" id="cname"/>
+                                </div>
+                            </apex:outputpanel>
+                        </apex:pageBlockSectionItem>
+                        <apex:inputfield value="{!selectedCorporateCustomer.Account_email__c}"/>
+                        <apex:inputfield value="{!selectedCorporateCustomer.Phone}"/>
+                        <apex:inputfield value="{!selectedCorporateCustomer.MobilePhone__c}"/>
+                        <!-- <apex:inputfield value="{!selectedCorporateCustomer.Fiscal_ID__c}"/>   -->
+                        <apex:inputfield value="{!selectedCorporateCustomer.Partita_IVA__c}"/>
+                    </apex:pageBlockSection>
+                    <center><apex:commandButton action="{!saveCustomer}" value="Crea e Inserisci {!if(isAgent,'Gestore','Cliente')}"/></center>    
+                </apex:outputPanel>    
+            </apex:pageBlock>                
+        </apex:outputPanel>  
+    </apex:form>
+</apex:page>

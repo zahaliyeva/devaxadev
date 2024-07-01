@@ -1,0 +1,26 @@
+<aura:component controller="WarrantiesCtrl" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global">
+	<!-- Handler -->
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <!-- Spinner -->
+    <lightning:spinner aura:id="mySpinner" class="slds-hide" />
+
+    <!-- Attributes -->
+    <aura:attribute name="recordId" type="String" default="" />	
+    <aura:attribute name="data" type="Object"/>
+    <aura:attribute name="columns" type="List"/>
+
+    <aura:registerEvent name="tabclosing" type="c:tabclosing" />
+
+    <div style="height: 100%">
+        <div class="slds-m-left--medium slds-m-top--small slds-m-bottom--small bottom-show-link">
+            <a id="full" onclick="{!c.back}">« Back</a>
+        </div>
+        <lightning:datatable
+                keyField="id"
+                data="{! v.data }"
+                columns="{! v.columns }"
+                hideCheckboxColumn="true"/>
+    </div>
+
+</aura:component>

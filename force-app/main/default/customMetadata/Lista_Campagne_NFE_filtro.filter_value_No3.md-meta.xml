@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>filter_value_No3</label>
+    <protected>false</protected>
+    <values>
+        <field>Developer_Value__c</field>
+        <value xsi:type="xsd:string">Marketing_campaign</value>
+    </values>
+    <values>
+        <field>Label__c</field>
+        <value xsi:type="xsd:string">Commerciale</value>
+    </values>
+    <values>
+        <field>RecordType_DeveloperName__c</field>
+        <value xsi:type="xsd:string">Marketing_campaign</value>
+    </values>
+    <values>
+        <field>Status_di_creazione__c</field>
+        <value xsi:type="xsd:string">Planned</value>
+    </values>
+    <values>
+        <field>Value__c</field>
+        <value xsi:type="xsd:string">Marketing Campaign</value>
+    </values>
+</CustomMetadata>

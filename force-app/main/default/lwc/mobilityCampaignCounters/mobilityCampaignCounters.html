@@ -1,0 +1,345 @@
+<template>
+    <c-mobility-spinner show={spinner} show-overlay={spinnerOverlay}></c-mobility-spinner>
+    <c-mobility-messages model={messages}></c-mobility-messages>
+
+ <!-- KPI SECTION + dashboard start  -->
+<template if:false={isDataEnrichment}>
+    <div class="row">
+        <!-- Alert -->
+        <div class="col-12 counter-alert">
+            <h4 class="alert-heading">
+                <span class="mr-1 align-bottom">
+                    <c-mobility-icon name='alert-counter' width='18px' height='18px'></c-mobility-icon>
+                </span>
+                {_label.campaignDetail_alert}
+            </h4>
+        </div>
+    </div>
+
+
+    <div class="row mt-4">
+        <div class="col-12 title pl-0">
+            <h4>{_label.campaignDetail_title}</h4>
+            <div class="page-border"></div>
+        </div>
+    </div>
+    <template if:false={isRoleWorker}>    
+        <div class="row">
+            <div class="col-12">
+                <div class='row counter-row'>
+                    <div class='col-4 mr-auto'>
+                        <h3>{_label.campaignDetail_collaborator}</h3>
+                        <select class='counter-select' onchange={reloadData}>
+                            <template for:each={collaborators} for:item='collaborator'>
+                                <option key={collaborator.value} value={collaborator.value}>{collaborator.label}</option>
+                            </template>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+    
+    <template if:true={isInformative}>    
+        <div class='row counter-row align-items-center justify-content-between counter-row-bar mt-4'>
+            <div class='col'>
+                <div class='progress counter-bar'>
+                    <div class={progressStyle} aria-valuemin='0' aria-valuemax={counters.customersInTarget}
+                        role='progressbar' style={progressWidth} aria-valuenow={counters.customersProcessed}>
+                        {counters.customersProcessed}
+                    </div>
+                </div>
+            </div>
+            <div class='col-4 text-nowrap'>                
+                <span class="counter-target text-gray-900 font-weight-bold pl-3">
+                    {counters.customersInTarget} {targetCustomer}
+                </span>
+            </div>
+        </div>
+    
+        <div class='row counter-row counter-table'>
+            <div class='col-3'>
+                {targetCustomer}
+            </div>
+            <div class='col-1 semibold'>
+                {counters.customersInTarget}
+            </div>
+            <div class='col-3'>
+                {_label.campaignDetail_workedCustomer}
+            </div>
+            <div class='col-1 semibold'>
+                {counters.customersProcessed}
+            </div>
+            <div class='col-3'>
+                {_label.campaignDetail_workedCustomerPercentage}
+            </div>
+            <div class='col-1 semibold'>
+                {customersProcessedPercentage}&percnt;
+            </div>          
+  
+        </div>
+    
+    </template>
+    <template if:false={isInformative}>
+    <div class='row counter-row align-items-center justify-content-between counter-row-bar mt-4'>
+        <div class='col'>
+            <div class='progress counter-bar'>
+                <div class={progressStyle} aria-valuemin='0' aria-valuemax={counters.customersInTarget}
+                    role='progressbar' style={progressWidth} aria-valuenow={counters.customersProcessed}>
+                    {counters.customersProcessed}
+                </div>
+            </div>
+        </div>
+        <div class='col-4 text-nowrap'>
+            <template if:true={counters.customersPriority}>
+                <span class="badge-green rounded py-1 px-2">
+                    <span class="align-bottom">
+                        <c-mobility-icon name="user-white" width="20px" height="20px">
+                        </c-mobility-icon>
+                    </span>
+                    <span class="text-uppercase text-white text-center font-weight-bold">
+                        {counters.customersPriority} {priority}
+                    </span>
+                </span>
+            </template>
+            <span class="counter-target text-gray-900 font-weight-bold pl-3">
+                {counters.customersInTarget} {targetCustomer}
+            </span>
+        </div>
+    </div>
+
+    <div class='row counter-row counter-table'>
+        <div class='col-3'>
+            {targetCustomer}
+        </div>
+        <div class='col-1 semibold'>
+            {counters.customersInTarget}
+        </div>
+        <div class='col-3'>
+            {_label.campaignDetail_workedCustomerPercentage}
+        </div>
+        <div class='col-1 semibold'>
+            {customersProcessedPercentage}&percnt;
+        </div>
+        <div class='col-3'>
+            {_label.campaignDetail_negotiationsWonPercentage}
+        </div>
+        <div class='col-1 semibold'>
+            {wonOpportunityPercCustomerTarget}&percnt;
+        </div>
+
+        <div class='col-3'>
+            {_label.campaignDetail_workedCustomer}
+        </div>
+        <div class='col-1 semibold'>
+            {counters.customersProcessed}
+        </div>
+        <div class='col-3'>
+            {_label.campaignDetail_negotiationsCreatedPercentage}
+        </div>
+        <div class='col-1 semibold'>
+            {createdOpportunityPercCustomerProcessed}&percnt;
+        </div>
+        <div class='col-3'>
+            {_label.campaignDetail_negotiationsWonPercentage}
+        </div>
+        <div class='col-1 semibold'>
+            {wonOpportunityPercCustomerProcessed}&percnt;
+        </div>
+
+        <div class='col-3'>
+            {priorityCustomer}
+        </div>
+        <div class='col-1 semibold'>
+            {counters.customersPriority}
+        </div>
+        <div class='col-3'>
+            {_label.campaignDetail_workedCustomerPercentage}
+        </div>
+        <div class='col-1 semibold'>
+            {customersPriorityProcessedPercentage}&percnt;
+        </div>
+        <div class='col-3'>
+            {_label.campaignDetail_negotiationsWonPercentage}
+        </div>
+        <div class='col-1 semibold'>
+            {wonOpportunityPercCustomerPriority}&percnt;
+        </div>
+
+        <div class='col-3'>
+            {_label.campaignDetail_negotiationsWon}
+        </div>
+        <div class='col-1 semibold'>
+            {counters.opportunityWon}
+        </div>
+        <div class='col-3'>
+            {_label.campaignDetail_negotiationsWonEuro}
+        </div>
+        <div class='col-1 semibold'>
+            {counters.opportunityWonRevenue}&euro;
+        </div>
+        <div class='col-4'></div>
+
+        <div class='col-3'>
+            {_label.campaignCounters_onGoingNegotiations}
+        </div>
+        <div class='col-1 semibold'>
+            {opportunityOngoing}
+        </div>
+        <div class='col-3'>
+            {_label.campaignCounters_onGoingNegotiations} (&euro;)
+        </div>
+        <div class='col-1 semibold'>
+            {opportunityOngoingRevenue}&euro;
+        </div>
+        <div class='col-4'></div>
+    </div>
+    </template>
+   
+    <template if:true={isMarketing}>
+    <div class="row mt-4">
+        <div class="col-12 title pl-0">
+            <h4>{_label.campaignSmsEmailLabel}</h4>
+            <div class="page-border"></div>
+        </div>
+    </div>
+
+    <div class='row counter-row counter-table'>
+    <div class='col-3'>
+        {_label.campaignSmsEmailSent}
+    </div>
+    <div class='col-1 semibold'>
+        {counters.customersInTargetWithEmailSMS}
+    </div>  
+    <div class='col-3'>
+        {_label.campaignSmsEmailNotDeliveredPercentage}
+    </div>
+    <div class='col-1 semibold'>
+        {forEmailSmsUndeliveredCustomerEmailSmsTarget}&percnt;
+    </div>  
+    <div class='col-3'>
+        {_label.campaignSmsEmailPriorityCustomersPercentage}
+    </div>
+    <div class='col-1 semibold'>
+        {forCustomerPriority}&percnt;
+    </div>  
+    <div class='col-3'>
+        {_label.campaignSmsEmailDeliveredEmail}
+    </div>
+    <div class='col-1 semibold'>
+        {counters.customersInTargetWithEmail}
+    </div>  
+    <div class='col-3'>
+        {_label.campaignSmsEmailOpeningPercentage}
+    </div>
+    <div class='col-1 semibold'>
+        {forOpenEmailRecontactRequest}&percnt;
+    </div>
+    <div class='col-3'>
+        {_label.campaignSmsEmailPriorityCustomersPercentage}
+    </div>
+    <div class='col-1 semibold'>
+        {forCustomerPriorityWithEmail}&percnt;
+    </div>    
+    <div class='col-3'>
+        {_label.campaignSmsEmailDeliveredSms}
+    </div>
+    <div class='col-1 semibold'>
+        {counters.customersInTargetWithSMS}
+    </div>  
+    <div class='col-3'>
+        {_label.campaignSmsEmailOpeningPercentage}
+    </div>
+    <div class='col-1 semibold'>
+        {forSmsOpenRecontactRequest}&percnt;
+    </div>
+    <div class='col-3'>
+        {_label.campaignSmsEmailPriorityCustomersPercentage}
+    </div>
+    <div class='col-1 semibold'>
+        {forSmsOpenRecontactRequest}&percnt;
+    </div>   
+</div>
+ </template>
+
+    <div class='row counter-row counter-row-report mt-4'>
+        <div class='col-12 title'>
+            <h4>{_label.campaignDetail_customerTitle}</h4>
+            <div class="page-border"></div>
+        </div>
+        <template if:true={loadDoughnut}>
+            <div class='col-6'>
+                <div class="mx-auto d-block text-center">
+                    <c-mobility-report 
+                        label={titleReport1}
+                        report-name={nameReport1}
+                        filter-name='CAMPAIGN_ID' 
+                        filter-value={params.recordId} 
+                        color-start='#F0FF93' 
+                        color-end='#BC9D45'
+                    >
+                    </c-mobility-report>
+                </div>
+            </div>
+            <div class='col-6'>
+                <div class="mx-auto d-block text-center">
+                    <c-mobility-report 
+                        label={titleReport2}
+                        report-name={nameReport2}
+                        filter-name='CAMPAIGN_ID'
+                        filter-value={params.recordId} 
+                        color-start='#DFF1E5' 
+                        color-end='#668980'
+                    >
+                    </c-mobility-report>
+                </div>
+            </div>
+        </template>
+    </div>
+</template>
+<!-- KPI SECTION + Dashboard end -->
+    <template if:true = {showAttachment}>
+        <c-mobility-upload-file parent-id={params.recordId}></c-mobility-upload-file>
+    </template>
+    <div class='row counter-row justify-content-between'>
+        <div class="col-12">
+            <ul class="nav nav-tabs nav-fill counter-tabs-nav shadow-bottom">
+                <template if:true={showOpportunity}>
+                <li class={opportunityTabClass} onclick={activeTab} data-target='0'>
+                    <a class="counter-tabs-item nav-link">
+                        <c-mobility-icon name='opportunity' width='40px' height='40px'></c-mobility-icon>
+                        <br />{_label.campaignCounters_negotiations}
+                    </a>
+                </li>
+            </template>
+                <li class={activitiesTabClass} onclick={activeTab} data-target='1'>
+                    <a class="counter-tabs-item nav-link">
+                        <c-mobility-icon name='activities' width='40px' height='40px'></c-mobility-icon>
+                        <br />{_label.campaignCounters_openActivities}
+                    </a>
+                </li>
+                <li class={historyTabClass} onclick={activeTab} data-target='2'>
+                    <a class="counter-tabs-item nav-link">
+                        <c-mobility-icon name='history' width='40px' height='40px'></c-mobility-icon>
+                        <br />{_label.campaignCounters_activityHistory}
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-12">
+            <div class="tab-content counter-tab-content shadow-bottom">
+                <template if:true={showOpportunity}>
+                <div class={opportunityPaneClass}>
+                    <c-s-object-data-grid tabledata={opportunity}></c-s-object-data-grid>
+                </div>
+            </template>
+                <div class={activitiesPaneClass}>
+                    <c-s-object-data-grid tabledata={activities}></c-s-object-data-grid>
+                </div>
+                <div class={historyPaneClass}>
+                    <c-s-object-data-grid tabledata={history}></c-s-object-data-grid>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

@@ -1,0 +1,18 @@
+<template>
+	<c-mobility-spinner show={spinner} show-overlay={spinnerOverlay}></c-mobility-spinner>
+	<c-mobility-messages model={messages}></c-mobility-messages>
+
+	<template if:true={authorized}>
+		
+		
+			<div class="contact-history-page">
+				<c-mobility-contact-history-list invoke-collout={invokeCollout} input-records={allData} filter-callback={loadFilteredContactHistoryAccount} params = {params}>
+				</c-mobility-contact-history-list>
+			</div>
+			<c-mobility-pagination pagination={pagination} change-page={onChangePage}></c-mobility-pagination>
+		
+	</template>
+	<template if:false={authorized}>
+		<c-mobility-unauthorized></c-mobility-unauthorized>
+	</template>
+</template>

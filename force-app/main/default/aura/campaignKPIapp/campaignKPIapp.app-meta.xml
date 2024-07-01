@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AuraDefinitionBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>42.0</apiVersion>
+    <description>Lightning app used to contain the campaign KPI component(s)
+Uses lightning out for visualforce embedding</description>
+</AuraDefinitionBundle>

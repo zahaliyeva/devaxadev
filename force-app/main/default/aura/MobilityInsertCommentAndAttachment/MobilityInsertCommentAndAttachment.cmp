@@ -1,0 +1,11 @@
+<aura:component controller="MobilityCaseListController" implements="forceCommunity:availableForAllPageTypes,force:lightningQuickAction,force:hasRecordId,force:appHostable,flexipage:availableForRecordHome,force:hasRecordId,force:hasSObjectName" access="global">
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+	<aura:attribute name="show" type="Boolean" />
+	<aura:attribute name="userRole" type="String" />
+	<aura:attribute name="ProfileName" type="String" />
+    
+    <aura:if isTrue="{!v.show}">
+    	<c:NewCommentAndAttachment caseId="{!v.recordId}" userRole="{!v.userRole}" profileName="{!v.ProfileName}" isMobility="true" />
+	</aura:if>
+        
+</aura:component>

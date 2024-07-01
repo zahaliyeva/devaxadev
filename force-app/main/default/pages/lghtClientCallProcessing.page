@@ -1,0 +1,233 @@
+<apex:page controller="VFC06_ClientCallProcessing" action="{!AllowDMLforMethods}" docType="html-5.0" lightningStylesheets="true" language="it">
+	<apex:includeLightning /> 
+	<apex:includeScript value="/support/console/46.0/integration.js"/>
+
+	<div class="slds-scope">
+		<div id="lghtCallProcessing"></div>
+	</div>
+	
+
+<script>
+		const urlParameter = {!UrlParameterJSON};
+
+		var visualForceFunction = function(event){
+			var data = event.getParam("data");
+			var url= event.getParam("Url");
+			var recordid = event.getParam("recordid");  
+
+			console.log('@data: '+data+' @url: '+url+' @recordid: '+recordid);     
+
+			if(data == "openNewCasePage"){
+				console.log('myEventData_ : openNewCasePage');
+				openNewCasePage(url);   
+			} else if(data == "openCaseTab"){
+				console.log('myEventData_ : openCaseTab');
+				openCaseTab(url, recordid);   
+			}				  
+		};
+
+		function openNewCasePage(url) {
+		    console.log("openNewCasePage");
+		    if(sforce.console.isInConsole()){
+		        console.log('openNewCasePage '+url);
+		        //window.location.replace('/500/e'+url+'&isdtp=nv');
+		    }else{
+		        console.log('not in console');
+		        //window.location.replace('/500/e'+url);//+'&isdtp=nv'
+		    }
+		}
+
+		function openCaseTab(CaseNumber, recordId) {
+		    console.log("openCaseTab: "+recordId+"-"+CaseNumber);
+		    if(sforce.console.isInConsole()){
+		        console.log('OpenCaseTab '+ CaseNumber);
+		        sforce.console.openPrimaryTab(null, '/' + recordId, false, CaseNumber, focusOnSuccess, CaseNumber);
+		    }else{
+		        window.location.replace('/' + recordId);
+		    }
+		}
+
+		var focusOnSuccess= function openSuccess(result) {
+		    console.log("result:",result);
+		    sforce.console.focusPrimaryTabById(result.id, closure);
+		};
+
+		var closure = function CloseTab(){
+		    if(sforce.console.isInConsole()){
+		        console.log('CloseTab');
+		        sforce.console.getEnclosingTabId(closeSubtab);
+		    }else{
+		        window.close();
+		    }
+		}
+
+		var closeSubtab = function closeSubtab(result) {
+		    console.log('closeSubtab');
+		    var tabId = result.id;
+		    sforce.console.closeTab(tabId);
+		};
+        if(urlParameter.Caller == 'Agente') {    
+			$Lightning.use("c:ClientCallProcessingApp", function() {            
+				$Lightning.createComponent("c:LghtCallProcessingAgente", {urlParameter}, "lghtCallProcessing", function(cmp) { 
+					console.log('cmp created . eventService');
+
+					sforce.console.setTabTitle(urlParameter.Caller + ' - Ricezione Chiamata');
+
+					$A.eventService.addHandler({
+						event: "c:tabclosing", 
+						handler : visualForceFunction
+					});
+
+					$A.eventService.addHandler({
+						event: "c:lghtRedirectNew",
+						handler: function (e) {
+							const data = e.getParams();
+							console.log(data);
+
+							switch(data.action){
+								case 'new-case':
+									sforce.one.createRecord('Case', data.recordTypeId, data.params);
+									break;
+								case 'detail-case':
+									if (sforce.console.isInConsole()) {
+										sforce.console.getFocusedPrimaryTabId((result)=>{
+											sforce.console.openSubtab(result.id, "/" + data.recordId, true, null, null);
+										});									
+										} else {
+											window.top.location.href = "/" + data.recordId;
+										}
+									break;
+							}
+
+						}
+					});
+
+				});
+			});
+        } 
+        else if(urlParameter.Caller == 'Dealer') {    
+			$Lightning.use("c:ClientCallProcessingApp", function() {            
+				$Lightning.createComponent("c:LghtCallProcessingDealer", {urlParameter}, "lghtCallProcessing", function(cmp) { 
+					console.log('cmp created . eventService');
+
+					sforce.console.setTabTitle(urlParameter.Caller + ' - Ricezione Chiamata');
+
+					$A.eventService.addHandler({
+						event: "c:tabclosing", 
+						handler : visualForceFunction
+					});
+
+					$A.eventService.addHandler({
+						event: "c:lghtRedirectNew",
+						handler: function (e) {
+							const data = e.getParams();
+							console.log(data);
+
+							switch(data.action){
+								case 'new-case':
+									sforce.one.createRecord('Case', data.recordTypeId, data.params);
+									break;
+								case 'detail-case':
+									if (sforce.console.isInConsole()) {
+										sforce.console.getFocusedPrimaryTabId((result)=>{
+											sforce.console.openSubtab(result.id, "/" + data.recordId, true, null, null);
+										});									
+										} else {
+											window.top.location.href = "/" + data.recordId;
+										}
+									break;
+							}
+
+						}
+					});
+
+				});
+			});
+        } else if(urlParameter.Caller == 'gestore'){
+			$Lightning.use("c:ClientCallProcessingApp", function() {            
+				$Lightning.createComponent("c:LghtCallProcessingGestore", {urlParameter}, "lghtCallProcessing", function(cmp) { 
+					console.log('cmp created . eventService');
+
+					sforce.console.setTabTitle(urlParameter.Caller + ' - Ricezione Chiamata');
+
+					$A.eventService.addHandler({
+						event: "c:tabclosing", 
+						handler : visualForceFunction
+					});
+
+					$A.eventService.addHandler({
+						event: "c:lghtRedirectNew",
+						handler: function (e) {
+							const data = e.getParams();
+							console.log(data);
+
+							switch(data.action){
+								case 'new-case':
+									sforce.one.createRecord('Case', data.recordTypeId, data.params);
+									break;
+								case 'detail-case':
+									if (sforce.console.isInConsole()) {
+										sforce.console.getFocusedPrimaryTabId((result)=>{
+											sforce.console.openSubtab(result.id, "/" + data.recordId, true, null, null);
+										});									
+										} else {
+											window.top.location.href = "/" + data.recordId;
+										}
+									break;
+								case 'detail-gestore':
+									if (sforce.console.isInConsole()) {
+										sforce.console.getFocusedPrimaryTabId((result)=>{
+											sforce.console.openSubtab(result.id, "/" + data.recordId, true, null, null);
+										});									
+										} else {
+											window.top.location.href = "/" + data.recordId;
+										}
+								break;
+							}
+
+						}
+					});
+
+				});
+			});
+		} else {
+				$Lightning.use("c:ClientCallProcessingApp", function() {            
+				$Lightning.createComponent("c:lghtCallProcessing", {urlParameter}, "lghtCallProcessing", function(cmp) { 
+					console.log('cmp created . eventService');
+
+					sforce.console.setTabTitle(urlParameter.Caller + ' - Ricezione Chiamata');
+
+					$A.eventService.addHandler({
+						event: "c:tabclosing", 
+						handler : visualForceFunction
+					});
+
+					$A.eventService.addHandler({
+						event: "c:lghtRedirectNew",
+						handler: function (e) {
+							const data = e.getParams();
+							console.log(data);
+
+							switch(data.action){
+								case 'new-case':
+									sforce.one.createRecord('Case', data.recordTypeId, data.params);
+									break;
+								case 'detail-case':
+									if (sforce.console.isInConsole()) {
+										sforce.console.getFocusedPrimaryTabId((result)=>{
+											sforce.console.openSubtab(result.id, "/" + data.recordId, true, null, null);
+										});									
+										} else {
+											window.top.location.href = "/" + data.recordId;
+										}
+									break;
+							}
+
+						}
+					});
+
+				});
+			});
+        }
+	</script>
+</apex:page>

@@ -1,0 +1,237 @@
+<template>
+  <c-mobility-spinner show={spinner} show-overlay={spinnerOverlay}></c-mobility-spinner>
+  <tamplate if:false={waitCallBack}>
+  <template if:false={withError}> 
+    <article class="card" if:true={showMainCard}>
+      <img src={logo} alt="Axa logo" />
+      <div class="slds-text-align_center">
+        <img src={inboxIcon} alt="inbox icon" />
+      </div>
+      <h1 class="slds-text-align_center title">
+        Gestisci le comunicazioni che vuoi ricevere
+      </h1>
+      <br />
+      <p align="center">Gentile {name},</p>
+      <br />
+      <p align="center">
+        Teniamo alla tua privacy e desideriamo che tu riceva le comunicazioni
+        che ti interessano.
+        <br />
+        <strong>
+          Seleziona dall'elenco i contenuti per i quali vuoi ricevere
+          aggiornamenti
+        </strong>
+      </p>
+      <br />
+      <ul>
+        <li>
+          <label class="container">
+            <h6 class="title">Comunicazioni informative</h6>
+            Ti inviamo aggiornamenti e informazioni relative ai prodotti e
+            servizi da te sottoscritti, sulle evoluzioni normative, sulle
+            scadenze più importanti, sull’area clienti e la nostra APP
+            <input
+              type="checkbox"
+              name="preference"
+              value="Comunicazioni informative"
+              class="options"
+              onchange={handleSelection}
+              checked = {privacy.Privacy1}
+            />
+            <span class="checkmark"> </span>
+          </label>
+        </li>
+        <li>
+          <label class="container">
+            <h6 class="title">Comunicazioni promozionali</h6>
+            Accedi ai vantaggi a te riservati e non perdere le nostre offerte.
+            Resta aggiornato sugli ultimi prodotti e servizi piú adatti ai tuoi
+            bisogni
+            <input
+              type="checkbox"
+              name="preference"
+              class="options"
+              value="Comunicazioni promozionali"
+              onchange={handleSelection}
+              checked = {privacy.Privacy2}
+            />
+            <span class="checkmark"> </span>
+          </label>
+        </li>
+        <!-- <li>
+                <label class="checkbox">
+                    <input type="checkbox" />
+                    <span>
+                        <h6 class="title">Sondaggi di soddisfazione</h6>
+                        Abbiamo a cuore le tue opinioni e la tua soddifsfazione
+                        e per noi fondamentale: aiutaci a migliorare
+                    </span>
+                </label>
+            </li> -->
+        <li>
+          <label class="container">
+            <h6 class="title">Ricerche di Mercato</h6>
+            Aiutaci a comprendere meglio i tuoi bisogni ed esigenze per
+            migliorare prodotti, servizi e processi
+            <input
+              type="checkbox"
+              name="preference"
+              class="options"
+              value="Ricerche di Mercato"
+              onchange={handleSelection}
+              checked = {privacy.Privacy3}
+            />
+            <span class="checkmark"> </span>
+          </label>
+        </li>
+        <li>
+          <label class="container">
+            <span>
+              <h6 class="title">Nessuna delle precedenti</h6>
+            </span>
+            <input
+              type="checkbox"
+              name="preference"
+              class="disabledOption"
+              value="Nessuna delle precedenti"
+              onchange={handleSelection}
+            />
+            <span class="checkmark"> </span>
+          </label>
+        </li>
+      </ul>
+      <br />
+      <footer class="slds-text-align_center">
+        <button
+          title="CONFERMA PREFERENZE"
+          onclick={handleConfirmPreferences}
+          class="button"
+        >
+          CONFERMA PREFERENZE
+        </button>
+      </footer>
+    </article>
+
+    <article class="card" if:true={showConfirmModifications}>
+      <img src={logo} alt="Axa logo" />
+      <div class="slds-text-align_center">
+        <img src={inboxIcon} alt="inbox icon" />
+      </div>
+      <h1 class="slds-text-align_center title">
+        Richiesta inviata con successo!
+      </h1>
+      <br />
+      <p align="center">
+        Le tue preferenze di comunicazione sono state aggiornate le nuove
+        impostazioni saranno attive entro
+        <strong> 36 ore. </strong>
+      </p>
+      <br />
+      <p align="center">
+        <strong> Continuerai a ricevere </strong>
+        le seguenti comunicazioni:
+      </p>
+      <br />
+      <ul class="slds-text-align_center">
+        <template
+          if:true={selectedPreferences}
+          for:each={selectedPreferences}
+          for:item="preference"
+        >
+          <li key={preference} class="title">-{preference}</li>
+        </template>
+      </ul>
+      <br />
+      <p align="center">
+        Inoltre puoi rimanere aggiornato seguendoci sui nostri canali social!
+      </p>
+      <br />
+      <!-- SOCIAL ICONS -->
+      <div class="social-container">
+        <a
+          href="https://www.facebook.com/AXAitalia?ref=ts&fref=ts"
+          target="_blank"
+        >
+          <img src={facebookIcon} class="social-icon" alt="Facebook icon" />
+        </a>
+        <a href="https://twitter.com/axaitalia?lang=it" target="_blank">
+          <img src={twitterIcon} class="social-icon" alt="Twitter icon" />
+        </a>
+        <a href="https://www.linkedin.com/company/axa-italia" target="_blank">
+          <img src={linkedInIcon} class="social-icon" alt="Linkedin icon" />
+        </a>
+        <a href="https://www.youtube.com/user/axaassicurazioni" target="_blank">
+          <img src={youTubeIcon} class="social-icon" alt="Youtube icon" />
+        </a>
+        <a href="https://www.instagram.com/axaitalia/" target="_blank">
+          <img src={instagramIcon} class="social-icon" alt="Instagram icon" />
+        </a>
+      </div>
+      <br />
+      <br />
+      <!-- <footer class="slds-text-align_center">
+        <button title="CHIUDI" class="button">CHIUDI</button>
+      </footer> -->
+    </article>
+
+    <article class="card" if:true={showTotalUnsubscribe}>
+      <img src={logo} alt="Axa logo" />
+      <div class="slds-text-align_center">
+        <img src={heartIcon} alt="heart icon" />
+      </div>
+      <h1 class="slds-text-align_center title">Ci mancherai!</h1>
+      <br />
+      <p align="center">
+        La tua richiesta per la disiscrizione da tutte le comunicazioni
+        provenienti da AXA per i canali email e SMS è stata presa in carico.
+      </p>
+      <br />
+      <p align="center">
+        Le nuove impostazioni saranno attive
+        <strong> entro 36 ore.</strong>
+      </p>
+      <br />
+      <p align="center">
+        Ti ricordiamo che continuerai a ricevere comunicazioni
+        <strong> contrattuali</strong> relative alle tue polizze
+      </p>
+      <br />
+
+      <p align="center">
+        Inoltre puoi rimanere aggiornato seguendoci sui nostri canali social!
+      </p>
+      <br />
+      <!-- SOCIAL ICONS -->
+      <div class="social-container">
+        <a
+          href="https://www.facebook.com/AXAitalia?ref=ts&fref=ts"
+          target="_blank"
+        >
+          <img src={facebookIcon} class="social-icon" alt="Facebook icon" />
+        </a>
+        <a href="https://twitter.com/axaitalia?lang=it" target="_blank">
+          <img src={twitterIcon} class="social-icon" alt="Twitter icon" />
+        </a>
+        <a href="https://www.linkedin.com/company/axa-italia" target="_blank">
+          <img src={linkedInIcon} class="social-icon" alt="Linkedin icon" />
+        </a>
+        <a href="https://www.youtube.com/user/axaassicurazioni" target="_blank">
+          <img src={youTubeIcon} class="social-icon" alt="Youtube icon" />
+        </a>
+        <a href="https://www.instagram.com/axaitalia/" target="_blank">
+          <img src={instagramIcon} class="social-icon" alt="Instagram icon" />
+        </a>
+      </div>
+      <br />
+      <br />
+      <!-- <footer class="slds-text-align_center">
+        <button title="CHIUDI" class="button">CHIUDI</button>
+      </footer> -->
+    </article>
+  </template>
+  <template if:true={withError}>
+    <c-axa-mail-errors errors={errorState} email="test@mail.com" sms="">
+    </c-axa-mail-errors>
+  </template>
+</tamplate>
+</template>

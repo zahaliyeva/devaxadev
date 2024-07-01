@@ -1,0 +1,112 @@
+<aura:component controller="LightningGetAllClaimsCTRL" implements="lightning:isUrlAddressable" description="target component" >
+  <aura:attribute name="account" type="Account" default="{sobjectType : 'Account'}" />
+  <aura:attribute name="visualizzaTutto" type="Boolean"  default="true"/>
+  <aura:attribute name="styleIni" type="String"  />
+  <aura:attribute name="limits" type="Integer" default="5"/>
+  <aura:attribute name="columns" type="List" />
+  <aura:attribute name="vClaims" type="Claim__c[]" />
+  <aura:attribute name="loading" type="Boolean" default="true"/>
+  <aura:attribute name="count" type="Integer" default="0"/>
+  <aura:attribute name="titolo" type="String" default="Sinistri"/>
+  <aura:handler name="init" value="{!this}" action="{!c.doInitJS}"/>
+  <lightning:navigation aura:id="navService"/>
+  <aura:attribute name="sortDirection" type="String" default="asc" />
+  <aura:attribute name="defaultSortDirection" type="String" default="asc" />
+  <aura:attribute name="sortedBy" type="String" />
+  
+
+   <!--modifica per APP Sorveglianza di Port 
+    <ul class="slds-accordion">
+    <li class="slds-accordion__list-item">
+        <section class="slds-accordion__section slds-is-open">
+          <div class="slds-accordion__summary">
+            <h3 class="slds-accordion__summary-heading">
+              <button aria-controls="accordion-details-01" aria-expanded="true" class="slds-button slds-button_reset slds-accordion__summary-action" onclick="{!c.toggleAccordion}">
+                    <lightning:icon aura:id="accordion" class="slds-show" iconName="utility:add" size="x-small" />
+                    <lightning:icon aura:id="accordion" class="slds-hide" iconName="utility:dash" size="x-small" />
+                <span class="slds-accordion__summary-content" title="Accordion summary">Sinistri</span>
+              </button>
+            </h3> 
+          </div>
+          <div aura:id="accordion"  class="slds-hide slds-accordion__content" id="accordion-details-01">
+            <aura:if isTrue="{!v.accordionOpened}">
+            modifica per APP Sorveglianza di Port-->
+            <article class="slds-card slds-card_boundary slds-m-top_medium">
+            <div style="margin-top: 10px;"></div>
+              <div class="slds-card__header slds-grid">
+                <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                  <div class="slds-media__figure">
+                    <span class="slds-icon_container slds-icon-standard-account" title="Sinistri">
+                          <lightning:icon iconName="standard:goals"/>
+                    </span>
+                  </div>
+                  <div class="slds-media__body">
+                    <h2 class="slds-card__header-title">
+                      <a href="javascript:void(0);" class="slds-card__header-link slds-truncate not-active" title="Sinistri">
+                        <span> {!v.titolo} </span>
+                      </a>
+                    </h2>
+                  </div>
+                </header>
+              </div>
+   
+              <aura:if isTrue="{! v.loading }">
+                <lightning:spinner alternativeText="Loading" />
+              </aura:if>
+
+              <aura:if isTrue="{!and(not(v.loading),not(empty(v.vClaims)))}">
+                <div class="slds-card__body slds-card__body_inner"  style="{!v.styleIni}">
+                  <lightning:datatable 
+                                  columns="{!v.columns}"
+                                  data="{!v.vClaims}"
+                                  keyField="Id"
+                                  rowNumberOffset="0"
+                                  hideCheckboxColumn = "true"
+                                  onrowaction="{!c.navigateToSObject}"
+                                  class="wrapped-header-datatable"
+                                  defaultSortDirection="{!v.defaultSortDirection}"
+                                  sortedDirection="{!v.sortDirection}"
+                                  sortedBy="{!v.sortedBy}"
+                                  onsort="{!c.handleSort}"
+                                  enableInfiniteLoading="{!!v.visualizzaTutto}"
+                                  onloadmore="{!c.doLoadMore}"
+                                  />
+                </div>
+              </aura:if>
+
+              <aura:if isTrue="{!and(not(v.loading), empty(v.vClaims))}">
+                              <!--per fare il Ui come li altri con col in bianco e messaggio-->  
+              <div class="slds-card__body slds-card__body_inner">
+                <div class="slds-table_bordered">
+                <lightning:datatable 
+                columns="{!v.columns}"
+                data="{!v.vClaims}"
+                keyField="Id"
+                rowNumberOffset="0"
+                hideCheckboxColumn = "true"
+                class="wrapped-header-datatable"
+                />
+                  <div class="slds-text-heading_small no-result slds-text-align_center slds-m-vertical_large"
+                  title="{!v.errorMessageResult ? 'Errore: non è possibile mostrare i risultati' : 'Non sono presenti sinistri'}">
+                        {!v.errorMessageResult ? 'Errore: non è possibile mostrare i risultati' : 'Non sono presenti sinistri'}
+                    </div>
+                  </div>
+                </div>
+              </aura:if>
+
+              <aura:if isTrue="{!v.visualizzaTutto}">
+              <footer class="slds-card__footer slds-border_top slds-align_absolute-center">
+                  <button class="slds-button slds-button_neutral" disabled="{! empty(v.vClaims) }" onclick="{!c.onVisualizzaTutto}">Visualizza Tutto</button>
+              </footer>
+              </aura:if>
+              
+            </article>
+    <!--modifica per APP Sorveglianza di Port        
+            </aura:if>
+          </div>
+        </section>
+    </li>
+    </ul>
+    -->
+
+</aura:component>

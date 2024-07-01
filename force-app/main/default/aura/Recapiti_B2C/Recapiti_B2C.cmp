@@ -1,0 +1,393 @@
+<aura:component controller="accountEditLightningCTRL">
+
+    <aura:attribute name="Recapiti_B2C" type="Account"/>
+    <aura:attribute name="telephoneWithPrefix" type="object"/>
+    <aura:handler event="c:AccountEvent" action="{!c.handleAccountReceived}"/>
+    <aura:registerEvent name="sendchangedEmail" type="c:ChangeEmailEvent"/>
+    <aura:registerEvent name="sendchangedMobilePhone" type="c:ChangeMobilePhoneEvent"/>
+    <aura:attribute name="InitialInfo" type="Array"/>
+    <aura:attribute name="currentAccount" type="Account" default="{ 'sobjectType': 'Account' }"/> 
+
+    <aura:attribute name="OpenTask" type="Boolean"/>
+    <aura:attribute name="EmailConsenso" type="String"/>
+    <aura:attribute name="BlockedPersEmail" type="Boolean"/>
+    <aura:attribute name="BlockedWorkEmail" type="Boolean"/>
+    <aura:attribute name="BlockFlagPersEmail" type="Boolean"/>
+    <aura:attribute name="BlockFlagWorkEmail" type="Boolean"/>
+    <aura:attribute name="BlockOppPersEmail" type="Boolean"/>
+    <aura:attribute name="BlockOppWorkEmail" type="Boolean"/>
+
+    <aura:attribute name="PhoneConsenso" type="String"/>
+    <aura:attribute name="BlockedMobilePhone" type="Boolean"/>
+    <aura:attribute name="BlockFlagMobilePhone" type="Boolean"/>
+    <aura:attribute name="BlockOppMobilePhone" type="Boolean"/>
+
+    <aura:handler event="c:ChangePrivacy2Event" action="{!c.handlePrivacy2change}"/>
+
+
+  
+    
+   <div id="container_recapiti" class="slds-col_padded  slds-p-bottom_x-small slds-m-top_small  slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1 slds-grid_align-center">
+       <h3 class="slds-section-title_divider"> Recapiti</h3> 
+   </div>
+
+
+       
+
+  <!--<fieldset  class="slds-form_compound  slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_4-of-12 slds-large-size_4-of-12">
+     <div class="slds-form-element__row" style="margin-bottom: 0;" >  
+       <div class="slds-form-element slds-col_padded slds-form_horizontal right">
+           <label class="slds-form-element_label slds-form_horizontal "  for="Telefonocellulare"></label> 
+         <div class="slds-form-element__control slds-container_large slds-form_horizontal" style="width:15%"> 
+            
+        </div>
+        <div class="slds-form-element__control" style="width:40%"  >
+         
+        </div>
+      </div>
+        </div>
+  </fieldset>-->
+
+  <fieldset class="slds-form-element slds-form-element_compound slds-large-size_4-of-12">
+   <div class="slds-form-element__control">
+     <div class="slds-form-element__row">
+       <div class="slds-size_1-of-6 slds-m-right_none" >
+         <div class="slds-form-element">
+           <label class="slds-form-element__label" for="TelefonocellularePrefisso">Tel. principale:</label>
+           <div class="slds-form-element__control">
+            <ui:inputPhone aura:id="CIF_Phone_IntPrefix" class="slds-input" placeholder="e.g. +39" value="{!v.telephoneWithPrefix.CIF_Phone__c.prefix}"/>  
+           </div>
+         </div>
+       </div>
+       <div class="slds-size_5-of-6 slds-m-left_none">
+         <div class="slds-form-element">
+            <label class="slds-form-element__label" for="Telefonocellulare"></label>
+           <div class="slds-form-element__control">
+            <ui:inputPhone aura:id="CIF_Phone" class="slds-input" value="{!v.telephoneWithPrefix.CIF_Phone__c.telephoneNumber}" change="{!c.PhoneChange}"/>
+           </div>
+         </div>
+       </div>
+     </div>
+   </div>
+ </fieldset>
+
+
+
+
+   <div id="container_CIF_Opposizione_Telefono" class="slds-form_horizontal slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_2-of-12 slds-large-size_2-of-12" >
+      <label id="RecapitoLabel" class="inputStyle slds-form-element_label " for="Opposizione Tel. principale:">Opposizione:</label> 
+      <div class="slds-form-element__control" align="center" style="padding-left:13% !important">
+         <ui:inputCheckbox aura:id="OppPrincipale" disabled="{!not(v.telephoneWithPrefix.CIF_Phone__c.telephoneNumber)}" value="{!v.Recapiti_B2C.Flag_Opposizione_Tel_Princ__c}"  change="{!c.OpposizioneChange}" required="true" >
+            <!--<ui:inputSelectOption text="" label="" disabled="true"/>-->
+          <!--  <ui:inputSelectOption text="No" label="No"/>
+            <ui:inputSelectOption text="Sì" label="Sì"/>-->
+            
+         </ui:inputCheckbox>
+      </div>
+   </div>
+
+   <div id="container_CIF__Motivo_Opposizione_Telefono" class="slds-form_horizontal slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_4-of-12 slds-large-size_4-of-12" >
+      <label id="RecapitoLabel" class="inputStyle slds-form-element_label " for="Motivo opposizione:">Motivo:</label> 
+      <div class="slds-form-element__control" style="width:95%" align="center">
+         <ui:inputSelect aura:id="MotivoOppPrincipale" class="slds-input" disabled="{!not(v.telephoneWithPrefix.CIF_Phone__c.telephoneNumber) || (v.Recapiti_B2C.Flag_Opposizione_Tel_Princ__c!=true)}" value="{!v.Recapiti_B2C.Motivo_opposizione_Tel_Princ__c}" required="true">
+            <ui:inputSelectOption text="" label="" />
+            <ui:inputSelectOption text="Cliente" label="Cliente"/>
+            <!--ui:inputSelectOption text="Tutela accordo dati" label="Tutela accordo dati"/-->
+            <ui:inputSelectOption text="Altro" label="Altro"/>
+         </ui:inputSelect>
+      </div>
+   </div>
+
+    <div id="spazio_vuoto" class="slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1">
+      <div class="slds-form-element">
+         &nbsp;
+      </div>
+   </div>
+
+   <!-- <fieldset id="container_mobilephone" class="slds-form_compound slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_4-of-12 slds-large-size_4-of-12">
+     <div class="slds-form-element__row" style="margin-bottom: 0">  
+      <div class="slds-form-element slds-col_padded slds-form_horizontal right">
+        <label class="slds-form-element_label slds-form_horizontal "  for="Telefonocellulare">Tel. cellulare:</label>
+         <div class="slds-form-element__control " style="width:18.5%"  > 
+           <ui:inputPhone aura:id="CIF_Person_Mobile_Phone_IntPrefix" class="slds-input" placeholder="e.g. +39" value="{!v.telephoneWithPrefix.CIF_PersonMobilePhone__c.prefix}" disabled="{!v.BlockedMobilePhone}"/>     
+        </div> 
+        <div class="slds-form-element__control" style="width:56%"  >
+         <ui:inputPhone aura:id="CIF_Person_Mobile_Phone"  class="slds-input" value="{!v.telephoneWithPrefix.CIF_PersonMobilePhone__c.telephoneNumber}" change="{!c.MobilePhoneChange}" disabled="{!v.BlockedMobilePhone}"/> 
+        </div>
+      </div>  
+     </div>
+  </fieldset>-->
+
+  <fieldset class="slds-form-element slds-form-element_compound slds-large-size_4-of-12">
+   <div class="slds-form-element__control">
+     <div class="slds-form-element__row">
+       <div class="slds-size_1-of-6 slds-m-right_none" >
+         <div class="slds-form-element">
+           <label class="slds-form-element__label" for="TelefonocellularePrefisso">Tel. cellulare:</label>
+           <div class="slds-form-element__control">
+            <ui:inputPhone aura:id="CIF_Person_Mobile_Phone_IntPrefix" class="slds-input" placeholder="e.g. +39" value="{!v.telephoneWithPrefix.CIF_PersonMobilePhone__c.prefix}" disabled="{!v.BlockedMobilePhone}"/>    
+           </div>
+         </div>
+       </div>
+       <div class="slds-size_5-of-6 slds-m-left_none">
+         <div class="slds-form-element">
+            <label class="slds-form-element__label" for="Telefonocellulare"></label>
+           <div class="slds-form-element__control">
+            <ui:inputPhone aura:id="CIF_Person_Mobile_Phone"  class="slds-input" value="{!v.telephoneWithPrefix.CIF_PersonMobilePhone__c.telephoneNumber}" change="{!c.MobilePhoneChange}" disabled="{!v.BlockedMobilePhone}"/> 
+           </div>
+         </div>
+       </div>
+     </div>
+   </div>
+ </fieldset>
+
+
+
+
+    <div id="container_CIF_Opposizione_Cellulare" class="slds-form_horizontal slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_2-of-12 slds-large-size_2-of-12">
+      <label id="RecapitoLabel" class="inputStyle slds-form-element_label " for="Opposizione Cellulare:">Opposizione:</label> 
+      <div class="slds-form-element__control" style="padding-left:13% !important">
+         <ui:inputCheckbox aura:id="OppCellulare" disabled="{!not(v.telephoneWithPrefix.CIF_PersonMobilePhone__c.telephoneNumber) || (v.BlockOppMobilePhone)}" value="{!v.Recapiti_B2C.Flag_Opposizione_Tel_Cell_B2C__c}" change="{!c.OpposizioneChange}" required="true">
+            <!--<ui:inputSelectOption text="" label="" disabled="true"/>-->
+            <!--<ui:inputSelectOption text="No" label="No"/>
+            <ui:inputSelectOption text="Sì" label="Sì"/>  -->          
+         </ui:inputCheckbox>
+      </div>
+   </div>
+
+   <div id="container_CIF__Motivo_Opposizione_Cellulare" class="slds-form_horizontal slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_4-of-12 slds-large-size_4-of-12" >
+      <label id="RecapitoLabel" class="inputStyle slds-form-element_label " for="Motivo opposizione:">Motivo:</label> 
+      <div class="slds-form-element__control" style="width:95%">
+         <ui:inputSelect aura:id="MotivoOppCellulare" class="slds-input" disabled="{!not(v.telephoneWithPrefix.CIF_PersonMobilePhone__c.telephoneNumber) || (v.Recapiti_B2C.Flag_Opposizione_Tel_Cell_B2C__c!=true) || (v.BlockOppMobilePhone)}" value="{!v.Recapiti_B2C.Motivo_opposizione_Tel_Cell_B2C__c}" required="true">
+            <ui:inputSelectOption text="" label="" />
+            <ui:inputSelectOption text="Cliente" label="Cliente"/>
+            <!--ui:inputSelectOption text="Tutela accordo dati" label="Tutela accordo dati"/-->
+            <ui:inputSelectOption text="Altro" label="Altro"/>
+         </ui:inputSelect>
+      </div>
+   </div>
+
+   <div id="spazio_vuoto" class="slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1">
+      <div class="slds-form-element">
+         &nbsp;
+      </div>
+   </div>
+
+ <!--<fieldset align="right" class="slds-form_compound slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_4-of-12 slds-large-size_4-of-12">
+
+      <div class="slds-form-element slds-col_padded slds-form_horizontal right">
+        <label class="slds-form-element_label slds-form_horizontal" for="Fax" >Fax:</label>  
+         <div class="slds-form-element__control " style="width:18.5%"  > 
+            <ui:inputPhone aura:id="Fax_IntPrefix" class="slds-input" placeholder="e.g. +39" value="{!v.telephoneWithPrefix.Fax.prefix}"/> 
+        </div> 
+        <div class="slds-form-element__control" style="width:56%"  >
+         <ui:inputPhone aura:id="Fax_" class="slds-input" value="{!v.telephoneWithPrefix.Fax.telephoneNumber}" change="{!c.FaxChange}"/>
+        </div>
+      </div>  
+    
+  </fieldset>    -->
+
+  <fieldset class="slds-form-element slds-form-element_compound slds-large-size_4-of-12">
+   <div class="slds-form-element__control">
+     <div class="slds-form-element__row">
+       <div class="slds-size_1-of-6 slds-m-right_none" >
+         <div class="slds-form-element">
+           <label class="slds-form-element__label" for="FaxPrefix">Fax:</label>
+           <div class="slds-form-element__control">
+            <ui:inputPhone aura:id="Fax_IntPrefix" class="slds-input" placeholder="e.g. +39" value="{!v.telephoneWithPrefix.Fax.prefix}"/>  
+           </div>
+         </div>
+       </div>
+       <div class="slds-size_5-of-6 slds-m-left_none">
+         <div class="slds-form-element">
+            <label class="slds-form-element__label" for="Fax"></label>
+           <div class="slds-form-element__control">
+            <ui:inputPhone aura:id="Fax_" class="slds-input" value="{!v.telephoneWithPrefix.Fax.telephoneNumber}" change="{!c.FaxChange}"/>
+           </div>
+         </div>
+       </div>
+     </div>
+   </div>
+ </fieldset>
+
+
+
+   <div id="container_CIF_Opposizione_Fax" class="slds-form_horizontal slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_2-of-12 slds-large-size_2-of-12">
+      <label id="RecapitoLabel" class="inputStyle slds-form-element_label " for="Opposizione Cellulare:">Opposizione:</label> 
+      <div class="slds-form-element__control" style="padding-left:13% !important">
+         <ui:inputCheckbox aura:id="OppFax" disabled="{!not(v.telephoneWithPrefix.Fax.telephoneNumber)}" value="{!v.Recapiti_B2C.Flag_Opposizione_Fax__c}" change="{!c.OpposizioneChange}" required="true">
+            <!--<ui:inputSelectOption text="" label="" disabled="true"/>-->
+            <!--<ui:inputSelectOption text="No" label="No"/>
+            <ui:inputSelectOption text="Sì" label="Sì"/> -->
+         </ui:inputCheckbox>
+      </div>
+   </div>
+
+   <div id="container_CIF__Motivo_Opposizione_Fax" class="slds-form_horizontal slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_4-of-12 slds-large-size_4-of-12">
+      <label id="RecapitoLabel" class="inputStyle slds-form-element_label " for="Motivo opposizione:">Motivo:</label> 
+      <div class="slds-form-element__control" style="width:95%">
+         <ui:inputSelect aura:id="MotivoOppFax" class="slds-input" disabled="{!not(v.telephoneWithPrefix.Fax.telephoneNumber) || (v.Recapiti_B2C.Flag_Opposizione_Fax__c!=true)}" value="{!v.Recapiti_B2C.Motivo_opposizione_Fax__c}" required="true">
+            <ui:inputSelectOption text="" label="" />
+            <ui:inputSelectOption text="Cliente" label="Cliente"/>
+            <!--ui:inputSelectOption text="Tutela accordo dati" label="Tutela accordo dati"/-->
+            <ui:inputSelectOption text="Altro" label="Altro"/>
+         </ui:inputSelect>
+      </div>
+   </div>
+
+   <div id="spazio_vuoto" class="slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1">
+      <div class="slds-form-element">
+         &nbsp;
+      </div>
+   </div>
+
+
+     <!--<fieldset align="right" class="slds-form_compound slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_4-of-12 slds-large-size_4-of-12">
+     <div class="slds-form-element__row" style="margin-bottom: 0">  
+      <div class="slds-form-element slds-col_padded slds-form_horizontal right">
+        <label class="slds-form-element_label slds-form_horizontal "  for="Telefonoufficio">Tel. ufficio:</label>
+         <div class="slds-form-element__control " style="width:18.5%"  > 
+           <ui:inputPhone aura:id="CIF_Work_phone_IntPrefix" class="slds-input" placeholder="e.g. +39" value="{!v.telephoneWithPrefix.CIF_Work_phone__c.prefix}"/>     
+        </div> 
+        <div class="slds-form-element__control" style="width:56%"  >
+         <ui:inputPhone aura:id="CIF_Work_phone"  class="slds-input" value="{!v.telephoneWithPrefix.CIF_Work_phone__c.telephoneNumber}" change="{!c.WorkPhoneChange}"/> 
+        </div>
+      </div>  
+     </div>
+  </fieldset> -->
+
+  <fieldset class="slds-form-element slds-form-element_compound slds-large-size_4-of-12">
+   <div class="slds-form-element__control">
+     <div class="slds-form-element__row">
+       <div class="slds-size_1-of-6 slds-m-right_none" >
+         <div class="slds-form-element">
+           <label class="slds-form-element__label" for="FaxPrefix">Tel. ufficio:</label>
+           <div class="slds-form-element__control">
+            <ui:inputPhone aura:id="CIF_Work_phone_IntPrefix" class="slds-input" placeholder="e.g. +39" value="{!v.telephoneWithPrefix.CIF_Work_phone__c.prefix}"/>    
+           </div>
+         </div>
+       </div>
+       <div class="slds-size_5-of-6 slds-m-left_none">
+         <div class="slds-form-element">
+            <label class="slds-form-element__label" for="Fax"></label>
+           <div class="slds-form-element__control">
+            <ui:inputPhone aura:id="CIF_Work_phone"  class="slds-input" value="{!v.telephoneWithPrefix.CIF_Work_phone__c.telephoneNumber}" change="{!c.WorkPhoneChange}"/> 
+           </div>
+         </div>
+       </div>
+     </div>
+   </div>
+ </fieldset>
+
+   <div id="container_CIF_Opposizione_TelUfficio" class="slds-form_horizontal slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_2-of-12 slds-large-size_2-of-12">
+      <label id="RecapitoLabel" class="inputStyle slds-form-element_label " for="Opposizione Cellulare:">Opposizione:</label> 
+      <div class="slds-form-element__control" style="padding-left:13% !important">
+         <ui:inputCheckbox aura:id="OppTelUff" disabled="{!not(v.telephoneWithPrefix.CIF_Work_phone__c.telephoneNumber)}" value="{!v.Recapiti_B2C.Flag_Opposizione_Tel_Uff__c}" change="{!c.OpposizioneChange}" required="true">
+            <!--<ui:inputSelectOption text="" label="" disabled="true"/>-->
+            <!--<ui:inputSelectOption text="No" label="No"/>
+            <ui:inputSelectOption text="Sì" label="Sì"/>-->
+         </ui:inputCheckbox>
+      </div>
+   </div>
+
+   <div id="container_CIF__Motivo_Opposizione_TelUfficio" class="slds-form_horizontal slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_4-of-12 slds-large-size_4-of-12">
+      <label id="RecapitoLabel" class="inputStyle slds-form-element_label " for="Motivo opposizione:">Motivo:</label> 
+      <div class="slds-form-element__control" style="width:95%">
+         <ui:inputSelect aura:id="MotivoOppTelUff" class="slds-input" disabled="{!not(v.telephoneWithPrefix.CIF_Work_phone__c.telephoneNumber) || (v.Recapiti_B2C.Flag_Opposizione_Tel_Uff__c!=true)}" value="{!v.Recapiti_B2C.Motivo_opposizione_Tel_Uff__c}" required="true">
+            <ui:inputSelectOption text="" label="" />
+            <ui:inputSelectOption text="Cliente" label="Cliente"/>
+            <!--ui:inputSelectOption text="Tutela accordo dati" label="Tutela accordo dati"/-->
+            <ui:inputSelectOption text="Altro" label="Altro"/>
+         </ui:inputSelect>
+      </div>
+   </div>
+
+
+    <div id="spazio_vuoto" class="slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-2">
+      <div class="slds-form-element">
+      </div>
+   </div>
+
+   <div id="spazio_vuoto" class="slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1">
+      <div class="slds-form-element"  >
+      </div>
+   </div>
+
+   <div id="spazio_vuoto" class="slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1">
+      <div class="slds-form-element">
+         &nbsp;
+      </div>
+   </div>
+
+
+          <div id="container_email" class="slds-container_large slds-form_horizontal slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_4-of-12 slds-large-size_4-of-12">    
+                <label class="slds-form-element_label" for="Email:">Email:</label> 
+                  <div id="container_Emailpersonale" class="slds-form-element__control" style="width:73%">
+                   <ui:inputEmail aura:id="CIF_Person_email"  class="slds-input" value="{!v.Recapiti_B2C.CIF_PersonEmail__c}" change="{!c.PersEmailChange}" disabled="{!v.BlockedPersEmail}"/>  
+                   <br/>
+                             
+            </div>
+     </div>
+   
+    <div id="container_CIF_Opposizione_Email" class="slds-form_horizontal slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_2-of-12 slds-large-size_2-of-12">
+      <label id="RecapitoLabel" class="inputStyle slds-form-element_label " for="Opposizione Cellulare:">Opposizione:</label> 
+      <div class="slds-form-element__control" style="padding-left:13% !important">
+         <ui:inputCheckbox aura:id="OppEmail" disabled="{!not(v.Recapiti_B2C.CIF_PersonEmail__c) || (v.BlockOppPersEmail)}" value="{!v.Recapiti_B2C.Flag_Opposizione_Email_Pers_B2C__c}" change="{!c.OpposizioneChange}" required="true">
+            <!--<ui:inputSelectOption text="" label="" disabled="true"/>-->
+            <!--<ui:inputSelectOption text="No" label="No"/>
+            <ui:inputSelectOption text="Sì" label="Sì"/>-->   
+         </ui:inputCheckbox>
+      </div>
+   </div>
+
+   <div id="container_CIF__Motivo_Opposizione_Email" class="slds-form_horizontal slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_4-of-12 slds-large-size_4-of-12">
+      <label id="RecapitoLabel" class="inputStyle slds-form-element_label " for="Motivo opposizione:">Motivo:</label> 
+      <div class="slds-form-element__control" style="width:95%">
+         <ui:inputSelect aura:id="MotivoOppEmail" class="slds-input" disabled="{!not(v.Recapiti_B2C.CIF_PersonEmail__c) || (v.Recapiti_B2C.Flag_Opposizione_Email_Pers_B2C__c!=true) || (v.BlockOppPersEmail)}" value="{!v.Recapiti_B2C.Motivo_opposizione_Email_Pers_B2C__c}" required="true">
+            <ui:inputSelectOption text="" label="" />
+            <ui:inputSelectOption text="Cliente" label="Cliente"/>
+            <!--ui:inputSelectOption text="Tutela accordo dati" label="Tutela accordo dati"/-->
+            <ui:inputSelectOption text="Altro" label="Altro"/>
+         </ui:inputSelect>
+      </div>
+   </div>
+
+   <div id="spazio_vuoto" class="slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1">
+      <div class="slds-form-element">
+         &nbsp;
+      </div>
+   </div>
+   
+  
+    
+
+        <div id="container_work_email" class="slds-container_large slds-form_horizontal slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_4-of-12 slds-large-size_4-of-12">    
+                <label class="slds-form-element_label" for="Email:">Email ufficio:</label> 
+                  <div id="container_Emaillavoro" class="slds-form-element__control" style="width:73%" >
+                   <ui:inputEmail aura:id="CIF_Work_email"   class="slds-input" value="{!v.Recapiti_B2C.CIF_Work_email__c}" change="{!c.WorkEmailChange}" disabled="{!v.BlockedWorkEmail}"/>              
+            </div>
+            </div> 
+
+
+
+    <div id="container_CIF_Opposizione_EmailUff" class="slds-form_horizontal slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_2-of-12 slds-large-size_2-of-12">
+      <label id="RecapitoLabel"  class="inputStyle slds-form-element_label " for="Opposizione Cellulare:">Opposizione:</label> 
+      <div class="slds-form-element__control" style="padding-left:13% !important">
+         <ui:inputCheckbox aura:id="OppEmailUff" disabled="{!not(v.Recapiti_B2C.CIF_Work_email__c) || (v.BlockOppWorkEmail)}" value="{!v.Recapiti_B2C.Flag_Opposizione_Email_Uff__c}" change="{!c.OpposizioneChange}" required="true">    
+         </ui:inputCheckbox>
+      </div>
+   </div>
+
+   <div id="container_CIF__Motivo_Opposizione_EmailUff" class="slds-form_horizontal slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_4-of-12 slds-large-size_4-of-12">
+      <label id="RecapitoLabel" class="inputStyle slds-form-element_label " for="Motivo opposizione:">Motivo:</label> 
+      <div class="slds-form-element__control" style="width:95%">
+         <ui:inputSelect aura:id="MotivoOppEmailUff" class="slds-input" disabled="{!not(v.Recapiti_B2C.CIF_Work_email__c) || (v.Recapiti_B2C.Flag_Opposizione_Email_Uff__c!=true) || (v.BlockOppWorkEmail)}" value="{!v.Recapiti_B2C.Motivo_opposizione_Email_Uff__c}" required="true">
+            <ui:inputSelectOption text="" label="" />
+            <ui:inputSelectOption text="Cliente" label="Cliente"/>
+            <!--ui:inputSelectOption text="Tutela accordo dati" label="Tutela accordo dati"/-->
+            <ui:inputSelectOption text="Altro" label="Altro"/>
+         </ui:inputSelect>
+      </div>
+   </div>
+    
+</aura:component>

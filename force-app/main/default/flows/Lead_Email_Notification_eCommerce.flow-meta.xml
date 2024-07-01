@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <processMetadataValues>
+            <name>emailAlertSelection</name>
+            <value>
+                <stringValue>Email_Does_Not_Answer_eCommerce</stringValue>
+            </value>
+        </processMetadataValues>
+        <name>myRule_11_A1</name>
+        <label>Send email Lead does not answer eCommerce</label>
+        <locationX>1100</locationX>
+        <locationY>200</locationY>
+        <actionName>Lead.Email_Does_Not_Answer_eCommerce</actionName>
+        <actionType>emailAlert</actionType>
+        <inputParameters>
+            <name>SObjectRowId</name>
+            <value>
+                <elementReference>myVariable_current.Id</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>Lead.Email_Does_Not_Answer_eCommerce</nameSegment>
+        <versionSegment>1</versionSegment>
+    </actionCalls>
+    <actionCalls>
+        <processMetadataValues>
+            <name>emailAlertSelection</name>
+            <value>
+                <stringValue>Email_sending_eCommerce</stringValue>
+            </value>
+        </processMetadataValues>
+        <name>myRule_1_A1</name>
+        <label>Email sending eCommerce</label>
+        <locationX>100</locationX>
+        <locationY>200</locationY>
+        <actionName>Lead.Email_sending_eCommerce</actionName>
+        <actionType>emailAlert</actionType>
+        <inputParameters>
+            <name>SObjectRowId</name>
+            <value>
+                <elementReference>myVariable_current.Id</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>Lead.Email_sending_eCommerce</nameSegment>
+        <versionSegment>1</versionSegment>
+    </actionCalls>
+    <actionCalls>
+        <processMetadataValues>
+            <name>emailAlertSelection</name>
+            <value>
+                <stringValue>eCommerce_Email_sending_single_assignment_salva_preventivo</stringValue>
+            </value>
+        </processMetadataValues>
+        <name>myRule_3_A1</name>
+        <label>Email sending eCommerce</label>
+        <locationX>300</locationX>
+        <locationY>200</locationY>
+        <actionName>Lead.eCommerce_Email_sending_single_assignment_salva_preventivo</actionName>
+        <actionType>emailAlert</actionType>
+        <inputParameters>
+            <name>SObjectRowId</name>
+            <value>
+                <elementReference>myVariable_current.Id</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>Lead.eCommerce_Email_sending_single_assignment_salva_preventivo</nameSegment>
+        <versionSegment>1</versionSegment>
+    </actionCalls>
+    <actionCalls>
+        <processMetadataValues>
+            <name>emailAlertSelection</name>
+            <value>
+                <stringValue>eCommerce_Email_sending_single_assignment_KO_finale_banca</stringValue>
+            </value>
+        </processMetadataValues>
+        <name>myRule_5_A1</name>
+        <label>Email sending eCommerce</label>
+        <locationX>500</locationX>
+        <locationY>200</locationY>
+        <actionName>Lead.eCommerce_Email_sending_single_assignment_KO_finale_banca</actionName>
+        <actionType>emailAlert</actionType>
+        <inputParameters>
+            <name>SObjectRowId</name>
+            <value>
+                <elementReference>myVariable_current.Id</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>Lead.eCommerce_Email_sending_single_assignment_KO_finale_banca</nameSegment>
+        <versionSegment>1</versionSegment>
+    </actionCalls>
+    <actionCalls>
+        <processMetadataValues>
+            <name>emailAlertSelection</name>
+            <value>
+                <stringValue>Email_sending_single_assignment_eCommerce</stringValue>
+            </value>
+        </processMetadataValues>
+        <name>myRule_7_A1</name>
+        <label>Email sending single assignment eCommerce</label>
+        <locationX>700</locationX>
+        <locationY>200</locationY>
+        <actionName>Lead.Email_sending_single_assignment_eCommerce</actionName>
+        <actionType>emailAlert</actionType>
+        <inputParameters>
+            <name>SObjectRowId</name>
+            <value>
+                <elementReference>myVariable_current.Id</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>Lead.Email_sending_single_assignment_eCommerce</nameSegment>
+        <versionSegment>1</versionSegment>
+    </actionCalls>
+    <actionCalls>
+        <processMetadataValues>
+            <name>emailAlertSelection</name>
+            <value>
+                <stringValue>Email_Reassignment_eCommerce</stringValue>
+            </value>
+        </processMetadataValues>
+        <name>myRule_9_A1</name>
+        <label>Send Email reassignment eCommerce</label>
+        <locationX>900</locationX>
+        <locationY>200</locationY>
+        <actionName>Lead.Email_Reassignment_eCommerce</actionName>
+        <actionType>emailAlert</actionType>
+        <inputParameters>
+            <name>SObjectRowId</name>
+            <value>
+                <elementReference>myVariable_current.Id</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>Lead.Email_Reassignment_eCommerce</nameSegment>
+        <versionSegment>1</versionSegment>
+    </actionCalls>
+    <apiVersion>49.0</apiVersion>
+    <decisions>
+        <processMetadataValues>
+            <name>index</name>
+            <value>
+                <numberValue>0.0</numberValue>
+            </value>
+        </processMetadataValues>
+        <name>myDecision</name>
+        <label>myDecision</label>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>myDecision2</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>default</defaultConnectorLabel>
+        <rules>
+            <name>myRule_1</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>formula_myRule_1</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>myRule_1_A1</targetReference>
+            </connector>
+            <label>New Owner eCommerce</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <processMetadataValues>
+            <name>index</name>
+            <value>
+                <numberValue>5.0</numberValue>
+            </value>
+        </processMetadataValues>
+        <name>myDecision10</name>
+        <label>myDecision10</label>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>default</defaultConnectorLabel>
+        <rules>
+            <name>myRule_11</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>formula_myRule_11</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>myRule_11_A1</targetReference>
+            </connector>
+            <label>Lead does not answer eCommerce</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <processMetadataValues>
+            <name>index</name>
+            <value>
+                <numberValue>1.0</numberValue>
+            </value>
+        </processMetadataValues>
+        <name>myDecision2</name>
+        <label>myDecision2</label>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>myDecision4</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>default</defaultConnectorLabel>
+        <rules>
+            <name>myRule_3</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>formula_myRule_3</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>myRule_3_A1</targetReference>
+            </connector>
+            <label>New Owner eCommerce Salva Preventivo</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <processMetadataValues>
+            <name>index</name>
+            <value>
+                <numberValue>2.0</numberValue>
+            </value>
+        </processMetadataValues>
+        <name>myDecision4</name>
+        <label>myDecision4</label>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>myDecision6</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>default</defaultConnectorLabel>
+        <rules>
+            <name>myRule_5</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>formula_myRule_5</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>myRule_5_A1</targetReference>
+            </connector>
+            <label>New Owner eCommerce KO finale banca</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <processMetadataValues>
+            <name>index</name>
+            <value>
+                <numberValue>3.0</numberValue>
+            </value>
+        </processMetadataValues>
+        <name>myDecision6</name>
+        <label>myDecision6</label>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>myDecision8</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>default</defaultConnectorLabel>
+        <rules>
+            <name>myRule_7</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>formula_myRule_7</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>myRule_7_A1</targetReference>
+            </connector>
+            <label>New Owner Agency User eCommerce</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <processMetadataValues>
+            <name>index</name>
+            <value>
+                <numberValue>4.0</numberValue>
+            </value>
+        </processMetadataValues>
+        <name>myDecision8</name>
+        <label>myDecision8</label>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>myDecision10</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>default</defaultConnectorLabel>
+        <rules>
+            <name>myRule_9</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>formula_myRule_9</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>myRule_9_A1</targetReference>
+            </connector>
+            <label>Reassign Lead eCommerce</label>
+        </rules>
+    </decisions>
+    <description>Lead email notification when Lead RecordType is eCommerce</description>
+    <formulas>
+        <processMetadataValues>
+            <name>originalFormula</name>
+            <value>
+                <stringValue>AND(ISPICKVAL([Lead].TECH_Company__c , &apos;AAI&apos;),ISCHANGED([Lead].OwnerId ),[Lead].TECH_Send_Email_Notification__c,ISPICKVAL([Lead].LeadSource, &apos;Web&apos;),NOT(ISPICKVAL([Lead].Landing_Page__c,&apos;&apos;)),CASESAFEID([Lead].OwnerId) &lt;&gt; CASESAFEID($User.Id),[Lead].Numero_assegnazioni_eseguite__c = 1,NOT([Lead].TECH_duplicatedwithClient__c),LEFT([Lead].OwnerId, 3)==&apos;00G&apos;,[Lead].RecordType.DeveloperName == &apos;eCommerce&apos;,
+OR(
+ISPICKVAL([Lead].Dettaglio__c , &apos;Richiedi appuntamento&apos;),
+ISPICKVAL([Lead].Dettaglio__c , &apos;Visualizza quotazione&apos;),
+ISPICKVAL([Lead].Dettaglio__c , &apos;Acquista&apos;),
+ISPICKVAL([Lead].Dettaglio__c , &apos;Salva quotazione&apos;)
+))</stringValue>
+            </value>
+        </processMetadataValues>
+        <name>formula_myRule_1</name>
+        <dataType>Boolean</dataType>
+        <expression>AND(ISPICKVAL({!myVariable_current.TECH_Company__c} , &apos;AAI&apos;),ISCHANGED({!myVariable_current.OwnerId} ),{!myVariable_current.TECH_Send_Email_Notification__c},ISPICKVAL({!myVariable_current.LeadSource}, &apos;Web&apos;),NOT(ISPICKVAL({!myVariable_current.Landing_Page__c},&apos;&apos;)),CASESAFEID({!myVariable_current.OwnerId}) &lt;&gt; CASESAFEID({!$User.Id}),{!myVariable_current.Numero_assegnazioni_eseguite__c} = 1,NOT({!myVariable_current.TECH_duplicatedwithClient__c}),LEFT({!myVariable_current.OwnerId}, 3)==&apos;00G&apos;,{!myVariable_current.RecordType.DeveloperName} == &apos;eCommerce&apos;,
+OR(
+ISPICKVAL({!myVariable_current.Dettaglio__c} , &apos;Richiedi appuntamento&apos;),
+ISPICKVAL({!myVariable_current.Dettaglio__c} , &apos;Visualizza quotazione&apos;),
+ISPICKVAL({!myVariable_current.Dettaglio__c} , &apos;Acquista&apos;),
+ISPICKVAL({!myVariable_current.Dettaglio__c} , &apos;Salva quotazione&apos;)
+))</expression>
+    </formulas>
+    <formulas>
+        <processMetadataValues>
+            <name>originalFormula</name>
+            <value>
+                <stringValue>AND(ISPICKVAL([Lead].TECH_Company__c , &apos;AAI&apos;),ISCHANGED([Lead].TECH_Email_Does_Not_Answer__c),[Lead].TECH_Email_Does_Not_Answer__c,[Lead].TECH_Send_Email_Notification__c,ISPICKVAL([Lead].LeadSource, &apos;Web&apos;),NOT(ISPICKVAL([Lead].Landing_Page__c,&apos;&apos;)),[Lead].RecordType.DeveloperName == &apos;eCommerce&apos;)</stringValue>
+            </value>
+        </processMetadataValues>
+        <name>formula_myRule_11</name>
+        <dataType>Boolean</dataType>
+        <expression>AND(ISPICKVAL({!myVariable_current.TECH_Company__c} , &apos;AAI&apos;),ISCHANGED({!myVariable_current.TECH_Email_Does_Not_Answer__c}),{!myVariable_current.TECH_Email_Does_Not_Answer__c},{!myVariable_current.TECH_Send_Email_Notification__c},ISPICKVAL({!myVariable_current.LeadSource}, &apos;Web&apos;),NOT(ISPICKVAL({!myVariable_current.Landing_Page__c},&apos;&apos;)),{!myVariable_current.RecordType.DeveloperName} == &apos;eCommerce&apos;)</expression>
+    </formulas>
+    <formulas>
+        <processMetadataValues>
+            <name>originalFormula</name>
+            <value>
+                <stringValue>AND(ISPICKVAL([Lead].TECH_Company__c , &apos;AAI&apos;),ISCHANGED([Lead].OwnerId ),[Lead].TECH_Send_Email_Notification__c,ISPICKVAL([Lead].LeadSource, &apos;Web&apos;),NOT(ISPICKVAL([Lead].Landing_Page__c,&apos;&apos;)),CASESAFEID([Lead].OwnerId) &lt;&gt; CASESAFEID($User.Id),[Lead].Numero_assegnazioni_eseguite__c = 1,NOT([Lead].TECH_duplicatedwithClient__c),LEFT([Lead].OwnerId, 3)==&apos;00G&apos;,[Lead].RecordType.DeveloperName == &apos;eCommerce&apos;,ISPICKVAL([Lead].Dettaglio__c , &apos;Salva preventivo&apos;),[Lead].Gi_cliente_eCommerce__c)</stringValue>
+            </value>
+        </processMetadataValues>
+        <name>formula_myRule_3</name>
+        <dataType>Boolean</dataType>
+        <expression>AND(ISPICKVAL({!myVariable_current.TECH_Company__c} , &apos;AAI&apos;),ISCHANGED({!myVariable_current.OwnerId} ),{!myVariable_current.TECH_Send_Email_Notification__c},ISPICKVAL({!myVariable_current.LeadSource}, &apos;Web&apos;),NOT(ISPICKVAL({!myVariable_current.Landing_Page__c},&apos;&apos;)),CASESAFEID({!myVariable_current.OwnerId}) &lt;&gt; CASESAFEID({!$User.Id}),{!myVariable_current.Numero_assegnazioni_eseguite__c} = 1,NOT({!myVariable_current.TECH_duplicatedwithClient__c}),LEFT({!myVariable_current.OwnerId}, 3)==&apos;00G&apos;,{!myVariable_current.RecordType.DeveloperName} == &apos;eCommerce&apos;,ISPICKVAL({!myVariable_current.Dettaglio__c} , &apos;Salva preventivo&apos;),{!myVariable_current.Gi_cliente_eCommerce__c})</expression>
+    </formulas>
+    <formulas>
+        <processMetadataValues>
+            <name>originalFormula</name>
+            <value>
+                <stringValue>AND(ISPICKVAL([Lead].TECH_Company__c , &apos;AAI&apos;),ISCHANGED([Lead].Dettaglio__c ),[Lead].TECH_Send_Email_Notification__c,ISPICKVAL([Lead].LeadSource, &apos;Web&apos;),NOT(ISPICKVAL([Lead].Landing_Page__c,&apos;&apos;)),CASESAFEID([Lead].OwnerId) &lt;&gt; CASESAFEID($User.Id),[Lead].Numero_assegnazioni_eseguite__c = 1,NOT([Lead].TECH_duplicatedwithClient__c),[Lead].RecordType.DeveloperName == &apos;eCommerce&apos;,ISPICKVAL([Lead].Dettaglio__c , &apos;KO finale banca&apos;))</stringValue>
+            </value>
+        </processMetadataValues>
+        <name>formula_myRule_5</name>
+        <dataType>Boolean</dataType>
+        <expression>AND(ISPICKVAL({!myVariable_current.TECH_Company__c} , &apos;AAI&apos;),ISCHANGED({!myVariable_current.Dettaglio__c} ),{!myVariable_current.TECH_Send_Email_Notification__c},ISPICKVAL({!myVariable_current.LeadSource}, &apos;Web&apos;),NOT(ISPICKVAL({!myVariable_current.Landing_Page__c},&apos;&apos;)),CASESAFEID({!myVariable_current.OwnerId}) &lt;&gt; CASESAFEID({!$User.Id}),{!myVariable_current.Numero_assegnazioni_eseguite__c} = 1,NOT({!myVariable_current.TECH_duplicatedwithClient__c}),{!myVariable_current.RecordType.DeveloperName} == &apos;eCommerce&apos;,ISPICKVAL({!myVariable_current.Dettaglio__c} , &apos;KO finale banca&apos;))</expression>
+    </formulas>
+    <formulas>
+        <processMetadataValues>
+            <name>originalFormula</name>
+            <value>
+                <stringValue>AND(ISPICKVAL([Lead].TECH_Company__c , &apos;AAI&apos;),ISCHANGED([Lead].OwnerId ),[Lead].TECH_Send_Email_Notification__c,ISPICKVAL([Lead].LeadSource, &apos;Web&apos;),NOT(ISPICKVAL([Lead].Landing_Page__c,&apos;&apos;)),CASESAFEID([Lead].OwnerId) &lt;&gt; CASESAFEID($User.Id),NOT([Lead].TECH_duplicatedwithClient__c),NOT(LEFT([Lead].OwnerId, 3)==&apos;00G&apos;),[Lead].RecordType.DeveloperName == &apos;eCommerce&apos;)</stringValue>
+            </value>
+        </processMetadataValues>
+        <name>formula_myRule_7</name>
+        <dataType>Boolean</dataType>
+        <expression>AND(ISPICKVAL({!myVariable_current.TECH_Company__c} , &apos;AAI&apos;),ISCHANGED({!myVariable_current.OwnerId} ),{!myVariable_current.TECH_Send_Email_Notification__c},ISPICKVAL({!myVariable_current.LeadSource}, &apos;Web&apos;),NOT(ISPICKVAL({!myVariable_current.Landing_Page__c},&apos;&apos;)),CASESAFEID({!myVariable_current.OwnerId}) &lt;&gt; CASESAFEID({!$User.Id}),NOT({!myVariable_current.TECH_duplicatedwithClient__c}),NOT(LEFT({!myVariable_current.OwnerId}, 3)==&apos;00G&apos;),{!myVariable_current.RecordType.DeveloperName} == &apos;eCommerce&apos;)</expression>
+    </formulas>
+    <formulas>
+        <processMetadataValues>
+            <name>originalFormula</name>
+            <value>
+                <stringValue>AND(ISPICKVAL([Lead].TECH_Company__c , &apos;AAI&apos;),ISCHANGED([Lead].OwnerId), ISCHANGED([Lead].Agency_Code__c),[Lead].TECH_Send_Email_Notification__c,ISPICKVAL([Lead].LeadSource, &apos;Web&apos;),NOT(ISPICKVAL([Lead].Landing_Page__c,&apos;&apos;)),CASESAFEID([Lead].OwnerId) &lt;&gt; CASESAFEID($User.Id),[Lead].Numero_assegnazioni_eseguite__c &gt; 1,[Lead].RecordType.DeveloperName == &apos;eCommerce&apos;,
+OR(
+ISPICKVAL([Lead].Dettaglio__c , &apos;Richiedi appuntamento&apos;),
+ISPICKVAL([Lead].Dettaglio__c , &apos;Visualizza quotazione&apos;),
+ISPICKVAL([Lead].Dettaglio__c , &apos;Acquista&apos;),
+ISPICKVAL([Lead].Dettaglio__c , &apos;Salva quotazione&apos;)
+) )</stringValue>
+            </value>
+        </processMetadataValues>
+        <name>formula_myRule_9</name>
+        <dataType>Boolean</dataType>
+        <expression>AND(ISPICKVAL({!myVariable_current.TECH_Company__c} , &apos;AAI&apos;),ISCHANGED({!myVariable_current.OwnerId}), ISCHANGED({!myVariable_current.Agency_Code__c}),{!myVariable_current.TECH_Send_Email_Notification__c},ISPICKVAL({!myVariable_current.LeadSource}, &apos;Web&apos;),NOT(ISPICKVAL({!myVariable_current.Landing_Page__c},&apos;&apos;)),CASESAFEID({!myVariable_current.OwnerId}) &lt;&gt; CASESAFEID({!$User.Id}),{!myVariable_current.Numero_assegnazioni_eseguite__c} &gt; 1,{!myVariable_current.RecordType.DeveloperName} == &apos;eCommerce&apos;,
+OR(
+ISPICKVAL({!myVariable_current.Dettaglio__c} , &apos;Richiedi appuntamento&apos;),
+ISPICKVAL({!myVariable_current.Dettaglio__c} , &apos;Visualizza quotazione&apos;),
+ISPICKVAL({!myVariable_current.Dettaglio__c} , &apos;Acquista&apos;),
+ISPICKVAL({!myVariable_current.Dettaglio__c} , &apos;Salva quotazione&apos;)
+) )</expression>
+    </formulas>
+    <interviewLabel>Lead_Email_Notification_eCommerce-3_InterviewLabel</interviewLabel>
+    <label>Lead: Email Notification eCommerce v13</label>
+    <processMetadataValues>
+        <name>ObjectType</name>
+        <value>
+            <stringValue>Lead</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>ObjectVariable</name>
+        <value>
+            <elementReference>myVariable_current</elementReference>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OldObjectVariable</name>
+        <value>
+            <elementReference>myVariable_old</elementReference>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>TriggerType</name>
+        <value>
+            <stringValue>onAllChanges</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>Workflow</processType>
+    <startElementReference>myDecision</startElementReference>
+    <status>Active</status>
+    <variables>
+        <name>myVariable_current</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>true</isOutput>
+        <objectType>Lead</objectType>
+    </variables>
+    <variables>
+        <name>myVariable_old</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+        <objectType>Lead</objectType>
+    </variables>
+</Flow>

@@ -1,0 +1,41 @@
+<template>
+	<c-mobility-spinner show={spinner} show-overlay="true"></c-mobility-spinner>
+	<c-mobility-messages model={messages}></c-mobility-messages>
+
+	<template if:true={authorized}>
+		<div class="overload-contain overload-on-top" style="z-index: 10000;">
+			<div class="overload-contain-child">
+				<div class="overload-element">
+					<div class="row">
+						<div class="col-12">
+							<h3>{title}</h3>
+							<c-mobility-layout 
+								hook={onHookCustomLayout} 
+								type-layout={typeLayout} 
+								object-name={objectName} 
+								record-type={recordType}
+								can-not-save-data={canNotSaveData}
+
+								ready-callback={readyCallback} 
+								save-callback={saveCallback} 
+								
+								params={params}
+								record-default={recordDefault}
+								record-override={recordOverride}
+								fields-override={fieldsOverride}
+							>
+							</c-mobility-layout>
+						</div>
+						<div class="col-12 text-right">
+							<div class="btn" onclick={onClose}>{_label.event_cancel}</div>
+							<div class="btn btn-primary" onclick={onConfirm}>{_label.event_saveEdit}</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</template>
+	<template if:false={authorized}>
+		<c-mobility-unauthorized></c-mobility-unauthorized>
+	</template>
+</template>

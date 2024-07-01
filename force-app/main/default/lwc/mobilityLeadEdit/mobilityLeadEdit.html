@@ -1,0 +1,130 @@
+<template>
+	<c-mobility-spinner show={spinner} show-overlay={spinnerOverlay}></c-mobility-spinner>
+	<c-mobility-messages 
+		model={messages}
+		confirm-warning-callback={confirmWarningCallback}
+		cancel-warning-callback={cancelAlertCallback}
+		label-warning-back={labelWarningBack}
+		label-alert-back={labelAlertBack}
+		label-warning-confirmation={labelWarningConfirmation}></c-mobility-messages>
+
+	<template if:true={authorized}>
+		<!-- Inizio Header -->
+		<div class="row lead-header shadow-bottom">
+
+			<!-- Breadcrumb -->
+			<div class="col-12">
+				<c-mobility-breadcrumb params={params} current={componentView}></c-mobility-breadcrumb>
+			</div>
+
+			<!-- Sections -->
+			<div class="col-12 lead-sections">
+				<c-mobility-layout type-layout='edit' object-name='Lead' record-id={params.recordId}
+					ready-callback={readyCallback} load-callback={loadCallback} change-callback={customLayoutUpdate}
+					params={params}>
+				</c-mobility-layout>
+			</div>
+
+			<div class="col-12">
+				<div class="row">
+					<div class="col-12">
+						<h4>{_label.leadEdit_referent}</h4>
+						<div class="page-border"></div>
+						<c-mobility-select-input 
+							search-invoke={invokeAccountSearch} 
+							search-callback={accountSearch}
+							search-select={accountSelect}
+							value={accountReferenteName}
+						></c-mobility-select-input>
+					</div>
+				</div>
+			</div>
+
+
+			<template if:true={showEvent}>
+				<c-mobility-event 
+					type-layout='edit' 
+					record-type='AAI_Event' 
+					record-default={eventData}
+					close-callback={confirmWarningCallback} 
+					save-confirm-callback={saveLeadWithComplete}
+					save-callback={saveLeadWithComplete}
+				>
+				</c-mobility-event>
+			</template>
+			<template if:true={showTask}>
+				<c-mobility-task 
+					type-layout='edit' 
+					record-type='Generico' 
+					record-default={taskData}
+					close-callback={confirmWarningCallback} 
+					save-confirm-callback={saveLeadWithComplete}
+					save-callback={saveLeadWithComplete}
+				>
+				</c-mobility-task>
+			</template>
+
+			<template if:true={showSubStatus}>
+				<div class="overload-contain overload-on-top" style="z-index: 10000;">
+					<div class="overload-contain-child">
+						<div class="overload-element" style="width: 50vw">
+							<div class="row">
+								<div class="col-12">
+									<h3>{_label.leadEdit_noInterestReason}</h3>
+									<template for:each={valuesSubStatus} for:item="subStatus">
+										<div class="form-check" key={subStatus.value}>
+											<input id={subStatus.value} class="form-check-input" type="radio"
+												name="Sottostato_del_Lead__c" onchange={onChange}
+												value={subStatus.value} />
+											<label class="form-check-label"
+												for={subStatus.value}>{subStatus.label}</label>
+										</div>
+									</template>
+								</div>
+								<div class="col-12 text-right">
+									<button class="btn btn-primary" onclick={confirmWarningCallback}
+										disabled={isDisabledSubTaskConfirm}>{_label.leadEdit_ok}</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</template>
+		</div>
+		<div class="bottom-space"></div>
+		<!-- Fine Header -->
+
+		<!-- Inizio Footer -->
+		<div class="footer row justify-content-between fixed-bottom">
+			<div class="col-2 up">
+				<a onclick={scroll} onmouseout={onOutScrollTop} onmouseover={onOverScrollTop}>
+					{_label.leadListView_up}
+					<span class="pl-2">
+						<c-mobility-icon name='arrow-up' width='10.5px' height='10.5px'>
+						</c-mobility-icon>
+					</span>
+				</a>
+			</div>
+			<div class="col-4 action ml-auto text-right">
+				<div class="row" style="flex-flow: nowrap;">
+					<div class="btn-box-action" onclick={navigateToEvent} data-component="mobilityLeadDetail"
+						data-record-id={params.recordId}>
+						<div class="btn btn-outline-primary btn-action">
+							{_label.leadEdit_cancel}
+						</div>
+					</div>
+					<div class="btn-box-action" onclick={save}>
+						<div class="btn btn-primary btn-action">
+							{_label.leadEdit_save}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Fine Footer -->
+	</template>
+
+	<template if:false={authorized}>
+		<c-mobility-unauthorized></c-mobility-unauthorized>
+	</template>
+</template>

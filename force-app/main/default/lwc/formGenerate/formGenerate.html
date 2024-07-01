@@ -1,0 +1,85 @@
+<template>
+	<template if:true={spinner}>
+		<lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+	</template>
+
+	<template if:false={spinner}>
+		<!-- FORM - START -->
+		<lightning-record-edit-form
+			id="recordViewForm"
+			record-type-id={recordTypeId}
+			object-api-name={sObjectName}
+			onchange={onChange}
+		>
+			<form onsubmit={onSubmit}>
+				<div class="slds-grid slds-wrap">
+					<div class="slds-size_12-of-12">
+						<template for:each={sections} for:item='section'>
+							<article key={section.Label__c} class="slds-card">
+								<template if:false={hideHeader}>
+								<div class="slds-card__header slds-grid">
+									<header class="slds-media slds-media_center slds-has-flexi-truncate">
+										<div class="slds-media__body">
+											<h2 class="slds-card__header-title">
+												<span>{section.Label__c}</span>
+											</h2>
+										</div>
+									</header>
+								</div>
+								</template>
+								<div class="slds-card__body slds-card__body_inner">
+									<div class="slds-grid slds-wrap">
+										<template for:each={section.Fields} for:item='field'>
+											<template if:true={field.Visible__c}>
+												<div key={field.Field__c} class={fieldClass}>
+													<label class="slds-form-element__label">{field.Label__c}</label>
+													<!-- DOMAIN - START -->
+													<template if:true={field.Domain__c}>
+														<div class="slds-form-element__control">
+															<div class="slds-select_container">
+																<select 
+																	class="slds-select"
+																	name={field.Field__c} 
+																	required={field.Required__c} 
+																	disabled={field.ReadOnly__c}
+																	value={field.Value__c}
+																>
+																	<option value="">---</option>
+																	<template for:each={field.Domain__c} for:item='domain'>
+																		<option key={domain.value} value={domain.value}>{domain.label}</option>
+																	</template>
+																</select>
+															</div>
+														</div>
+													</template>
+													<!-- DOMAIN - END -->
+
+													<!-- DEFAULT - START --> 
+													<template if:false={field.Domain__c}>
+														<lightning-input-field
+															class = "validate"
+															id={field.Field__c}
+															label={field.Label__c}
+															field-name={field.Field__c}
+															required={field.Required__c} 
+															disabled={field.ReadOnly__c} 
+															value={field.Value__c}
+															variant="label-hidden"
+														></lightning-input-field>
+													</template>
+													<!-- DEFAULT - END --> 
+												</div>
+											</template>
+										</template>
+									</div>
+								</div>
+							</article>
+						</template>
+						<button style="display: none;">Submit</button>
+					</div>
+				</div>
+			</form>
+		</lightning-record-edit-form>
+		<!-- FORM - END -->
+	</template>
+</template>

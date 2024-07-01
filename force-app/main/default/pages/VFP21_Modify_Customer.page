@@ -1,0 +1,52 @@
+<!--
+***************************************************************************************************
+---------------------------------------------------------------------------------------------------
+-- - Name          : VFC21_Modify_Customer
+-- - Author        : Moscatelli Marco
+-- - Description   : Sample controller to define the behaviour of the button "Modify Customer" 
+-- -                 internal to the Case page
+--
+-- Maintenance History:
+--
+-- Date         Version  Remarks
+-- -----------  -------  --------------------------------------------------------------------------
+-- 13-04-2018   1.0     
+---------------------------------------------------------------------------------------------------
+***************************************************************************************************
+-->
+<apex:page extensions="VFC21_Modify_Customer" standardController="Case">
+    <apex:includeScript value="/soap/ajax/30.0/connection.js"/>
+    <apex:includeScript value="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"/>
+    <apex:includeScript value="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"/>
+    <apex:includeScript value="/support/console/42.0/integration.js"/>
+    <script>
+ 	function ModifyCustomer()
+    {
+        var AccId = "{!AccountId}";
+        var CasId = "{!CaseId}";
+        var label = "{!AccountName}";
+        
+        console.log('dentro');
+        var url = '/lightning/n/LightningAccountEdit?&c__recordId='+AccId+'&c__CaseId='+CasId+'&c__retUrl='+CasId;
+        var name = '';
+
+
+        if(sforce.console.isInConsole())
+        {
+            sforce.console.getEnclosingPrimaryTabId(function(primarytab){
+                sforce.console.openSubtab(primarytab.id , url, true, label, null, function(result){
+                }, name);
+            }); 
+        } 
+		else 
+		{
+            window.open(url);
+        }    
+    }
+
+    </script>
+    
+    <apex:form style="margin-left:50%;">
+        <apex:commandButton oncomplete="ModifyCustomer();" value="Modifica Cliente" disabled="{!IsRO}"/>
+    </apex:form>
+</apex:page>

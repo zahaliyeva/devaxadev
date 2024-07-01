@@ -1,0 +1,4 @@
+<apex:component controller="LM_Reassignment_Email_CTRL" access="global" >
+	<apex:attribute name="LeadId" type="Id" description="Id of the lead" assignTo="{!relatedToLeadId}"/>   
+   	<apex:outputText value="{!ReassignmentString}" escape="false"></apex:outputText>
+</apex:component>

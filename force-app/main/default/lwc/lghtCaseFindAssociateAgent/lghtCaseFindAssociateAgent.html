@@ -1,0 +1,149 @@
+<template>
+    <template if:true={spinner}>
+        <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+    </template>
+    
+    <div class="slds-grid slds-gutters">
+        <div class="slds-col">
+            <form onchange={onChange}>
+                <!-- CARD START -->
+                <article class="slds-card">
+                    <div class="slds-card__header slds-grid">
+                        <!-- CARD HEADER START -->
+                        <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                            <div class="slds-media__body">
+                                <h2 class="slds-card__header-title">
+                                    <a href="javascript:void(0);" class="slds-card__header-link slds-truncate" title={title}>
+                                        <span>Cerca Agente</span>
+                                    </a>
+                                </h2>
+                            </div>
+                        </header>
+                        <!-- CARD HEADER END -->
+                    </div>
+                    <div class="slds-card__body slds-card__body_inner">
+                        <!-- CARD BODY START -->
+                        <!-- FORM - START -->
+                        <div class="slds-grid slds-gutters">
+                            <div class="slds-col slds-size_1-of-3">
+                                <!-- FIELD - START -->
+                                <div class="slds-form-element">
+                                    <label class="slds-form-element__label" for="form-first-name">Nome</label>
+                                    <div class="slds-form-element__control">
+                                        <input type="text" id="form-first-name" name="FirstName" placeholder="Nome" class="slds-input" value={searchData.FirstName} />
+                                    </div>
+                                </div>
+                                <!-- FIELD - END -->
+                            </div>
+                            <div class="slds-col slds-size_1-of-3">
+                                <!-- FIELD - START -->
+                                <div class="slds-form-element">
+                                    <label class="slds-form-element__label" for="form-last-name">Cognome</label>
+                                    <div class="slds-form-element__control">
+                                        <input type="text" id="form-last-name" name="LastName" placeholder="Cognome" class="slds-input" value={searchData.LastName}/>
+                                    </div>
+                                </div>
+                                <!-- FIELD - END -->
+                            </div>
+                            <div class="slds-col slds-size_1-of-3">
+                                <!-- FIELD - START -->
+                                <div class="slds-form-element">
+                                    <label class="slds-form-element__label" for="form-email">Email</label>
+                                    <div class="slds-form-element__control">
+                                        <input type="text" id="form-email" name="Email" placeholder="Email" class="slds-input" value={searchData.Email}/>
+                                    </div>
+                                </div>
+                                <!-- FIELD - END -->
+                            </div>
+                        </div>
+                        <div class="slds-grid slds-gutters">
+                            <div class="slds-col slds-size_1-of-3">
+                                <!-- FIELD - START -->
+                                <div class="slds-form-element">
+                                    <label class="slds-form-element__label" for="form-agency-code">Codice Agenzia</label>
+                                    <div class="slds-form-element__control">
+                                        <input type="text" id="form-agency-code" name="Agency_Code__c" placeholder="Codice Agenzia" class="slds-input" value={searchData.Agency_Code__c}/>
+                                    </div>
+                                </div>
+                                <!-- FIELD - END -->
+                            </div>
+                            <div class="slds-col slds-size_1-of-3">
+                                <!-- FIELD - START -->
+                                <div class="slds-form-element">
+                                    <label class="slds-form-element__label" for="form-community-nickname">Matricola</label>
+                                    <div class="slds-form-element__control">
+                                        <input type="text" id="form-community-nickname" name="CommunityNickname" placeholder="Matricola" class="slds-input" value={searchData.CommunityNickname}/>
+                                    </div>
+                                </div>
+                                <!-- FIELD - END -->
+                            </div>
+                        </div>
+                        <!-- FORM - END -->
+
+                        <!-- CARD BODY END -->
+                    </div>
+                </article>
+                <!-- CARD END -->
+
+                <div class="slds-text-align_center" style="margin-top: 20px;margin-bottom: 20px;">
+                    <button class="slds-button slds-button_neutral" onclick={onSearchAgent}>Cerca</button>
+                </div>
+                
+                <!-- USER RESULT - START -->
+                <template if:true={hasResult}>
+                    <!-- TABLE RESULT START -->
+                    <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                        <thead>
+                            <tr class="slds-line-height_reset">
+                                <th scope="col">Nome</th>
+                                <th scope="col">Cognome</th>
+                                <th scope="col">Matricola</th>
+                                <th scope="col">Utenza Attiva</th>
+                                <th scope="col">Nome Agenzia</th>
+                                <th scope="col">Agenzia Attiva</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template for:each={listResults} for:index="index" for:item="record">
+                                <tr key={record.Id}>
+                                    <td>{record.FirstName}</td>
+                                    <td>{record.LastName}</td>
+                                    <td>{record.CommunityNickname}</td>
+                                    <td>
+										<template if:true={record.IsActive}>
+											<lightning-icon icon-name="utility:check" size="x-small" alternative-text="Is Active!" title="Is Active"></lightning-icon>
+										</template>
+										<template if:false={record.IsActive}>
+											<lightning-icon icon-name="utility:close" size="x-small" alternative-text="Is Not Active!" title="Is Not Active"></lightning-icon>
+										</template>
+                                	</td>
+                                    <td>
+                                		<template if:true={record.Account}>
+                                    		{record.Account.Name}
+                                		</template>
+                                    </td>
+                                    <td>
+                                		<template if:true={record.Account}>
+											<template if:true={record.Account.Active__c}>
+												<lightning-icon icon-name="utility:check" size="x-small" alternative-text="Is Active!" title="Is Active"></lightning-icon>
+											</template>
+											<template if:false={record.Account.Active__c}>
+												<lightning-icon icon-name="utility:close" size="x-small" alternative-text="Is Not Active!" title="Is Not Active"></lightning-icon>
+											</template>
+                                		</template>
+                                    </td>
+                                    <td>
+                                        <button class="slds-button slds-button_neutral" onclick={onAssociate} data-id={record.Id}>Associa</button>
+                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                    <!-- TABLE RESULT END -->
+                </template>
+                <!-- USER RESULT - END -->
+            </form>
+        </div>
+    </div>
+</template>

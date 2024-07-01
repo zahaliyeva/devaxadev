@@ -1,0 +1,81 @@
+<apex:page extensions="sendEmailCaseCTRL" standardController="Case" showHeader="{!$CurrentPage.parameters.showHeader}" standardStylesheets="false" sidebar="{!$CurrentPage.parameters.showHeader}" applyHtmlTag="true" applyBodyTag="false" docType="html-5.0">
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>      
+    </head>
+    
+    <apex:includeScript value="/soap/ajax/41.0/connection.js"/>
+    <apex:includeScript value="/soap/ajax/41.0/apex.js"/>
+    <apex:includeLightning />
+    <apex:includeScript value="/lightning/lightning.out.js" />
+    <apex:includeScript value="/canvas/sdk/js/36.0/publisher.js"/>
+    <apex:includeScript value="https://mobile1.t.salesforce.com/soap/ajax/30.0/connection.js" />
+    <!--  apex:stylesheet value="/resource/lds/assets/styles/salesforce-lightning-design-system-vf.css"/-->
+
+    <div class="slds" style="{! If(and($CurrentPage.parameters.showHeader == 'false', $User.UITheme != 'Theme4t'),'overflow-y: scroll;  height: 270px;','') }"> 
+        <div id="lightning" />
+            
+    </div>
+    
+    <script>    
+    console.log('sendEmailCase');
+    var width = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth);
+    console.log('isFeedView: ',{!isFeedView});
+    
+    $Lightning.use("c:sendEmailCaseApp", function() {
+        $Lightning.createComponent("c:sendEmailCaseMainCmp",
+                                   { 
+                                       "jsDebug" :  {!jsDebug},
+                                       "recordId" : "{!apexCaseId}", 
+                                       "toAddresses" : "{!additionalToAddress}",
+                                       "senderAddress" : "{!senderAddress}",
+                                       "defaultTemplate" : "{!templateId}",
+                                       "screenWidth": width,
+                                       "isFeedView" : "{!isFeedView}"
+                                   },
+                                   "lightning",
+                                   function(cmp) {
+                                       console.log("Component created!");
+                                       console.log('eventService');
+                                       $A.eventService.addHandler({ "event": "c:tabclosing", "handler" : visualForceFunction});
+                                       console.log(cmp);
+                                   });
+    });
+    var theme = "{!$User.UITheme}";
+    console.log('theme: ',theme);
+    var visualForceFunction = function(event){
+        console.log('event');
+        var myEventData = event.getParam("data");
+        var caseid= event.getParam("recordid");
+        var url= event.getParam("Url");
+        console.log(url);
+        if(myEventData == 'refresh')
+            refreshCase(url);
+        
+    };
+    
+    function refreshCase(url)
+    {
+        try
+        {
+            console.log("refresh");
+            
+            if(theme == 'Theme4t')
+            {
+                console.log('mobile');
+                Sfdc.canvas.publisher.publish({name: "publisher.close", payload:{ refresh:"true"}});
+            }
+            else {
+                console.log('desktop');
+                console.log('url: '+url);
+                window.location.href = url;
+            }
+        }
+        catch (e)
+        {}
+        finally 
+        {}
+    } 
+    
+    </script>    
+    
+</apex:page>

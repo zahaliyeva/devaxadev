@@ -1,0 +1,23 @@
+<template>
+	<template if:true={spinner}>
+		<lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+	</template>
+
+	<template if:true={selectRecordType}>
+		<c-lght-case-record-type 
+			show="true"
+			test={test}
+			load-callback={loadRecordTypeCallback}
+			cancel-callback={cancelCallback}
+			confirm-callback={confirmCallback}>
+		</c-lght-case-record-type>
+	</template>
+
+	<div>
+		<template if:true={showError}>
+			<h1>Create Case not Avaiable</h1>
+
+			<lightning-button label="Indietro" title="Indietro" onclick={onCloseTab} class="slds-m-left_x-small"></lightning-button>
+		</template>
+	</div>
+</template>

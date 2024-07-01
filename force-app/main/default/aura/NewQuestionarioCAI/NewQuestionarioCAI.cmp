@@ -1,0 +1,1456 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction,lightning:actionOverride" access="global" controller="VFC30_NewQuestionarioCAICTRL" >
+    <!-- *** ATTRIBUTE BLOCK *** -->
+    <lightning:navigationItemAPI aura:id="navigationItem" />
+    <lightning:workspaceAPI aura:id="workspace" />
+    <lightning:utilityBarAPI aura:id="utilityBar" />
+    
+    <!--MOSCATELLI_M 13/03/2019: Axa Assistance- START-->
+    <aura:attribute name="UsrProfile" type="String"/>
+    <aura:attribute name="NDG" type="String"/>
+    
+    <!--MOSCATELLI_M 13/03/2019: Axa Assistance- END-->
+    <aura:attribute name="jsDebug" type="Boolean"/> 
+    <aura:attribute name="isLoading" type="Boolean" default="false"/>
+    <aura:attribute name="fiscalCode" type="String"/>
+    <aura:attribute name="accountId" type="String"/>
+    <aura:attribute name="policyNumber" type="String"/>
+    <aura:attribute name="showPreDenunciations" type="Boolean" default="true"/>
+    <aura:attribute name="isSuccess" type="Boolean" default="true" />
+    <aura:attribute name="errorMessage" type="String" />
+    <aura:attribute name="title" type="String" default="Nuovo Questionario CA" />
+    <aura:attribute name="questionarioCA" type="Questionario_CA__c" default="{sobjectType : 'Questionario_CA__c'}" />
+    <aura:attribute name="condUgualeContr" type="Boolean" default="false"/>
+    <aura:attribute name="condControparteUgualeContr" type="Boolean" default="false"/>
+    <aura:attribute name="OpeningMethod" type = "String"/>
+    <!--Bonifazi Giorgio 19/07/2019: Caring Angel fase 2 START-->
+    <aura:attribute name="showSinistroCanalizzato" type="Boolean" default="false" />
+    <aura:attribute name="isHD2Profile" type="Boolean" default="false" />
+    <aura:attribute name="isCaringAngelProfile" type="Boolean" default="false" />
+     <aura:attribute name="isVisibleSTEP1" type="Boolean" default="false" />
+    <aura:attribute name="isVisibleSTEP1a" type="Boolean" default="true" />
+    <aura:attribute name="isVisibleSTEP1b" type="Boolean" default="true" />
+    <aura:attribute name="isVisibleSTEP1c" type="Boolean" default="true" />
+    <aura:attribute name="isVisibleSTEP1d" type="Boolean" default="true" />
+    <aura:attribute name="isVisibleSTEP2" type="Boolean" default="true" />
+    <aura:attribute name="isVisibleSTEP2a" type="Boolean" default="true" />
+    <aura:attribute name="isVisibleSTEP3" type="Boolean" default="false" />
+    <aura:attribute name="isVisibleSTEP4" type="Boolean" default="false" />
+    <aura:attribute name="isVisibleSTEP5" type="Boolean" default="false" />
+    <aura:attribute name="isVisibleSTEP5a" type="Boolean" default="true" />
+    <aura:attribute name="isVisibleSTEP5b" type="Boolean" default="true" />   
+    <aura:attribute name="isVisibleSTEP6" type="Boolean" default="false" />
+    <aura:attribute name="isVisibleSTEP6a" type="Boolean" default="true" />
+    <aura:attribute name="isVisibleSTEP6b" type="Boolean" default="true" />
+    <aura:attribute name="isVisibleSTEP7" type="Boolean" default="false" />
+    <aura:attribute name="isVisibleSTEP7a" type="Boolean" default="true" />
+    <aura:attribute name="isVisibleSTEP7b" type="Boolean" default="true" />
+    <aura:attribute name="isVisibleSTEP8" type="Boolean" default="false" />
+    <aura:attribute name="isVisibleSTEP8a" type="Boolean" default="true" />
+    <aura:attribute name="isVisibleSTEP9" type="Boolean" default="false" />
+    <!--Bonifazi Giorgio 19/07/2019: Caring Angel fase 2 END-->
+    <aura:attribute name ="questionarioCaID" type="String" />
+    <aura:attribute name ="method" type="String" />
+    <aura:attribute name="questionario" type="Questionario_CA__c" default="{sobjectType : 'Questionario_CA__c'}" />
+    <!--Bonifazi Giorgio 19/07/2019: Caring Angel fase 2 START-->
+    <aura:attribute name="pickFields" type="String[]" default="['Compagnia__c','Ambulanza__c','Autorit__c','Carro__c','Claim_Type__c','Event_Type__c','Feriti__c','Tipo_controparte__c','Note_ambulanza__c','Note_autorit__c','Note_carroattrezzi__c','Sinistro_canalizzabile__c','Sinistro_canalizzato__c','assistenza_cai_richiesta__c','Motivo_trasferimento__c','CheckFileAllegati__c','Tipologia_Targa__c','Presenza_Testimoni__c','Sesso_Controparte__c','Sesso_Controparte_Contr__c', 'Fast_Payment__c','Caring_Angel_Type__c']"/>
+    <aura:attribute name="Presenza_Testimoni__c" type="String[]" default="[]"/>
+    <!--Bonifazi Giorgio 19/07/2019: Caring Angel fase 2 END-->
+    <aura:attribute name="Compagnia__c" type="String[]" default="[]"/>
+    <aura:attribute name="Feriti__c" type="String[]" default="[]"/>
+    <aura:attribute name="Ambulanza__c" type="String[]" default="[]"/>
+    <aura:attribute name="Autorit__c" type="String[]" default="[]"/>
+    <aura:attribute name="Carro__c" type="String[]" default="[]"/>
+    <aura:attribute name="Tipo_controparte__c" type="String[]" default="[]"/>
+    <aura:attribute name="Note_ambulanza__c" type="String[]" default="[]"/>
+    <aura:attribute name="Note_autorit__c" type="String[]" default="[]"/>
+    <aura:attribute name="Note_carroattrezzi__c" type="String[]" default="[]"/>
+    <aura:attribute name="Tipologia_Targa__c" type="String[]" default="[]"/>
+    <!--Bonifazi Giorgio 19/07/2019: Caring Angel fase 2 START-->
+    <aura:attribute name="Sinistro_canalizzabile__c" type="String[]" default="[]"/>
+    <aura:attribute name="Sinistro_canalizzato__c" type="String[]" default="[]"/>
+    <aura:attribute name="Fast_Payment__c" type="String[]" default="[]"/>
+    <aura:attribute name="Caring_Angel_Type__c" type="String[]" default="[]"/>
+    <aura:attribute name="assistenza_cai_richiesta__c" type="String[]" default="[]"/>
+    <aura:attribute name="pageReference" type="Object"/>
+    <aura:attribute name="Motivo_trasferimento__c" type="String[]" default="[]"/>
+    <!-- <aura:attribute name="isOpen" type="boolean" default="false" /> -->
+    <aura:attribute name="showInviaAdHD2" type="boolean" default="false" />
+    <aura:attribute name="remainingCharacters" type="String" default="1000" />
+    <aura:attribute name="showAttachmentBox" type="Boolean" default="false"/>
+    <aura:attribute name="showShareFile_Flag" type="Boolean" default="false"/>
+    <aura:attribute name="toggleRecordType" type="String" default="Supporto" required="true" />
+    <aura:attribute name="attachmentList" type="List" />
+    <aura:attribute name="attachmentListFileNames" type="List"/>
+    <aura:attribute name="attachmentnamelist" type="List" default="[]"/>
+    <aura:handler name="uploadaction" event="c:fileuploadevt" action="{!c.updateattachmentlst}"/>
+    <aura:attribute name="MandatoryInputsMissing" type="Boolean" default="false" />
+    <aura:attribute name="error" type="String" default="" />
+    <aura:attribute name="CheckFileAllegati__c" type="String[]" default="[]"/>
+    <!--Bonifazi Giorgio 19/07/2019: Caring Angel fase 2 END-->
+    <aura:attribute name="picklistMap" type="Map" default="{}" />
+    <aura:attribute name="getPolizzeModal" type="boolean" default="false"/>
+    <aura:attribute name="findClientModal" type="boolean" default="false"/>
+    <aura:attribute name="tipoCliente" type="String" />
+    <aura:attribute name="isVisibleNoteFeriti" type="boolean" default="false"/>
+    <aura:attribute name="isVisibleNoteAmbulanza" type="boolean" default="false"/>
+    <aura:attribute name="isVisibleNoteAutorita" type="boolean" default="false"/>
+    <aura:attribute name="isVisibleNoteCarroattrezzi" type="boolean" default="false"/>
+    <aura:attribute name='policyNodeCode' type="String" />
+    <aura:attribute name="oraEvento" type="String" />
+    <aura:attribute name="sinistro" type="Boolean" default="false"/> <!--ZA prima salva per prendere l'id del questionario -->
+    <aura:attribute name="minutiEvento" type="String" />
+    <aura:attribute name="oraRecall" type="String" />
+    <aura:attribute name="minutiRecall" type="String" />
+    <aura:attribute name="phone" type="String" />
+    <aura:attribute name="caller" type="String" />
+    <aura:attribute name="lob" type="String"/>
+    <aura:attribute name="category" type="String" />
+    <aura:attribute name="subcategory" type="String" />
+    <aura:attribute name="showToast" type="Boolean" default="false" />
+    <aura:attribute name="typeToast" type="String"  />
+    <aura:attribute name="messageToast" type="String"  />
+    <aura:attribute name="HOURSList" type="String[]" default="[]"/>
+    <aura:attribute name="HOURSListRecall" type="String[]" default="[]"/>
+    <aura:attribute name="MINUTESList" type="String[]" default="[]"/>
+    <aura:attribute name="caseId" type="String"  />
+    <!--MMOSCATELLI 23/11/2018 : Caring Angel Enhancement- START-->
+    <aura:attribute name="source" type="String"  />
+    <aura:attribute name="RecordsDeleted" type="Boolean"  default="false"/>
+    <!--MMOSCATELLI 23/11/2018 : Caring Angel Enhancement- END-->
+   
+    <!-- d.pirelli CAI DIGITAle start -->
+    <aura:attribute name="testimoniList" type="Testimone_Ferito__c[]"/> 
+    <aura:attribute name="feritiList" type="Testimone_Ferito__c[]"/>
+    <aura:attribute name="AniaStatus" type="String" />
+    <aura:attribute name="AniaServiceOK" type="Boolean" default="false" />
+    <aura:attribute name="CompagniaAssicurativa" type="String" />
+    <aura:attribute name="Marca" type="String" />
+    <aura:attribute name="Modello" type="String" />
+    <aura:attribute name="ProvenienzaVeicolo" type="String" />
+    <aura:attribute name="TipoVeicolo" type="String" />
+    <aura:attribute name="ComuneNascita" type="String" />
+    <aura:attribute name="ProvinciaNascita" type="String" />
+    <aura:attribute name="Sesso_Controparte__c" type="String[]" default="[]" />
+    <aura:attribute name="Sesso_Controparte_Contr__c" type="String[]" default="[]" />
+    <aura:attribute name="comuneNascitaContrCond" type="String" default="" />
+    <aura:attribute name="provinciaNascitaContrCond" type="String" default="" />
+    <!-- d.pirelli CAI DIGITAle end -->
+    <aura:registerEvent name="tabclosing" type="c:tabclosing" />
+    <aura:attribute name="AlreadyOpened" type="Boolean"/>
+    <aura:attribute name="SaveButtonPressed" type="String"/>
+    <aura:attribute name="persone" type="List" default="[
+                                                        {'label': 'Persona Fisica', 'value': 'fisica'},
+                                                        {'label': 'Persona giuridica', 'value': 'giuridica'}
+                                                        ]"/>
+    <aura:attribute name="personaContr" type="String" default="fisica"/>
+    <aura:attribute name="AnnullaModal" type="Boolean" default="false" />
+    <aura:attribute name="accountIdToUpdate" type="String" />
+    <aura:attribute name="DetailsMessageToast" type="String" />
+    <aura:attribute name="CaseIDFromNEW" type="String" />
+    <aura:attribute name="todayISODateTime" type="String" /> <!-- OAVERSANO 22/11/2018 ENHANCEMENT -->
+    <!-- Giorgio Bonifazi CAI DIGITALE START-->
+    <aura:attribute name="cellulare" type="String" />
+    <aura:attribute name="StatoImmatricolazioneVeicolo" type="String" default="ITALIA" />
+	<aura:attribute name="CodiceFiscaleControparte" type="String"/>															   
+    <aura:attribute name="CodiceFiscaleControparteContr" type="String"/>
+    <aura:attribute name="CodiceFiscaleCondContr" type="String"/>	
+    <aura:attribute name="IndexPathCurr" type="String"  default="v.isVisibleSTEP2"/>
+    <aura:attribute name="IndexCurrPage" type="Integer"  default="0"/>  
+    
+    <aura:attribute name="mapLabelStepBar" type="Object[]" default="[{ 'key': 'STEP1', 'label':'INFORMAZIONI SINISTRO'}, 
+                                                                      {'key': 'STEP2', 'label': 'INFORMAZIONI CONTRAENTE'}, 
+                                                                      {'key': 'STEP3',  'label':'INFORMAZIONI CONTROPARTE'}, 
+                                                                      {'key': 'STEP4',  'label': 'INFORMAZIONI FERITI/TESTIMONI'},
+                                                                      {'key': 'STEP5',  'label': 'INFORMAZIONI RICONTATTO'}, 
+                                                                      {'key': 'STEP6',  'label': 'INFORMAZIONI NOTE HD2'  }]" />	
+    <aura:attribute name="steps" type="Object[]" default="[
+                                                            {'value':'STEP1' , 'isCurr' :'Y', 'completed' :'N','hide':'N'},
+                                                            {'value':'STEP2', 'isCurr' :'N', 'completed' :'N','hide':'N'},
+                                                            {'value':'STEP3' , 'isCurr' :'N', 'completed' :'N','hide':'N'},
+                                                            {'value':'STEP4' , 'isCurr' :'N', 'completed' :'N','hide':'Y'},
+                                                            {'value':'STEP5' , 'isCurr' :'N', 'completed' :'N','hide':'N'},
+                                                            {'value':'STEP6', 'isCurr' :'N', 'completed' :'N','hide':'Y'}
+                                                          ]"/>
+
+    <aura:attribute name="sortOrderPage" type="List" default="[ 'v.isVisibleSTEP2',
+                                                                'v.isVisibleSTEP1',
+                                                                'v.isVisibleSTEP3',
+                                                                'v.isVisibleSTEP4',
+                                                                'v.isVisibleSTEP5',
+                                                                'v.isVisibleSTEP8']"/>
+    <aura:attribute name="regEx" type="Object" />    
+    <aura:attribute name="msgMissMatch" type="String" default="{!$Label.c.InvalidFormat}"/>
+    <aura:attribute name="patternFiscalCode" type="String" default="{!$Label.c.patternCheckFiscalCode}" /> 
+    <aura:attribute name="patternPhone" type="String" /> 
+    <aura:attribute name="patternEmail" type="String" /> 
+    <aura:attribute name="successSaveSurvey" type="String" default="false"/>
+    <!-- *** targaForm *** -->
+    <aura:attribute name="NonEditTarga" type="Boolean" default="false" />
+  
+    <!-- Giorgio Bonifazi CAI DIGITALE END-->
+    <!-- *** ATTRIBUTE BLOCK *** -->
+    <!-- *** HANDLER BLOCK *** -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="associatePolicyToQuestionarioCA" event="c:associatePolicyToQuestionarioCA" action="{!c.handleAssociatePolicyToQuestionarioCA}"/>
+    <aura:handler name="associateClientToQuestionarioCA" event="c:associateClientToQuestionarioCA" action="{!c.handleAssociateClientToQuestionarioCA}"/>
+    <aura:handler event="c:saveSurveyEvent" action="{!c.salvaQuestionario}"/>
+    <!-- *** HANDLER BLOCK *** -->
+    <!-- *** EVENT BLOCK *** -->
+    <aura:registerEvent name="refreshOpener" type="c:refreshOpener" />
+    
+
+
+    <!-- *** EVENT BLOCK *** -->
+    
+    <force:recordData aura:id="recordEditor"
+                      layoutType="FULL"
+                      recordId="{!v.recordId}"
+                      targetError="{!v.recordError}"
+                      targetRecord="{!v.record}"
+                      targetFields ="{!v.simpleRecord}"
+                      mode="EDIT"
+                      />
+    
+    <!-- <lightning:card class="slds-p-vertical_x-small borderNone slds-p-top_none" title="Questionario CA"> -->
+    <!--	<aura:set attribute="title">
+         <lightning:icon iconName="action:new_case" size="small" class="" variant="inverse"/>
+       &nbsp;{! v.title }
+  </aura:set> -->   
+    
+    <article class="slds-card ">
+        <div class="slds-card__header slds-grid slds-p-vertical_x-small borderNone slds-p-top_none" style="display:block;">
+            
+            
+            <!-- <aura:set attribute="actions">
+    
+  </aura:set> -->
+            <div class="c-container" style="margin: 2%;">
+                
+                <div class="slds-page-header" role="banner" >
+                    <div class="slds-media">
+                        <div class="slds-media__figure">
+                            <lightning:icon iconName="action:new_case"  />
+                        </div>
+                        <div class="slds-media__body">
+                            <h1 class="slds-text-heading_medium">{! v.title } </h1>
+                        </div>
+                    </div>
+                </div> 
+                    <center>
+                <div class="slds-size_6-of-12">
+                 	
+                 <c:CustomPathBarComponent steps="{! v.steps }" mapLabelStepBar="{!v.mapLabelStepBar}"/>
+                   
+                </div>
+                         </center>
+                <div  id="scrollDiv" style="max-height:400px;overflow-y: auto;">
+  
+     
+                <aura:if isTrue="{!v.isVisibleSTEP1}">                       
+                    <aura:if isTrue="{!v.isVisibleSTEP1a}">
+                        <div class="slds-card__header slds-grid" style="padding: 0.75rem 0rem 0;">
+                            <header class="slds-media slds-media--center slds-has-flexi-truncate">
+                                <div class="slds-media__body slds-truncate">
+                                    <div class="slds-section-title_divider">
+                                        <h2>
+                                            <span class="slds-text-heading--small">INFORMAZIONI CONTRAENTE (CONTRAENTE)</span>
+                                        </h2>
+                                    </div>
+                                </div>
+                            </header>
+                        </div>
+                        <br/>
+                        <center>
+                            <lightning:radioGroup 	name="personaGroupButton"
+                                                  label=""
+                                                  options="{! v.persone }"
+                                                  value="{! v.personaContr }"
+                                                  type="button"/>
+                            <lightning:button class="marginTOPAssociaCliente" variant="Neutral" name="contraente" label="Cerca e associa contraente" title="Cerca e associa contraente" onclick="{! c.findAssociateClient }"/>
+                        </center>
+                        <lightning:layout horizontalAlign="center" multipleRows="true">
+                            <lightning:layoutItem flexibility="auto" padding="around-small" size="12" largeDeviceSize="6" mediumDeviceSize="6" smallDeviceSize="12">
+                                <div class="slds-form-element">
+                                    <label class="slds-form-element__label" for="nomeForm">Nome</label>
+                                    <div class="slds-form-element__control">
+                                        <ui:inputText aura:id="nomeForm" class="slds-input" value="{!v.questionarioCA.Nome_contraente__c}" />
+                                    </div>
+                                    <aura:if isTrue="{! v.personaContr == 'fisica'}" >
+                                        <label class="slds-form-element__label" for="cognomeForm">Cognome</label>
+                                        <div class="slds-form-element__control">
+                                            <ui:inputText aura:id="cognomeForm" class="slds-input" value="{!v.questionarioCA.Cognome_Contraente__c}" />
+                                        </div>
+                                        <div class="slds-form-element__control">
+                                            <lightning:input type="date" name="Data di nascita" label="Data di nascita" value="{!v.questionarioCA.Data_di_nascita_contraente__c}"/>
+                                        </div>
+                                    </aura:if>
+                                    <aura:if isTrue="{! v.personaContr == 'fisica'}" >
+                                          <div class="slds-form-element__control">
+                                            <lightning:input type="text"  aura:id="CodFiscaleForm" label="Codice fiscale" value="{!v.questionarioCA.Codice_fiscale_contraente__c}" pattern ="{!v.patternFiscalCode}" messageWhenPatternMismatch="{!v.msgMissMatch}"/>
+                                        </div>                                     
+                                    </aura:if>
+                                    <aura:if isTrue="{! v.personaContr == 'giuridica'}" >
+                                        <label class="slds-form-element__label" for="CodFiscaleForm">Partita IVA</label>
+                                        <div class="slds-form-element__control">
+                                            <ui:inputText aura:id="CodFiscaleForm" class="slds-input" value="{!v.questionarioCA.Codice_fiscale_contraente__c}" />
+                                        </div>
+                                    </aura:if>
+                                    <!--Giorgio Bonifazi CAI DIGITALE START-->
+                                    <aura:if isTrue="{! v.personaContr == 'fisica'}" >
+                                        <div class="slds-form-element__control">
+                                            <lightning:input aura:id="CellulareForm" pattern ="{!v.patternPhone}" messageWhenPatternMismatch="{!v.msgMissMatch}" name="cellulare" label="Cellulare" value="{!v.questionarioCA.Numero_Cellulare_Contraente__c}"/>
+                                        </div>
+                                    </aura:if>
+                                    <aura:if isTrue="{! v.personaContr == 'giuridica'}" >
+                                        <div class="slds-form-element__control">
+                                            <lightning:input aura:id="CellulareForm" name="cellulare" pattern ="{!v.patternPhone}" messageWhenPatternMismatch="{!v.msgMissMatch}" label="Telefono" value="{!v.questionarioCA.Numero_Cellulare_Contraente__c}"/>
+                                        </div>
+                                    </aura:if>
+                                    <!--Giorgio Bonifazi CAI DIGITALE END-->
+                                    <lightning:input aura:id="EmailForm" type="email" name="Email" value="{!v.questionarioCA.Email_Contraente__c}" label="Email" pattern ="{!v.patternEmail}" messageWhenPatternMismatch="{!v.msgMissMatch}" />
+                                </div>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem flexibility="auto" padding="around-medium" size="12" largeDeviceSize="6" mediumDeviceSize="6" smallDeviceSize="12">
+                            
+                                <div class="slds-form-element__control" style="margin-top:2.6%;">
+                                    <lightning:input type="toggle" label="Conducente uguale a contraente" name="condUgualeContr" checked="{!v.condUgualeContr}" messageToggleActive="" messageToggleInactive=""/>
+                                </div>
+                               
+                            </lightning:layoutItem>
+                        </lightning:layout>
+                    </aura:if>
+                    <aura:if isTrue="{!v.isVisibleSTEP1b}">
+                        <lightning:layout horizontalAlign="center" multipleRows="true">
+                            <lightning:layoutItem flexibility="auto" padding="around-small" size="12" largeDeviceSize="6" mediumDeviceSize="6" smallDeviceSize="12">
+                                <div class="slds-card__header slds-grid" style="padding: 0.75rem 0rem 0;">
+                                    <header class="slds-media slds-media--center slds-has-flexi-truncate">
+                                        <div class="slds-media__body slds-truncate">
+                                            <div class="slds-section-title_divider">
+                                                <h2>
+                                                    <span class="slds-text-heading--small">{!v.personaContr == 'fisica'?'Residenza':'Sede'}</span>
+                                                </h2>
+                                            </div>
+                                        </div>
+                                    </header>
+                                </div>
+                                <div class="slds-form-element">
+                                    <label class="slds-form-element__label" for="indirizzoResForm">Indirizzo</label>
+                                    <div class="slds-form-element__control">
+                                        <ui:inputText aura:id="indirizzoResForm" class="slds-input" value="{!v.questionarioCA.Indirizzo_Contraente__c}" />
+                                    </div>
+                                    <label class="slds-form-element__label" for="cittaResForm">Città</label>
+                                    <div class="slds-form-element__control">
+                                        <ui:inputText aura:id="cittaResForm" class="slds-input" value="{!v.questionarioCA.Citt_Contraente__c}" />
+                                    </div>
+                                    <label class="slds-form-element__label" for="provinciaResForm">Provincia</label>
+                                    <div class="slds-form-element__control">
+                                        <ui:inputText aura:id="provinciaResForm" class="slds-input" value="{!v.questionarioCA.Provincia_Contraente__c}" />
+                                    </div>
+                                    <label class="slds-form-element__label" for="CAPResForm">CAP</label>
+                                    <div class="slds-form-element__control">
+                                        <ui:inputText aura:id="CAPResForm" class="slds-input" value="{!v.questionarioCA.CAP_Contraente__c}" />
+                                    </div>
+                                    <label class="slds-form-element__label" for="statoResForm">Stato</label>
+                                    <div class="slds-form-element__control">
+                                        <ui:inputText aura:id="statoResForm" class="slds-input" value="{!v.questionarioCA.Stato_Contraente__c}" />
+                                    </div>
+                                </div>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem flexibility="auto" padding="around-small" size="12" largeDeviceSize="6" mediumDeviceSize="6" smallDeviceSize="12">
+                                <aura:if isTrue="{! v.personaContr == 'fisica'}" >
+                                    <div class="slds-card__header slds-grid" style="padding: 0.75rem 0rem 0;">
+                                        <header class="slds-media slds-media--center slds-has-flexi-truncate">
+                                            <div class="slds-media__body slds-truncate">
+                                                <div class="slds-section-title_divider">
+                                                    <h2>
+                                                        <span class="slds-text-heading--small">Domicilio</span>
+                                                    </h2>
+                                                </div>
+                                            </div>
+                                        </header>
+                                    </div>
+                                    <div class="slds-form-element">
+                                        <label class="slds-form-element__label" for="indirizzoDomForm">Indirizzo</label>
+                                        <div class="slds-form-element__control">
+                                            <ui:inputText aura:id="indirizzoDomForm" class="slds-input" value="{!v.questionarioCA.Indirizzo_Domicilio_Contraente__c}" />
+                                        </div>
+                                        <label class="slds-form-element__label" for="cittaDomForm">Città</label>
+                                        <div class="slds-form-element__control">
+                                            <ui:inputText aura:id="cittaDomForm" class="slds-input" value="{!v.questionarioCA.Citt_Domicilio_Contraente__c}" />
+                                        </div>
+                                        <label class="slds-form-element__label" for="provinciaDomForm">Provincia</label>
+                                        <div class="slds-form-element__control">
+                                            <ui:inputText aura:id="provinciaDomForm" class="slds-input" value="{!v.questionarioCA.Provincia_Domicilio_Contraente__c}" />
+                                        </div>
+                                        <label class="slds-form-element__label" for="CAPDomForm">CAP</label>
+                                        <div class="slds-form-element__control">
+                                            <ui:inputText aura:id="CAPDomForm" class="slds-input" value="{!v.questionarioCA.CAP_Domicilio_Contraente__c}" />
+                                        </div>
+                                        <label class="slds-form-element__label" for="statoDomForm">Stato</label>
+                                        <div class="slds-form-element__control">
+                                            <ui:inputText aura:id="statoDomForm" class="slds-input" value="{!v.questionarioCA.Stato_Domicilio_Contraente__c}" />
+                                        </div>
+                                    </div>
+                                </aura:if>
+                            </lightning:layoutItem>
+                        </lightning:layout>
+                    </aura:if>
+                    <aura:if isTrue="{!v.isVisibleSTEP1c}">
+                        <div class="slds-card__header slds-grid" style="padding: 0.75rem 0rem 0;">
+                            <header class="slds-media slds-media--center slds-has-flexi-truncate">
+                                <div class="slds-media__body slds-truncate">
+                                    <div class="slds-section-title_divider">
+                                        <h2>
+                                            <span class="slds-text-heading--small">Polizza</span>
+                                        </h2>
+                                    </div>
+                                </div>
+                            </header>
+                        </div>
+                        <br/>
+                        <lightning:layout horizontalAlign="center" multipleRows="true">
+                            <center>
+                                <lightning:button variant="Neutral" label="Recupera polizze" title="Recupera polizze" onclick="{! c.getPolizze }"/>
+                            </center>
+                        </lightning:layout>
+                    </aura:if>
+                    <aura:if isTrue="{!v.isVisibleSTEP1d}">
+                        <lightning:layout horizontalAlign="center" multipleRows="true">
+                            <lightning:layoutItem flexibility="auto" padding="around-small" size="12" largeDeviceSize="6" mediumDeviceSize="6" smallDeviceSize="12">
+
+                                    <div class="slds-form-element">
+                                        <label class="slds-form-element__label" for="targaForm">Targa</label>
+                                        <div class="slds-form-element__control">
+                                            <ui:inputText aura:id="targaForm" class="slds-input" value="{!v.questionarioCA.Targa__c}" disabled="{!v.NonEditTarga}" />
+                                        </div>
+                                    </div>
+                                    
+                                <div class="slds-form-element">
+                                    <label class="slds-form-element__label" for="numPolizzaForm">N° polizza</label>
+                                    <div class="slds-form-element__control">
+                                        <ui:inputText aura:id="numPolizzaForm" class="slds-input" value="{!v.questionarioCA.Numero_Polizza__c}" disabled="true"/>
+                                    </div>
+                                </div>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem flexibility="auto" padding="around-small" size="12" largeDeviceSize="6" mediumDeviceSize="6" smallDeviceSize="12">
+                                <div class="slds-form-element">
+                                    <label class="slds-form-element__label" for="targaForm">Compagnia</label>
+                                    <div class="slds-form-element__control">
+                                        <ui:inputText aura:id="compagniaForm" class="slds-input" value="{!v.questionarioCA.Compagnia__c}" disabled="true"/>
+                                    </div>
+                                </div>
+                                <lightning:input name="stato immatricolazione veicolo" label="Stato Immatricolazione Veicolo" value="{!v.StatoImmatricolazioneVeicolo}" readonly="true" />
+                            </lightning:layoutItem>
+                        </lightning:layout>
+                    </aura:if>
+                </aura:if>
+                <aura:if isTrue="{!v.isVisibleSTEP2}">
+                    <aura:if isTrue="{!v.isVisibleSTEP2a}">
+                        <div class="slds-card__header slds-grid" style="padding: 0.75rem 0rem 0;">
+                            <header class="slds-media slds-media--center slds-has-flexi-truncate">
+                                <div class="slds-media__body slds-truncate">
+                                    <div class="slds-section-title_divider">
+                                        <h2>
+                                            <span class="slds-text-heading--small">INFORMAZIONI SINISTRO</span>
+                                        </h2>
+                                    </div>
+                                </div>
+                            </header>
+                        </div>
+                        <lightning:layout horizontalAlign="center" multipleRows="true">
+                            <lightning:layoutItem flexibility="auto" padding="around-small" size="12" largeDeviceSize="6" mediumDeviceSize="6" smallDeviceSize="12">
+                                <div class="slds-form-element">
+                                    <div class="slds-form-element__control">
+                                        <lightning:input type="date" name="Data evento" label="Data evento" value="{!v.questionarioCA.Data_Evento__c}"/>
+                                    </div>
+                                    <!--MOSCATELLI_M 16/11/2018: Caring Angel CR - START
+                                    <label class="slds-form-element__label" for="luogoForm">Luogo</label>
+                                    <div class="slds-form-element__control">
+                                        <ui:inputText aura:id="luogoForm" class="slds-input" value="{!v.questionarioCA.Luogo_Evento__c}" />
+                                    </div>-->
+                                    <label class="slds-form-element__label" for="EventIndirizzo">Indirizzo Evento</label>
+                                    <div class="slds-form-element__control">
+                                        <ui:inputText aura:id="EventIndirizzo" class="slds-input" value="{!v.questionarioCA.Indirizzo_Evento__c}" />
+                                    </div>
+                                    <label class="slds-form-element__label" for="EventCitta">Città</label>
+                                    <div class="slds-form-element__control">
+                                        <ui:inputText aura:id="EventCittà" class="slds-input" value="{!v.questionarioCA.Citt_Evento__c}" />
+                                    </div>
+                                    <label class="slds-form-element__label" for="EventProvincia">Provincia</label>
+                                    <div class="slds-form-element__control">
+                                        <ui:inputText aura:id="EventProvincia" class="slds-input" value="{!v.questionarioCA.Provincia_Evento__c}" />
+                                    </div> 
+                                    <label class="slds-form-element__label" for="EventCAP">CAP</label>
+                                    <div class="slds-form-element__control">
+                                        <ui:inputText aura:id="EventCAP" class="slds-input" value="{!v.questionarioCA.CAP_Evento__c}" />
+                                    </div> 
+                                    <label class="slds-form-element__label" for="EventStato">Stato</label>
+                                    <div class="slds-form-element__control">
+                                        <ui:inputText aura:id="EventStato" class="slds-input" value="{!v.questionarioCA.Stato_Evento__c}" />
+                                    </div>                                     
+                                    <!--MOSCATELLI_M 16/11/2018: Caring Angel CR - END-->
+                                    <lightning:layout horizontalAlign="center" multipleRows="true" >
+                                        <lightning:layoutItem alignmentBump="right" flexibility="auto" padding="none" size="12" largeDeviceSize="5" mediumDeviceSize="5" smallDeviceSize="12">
+                                            <div class="slds-form-element__control">
+                                                <lightning:select name="Ora" label="Ora" value="{!v.oraEvento}" >
+                                                    <option value=""></option>
+                                                    <aura:iteration var="option" items="{!v.HOURSList}" >
+                                                        <option value="{! option }">{! option }</option>
+                                                    </aura:iteration>
+                                                </lightning:select>
+                                            </div>
+                                        </lightning:layoutItem>
+                                        <lightning:layoutItem alignmentBump="left" flexibility="auto" padding="none" size="12" largeDeviceSize="5" mediumDeviceSize="5" smallDeviceSize="12">
+                                            <div class="slds-form-element__control">
+                                                <lightning:select name="Minuti" label="Minuti" value="{!v.minutiEvento}" >
+                                                    <option value=""></option>
+                                                    <aura:iteration var="option" items="{!v.MINUTESList}" >
+                                                        <option value="{! option }">{! option }</option>
+                                                    </aura:iteration>
+                                                </lightning:select>
+                                            </div>
+                                        </lightning:layoutItem>
+                                    </lightning:layout>
+                                    <div class="slds-form-element__control">
+                                        <lightning:textarea aura:id="descrizioneDinamicaForm" label="Descrizione dinamica" name="Descrizione dinamica" value="{!v.questionarioCA.Descrizione_dinamica__c}" placeholder="" />
+                                    </div>
+                                    <!--Bonifazi Giorgio 19/07/2019: Caring Angel fase 2 START-->
+                                    <lightning:select name="Assistenza CAI Richiesta" label="Assistenza CAI Richiesta" onchange="{! c.ShowOrHideNoteSection }"  value="{!v.questionarioCA.assistenza_cai_richiesta__c}">
+                                        <option value=""></option>
+                                        <aura:iteration var="option" items="{!v.assistenza_cai_richiesta__c}">
+                                            <option value="{! option }">{! option }</option>
+                                        </aura:iteration>
+                                    </lightning:select>
+                                    <!--Bonifazi Giorgio 19/07/2019: Caring Angel fase 2 END-->
+                                </div>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem flexibility="auto" padding="around-medium" size="12" largeDeviceSize="6" mediumDeviceSize="6" smallDeviceSize="12">
+                                <div class="slds-form-element__control" >
+                                    <lightning:input aura:id="telForm" label="Telefono" name="Telefono" value="{!v.questionarioCA.Telefono__c}"  pattern ="{!v.patternPhone}" messageWhenPatternMismatch ="{!v.msgMissMatch}"/>
+                                    <lightning:input pattern ="{!v.patternEmail}" messageWhenPatternMismatch="{!v.msgMissMatch}" aura:id="mailForm" type="email" name="Email" value="{!v.questionarioCA.Email__c}" label="Email" />
+                                    <label class="slds-form-element__label" for="numChiamanteForm">Numero chiamante</label>
+                                    <div class="slds-form-element__control">
+                                        <ui:inputText aura:id="numChiamanteForm" class="slds-input" value="{!v.questionarioCA.Numero_chiamante__c}" disabled="true"/>
+                                    </div>
+                                    <lightning:select aura:id="presenzaFeriti" name="Feriti" label="Feriti" value="{!v.questionarioCA.Feriti__c}" onchange="{!c.onChangeFeriti}">
+                                        <option value=""></option>
+                                        <aura:iteration var="option" items="{!v.Feriti__c}">
+                                            <option value="{! option }">{! option }</option>
+                                        </aura:iteration>
+                                    </lightning:select>
+                                       <!-- d.pirelli CAI DIGITALE start -->
+                                    <lightning:select name="Presenza_Testimoni" aura:id="presenzaTestimoni" label="Presenza Testimoni" value="{!v.questionarioCA.Presenza_Testimoni__c}" onchange="{!c.onChangeTestimoni}" >
+                                            <option value=""></option>
+                                            <aura:iteration var="option" items="{!v.Presenza_Testimoni__c}">
+                                                <option value="{! option }">{! option }</option>
+                                            </aura:iteration>
+                                        </lightning:select>
+                                    <!-- d.pirelli CAI DIGITALE end -->
+                                    <lightning:select name="Ambulanza" label="Ambulanza" onchange="{! c.ShowOrHideNoteSection }" value="{!v.questionarioCA.Ambulanza__c}" >
+                                        <option value=""></option>
+                                        <aura:iteration var="option" items="{!v.Ambulanza__c}">
+                                            <option value="{! option }">{! option }</option>
+                                        </aura:iteration>
+                                    </lightning:select>
+                                    <aura:if isTrue="{!v.isVisibleNoteAmbulanza}" >
+                                        <lightning:select name="noteAmbulanza" label="Ambulanza note" value="{!v.questionarioCA.Note_ambulanza__c}" >
+                                            <option value=""></option>
+                                            <aura:iteration var="option" items="{!v.Note_ambulanza__c}">
+                                                <option value="{! option }">{! option }</option>
+                                            </aura:iteration>
+                                        </lightning:select>
+                                    </aura:if>
+                                    <lightning:select name="Autorita" label="Autorità" onchange="{! c.ShowOrHideNoteSection }" value="{!v.questionarioCA.Autorit__c}">
+                                        <option value=""></option>
+                                        <aura:iteration var="option" items="{!v.Autorit__c}">
+                                            <option value="{! option }">{! option }</option>
+                                        </aura:iteration>
+                                    </lightning:select>
+                                    <aura:if isTrue="{!v.isVisibleNoteAutorita}" >
+                                        <lightning:select name="noteAutorita" label="Autorità note" value="{!v.questionarioCA.Note_autorit__c}">
+                                            <option value=""></option>
+                                            <aura:iteration var="option" items="{!v.Note_autorit__c}">
+                                                <option value="{! option }">{! option }</option>
+                                            </aura:iteration>
+                                        </lightning:select>
+                                    </aura:if>
+                                    <lightning:select name="Carroattrezzi" label="Carroattrezzi" onchange="{! c.ShowOrHideNoteSection }"  value="{!v.questionarioCA.Carro__c}">
+                                        <option value=""></option>
+                                        <aura:iteration var="option" items="{!v.Carro__c}">
+                                            <option value="{! option }">{! option }</option>
+                                        </aura:iteration>
+                                    </lightning:select>
+                                    <aura:if isTrue="{!v.isVisibleNoteCarroattrezzi}" >
+                                        <lightning:select name="noteCarroattrezzi" label="Carroattrezzi note" value="{!v.questionarioCA.Note_carroattrezzi__c}" >
+                                            <option value=""></option>
+                                            <aura:iteration var="option" items="{!v.Note_carroattrezzi__c}">
+                                                <option value="{! option }">{! option }</option>
+                                            </aura:iteration>
+                                        </lightning:select>
+                                    </aura:if>
+                                </div>
+                            </lightning:layoutItem>
+                        </lightning:layout>
+                    </aura:if>
+                </aura:if>
+                
+                <!-- d.pirelli CAI DIGITALE start -->
+                
+                
+                <aura:if isTrue="{!v.isVisibleSTEP3}">
+                        <aura:if isTrue="{!v.isVisibleSTEP5a}">
+                                <div class="slds-card__header slds-grid" style="padding: 0.75rem 0rem 0;">
+                                    <header class="slds-media slds-media--center slds-has-flexi-truncate">
+                                        <div class="slds-media__body slds-truncate">
+                                            <div class="slds-section-title_divider">
+                                                <h2>
+                                                    <span class="slds-text-heading--small">INFORMAZIONI CONTRAENTE (CONDUCENTE VEICOLO CONTRAENTE)</span>
+                                                </h2>
+                                            </div>
+                                        </div>
+                                    </header>
+                                </div>
+                                <br/>
+                                <center>
+                                    <lightning:button variant="Neutral" name="conducente" label="Cerca e associa conducente" title="Cerca e associa conducente" onclick="{! c.findAssociateClient }"/>
+                                </center>
+                                <lightning:layout horizontalAlign="center" multipleRows="true">
+                                    <lightning:layoutItem flexibility="auto" padding="around-small" size="12" largeDeviceSize="6" mediumDeviceSize="6" smallDeviceSize="12">
+                                        <div class="slds-form-element">
+                                         
+                                            <div class="slds-form-element__control">
+                                                <lightning:input label="Nome" aura:id="nomeFormCOND" value="{!v.questionarioCA.Nome_conducente__c}"  onchange="{!c.calculateFiscalCodeContrCond}"/>
+                                            </div>                                                  
+                                            
+                                            <div class="slds-form-element__control">
+                                                <lightning:input label="Cognome" aura:id="cognomeFormCOND" value="{!v.questionarioCA.Cognome_Conducente__c}"  onchange="{!c.calculateFiscalCodeContrCond}"/>
+                                            </div>
+                                            <lightning:select aura:id="SessoContrCond" label="Sesso" onchange="{!c.calculateFiscalCodeContrCond}" >
+                                                <option value=""></option>
+                                                <option value="F">F</option>
+                                                <option value="M">M</option>
+                                            </lightning:select>
+                                            <div class="slds-form-element__control">
+                                                <lightning:input  name="ComuneNascita" label="Luogo di Nascita" value="{!v.comuneNascitaContrCond}" onchange="{!c.calculateFiscalCodeContrCond}"/>
+                                            </div>
+                                            <div class="slds-form-element__control">
+                                                <lightning:input  name="ProvinciaNascita" label="Provincia di Nascita" value="{!v.provinciaNascitaContrCond}" maxlength="2" onchange="{!c.calculateFiscalCodeContrCond}"/>
+                                            </div>
+                                            <div class="slds-form-element__control">
+                                                <lightning:input type="date" name="Data di nascita" label="Data di nascita" value="{!v.questionarioCA.Data_di_nascita_conducente__c}"  onchange="{!c.calculateFiscalCodeContrCond}"/>
+                                            </div>
+                                         <div class="slds-form-element__control">
+                                            <lightning:input label="Codice fiscale" type="text"  aura:id="CodFiscaleFormCOND" messageWhenPatternMismatch ="{!v.msgMissMatch}" pattern ="{!v.patternFiscalCode}" value="{!v.CodiceFiscaleCondContr}" />
+                                        </div>
+                                             <div class="slds-form-element__control">
+                                            <lightning:input pattern ="{!v.patternEmail}" messageWhenPatternMismatch="{!v.msgMissMatch}"  aura:id="EmailFormCOND" type="email" name="Email" value="{!v.questionarioCA.Email_conducente__c}" label="Email" />
+                                          </div>
+                                                 <!-- d.pirelli CAI DIGITALE start -->
+                                             <div class="slds-form-element__control">
+                                             <lightning:input aura:id="TelefonoFormCOND" label="Telefono" name="Telefono" value="{!v.questionarioCA.Telefono_conducente__c}"  pattern ="{!v.patternPhone}" messageWhenPatternMismatch ="{!v.msgMissMatch}"/> 
+                                             </div>
+                                         <!-- d.pirelli CAI DIGITALE end -->
+                                        </div>
+                                    </lightning:layoutItem>
+                                    <lightning:layoutItem flexibility="auto" padding="around-medium" size="12" largeDeviceSize="6" mediumDeviceSize="6" smallDeviceSize="12">
+                                        
+                                    </lightning:layoutItem>
+                                </lightning:layout>
+                            </aura:if>
+                            <aura:if isTrue="{!v.isVisibleSTEP5b}">
+                                <lightning:layout horizontalAlign="center" multipleRows="true">
+                                    <lightning:layoutItem flexibility="auto" padding="around-small" size="12" largeDeviceSize="6" mediumDeviceSize="6" smallDeviceSize="12">
+                                        <div class="slds-card__header slds-grid" style="padding: 0.75rem 0rem 0;">
+                                            <header class="slds-media slds-media--center slds-has-flexi-truncate">
+                                                <div class="slds-media__body slds-truncate">
+                                                    <div class="slds-section-title_divider">
+                                                        <h2>
+                                                            <span class="slds-text-heading--small">Residenza</span>
+                                                        </h2>
+                                                    </div>
+                                                </div>
+                                            </header>
+                                        </div>
+                                        <div class="slds-form-element">
+                                            <label class="slds-form-element__label" for="indirizzoResFormCOND">Indirizzo</label>
+                                            <div class="slds-form-element__control">
+                                                <ui:inputText aura:id="indirizzoResFormCOND" class="slds-input" value="{!v.questionarioCA.Indirizzo_Conducente__c}" />
+                                            </div>
+                                            <label class="slds-form-element__label" for="cittaResFormCOND">Città</label>
+                                            <div class="slds-form-element__control">
+                                                <ui:inputText aura:id="cittaResFormCOND" class="slds-input" value="{!v.questionarioCA.Citt_Conducente__c}" />
+                                            </div>
+                                            <label class="slds-form-element__label" for="provinciaResFormCOND">Provincia</label>
+                                            <div class="slds-form-element__control">
+                                                <ui:inputText aura:id="provinciaResFormCOND" class="slds-input" value="{!v.questionarioCA.Provincia_Conducente__c}" />
+                                            </div>
+                                            <label class="slds-form-element__label" for="CAPResFormCOND">CAP</label>
+                                            <div class="slds-form-element__control">
+                                                <ui:inputText aura:id="CAPResFormCOND" class="slds-input" value="{!v.questionarioCA.CAP_Conducente__c}" />
+                                            </div>
+                                            <label class="slds-form-element__label" for="statoResFormCOND">Stato</label>
+                                            <div class="slds-form-element__control">
+                                                <ui:inputText aura:id="statoResFormCOND" class="slds-input" value="{!v.questionarioCA.Stato_Conducente__c}" />
+                                            </div>
+                                        </div>
+                                    </lightning:layoutItem>
+                                    <lightning:layoutItem flexibility="auto" padding="around-small" size="12" largeDeviceSize="6" mediumDeviceSize="6" smallDeviceSize="12">
+                                        <div class="slds-card__header slds-grid" style="padding: 0.75rem 0rem 0;">
+                                            <header class="slds-media slds-media--center slds-has-flexi-truncate">
+                                                <div class="slds-media__body slds-truncate">
+                                                    <div class="slds-section-title_divider">
+                                                        <h2>
+                                                            <span class="slds-text-heading--small">Domicilio</span>
+                                                        </h2>
+                                                    </div>
+                                                </div>
+                                            </header>
+                                        </div>
+                                        <div class="slds-form-element">
+                                            <label class="slds-form-element__label" for="indirizzoDomFormCOND">Indirizzo</label>
+                                            <div class="slds-form-element__control">
+                                                <ui:inputText aura:id="indirizzoDomFormCOND" class="slds-input" value="{!v.questionarioCA.Indirizzo_Domicilio_Conducente__c}" />
+                                            </div>
+                                            <label class="slds-form-element__label" for="cittaDomFormCOND">Città</label>
+                                            <div class="slds-form-element__control">
+                                                <ui:inputText aura:id="cittaDomFormCOND" class="slds-input" value="{!v.questionarioCA.Citt_Domicilio_Conducente__c}" />
+                                            </div>
+                                            <label class="slds-form-element__label" for="provinciaDomFormCOND">Provincia</label>
+                                            <div class="slds-form-element__control">
+                                                <ui:inputText aura:id="provinciaDomFormCOND" class="slds-input" value="{!v.questionarioCA.Provincia_Domicilio_Conducente__c}" />
+                                            </div>
+                                            <label class="slds-form-element__label" for="CAPDomFormCOND">CAP</label>
+                                            <div class="slds-form-element__control">
+                                                <ui:inputText aura:id="CAPDomFormCOND" class="slds-input" value="{!v.questionarioCA.CAP_Domicilio_Conducente__c}" />
+                                            </div>
+                                            <label class="slds-form-element__label" for="statoDomFormCOND">Stato</label>
+                                            <div class="slds-form-element__control">
+                                                <ui:inputText aura:id="statoDomFormCOND" class="slds-input" value="{!v.questionarioCA.Stato_Domicilio_Conducente__c}" />
+                                            </div>
+                                        </div>
+                                    </lightning:layoutItem>
+                                </lightning:layout>
+                            </aura:if>            
+                </aura:if>
+                <aura:if isTrue="{!v.isVisibleSTEP4}">
+                        <aura:if isTrue="{!v.isVisibleSTEP6a}">
+                                <div class="slds-card__header slds-grid" style="padding: 0.75rem 0rem 0;">
+                                    <header class="slds-media slds-media--center slds-has-flexi-truncate">
+                                        <div class="slds-media__body slds-truncate">
+                                            <div class="slds-section-title_divider">
+                                                <h2>
+                                                    <span class="slds-text-heading--small">INFORMAZIONI CONTROPARTE (CONTROPARTE)</span>
+                                                </h2>
+                                            </div>
+                                        </div>
+                                    </header>
+                                </div>
+                                <lightning:layout horizontalAlign="center" multipleRows="true">
+                                    <lightning:layoutItem flexibility="auto" padding="around-small" size="12" largeDeviceSize="6" mediumDeviceSize="6" smallDeviceSize="12">
+                                        <div class="slds-form-element">
+                                            <label class="slds-form-element__label" for="targaFormCONTR">Targa</label>
+                                                <div class="slds-form-element__control">
+                                                    <ui:inputText aura:id="targaFormCONTR" class="slds-input" value="{!v.questionarioCA.Targa_controparte__c}" />
+                                                </div>
+                                            <lightning:select name="Tipologia Targa" label="Tipologia Targa" value="{!v.questionarioCA.Tipologia_Targa__c}" >
+                                                <option value=""></option>
+                                                <aura:iteration var="option" items="{!v.Tipologia_Targa__c}">
+                                                    <option value="{! option }">{! option }</option>
+                                                </aura:iteration>
+                                             </lightning:select>
+                                            <lightning:select name="Tipo controparte" label="Tipo controparte" value="{!v.questionarioCA.Tipo_controparte__c}" >
+                                                <option value=""></option>
+                                                <aura:iteration var="option" items="{!v.Tipo_controparte__c}">
+                                                    <option value="{! option }">{! option }</option>
+                                                </aura:iteration>
+                                            </lightning:select>
+                                            
+                                            <div class="slds-form-element__control">
+                                                <lightning:input aura:id="nomeFormCONTR"  label="Nome" value="{!v.questionarioCA.Nome_controparte__c}" onchange="{!c.calculateFiscalCode}" />
+                                            </div>
+																														  
+                                            <div class="slds-form-element__control">
+                                                <lightning:input aura:id="cognomeFormCONTR" label="Cognome" value="{!v.questionarioCA.Cognome_Controparte__c}" onchange="{!c.calculateFiscalCode}"/>
+                                            </div>
+                                            <div class="slds-form-element__control">
+                                                <lightning:select name="SessoControparte" label="Sesso"  onchange="{!c.calculateFiscalCode}" value="{!v.questionarioCA.Sesso_Controparte__c}">
+                                                    <option value=""></option>
+                                                    <aura:iteration var="option" items="{!v.Sesso_Controparte__c}">
+                                                        <option value="{! option }">{! option }</option>
+                                                    </aura:iteration>
+                                                </lightning:select>
+                                            </div>
+                                            <div class="slds-form-element__control">
+                                                <lightning:input type="date" name="Data di nascita" label="Data di nascita" value="{!v.questionarioCA.Data_di_nascita_controparte__c}" onchange="{!c.calculateFiscalCode}"/>
+                                            </div>
+                                            <!--Giorgio Bonifazi CAI DIGITALE START-->
+                                            <div class="slds-form-element__control">
+                                                <lightning:input  name="ComuneNascita" label="Luogo di Nascita" value="{!v.questionarioCA.Comune_di_Nascita_Controparte__c}" onchange="{!c.calculateFiscalCode}"/>
+                                            </div>
+                                            <div class="slds-form-element__control">
+                                                <lightning:input  name="ProvinciaNascita" label="Provincia di Nascita" value="{!v.questionarioCA.Provincia_Nascita_Controparte__c}" maxlength="2" onchange="{!c.calculateFiscalCode}"/>
+                                            </div>
+																																																   
+																   
+                                            <!--Giorgio Bonifazi CAI DIGITALE END-->
+																																	
+                                            <div class="slds-form-element__control">
+                                                <lightning:input aura:id="CodFiscaleFormCONTR" label="Codice Fiscale" value="{!v.CodiceFiscaleControparte}" pattern ="{!v.patternFiscalCode}" messageWhenPatternMismatch="{!v.msgMissMatch}"/>
+                                            </div>
+                                            <div class="slds-form-element__control">
+                                              <lightning:input aura:id="EmailFormCONTR" type="email" name="Email" value="{!v.questionarioCA.Email_Controparte__c}" label="Email" pattern ="{!v.patternEmail}" messageWhenPatternMismatch="{!v.msgMissMatch}"  />
+                                            </div>
+                                            <div class="slds-form-element">
+                                            <lightning:input aura:id="telCONTRForm" type="tel" label="Telefono" name="Telefono" value="{!v.questionarioCA.Telefono_controparte__c}" pattern ="{!v.patternPhone}" messageWhenPatternMismatch="{!v.msgMissMatch}"/>		
+                                                </div>
+                                        </div>
+                                    </lightning:layoutItem>
+                                    <lightning:layoutItem flexibility="auto" padding="around-small" size="12" largeDeviceSize="6" mediumDeviceSize="6" smallDeviceSize="12">
+                                        <!--Giorgio Bonifazi CAI DIGITALE START-->
+                                            <div class="slds-form-element__control" style="margin-top:2.6%;">
+                                                <lightning:button variant="Neutral" name="Verifica ANIA"  label="Verifica ANIA"  onclick="{! c.VerifyANIA }"/>
+                                            </div>
+                                        <!--Giorgio Bonifazi CAI DIGITALE END-->
+                                         <!-- d.pirelli CAI DIGITALE start -->
+                                            <div class="slds-form-element__control" style="margin-top:2.6%;">
+                                                <lightning:input type="toggle" label="Conducente controparte uguale a contraente" name="condControparteUgualeContr" checked="{!v.condControparteUgualeContr}"  messageToggleActive="" messageToggleInactive=""  />
+                                            </div>
+                                         <!-- d.pirelli CAI DIGITALE end -->
+                                    </lightning:layoutItem>
+                                </lightning:layout>
+                            </aura:if>
+                            <aura:if isTrue="{!v.isVisibleSTEP6b}">
+                                <lightning:layout horizontalAlign="center" multipleRows="true">
+                                    <lightning:layoutItem flexibility="auto" padding="around-small" size="12" largeDeviceSize="6" mediumDeviceSize="6" smallDeviceSize="12">
+                                        <div class="slds-card__header slds-grid" style="padding: 0.75rem 0rem 0;">
+                                            <header class="slds-media slds-media--center slds-has-flexi-truncate">
+                                                <div class="slds-media__body slds-truncate">
+                                                    <div class="slds-section-title_divider">
+                                                        <h2>
+                                                            <span class="slds-text-heading--small">Residenza</span>
+                                                        </h2>
+                                                    </div>
+                                                </div>
+                                            </header>
+                                        </div>
+                                        <div class="slds-form-element">
+                                            <label class="slds-form-element__label" for="indirizzoResFormCONTR">Indirizzo</label>
+                                            <div class="slds-form-element__control">
+                                                <ui:inputText aura:id="indirizzoResFormCONTR" class="slds-input" value="{!v.questionarioCA.Indirizzo_Controparte__c}" />
+                                            </div>
+                                            <label class="slds-form-element__label" for="cittaResFormCONTR">Città</label>
+                                            <div class="slds-form-element__control">
+                                                <ui:inputText aura:id="cittaResFormCONTR" class="slds-input" value="{!v.questionarioCA.Citt_Controparte__c}" />
+                                            </div>
+                                            <label class="slds-form-element__label" for="provinciaResFormCONTR">Provincia</label>
+                                            <div class="slds-form-element__control">
+                                                <ui:inputText aura:id="provinciaResFormCONTR" class="slds-input" value="{!v.questionarioCA.Provincia_Controparte__c}" />
+                                            </div>
+                                            <label class="slds-form-element__label" for="CAPResFormCONTR">CAP</label>
+                                            <div class="slds-form-element__control">
+                                                <ui:inputText aura:id="CAPResFormCONTR" class="slds-input" value="{!v.questionarioCA.CAP_Controparte__c}" />
+                                            </div>
+                                            <label class="slds-form-element__label" for="statoResFormCONTR">Stato</label>
+                                            <div class="slds-form-element__control">
+                                                <ui:inputText aura:id="statoResFormCONTR" class="slds-input" value="{!v.questionarioCA.Stato_Controparte__c}" />
+                                            </div>
+                                        </div>
+                                    </lightning:layoutItem>
+                                    <lightning:layoutItem flexibility="auto" padding="around-small" size="12" largeDeviceSize="6" mediumDeviceSize="6" smallDeviceSize="12">
+                                        <div class="slds-card__header slds-grid" style="padding: 0.75rem 0rem 0;">
+                                            <header class="slds-media slds-media--center slds-has-flexi-truncate">
+                                                <div class="slds-media__body slds-truncate">
+                                                    <div class="slds-section-title_divider">
+                                                        <h2>
+                                                            <span class="slds-text-heading--small">Domicilio</span>
+                                                        </h2>
+                                                    </div>
+                                                </div>
+                                            </header>
+                                        </div>
+                                        <div class="slds-form-element">
+                                            <label class="slds-form-element__label" for="indirizzoDomFormCONTR">Indirizzo</label>
+                                            <div class="slds-form-element__control">
+                                                <ui:inputText aura:id="indirizzoDomFormCONTR" class="slds-input" value="{!v.questionarioCA.Indirizzo_Domicilio_Controparte__c}" />
+                                            </div>
+                                            <label class="slds-form-element__label" for="cittaDomFormCONTR">Città</label>
+                                            <div class="slds-form-element__control">
+                                                <ui:inputText aura:id="cittaDomFormCONTR" class="slds-input" value="{!v.questionarioCA.Citt_Domicilio_Controparte__c}" />
+                                            </div>
+                                            <label class="slds-form-element__label" for="provinciaDomFormCONTR">Provincia</label>
+                                            <div class="slds-form-element__control">
+                                                <ui:inputText aura:id="provinciaDomFormCONTR" class="slds-input" value="{!v.questionarioCA.Provincia_Domicilio_Controparte__c}" />
+                                            </div>
+                                            <label class="slds-form-element__label" for="CAPDomFormCONTR">CAP</label>
+                                            <div class="slds-form-element__control">
+                                                <ui:inputText aura:id="CAPDomFormCONTR" class="slds-input" value="{!v.questionarioCA.CAP_Domicilio_Controparte__c}" />
+                                            </div>
+                                            <label class="slds-form-element__label" for="statoDomFormCONTR">Stato</label>
+                                            <div class="slds-form-element__control">
+                                                <ui:inputText aura:id="statoDomFormCONTR" class="slds-input" value="{!v.questionarioCA.Stato_Domicilio_Controparte__c}" />
+                                            </div>
+                                        </div>
+                                    </lightning:layoutItem>
+                                </lightning:layout>
+                            </aura:if>       
+                </aura:if>
+                <!-- d.pirelli CAI DIGITALE end -->
+                <aura:if isTrue="{!v.isVisibleSTEP5}">
+                        <aura:if isTrue="{!v.isVisibleSTEP7a}">
+                                <div class="slds-card__header slds-grid" style="padding: 0.75rem 0rem 0;">
+                                    <header class="slds-media slds-media--center slds-has-flexi-truncate">
+                                        <div class="slds-media__body slds-truncate">
+                                            <div class="slds-section-title_divider">
+                                                <h2>
+                                                    <span class="slds-text-heading--small">INFORMAZIONI CONTROPARTE (CONDUCENTE VEICOLO CONTROPARTE)</span>
+                                                </h2>
+                                            </div>
+                                        </div>
+                                    </header>
+                                </div>
+                                <lightning:layout horizontalAlign="center" multipleRows="true">
+                                    <lightning:layoutItem flexibility="auto" padding="around-small" size="12" largeDeviceSize="6" mediumDeviceSize="6" smallDeviceSize="12">
+                                        <div class="slds-form-element">
+                                            <div class="slds-form-element__control">
+                                                <lightning:input  aura:id="nomeFormCONTRContraente" label="Nome" value="{!v.questionarioCA.Nome_Controparte_Contr__c}" onchange="{!c.calculateFiscalCodeContr}"/>
+                                            </div>
+                                            <div class="slds-form-element__control">
+                                                <lightning:input aura:id="cognomeFormCONTRContraente" label="Cognome" value="{!v.questionarioCA.Cognome_Controparte_Contr__c}" onchange="{!c.calculateFiscalCodeContr}"/>
+                                            </div>
+                                            <div>
+                                                <lightning:select name="SessoControparteContr" label="Sesso" onchange="{!c.calculateFiscalCodeContr}" value="{!v.questionarioCA.Sesso_Controparte_Contr__c}" >
+                                                    <option value=""></option>
+                                                    <aura:iteration var="option" items="{!v.Sesso_Controparte_Contr__c}">
+                                                        <option value="{! option }">{! option }</option>
+                                                    </aura:iteration>
+                                                </lightning:select>
+                                                <!--Giorgio Bonifazi CAI DIGITALE END-->
+                                            </div>
+                                            <div class="slds-form-element__control">
+                                                <lightning:input type="date" name="Data di nascita" label="Data di nascita" value="{!v.questionarioCA.Data_Nascita_Controparte_Contr__c}" onchange="{!c.calculateFiscalCodeContr}"/>
+                                            </div>
+                                            <div class="slds-form-element__control">
+                                                 <lightning:input aura:id="LuogoDiNascitaFormCONTRContraente" label="Luogo di Nascita" value="{!v.questionarioCA.Luogo_Nascita_Controparte_Contr__c}" onchange="{!c.calculateFiscalCodeContr}" />
+                                            </div>
+                                            <!--Giorgio Bonifazi CAI DIGITALE START-->
+                                            <div class="slds-form-element__control">																					
+                                                <lightning:input  name="ProvinciaNascita" label="Provincia di Nascita" value="{!v.questionarioCA.Provincia_Nascita_Conducente_Contr__c}" maxlength="2" onchange="{!c.calculateFiscalCodeContr}"/>
+                                            </div>
+                                            <div class="slds-form-element__control">
+                                               <lightning:input aura:id="CodFiscaleFormCONTRContraente" label="Codice Fiscale" value="{!v.CodiceFiscaleControparteContr}" pattern ="{!v.patternFiscalCode}" messageWhenPatternMismatch="{!v.msgMissMatch}"  />                                       
+                                            </div>
+                                            <lightning:input aura:id="EmailFormCONTRContraente" type="email" name="Email" value="{!v.questionarioCA.Email_Controparte_Contr__c}" label="Email" pattern ="{!v.patternEmail}" messageWhenPatternMismatch="{!v.msgMissMatch}" />
+                                        </div>
+														   
+																																											
+                                        <div class="slds-form-element">
+                                            <lightning:input aura:id="telCONTRFormNonContraente" type="tel" label="Telefono" name="Telefono" value="{!v.questionarioCA.Numero_Cell_Controparte_Contraente__c}" pattern ="{!v.patternPhone}" messageWhenPatternMismatch="{!v.msgMissMatch}" />		
+                                        </div>
+                                       
+                                    </lightning:layoutItem>
+                                    <lightning:layoutItem flexibility="auto" padding="around-small" size="12" largeDeviceSize="6" mediumDeviceSize="6" smallDeviceSize="12">
+                                        
+                                    </lightning:layoutItem>
+                                 
+                                </lightning:layout>
+                            </aura:if>
+                            <aura:if isTrue="{!v.isVisibleSTEP7b}">
+                                <lightning:layout horizontalAlign="center" multipleRows="true">
+                                    <lightning:layoutItem flexibility="auto" padding="around-small" size="12" largeDeviceSize="6" mediumDeviceSize="6" smallDeviceSize="12">
+                                        <div class="slds-card__header slds-grid" style="padding: 0.75rem 0rem 0;">
+                                            <header class="slds-media slds-media--center slds-has-flexi-truncate">
+                                                <div class="slds-media__body slds-truncate">
+                                                    <div class="slds-section-title_divider">
+                                                        <h2>
+                                                            <span class="slds-text-heading--small">Residenza</span>
+                                                        </h2>
+                                                    </div>
+                                                </div>
+                                            </header>
+                                        </div>
+                                        <div class="slds-form-element">
+                                            <label class="slds-form-element__label" for="indirizzoResFormCONTRContraente">Indirizzo</label>
+                                            <div class="slds-form-element__control">
+                                                <ui:inputText aura:id="indirizzoResFormCONTRContraente" class="slds-input" value="{!v.questionarioCA.Indirizzo_Res_Controparte_Contr__c}" />
+                                            </div>
+                                            <label class="slds-form-element__label" for="cittaResFormCONTRContraente">Città</label>
+                                            <div class="slds-form-element__control">
+                                                <ui:inputText aura:id="cittaResFormCONTRContraente" class="slds-input" value="{!v.questionarioCA.Citt_Res_Controparte_Contr__c}" />
+                                            </div>
+                                            <label class="slds-form-element__label" for="provinciaResFormCONTRContraente">Provincia</label>
+                                            <div class="slds-form-element__control">
+                                                <ui:inputText aura:id="provinciaResFormCONTRContraente" class="slds-input" value="{!v.questionarioCA.Provincia_Res_Controparte_Contr__c}" />
+                                            </div>
+                                            <label class="slds-form-element__label" for="CAPResFormCONTRContraente">CAP</label>
+                                            <div class="slds-form-element__control">
+                                                <ui:inputText aura:id="CAPResFormCONTRContraente" class="slds-input" value="{!v.questionarioCA.CAP_Res_Controparte_Contr__c}" />
+                                            </div>
+                                            <label class="slds-form-element__label" for="statoResFormCONTRContraente">Stato</label>
+                                            <div class="slds-form-element__control">
+                                                <ui:inputText aura:id="statoResFormCONTRContraente" class="slds-input" value="{!v.questionarioCA.Stato_Res_Controparte_Contr__c}" />
+                                            </div>
+                                        </div>
+                                    </lightning:layoutItem>
+                                    <lightning:layoutItem flexibility="auto" padding="around-small" size="12" largeDeviceSize="6" mediumDeviceSize="6" smallDeviceSize="12">
+                                        <div class="slds-card__header slds-grid" style="padding: 0.75rem 0rem 0;">
+                                            <header class="slds-media slds-media--center slds-has-flexi-truncate">
+                                                <div class="slds-media__body slds-truncate">
+                                                    <div class="slds-section-title_divider">
+                                                        <h2>
+                                                            <span class="slds-text-heading--small">Domicilio</span>
+                                                        </h2>
+                                                    </div>
+                                                </div>
+                                            </header>
+                                        </div>
+                                        <div class="slds-form-element">
+                                            <label class="slds-form-element__label" for="indirizzoDomFormCONTRContraente">Indirizzo</label>
+                                            <div class="slds-form-element__control">
+                                                <ui:inputText aura:id="indirizzoDomFormCONTRContraente" class="slds-input" value="{!v.questionarioCA.Indirizzo_Dom_Controparte_Contr__c}" />
+                                            </div>
+                                            <label class="slds-form-element__label" for="cittaDomFormCONTRContraente">Città</label>
+                                            <div class="slds-form-element__control">
+                                                <ui:inputText aura:id="cittaDomFormCONTRContraente" class="slds-input" value="{!v.questionarioCA.Citt_Dom_Controparte_Contr__c}" />
+                                            </div>
+                                            <label class="slds-form-element__label" for="provinciaDomFormCONTRContraente">Provincia</label>
+                                            <div class="slds-form-element__control">
+                                                <ui:inputText aura:id="provinciaDomFormCONTRContraente" class="slds-input" value="{!v.questionarioCA.Provincia_Dom_Controparte_Contr__c}" />
+                                            </div>
+                                            <label class="slds-form-element__label" for="CAPDomFormCONTRContraente">CAP</label>
+                                            <div class="slds-form-element__control">
+                                                <ui:inputText aura:id="CAPDomFormCONTRContraente" class="slds-input" value="{!v.questionarioCA.CAP_Dom_Controparte_Contr__c}" />
+                                            </div>
+                                            <label class="slds-form-element__label" for="statoDomFormCONTRContraente">Stato</label>
+                                            <div class="slds-form-element__control">
+                                                <ui:inputText aura:id="statoDomFormCONTRContraente" class="slds-input" value="{!v.questionarioCA.Stato_Dom_Controparte_Contr__c}" />
+                                            </div>
+                                        </div>
+                                    </lightning:layoutItem>
+                                </lightning:layout>
+                            </aura:if>   
+                </aura:if>
+                <aura:if isTrue="{!v.isVisibleSTEP6}">
+                        <div class="slds-card__header slds-grid" style="padding: 0.75rem 0rem 0;">
+                                <header class="slds-media slds-media--center slds-has-flexi-truncate">
+                                    <div class="slds-media__body slds-truncate">
+                                        <div class="slds-section-title_divider">
+                                            <h2>
+                                                <span class="slds-text-heading--small">INFORMAZIONI FERITI</span>
+                                            </h2>
+                                        </div>
+                                    </div>
+                                </header>
+                            </div>
+                    <c:DettaglioTestimoniFeritiTable  RecordType="Ferito" testimoniFeritiList="{!v.feritiList}" />     
+                </aura:if>
+          
+                <!--Daniela Pirelli CAI Digitale START-->
+                <aura:if isTrue="{!v.isVisibleSTEP7}">
+                        <div class="slds-card__header slds-grid" style="padding: 0.75rem 0rem 0;">
+                                <header class="slds-media slds-media--center slds-has-flexi-truncate">
+                                    <div class="slds-media__body slds-truncate">
+                                        <div class="slds-section-title_divider">
+                                            <h2>
+                                                <span class="slds-text-heading--small">INFORMAZIONI TESTIMONI</span>
+                                            </h2>
+                                        </div>
+                                    </div>
+                                </header>
+                            </div>
+                    <c:DettaglioTestimoniFeritiTable RecordType="Testimone" testimoniFeritiList="{!v.testimoniList}" />   
+                </aura:if>
+                 <!--Daniela Pirelli CAI Digitale END-->
+                
+                
+                <aura:if isTrue="{!v.isVisibleSTEP8}">
+                    <aura:if isTrue="{!v.isVisibleSTEP5a}">
+                        <div class="slds-card__header slds-grid" style="padding: 0.75rem 0rem 0;">
+                            <header class="slds-media slds-media--center slds-has-flexi-truncate">
+                                <div class="slds-media__body slds-truncate">
+                                    <div class="slds-section-title_divider">
+                                        <h2>
+                                            <span class="slds-text-heading--small">INFORMAZIONI RICONTATTO</span>
+                                        </h2>
+                                    </div>
+                                </div>
+                            </header>
+                        </div>
+                        <br/>
+                        <!--Bonifazi Giorgio 19/07/2019: Caring Angel fase 2 START-->
+                        <center>
+                        <aura:if isTrue="{! not(v.isHD2Profile)}">
+                            <lightning:button variant="Neutral" label="Assegna ad HD2" title="Assegna ad HD2" onclick="{!c.secondoLivello}"/>
+                            <!--<lightning:button variant="Neutral" name="Assegna_Case"  label="Assegna case ad HD2" title="Assegna case ad HD2" onclick="{! c.AssegnaCaseHD2 }"/> -->
+
+                                <!--<aura:if isTrue="{!v.isOpen}">
+                                <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                                    <div class="slds-modal__container">
+                                        <header class="slds-modal__header">
+                                            <img src="{!$Resource.LogoAxaAssistenza}" style="width:275px;" />
+                                        
+                                            
+                                        </header>
+                                            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                                                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Assegna case ad HD2</h2>
+                                                <lightning:textarea label="Commento/Allegato" maxlength="1000" onchange="{!c.countCharacters}"  value="{!v.questionarioCA.Description__c}" />
+                                                <div class="slds-text-font_monospace slds-text-align_right">Caratteri rimanenti : {!v.remainingCharacters}</div>
+                                                <lightning:select name="Motivo Trasferimento" label="Motivo Trasferimento" value="{!v.questionarioCA.Motivo_trasferimento__c}" onchange="{!c.toggle}">
+                                                        <option value=""></option>
+                                                        <aura:iteration var="option" items="{!v.Motivo_trasferimento__c}" >
+                                                            <option value="{! option }">{! option }</option>
+                                                        </aura:iteration>
+                                                </lightning:select>
+                                            </div>
+                                        <footer class="slds-modal__footer">
+                                                <lightning:button class="slds-align-center" label="Conferma" onclick="{!c.clickCreate}" />
+                                                <lightning:button class="slds-align-center" label="Aggiungi allegato" onclick="{!c.openAddAttachment}" />
+                                                <lightning:button class="slds-align-center" label="Cancel"   onclick="{! c.closeModel }"/>
+                                                <br />
+                                                <aura:if isTrue="{!v.MandatoryInputsMissing}" >      
+                                                        <br />
+                                                        <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error" role="alert">
+                                                            <h3>{! v.error }</h3>
+                                                        </div>
+                                                </aura:if>
+                                                            
+                                        </footer>
+                                    </div>
+                                </section>
+                                <div class="slds-backdrop slds-backdrop_open"></div>
+                                
+                            </aura:if> -->
+                        </aura:if>
+
+            
+                        
+                        <!--Bonifazi Giorgio 19/07/2019: Caring Angel fase 2 END-->
+                        <lightning:button variant="Neutral" name="Apri_Sinistro" iconPosition="right" label="Apri sinistro su SOL" title="Apri sinistro su SOL" onclick="{! c.creaSinistro }" disabled="{!v.AlreadyOpened}"/>
+                
+                        <c:SendSMSOnCAI successSaveSurvey="{!v.successSaveSurvey}" FirstName = '{!v.questionarioCA.Nome_conducente__c}' LastName = "{!v.questionarioCA.Cognome_Conducente__c}" recordId="{!v.caseId}" PhoneNumber = "{!v.questionarioCA.Telefono_conducente__c}" ConducenteEqualscontraente = "{!v.condUgualeContr}"/> 
+                        </center>
+                          
+                        
+                        <lightning:layout horizontalAlign="center" multipleRows="true">
+                            <lightning:layoutItem flexibility="auto" padding="around-small" size="12" largeDeviceSize="6" mediumDeviceSize="6" smallDeviceSize="12">
+                                <div class="slds-form-element">
+                                    <div class="slds-form-element__control">
+                                        <lightning:input type="date" name="Data" label="Data" value="{!v.questionarioCA.Data_recall__c}" min="{!v.todayISODateTime}"/> <!-- OAVERSANO 22/11/2018 ENHANCEMENT -->
+                                    </div>
+                                    <lightning:layout horizontalAlign="center" multipleRows="true" >
+                                        <lightning:layoutItem alignmentBump="right" flexibility="auto" padding="none" size="12" largeDeviceSize="5" mediumDeviceSize="5" smallDeviceSize="12">
+                                            <div class="slds-form-element__control">
+                                                <lightning:select name="Ora" label="Ora" value="{!v.oraRecall}" >
+                                                    <option value=""></option>
+                                                    <aura:iteration var="option" items="{!v.HOURSListRecall}" >
+                                                        <option value="{! option }">{! option }</option>
+                                                    </aura:iteration>
+                                                </lightning:select>
+                                            </div>
+                                        </lightning:layoutItem>
+                                        
+                                        <lightning:layoutItem alignmentBump="left" flexibility="auto" padding="none" size="12" largeDeviceSize="5" mediumDeviceSize="5" smallDeviceSize="12">
+                                            <div class="slds-form-element__control">
+                                                <lightning:select name="Minuti" label="Minuti" value="{!v.minutiRecall}" >
+                                                    <option value=""></option>
+                                                    <aura:iteration var="option" items="{!v.MINUTESList}" >
+                                                        <option value="{! option }">{! option }</option>
+                                                    </aura:iteration>
+                                                </lightning:select>
+                                            </div>
+                                        </lightning:layoutItem>
+                        <!--Bonifazi Giorgio 19/07/2019: Caring Angel fase 2 START-->
+                                        <lightning:layoutItem alignmentBump="right" flexibility="auto" padding="none" size="12" largeDeviceSize="5" mediumDeviceSize="5" smallDeviceSize="12">
+                                            <div class="slds-form-element__control">
+                                                <lightning:select name="Sinistro Canalizzabile" label="Sinistro Canalizzabile" value="{!v.questionarioCA.Sinistro_canalizzabile__c}" >
+                                                    <option value=""></option>
+                                                    <aura:iteration var="option" items="{!v.Sinistro_canalizzabile__c}" >
+                                                        <option value="{! option }">{! option }</option>
+                                                    </aura:iteration>
+                                                </lightning:select>
+                                            </div>
+                                        </lightning:layoutItem>
+                                        <aura:if isTrue="{!v.showSinistroCanalizzato}">
+                                        <lightning:layoutItem alignmentBump="left" flexibility="auto" padding="none" size="12" largeDeviceSize="5" mediumDeviceSize="5" smallDeviceSize="12">
+                                            <div class="slds-form-element__control">
+                                                <lightning:select name="Sinistro Canalizzato" label="Sinistro Canalizzato" value="{!v.questionarioCA.Sinistro_canalizzato__c}" >
+                                                    <option value=""></option>
+                                                    <aura:iteration var="option" items="{!v.Sinistro_canalizzato__c}" >
+                                                        <option value="{! option }">{! option }</option>
+                                                    </aura:iteration>
+                                                </lightning:select>
+                                            </div>
+                                        </lightning:layoutItem>
+                                        </aura:if>  
+                        <!--Bonifazi Giorgio 19/07/2019: Caring Angel fase 2 END-->
+                                    </lightning:layout>
+                                    <div>
+                                    </div>
+                                        
+                                </div>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem flexibility="auto" padding="around-small" size="12" largeDeviceSize="6" mediumDeviceSize="6" smallDeviceSize="12">
+                            <lightning:layoutItem flexibility="auto" padding="none">
+                                <div class="slds-form-element__control" >
+                                    <div class="slds-form-element__control">
+                                        <lightning:textarea aura:id="noteRecallForm" label="Note" name="Note recall" placeholder="" value="{!v.questionarioCA.Note__c}"/>
+                                    </div>
+                                </div>
+                            </lightning:layoutItem> 
+                            <lightning:layoutItem flexibility="auto" padding="none" size="12">
+                                    <div class="slds-form-element__control">
+                                        <lightning:select name="Fast Payment" label="Fast Payment" value="{!v.questionarioCA.Fast_Payment__c}" >
+                                            <option value=""></option>
+                                            <aura:iteration var="option" items="{!v.Fast_Payment__c}" >
+                                                <option value="{! option }">{! option }</option>
+                                            </aura:iteration>
+                                        </lightning:select>
+                                    </div>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem flexibility="auto" padding="none" size="12">
+                                <div class="slds-form-element__control">
+                                    <lightning:select name="Tipo di Caring Angel" label="Tipo di Caring Angel" value="{!v.questionarioCA.Caring_Angel_Type__c}" >
+                                        <option value=""></option>
+                                        <aura:iteration var="option" items="{!v.Caring_Angel_Type__c}" >
+                                            <option value="{! option }">{! option }</option>
+                                        </aura:iteration>
+                                    </lightning:select>
+                                </div>
+                        	</lightning:layoutItem>
+                        </lightning:layoutItem>
+                        </lightning:layout>
+                    </aura:if>
+                </aura:if>
+                <!--Bonifazi Giorgio 19/07/2019: Caring Angel fase 2 START-->
+                <aura:if isTrue="{!v.isVisibleSTEP9}">
+                    
+                        <div class="slds-card__header slds-grid" style="padding: 0.75rem 0rem 0;">
+                            <header class="slds-media slds-media--center slds-has-flexi-truncate">
+                                <div class="slds-media__body slds-truncate">
+                                    <div class="slds-section-title_divider">
+                                        <h2>
+                                            <span class="slds-text-heading--small">NOTE HD2</span>
+                                        </h2>
+                                    </div>
+                                </div>
+                            </header>
+                        </div>
+                        <br/>
+                        <lightning:layout horizontalAlign="center" multipleRows="true" >
+                        <lightning:layoutItem flexibility="auto" padding="around-small" size="12" largeDeviceSize="6" mediumDeviceSize="6" smallDeviceSize="12">
+                            <div class="slds-form-element__control" >
+                                <lightning:textarea aura:id = "NoteHD2Form" label= "Note HD2" name="Note HD2" placeholder="" value="{!v.questionarioCA.Note_HD2__c}" />
+                            </div>  
+                        </lightning:layoutItem>
+                    </lightning:layout>                    
+                </aura:if>
+                <aura:if isTrue="{!v.AniaServiceOK}" >
+                                <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                                    <div class="slds-modal__container">
+                                        <!-- ###### MODAL BOX HEADER Start ######-->
+                                        <header class="slds-modal__header">
+                                            <img src="{!$Resource.LogoAxaAssistenza}" style="width:275px;" />
+                                        
+                                            
+                                        </header>
+                                            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                                                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Servizio SIC ANIA</h2>
+                                                
+                                                <div class="slds-form-element__control">
+                                                <lightning:input name="Compagnia Assicurativa" disabled="true" value="{!v.CompagniaAssicurativa}" label="Compagnia Assicurativa" />
+                                                </div>
+                                                <div class="slds-form-element__control"> 
+                                                <lightning:input name="Marca" disabled="true" value="{!v.Marca}" label="Marca" />
+                                                </div> 
+                                                <div class="slds-form-element__control">
+                                                <lightning:input name="Modello" disabled="true" value="{!v.Modello}" label="Modello" />
+                                                </div> 
+                                                <div class="slds-form-element__control">
+                                                <lightning:input name="Provenienza Veicolo" disabled="true" value="{!v.ProvenienzaVeicolo}" label="Provenienza Veicolo" />
+                                                </div> 
+                                                <div class="slds-form-element__control">
+                                                <lightning:input name="Tipo Veicolo" disabled="true" value="{!v.TipoVeicolo}" label="Tipo Veicolo" />
+                                                </div> 
+                        
+                                            </div>
+                                        <footer class="slds-modal__footer">
+                                                <lightning:button class="slds-align-center" label="Ok" onclick="{!c.closeModelANIAOK}" />
+                                                
+                                                <br />      
+                                        </footer>
+                                    </div>
+                                </section>
+                                <div class="slds-backdrop slds-backdrop_open"></div>
+                </aura:if>
+
+                <br/>
+                <br/>
+                <div class="slds-align_absolute-center slds-m-bottom_large">
+                    <lightning:button variant="Neutral" label="Salva" title="Salva" onclick="{!c.salvaQuestionario}"/>
+                    <aura:if isTrue="{!v.caseId!=null}" >
+                        &nbsp;&nbsp;
+                        <lightning:button variant="Neutral" label="Annulla" title="Indietro" name="previous" onclick="{!c.showModalAnnulla}"/>
+                    </aura:if>
+                    <aura:if isTrue="{!not(v.isVisibleSTEP2)}" >
+                        &nbsp;&nbsp;
+                        <lightning:button variant="Neutral" label="Indietro" title="Indietro" name="previous" onclick="{!c.performStep}"/>
+                    </aura:if>
+                    <aura:if isTrue="{!v.isVisibleSTEP8}" >
+                         <aura:if isTrue="{!v.isCaringAngelProfile}">
+                            &nbsp;&nbsp;
+                           <c:SendSMSCmp recordId="{!v.caseId}" isQuestionario="true" accountId = "{!v.accountId}"/>
+                        </aura:if>
+                    </aura:if>
+                    <aura:if isTrue="{!not(v.isHD2Profile)}">
+                        <aura:if isTrue="{!not(v.isVisibleSTEP8)}" >
+                            &nbsp;&nbsp;
+                            <lightning:button variant="Neutral" label="Avanti" title="Avanti" name="next" onclick="{!c.performStep}"/>
+                        </aura:if>
+                        <aura:if isTrue="{!(v.isVisibleSTEP8)}" >
+                            &nbsp;&nbsp;
+                            <lightning:button variant="Neutral" label="Fine" title="Fine" onclick="{!c.endQuestionario}"/>
+                        </aura:if>
+                    </aura:if>
+                    <aura:if isTrue="{!(v.isHD2Profile)}">
+                        <aura:if isTrue="{!not(v.isVisibleSTEP9)}" >
+                            &nbsp;&nbsp;
+                            <lightning:button variant="Neutral" label="Avanti" title="Avanti" name="next" onclick="{!c.performStep}"/>
+                        </aura:if>
+                        <aura:if isTrue="{!(v.isVisibleSTEP9)}" >
+                            &nbsp;&nbsp;
+                            <lightning:button variant="Neutral" label="Fine" title="Fine" onclick="{!c.endQuestionario}"/>
+                        </aura:if>
+                    </aura:if>
+                    <aura:if isTrue="{!v.isVisibleSTEP9}" >
+                         <aura:if isTrue="{!v.isCaringAngelProfile}">
+                            &nbsp;&nbsp;
+                           <c:SendSMSCmp recordId="{!v.caseId}" isQuestionario="true" accountId = "{!v.accountId}"/>
+                        </aura:if>
+                    </aura:if>
+                </div>
+                
+            </div>
+            <!--  </lightning:card> -->
+            <!--Bonifazi Giorgio 19/07/2019: Caring Angel fase 2 END-->
+        </div>
+            </div>
+    </article>
+    
+    
+    <aura:if isTrue="{! v.isLoading }">
+        <lightning:spinner alternativeText="Loading" class="spinnerFixed"/>
+    </aura:if>
+    <aura:if isTrue="{!v.getPolizzeModal}">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open slds-modal_large">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <h2 id="modal-get-all-policies" class="slds-modal__title slds-hyphenate">Polizze sottoscritte</h2>
+                    <lightning:buttonIcon iconName="utility:close"
+                        onclick="{!c.chiudiModalePolizze}"
+                         alternativeText="close"
+                         variant="bare-inverse"
+                         class="slds-modal__close"/>
+                </header> 
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1" style="padding: 0;"> 
+                    <c:GetAllPolicies fiscalCode="{!v.questionarioCA.Codice_fiscale_contraente__c}" accountId="{!v.accountId}" CaseId="{!v.caseId}" UsrProfile="{!v.UsrProfile}" startDate="{!v.questionarioCA.Data_Evento__c}" targa="{!v.questionarioCA.Targa__c}" mode="CaringProperty"/>                	
+                    <!-- <c:GetAllPolicies fiscalCode="SLVFPP69L30Z133T" startDate="2020-03-13" mode="CaringSalute" /> -->
+                </div>
+                <footer class="slds-modal__footer"  style="padding: 1px;">
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+        <c:NewCommentAndAttachmentLightning
+        CaseId="{!v.caseId}"
+        isOpen="{!v.showInviaAdHD2}"
+        FastPayment= "{!v.questionarioCA.Fast_Payment__c}" />
+    <aura:if isTrue="{!v.findClientModal}">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open slds-modal_large">
+            <div class="slds-modal__container" style="padding: 1.4rem !important">
+                <header class="slds-modal__header" style="padding: 1px;">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick="{!c.chiudiModalfindAssociateClient}">
+                        <lightning:icon iconName="utility:close" alternativeText="Chiudi" class="whiteIcon"/>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1" style="padding: 0; height: 90%;">
+                    <c:FindAssociateClient tipoCliente="{!v.tipoCliente}" tipoAccount="{!v.personaContr}" />
+                </div>
+                <footer class="slds-modal__footer"  style="padding: 1px;">
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+    <aura:if isTrue="{! v.showToast }">
+        <div class="slds-notify_container slds-is-relative" style="position: fixed;margin-top: 10%;">
+            <div class="{!'slds-notify slds-notify_toast slds-theme_'+v.typeToast}" role="status" style="height: 4rem;">
+                <span class="slds-assistive-text">warning</span>
+                <span class="{!'slds-icon_container slds-m-right_small slds-no-flex slds-align-top slds-icon-utility-'+v.typeToast}" title="{!v.typeToast}">
+                    <lightning:icon iconName="{!'utility:'+v.typeToast}" alternativeText="Approved" class="whiteIcon"/>
+                </span>
+                <div class="slds-notify__content">
+                    <h2 class="slds-text-heading_small ">{!v.messageToast}</h2>
+                    <p>{!v.DetailsMessageToast}</p>
+                </div>
+                <div class="slds-notify__close">
+                    <button class="slds-button slds-button_icon slds-button_icon-inverse" title="Chiudi" onclick="{!c.chiudiToast}">
+                        <lightning:icon iconName="utility:close" alternativeText="Approved"  class="whiteIcon"/>
+                        <span class="slds-assistive-text">Chiudi</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+    <aura:if isTrue="{!v.AnnullaModal}">
+        <section style="min-width: 10rem; " role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open ">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header" style="padding: 1px;">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick="{!c.chiudiModalAnnulla}">
+                        <lightning:icon iconName="utility:close" alternativeText="Chiudi" class="whiteIcon" />
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1" style="padding: 0;">
+                    <center>
+                        <br/>
+                        <p>Sei sicuro di voler annullare la compilazione del questionario?</p>
+                        <p>Tutti i dati non salvati verranno persi.</p>
+                        <br/>
+                    </center>
+                </div>
+                <footer class="slds-modal__footer">
+                    <div class="slds-align_absolute-center" style="margin-right: 0;">
+                        <lightning:button variant="Neutral" label="Conferma" title="Conferma" name="confermaAnnulla" onclick="{!c.returnToCase}"/>
+                        <lightning:button variant="Neutral" label="Ritorna al questionario" title="Ritorna al questionario" name="Annulla" onclick="{!c.chiudiModalAnnulla}"/>                    
+                    </div>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+    <!-- Giorgio Bonifazi : Caring Angel Fase 2 - START -->
+    <aura:if isTrue="{!v.showAttachmentBox}">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_shade">
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate slds-text-color_default">Allega file</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium">
+                    
+                    <c:fileUpload showShareFile_Flag="{!v.showShareFile_Flag}" stoConvRT="{!v.toggleRecordType}" parentId="{!v.caseId}" attachmentList="{!v.attachmentList}" attachmentListFileNames="{!v.attachmentListFileNames}"/>
+                 
+                </div>
+                <div class="slds-modal__footer slds-theme_default">
+                    <lightning:button variant="brand" class="slds-align_absolute-center" label="Chiudi" onclick="{!c.closeAddAttachment}" />
+                </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+    
+    <!-- Giorgio Bonifazi : Caring Angel Fase 2 - END -->
+</aura:component>

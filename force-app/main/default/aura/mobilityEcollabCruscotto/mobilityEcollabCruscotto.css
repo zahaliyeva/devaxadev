@@ -1,0 +1,87 @@
+.THIS a{
+
+    color: #0176d3;
+}
+
+.THIS .slds-card{
+    border: none;
+}
+
+.THIS .mobility_modal {
+    --mobility-modal-padding: 1.125rem;
+    --mobility-modal-border-radius: 0.625rem;
+    --mobility-modal-backdrop-blur: 4px;
+    --mobility-modal-backdrop-background: rgba(0,0,0,.6);
+    --mobility-modal-shadow: 2px 4px 8px 0px rgba(0, 0, 0, 0.25);
+    --mobility-modal-background: #FFF;
+    --mobility-modal-max-width: 80vw;
+    --mobility-modal-max-height: 80vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    width: 100dvw;
+    height: 100dvh;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    background: var(--mobility-modal-backdrop-background);
+    backdrop-filter: blur(var(--mobility-modal-backdrop-blur));
+}
+
+.THIS .mobility-modal__card {
+    width: auto;
+    height: auto;
+    border-radius: var(--mobility-modal-border-radius);
+    background: var(--mobility-modal-background);
+    box-shadow: var(--mobility-modal-shadow);
+    overflow: hidden;
+    padding: var(--mobility-modal-padding) 0;
+}
+
+.THIS .mobility-modal__scroller {
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-height: var(--mobility-modal-max-height);
+    max-width: var(--mobility-modal-max-width);
+    padding: 0 var(--mobility-modal-padding);
+    margin-bottom: calc(var(--mobility-modal-padding) * 2);
+
+    scrollbar-color: rgba(0, 0, 0, 0.502) rgba(0, 0, 0, 0);
+    scrollbar-width: thin;
+}
+
+.THIS .mobility-modal__scroller::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+.THIS .mobility-modal__scroller::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.502);
+    border-radius: 8px;
+}
+.THIS .mobility-modal__scroller::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0);
+}
+
+.THIS .btn {
+    display: flex;
+    padding: 12px 20px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    text-align: center;
+    font-family: Helvetica;
+    font-size: 13px !important;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 16px;
+    letter-spacing: 1.3px;
+    text-transform: uppercase;
+}
+
+.THIS .btn.btn-outline-primary {
+    border: 2px solid var(--uiaxa-blue, #00008F);
+}

@@ -1,0 +1,5 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes,force:lightningQuickAction,force:hasRecordId,force:appHostable,flexipage:availableForRecordHome,force:hasRecordId,force:hasSObjectName" access="global">
+	
+    <c:CommentToSolution caseId="{!v.recordId}" isMobility="true" />
+    
+</aura:component>

@@ -1,0 +1,4 @@
+<aura:event type="COMPONENT">
+    <aura:attribute name="policy" type="sObject"/>
+    <aura:attribute name="isGoldCustomer" type="Boolean"/>
+</aura:event>

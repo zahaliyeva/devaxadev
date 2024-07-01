@@ -1,0 +1,120 @@
+<apex:page Controller="VFC26_AgentCreateCaseLightning" showHeader="true" sidebar="false" standardStylesheets="false" applyHtmlTag="true" applyBodyTag="false" docType="html-5.0" tabStyle="Assistenza__tab">
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>      
+    </head>
+    
+    <apex:includeScript value="/support/console/43.0/integration.js"/>      
+    <apex:includeScript value="/soap/ajax/41.0/connection.js"/>
+    <apex:includeScript value="/soap/ajax/41.0/apex.js"/>
+    <apex:slds />
+    <apex:includeLightning />
+    <apex:includeScript value="/lightning/lightning.out.js" />
+    <apex:includeLightning />
+    <apex:includeScript value="https://code.jquery.com/jquery-1.8.1.min.js" />
+   <!-- <div class="slds" style="margin-top:10px;margin-left:10px;"> -->
+    <div class="slds">
+        <div id="lightning" />
+    </div>
+    <!--
+    <style>
+    html,
+    body {
+    overflow-x: hidden;
+    },
+    .bodyDiv{
+    box-shadow: 0 8px 10px hsla(0,0%,0%,.25);
+    }
+    </style>-->
+    
+    <script>   
+    var width = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth);
+    
+    $Lightning.use("c:CreateCaseApp", function()
+                   {
+                       $Lightning.createComponent("c:CreateCaseMainCmp",
+                                                  { 
+                                                      "jsDebug" :  {!jsDebug},
+                                                      "screenWidth": width
+                                                  },"lightning",
+                                                  function(cmp)
+                                                  { 
+                                                      console.log('eventService');
+                                                      $A.eventService.addHandler({ "event": "c:refreshOpener", "handler" : visualForceFunction});
+                                                  }); 
+                   });       
+          
+    </script> 
+    
+    <script type="text/javascript">
+    jQuery.noConflict();
+    
+    var visualForceFunction = function(event){
+        console.log('event');
+        var myEventData = event.getParam("data");
+        if(myEventData == 'refresh')
+            refreshpage();
+        else if(myEventData == 'cancel')
+            closeSubTab();
+        
+    };
+    
+    function refreshpage()
+    {
+        try
+        {
+            console.log("refresh");
+            if(sforce.console.isInConsole())
+            {
+                console.log('console');
+                sforce.console.getEnclosingPrimaryTabId(function(primarytab)
+                                                        {
+                                                            console.log('primary: '+primarytab.id );
+                                                            sforce.console.refreshPrimaryTabById(primarytab.id , true);
+                                                        }); 
+            }
+            else
+            {
+                console.log('no console');
+                window.close();
+                opener.refreshTopPage(CaseId);
+            }
+        }
+        catch (e)
+        {}
+        finally 
+        {}
+    } 
+    function CloseTab() {
+        sforce.console.getEnclosingTabId(closeSubtab);
+    }
+    var closeSubtab = function closeSubtab(result) {
+        var tabId = result.id;
+        console.log('tabId: ',tabId);
+        sforce.console.closeTab(tabId);
+    };
+    function closeSubTab()
+    {
+        try
+        {
+            console.log("cancel");
+            if(sforce.console.isInConsole())
+            {
+                console.log('console');
+                CloseTab();
+            }
+            else
+            {
+                console.log('no console');
+                window.close();
+                opener.refreshTopPage(CaseId);
+            }
+            
+        }
+        catch (e)
+        {}
+        finally 
+        {}
+    }    
+    </script>    
+    
+</apex:page>

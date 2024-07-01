@@ -1,0 +1,6 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes" access="global">
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <div style="text-align:right;">
+        <a class="slds-button slds-button_neutral" href="/crm/s/gestione-coda-agenzia" style="text-decoration:none;">Gestione coda Case</a> 
+    </div>
+</aura:component>

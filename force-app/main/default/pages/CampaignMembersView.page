@@ -1,0 +1,1334 @@
+<apex:page lightningStylesheets="true" standardStylesheets="true" standardController="Campaign" docType="html-5.0" extensions="CampaignMembersViewCTRL" tabStyle="Campaign" sidebar="false" showHeader="true">
+
+    <apex:stylesheet value="{!URLFOR($Resource.SLDS, 'assets/styles/salesforce-lightning-design-system-vf.css')}" />
+
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" lang="en">
+        <!-- Set input Field. Name to UPPERCASE -->
+        <apex:variable var="inputf" value="NOTE__C;" />
+        
+        <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" />
+        <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"/>
+        <apex:includeScript value="/soap/ajax/33.0/connection.js"/>
+        <apex:includeScript value="/soap/ajax/33.0/apex.js"/>
+        <apex:includeScript value="{!URLFOR($Resource.PopIn,'/popin.js')}"/>
+        
+        <head>
+            <apex:slds />
+        </head>
+        
+        
+        <style type="text/css">
+            
+            html .brandTertiaryBgr {background-color: transparent !important;}
+            .pbSubheader .hideListButton {background: transparent url('/img/alohaSkin/twisty_sprite.png') 0 -11px no-repeat !important;}
+            .pbSubheader .showListButton {background: transparent url('/img/alohaSkin/twisty_sprite.png') 0 0 no-repeat !important;}
+            
+            #filter_scadenza_da .slds-datepicker {left:auto; right:0px;}
+            #filter_scadenza_a .slds-datepicker {left:auto; right:0px;}
+            
+            span.dateFormat {display:none;}
+            
+            .datePicker {z-index:9999 !important; position:fixed}
+            
+        </style>
+
+        
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.12.0/moment.js"></script>
+        <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+        <script src="{!URLFOR($Resource.aljs, '/jquery.aljs-all-with-moment.min.js')}"></script>
+        <script src="{!URLFOR($Resource.aljs, '/jquery.aljs-datepicker.min.js')}"></script>
+        <script src="{!URLFOR($Resource.aljs, '/jquery.aljs-init.min.js')}"></script>
+        
+
+         <script type="text/javascript">
+           window.onload = function(){
+               //this is calling the apex:actionFunction below with the same name when the page loads
+               var width = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth);
+               console.log('width'+width);
+               document.getElementById('pageWidth').style.maxWidth = 0.97*width + 'px';
+           }
+        </script>
+        
+        <script>
+        function addChangeListener() {
+            
+            var j$ = jQuery.noConflict();
+            //Assigning SLDS Static Resource Path To A Variable To Use It With ALJS Initialization
+            var assetsLoc = '{!URLFOR($Resource.SLDS)}';
+            
+            //ALJS Initialization
+            
+            j$.aljsInit({
+                assetsLocation: assetsLoc, //SLDS Static Resource Path
+                scoped: true
+            });
+            
+            j$(document).ready(function() {
+                //Initializing Datepicker with options To The SLDS Input on document ready.
+                j$('#expiry_from').datepicker({format:'DD/MM/YYYY'});
+                j$('#expiry_to').datepicker({format:'DD/MM/YYYY'});
+            });
+        }
+        addChangeListener();
+        </script>
+        
+        
+        <script type="text/javascript">
+        var TotSelected=0;
+        
+        function refreshContactPopoUp(){
+            refreshExecuteQuery();
+        }
+        
+        function sendEmail(accID,agent,location,address,date,time,subject,eventError) {
+            addChangeListener();
+            
+            if (eventError == 'false') {
+                console.log('HERE');
+                
+                if (location == 'Presso cliente')
+                    location = 'in ' + address;
+                else if (location == 'Presso agenzia')
+                    location = 'presso agenzia';
+                
+                var body = "Gentile Cliente,%0A%0Ati confermiamo l’appuntamento con " + agent + " " + location + " il " + date + " alle " + time + ".%0A%0ACordiali saluti,%0ALa tua agenzia AXA";
+                var URL = "/agenzie/_ui/core/email/author/EmailAuthor?"
+                + "p2_lkid=" + accID
+                + "&p3_lkid=" + accID
+                + "&retURL=/agenzie/" + accID
+                + "&p23=" + body
+                //+ "&template_id=" + templateId
+                //+ "&p5="
+                + "&p6=" + subject
+                ;
+                console.log("URL: " + URL);
+                window.open(URL,'_blank');
+            }
+        }        
+                
+        function doCheckboxChange(cb){
+            console.log('Testing onclick');
+            console.log('TotSelected before update');
+            console.log(TotSelected);
+            console.log('cb.checked');
+            console.log(cb.checked);
+            
+            if(cb.checked==true){
+                if (TotSelected>0) {
+                    TotSelected=TotSelected+1;
+                } else {
+                    TotSelected=1;
+                }
+                console.log('TotSelected after update');
+                console.log(TotSelected);
+            } else {
+                if (TotSelected>0) {
+                    TotSelected=TotSelected-1;
+                } else {
+                    TotSelected=0;
+                }
+                console.log('TotSelected after update');
+                console.log(TotSelected);
+            }
+            document.getElementById('tableUtils').innerHTML='['+TotSelected+' record selezionati]';
+            
+        }
+        
+        function cvCheckAllOrNone(allOrNoneCheckbox) {
+            
+            // Find parent table
+            var container = allOrNoneCheckbox;
+            while (container.tagName != "TABLE") {
+                container = container.parentNode;
+            }
+            
+            // Switch all checkboxes
+            var inputs = container.getElementsByTagName("input");
+            var checked = allOrNoneCheckbox.checked;
+            TotSelected=0;
+            for (var i = 0; i < inputs.length; i++) { 
+                var input = inputs.item(i);
+                if (input.type == "checkbox" && input.disabled != true) {
+                    if (input != allOrNoneCheckbox) {
+                        input.checked = checked;
+                        if (checked) {
+                            TotSelected=TotSelected+1;
+                        }
+                    }
+                }
+            }
+            document.getElementById('tableUtils').innerHTML='['+TotSelected+' record selezionati]';
+            
+        }        
+        
+        // SERGER_T: THIS FUNCTION IS NOT USED AND CAN BE DELETED
+        function loading(val, id) {
+            if (val) {
+                document.getElementById(id).style.display = 'block';
+                console.log(document.getElementById(id).innerHTML);
+                //document.getElementById('contentLoaded').style.display = 'none';
+            } else {
+                document.getElementById(id).style.display = 'none';
+                //document.getElementById('contentLoaded').style.display = 'block';
+            }
+        }
+        
+        // SERGER_T: THIS FUNCTION IS NOT USED AND CAN BE DELETED
+        function setFocusOnLoad() {} //function to avoid calendar popping up on pageload
+        </script>
+        
+         
+        <apex:PageMessages id="messages"/>
+
+        
+        <!-- TUGAL SERGER: SLDS -->
+        <body class="slds-scope">
+             <div id="pageWidth">  
+                <!--div style="{!'max-width:'+v.screenWidth+'px'}"--> 
+            
+            <div class="slds" id="myDiv"> <!--style="height:100vh; width:100vw;"-->
+               
+                <!-- TUGAL SERGER: PAGE HEADER -->
+                <div class="slds-page-header" role="banner">
+                    <div class="slds-grid">
+                        <div class="slds-col">
+                            <div class="slds-media slds-no-space slds-grow">
+                                <div class="slds-media__figure">
+                                    <svg aria-hidden="true" class="slds-icon slds-icon-standard-campaign slds-icon_large">
+                                        <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/standard-sprite/svg/symbols.svg#campaign')}"></use>
+                                    </svg>
+                                </div>
+                                <div class="slds-media__body">
+                                    <p class="slds-text-title--caps slds-line-height--reset">Lavorazione Campagna</p>
+                                    <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate">{!Campaign.Name}</h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <apex:form id="main_form" >
+                    <div class="slds-text-body_regular slds-m-top_x-small" >Totale Clienti in Campagna:{!totalCM} (filtrati {!totalCMfiltered})</div>
+                    
+                    <!-- TUGAL SERGER: FILTER SECTION -->
+                    <div id="filter_header" class="slds-m-top_x-large slds-m-bottom_medium slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1" >
+                        <h3 class="slds-section-title_divider">Filtri</h3>
+                    </div>
+                    
+                    <div id="filter_grid" class="slds-m-vertical_medium slds-grid slds-wrap slds-grid_pull-padded slds-grid_align-spread slds-grid_vertical-align-center">
+                        <div id="filter_status" class="slds-p-bottom_xx-small slds-form_horizontal slds-align-middle slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3">
+                            <apex:selectList styleClass="slds-input slds-align-middle" value="{!SelectedStatus}" onchange="showJava();" size="1">
+                                <apex:selectOptions value="{!StatusCampaignLists}"/>
+                                <!-- <c:TextBubble helpText="Filtra i clienti campagna in base allo stato selezionato sulla campagna corrente"/> -->
+                            </apex:selectList>
+                        </div>
+                        <div id="filter_owner" class="slds-p-bottom_xx-small slds-form_horizontal slds-align-middle slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3">
+                            <apex:selectList styleClass="slds-input slds-align-middle" onchange="showJava();" value="{!SelectedOwner}" size="1">
+                                <apex:selectOptions value="{!OwnerList}"/>
+                                <!-- <c:TextBubble helpText="Filtra i clienti campagna in base al titolare selezionato"/> -->
+                            </apex:selectList>
+                        </div>
+                        <div id="filter_nodes" class="slds-p-bottom_xx-small slds-form_horizontal slds-align-middle slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3">
+                            <apex:selectList styleClass="slds-input slds-align-middle" value="{!SelectedNode}" size="1">              
+                                <apex:selectOptions value="{!NodesList}"/>
+                                <!-- <c:TextBubble helpText="Filtra i clienti campagna in base al nodo selezionato, considerando anche i relativi sotto-nodi"/> -->
+                            </apex:selectList>
+                        </div>
+                        <div id="filter_nome" class="slds-p-bottom_xx-small slds-form_horizontal slds-align-middle slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3">
+                            <div class="slds-form-element slds-m-bottom_none">
+                                <apex:inputText id="name" value="{!FirstNameFilter}" styleClass="slds-input" html-placeholder="Cerca per Nome"/>
+                                <!-- <c:TextBubble helpText="Filtra i clienti campagna il cui nome contiene i caratteri specificati"/> -->
+                            </div>
+                        </div>
+                        <div id="filter_cognome" class="slds-p-bottom_xx-small slds-form_horizontal slds-align-middle slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3">
+                            <div class="slds-form-element slds-m-bottom_none">
+                                <apex:inputText id="surname" value="{!LastNameFilter}" styleClass="slds-input" html-placeholder="Cerca per Cognome"/>
+                                <!-- <c:TextBubble helpText="Filtra i clienti campagna il cui cognome contiene i caratteri specificati"/> -->
+                            </div>
+                        </div> 
+                        <div id="filter_ragioneSociale" class="slds-p-bottom_xx-small slds-form_horizontal slds-align-middle slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3">
+                            <div class="slds-form-element slds-m-bottom_none">
+                                <apex:inputText id="companyName" value="{!RagioneSocialeFilter}" styleClass="slds-input" html-placeholder="Cerca per Ragione Sociale"/>
+                                <!-- <c:TextBubble helpText="Filtra i clienti campagna il cui cognome contiene i caratteri specificati"/> -->
+                            </div>
+                        </div>
+                        <div id="filter_indice" class="slds-p-bottom_xx-small slds-form_horizontal slds-align-middle slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3">
+                            <apex:selectList styleClass="slds-input slds-align-middle" value="{!SelectedIndex}" size="1">
+                                <apex:selectOptions value="{!IndiceCliente}"  />
+                            </apex:selectList>
+                        </div>
+                        <div id="filter_scadenza_da" class="slds-p-bottom_xx-small slds-form_horizontal slds-align-middle slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3" style="{!IF(dataEnrichment,'display:none','')}">
+                            <div class="slds-form-element slds-m-bottom_none">
+                                <input id="expiry_from" value="{!startTask.d.RecurrenceEndDateOnly}" class="slds-input" type="text" placeholder="Scadenza polizza (Da):"/>
+                            </div>
+                        </div>
+                        <div id="filter_scadenza_a" class="slds-p-bottom_xx-small slds-form_horizontal slds-align-middle slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3" style="{!IF(dataEnrichment,'display:none','')}">
+                            <div class="slds-form-element slds-m-bottom_none">
+                                <input id="expiry_to" value="{!endTask.d.RecurrenceEndDateOnly}" class="slds-input" type="text" placeholder="Scadenza polizza (A):"/>
+                            </div>
+                        </div>
+                        <div id="filter_tracking" class="slds-p-bottom_xx-small slds-form_horizontal slds-align-middle slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3" style="{!IF(informativeCamp||agencyCamp,'display:none','')}">
+                            <apex:selectList styleClass="slds-input slds-align-middle" value="{!SelectedSubstatus}" size="1">
+                                <apex:selectOptions value="{!SubstatusCampaignLists}"/>
+                                <!-- <c:TextBubble helpText="Filtra i clienti oggetto della campagna in base allo stato dell’invio"/> -->
+                            </apex:selectList>
+                        </div>
+                        <div id="filter_processed" class="slds-p-bottom_xx-small slds-form_horizontal slds-align-middle slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3" style="{!IF(dataEnrichment,'','display:none')}">
+                            <apex:selectList styleClass="slds-input slds-align-middle" value="{!isProcessed}" size="1">
+                                <apex:selectOptions value="{!IsProcessedList}"  />
+                                <!-- <c:TextBubble helpText="Filtra i clienti oggetto della campagna in base allo stato del cliente"/> -->
+                            </apex:selectList>
+                        </div>
+                        <div id="filter_outcome" class="slds-p-bottom_xx-small slds-form_horizontal slds-align-middle slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3" style="{!IF(informativeCamp,'','display:none')}">
+                            <apex:selectList styleClass="slds-input slds-align-middle" value="{!SelectedInformativeOutcome}" size="1">
+                                <apex:selectOptions value="{!InformativeOutcomeList}"/>
+                                <!-- <c:TextBubble helpText="Filtra i clienti campagna lavorati in base all'esito della chiusura campagna"/> -->
+                            </apex:selectList>
+                        </div>
+                        <div id="filter_priority" class="slds-p-bottom_xx-small slds-form_horizontal slds-align-middle slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3" style="{!IF(dataEnrichment||informativeCamp||agencyCamp,'display:none','')}">
+                            <apex:selectList styleClass="slds-input slds-align-middle" value="{!SelectedPriority}" size="1">
+                                <apex:selectOptions value="{!ClientiPrioritari}"  />
+                                <!-- <c:TextBubble helpText="Filtra i clienti che hanno richiesto di essere contattati e non ancora lavorati"/> -->
+                            </apex:selectList>
+                        </div>
+                        <div id="filter_propensione_acquisto" class="slds-p-bottom_xx-small slds-form_horizontal slds-align-middle slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3" style="{!IF(informativeCamp||agencyCamp,'display:none','')}">
+                            <apex:selectList styleClass="slds-input slds-align-middle" value="{!SelectedContactPriority}" size="1">
+                                <apex:selectOptions value="{!PriorityList}"  />
+                            </apex:selectList>
+                        </div>
+                        <div id="filter_opportunity_status" class="slds-p-bottom_xx-small slds-form_horizontal slds-align-middle slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3" style="{!IF(marketingCamp||agencyCamp||performaCamp,'','display:none')}">
+                            <apex:selectList styleClass="slds-input slds-align-middle" value="{!SelectedOpportunityStatus}" size="1">
+                                <apex:selectOptions value="{!OpportunityStatus}" />
+                            </apex:selectList>
+                        </div>
+                    </div>
+                    
+                    <div id="filter_button" class="slds-align_absolute-center">
+                        <div class="slds-text-align_center" role="group">
+                            <apex:commandButton styleClass="slds-m-top_xx-small slds-button slds-button_neutral btnSubmit" style="text-align:center;" action="{!CleanQuery}" value="Applica Filtri" rerender="main_form,messages" oncomplete="addChangeListener();" status="spinner_main"/>
+                            <apex:commandButton styleClass="slds-m-top_xx-small slds-button slds-button_neutral btnSubmit" style="text-align:center;" action="{!resetFilter}" value="Reset Filtri" rerender="main_form,messages" oncomplete="addChangeListener();" status="spinner_main"/>
+                        </div>
+                    </div>
+                    
+                    <!-- TUGAL SERGER: ACTION SECTION -->
+                    <div id="action_header" class="slds-m-top_x-large slds-m-bottom_medium slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1" >
+                        <h3 class="slds-section-title_divider">Azioni</h3>
+                    </div>
+                    
+                    <div id="action_grid" class="slds-m-vertical_medium slds-grid slds-grid_pull-padded slds-grid_align-spread slds-grid_vertical-align-center">
+                        <div id="stat" class="slds-form_horizontal slds-align-middle slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size--1-of-3 slds-large-size_1-of-3">
+                            <apex:selectList styleClass="slds-input slds-align-middle" style="width:50%" value="{!AssignStatus}" size="1" >
+                                <apex:selectOptions value="{!StatusCampaignListsForAssignment}"/>
+                            </apex:selectList>
+                            <apex:commandButton styleClass="slds-m-left_xx-small slds-button slds-button_neutral btnSubmit slds-align-middle" action="{!showPopupStato}" value="Aggiorna Stato" rerender="popupAction" status="spinner_main"/>
+                        </div>
+                        
+                        <div id="exclude" class="slds-container--large slds-form--horizontal slds-align-middle slds-col--padded" style="{!IF(dataEnrichment||marketingCamp||informativeCamp||performaCamp,'display:none','')}">
+                            <apex:commandButton styleClass="slds-button slds-button_neutral btnSubmit slds-align-middle slds-grid_align-center" action="{!showPopupEsclusione}" value="Escludi cliente campagna"  rerender="popupAction" status="spinner_main"/>
+                        </div>
+                        
+                        <div id="assign" class="slds-container--large slds-form--horizontal slds-align-middle slds-col--padded slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-3 slds-large-size--1-of-3">
+                            <apex:selectList styleClass="slds-input slds-align-middle" style="width:50%" value="{!SelectedUser}" size="1">
+                                <apex:selectOptions value="{!AssignmentUser}"/>
+                            </apex:selectList>
+                            <apex:commandButton styleClass="slds-m-left_xx-small slds-button slds-button_neutral btnSubmit slds-align-middle" action="{!showPopupAssegnazione}" value="Assegna" rerender="popupAction" status="spinner_main"/>
+                        </div>
+                    </div>
+                    
+                    
+                    <!-- TUGAL SERGER: RECORD TABLE -->
+                    <div id="table_header" class="slds-m-top_x-large slds-m-bottom_medium slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1" >
+                        <h3 class="slds-section-title_divider">Clienti in campagna</h3>
+                    </div>
+                    
+                    <table id="record_table" aria-multiselectable="true" class="slds-m-vertical_medium slds-table slds-table_fixed-layout slds-table_bordered slds-table_resizable-cols" role="grid">
+                        <thead>
+                            <tr class="slds-line-height_reset">
+                                <th aria-label="Checkbox" class="slds-text-title slds-text-align_right slds-p-left_none" scope="col" style="width: 3.25rem;">
+                                    <span id="column-group-header" class="slds-assistive-text">Choose a row</span>
+                                    <div class="slds-th__action slds-th__action_form">
+                                        <div class="slds-checkbox">
+                                            <input type="checkbox" name="options" id="CB_All" tabindex="0" aria-labelledby="CBL_All column-group-header" value="{!selectedAllpicks}" onclick="cvCheckAllOrNone(this)"/>
+                                            <label class="slds-checkbox__label" for="CB_All" id="CBL_All">
+                                                <span class="slds-checkbox_faux"></span>
+                                                <span class="slds-form-element__label slds-assistive-text">Select All</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </th>
+                                <!--> MASSAROTTI ANTONINO 20/11/2019 START <!-->
+                                
+                                <th aria-label="Nome e Cognome" class="slds-text-title slds-p-right_none" scope="col" style="width: 10rem;">
+                                    <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate slds-th__action slds-text-link_reset">
+                                        <span class="slds-truncate" title="Nome e Cognome">Nome e Cognome</span>
+                                    </div>
+                                </th>
+                                <th aria-label="Polizze attive" class="slds-text-title slds-p-right_none slds-cell-wrap" scope="col" style="width: 4rem;{!IF(listeincentivazione,'display: none','')}">
+                                    <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate slds-th__action slds-text-link_reset">
+                                        <span class="slds-truncate" title="Polizze attive" style="text-align:center" >Polizze<br/>attive</span>
+                                    </div>
+                                </th>
+                                <th aria-label="Numero campagne attive" class="slds-text-title slds-p-right_none" scope="col" style="width: 5rem; {!IF(listeincentivazione,'display : none','')}">
+                                    <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate slds-th__action slds-text-link_reset">
+                                        <span class="slds-truncate" title="Numero Campagne Attive" style="text-align:center">Campagne<br/>attive</span>
+                                    </div>
+                                </th>
+                                <th aria-label="Indice cliente" class="slds-text-title slds-p-right_none" scope="col" style="width: 5rem; {!IF(listeincentivazione,'display : none','')}">
+                                    <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate slds-th__action slds-text-link_reset slds-align_absolute-center">
+                                        <span class="slds-truncate" title="Indice Cliente" style="text-align:center">Indice<br/>Cliente</span>
+                                    </div>
+                                </th>
+                                <th aria-label="Propensione acquisto" class="slds-text-title slds-p-right_none" scope="col" style="width: 6rem; {!IF(informativeCamp||agencyCamp||listeincentivazione,'display:none','')}">
+                                    <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate slds-th__action slds-text-link_reset">
+                                        <span class="slds-truncate" title="Propensione acquisto" style="text-align:center">Propensione<br/>acquisto</span>
+                                    </div>
+                                </th>
+                                <th aria-label="Data scadenza prima polizza" class="slds-text-title slds-p-right_none" scope="col" style="width: 5rem; {!IF(listeincentivazione,'display : none','')}">
+                                    <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate slds-th__action slds-text-link_reset">
+                                        <span class="slds-truncate" title="Data Scadenza Prima Polizza" style="text-align:center">Prima<br/>Scadenza</span>
+                                    </div>
+                                </th>
+                                <th aria-label="Stato" class="slds-text-title slds-p-right_none" scope="col">
+                                    <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate slds-th__action slds-text-link_reset">
+                                        <span class="slds-truncate" title="Stato">{!$ObjectType.CampaignMember.Fields.Status.Label}</span>
+                                    </div>
+                                </th>
+                                <th aria-label="Esito contatto informativo" class="slds-text-title slds-p-right_none" scope="col" style="{!IF(informativeCamp,'','display:none')}">
+                                    <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate slds-th__action slds-text-link_reset">
+                                        <span class="slds-truncate" title="Esito di contatto informativo">{!$ObjectType.CampaignMember.Fields.Informative_Contact_Outcome__c.Label}</span>
+                                    </div>
+                                </th>
+                                <th aria-label="Tracking contatto" class="slds-text-title slds-p-right_none" scope="col" style="{!IF(informativeCamp||agencyCamp||listeincentivazione,'display:none','')}">
+                                    <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate slds-th__action slds-text-link_reset">
+                                        <span class="slds-truncate" title="Tracking contatto">{!$ObjectType.CampaignMember.Fields.Sottostato__c.Label}</span>
+                                    </div>
+                                </th>
+                                <th aria-label="Nodi" class="slds-text-title slds-p-right_none" scope="col" style="width:10rem;{!IF(listeincentivazione,'display:none','')}">
+                                    <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate slds-th__action slds-text-link_reset">
+                                        <span class="slds-truncate" title="Nodi" style = "width:100%; text-align:center">{!$ObjectType.CampaignMember.Fields.Nodes__c.Label}</span>
+                                    </div>
+                                </th>
+                                <th aria-label="Nodo" class="slds-text-title slds-p-right_none" scope="col" style="width:10rem;{!IF(listeincentivazione,'','display:none')}">
+                                    <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate slds-th__action slds-text-link_reset">
+                                        <span class="slds-truncate" title="Nodi" style = "width:100%; text-align:center">Nodo</span>
+                                    </div>
+                                </th>
+                                <th aria-label="Titolare" class="slds-text-title slds-p-right_none" scope="col" style = "{!IF(listeincentivazione,'display : none','')}">
+                                    <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate slds-th__action slds-text-link_reset">
+                                        <span class="slds-truncate" title="Titolare">{!$ObjectType.CampaignMember.Fields.Owner__c.Label}</span>
+                                    </div>
+                                </th>
+                                <th aria-label="Traccia contatto" class="slds-text-title slds-p-right_none" scope="col" style="width: 7rem; {!IF(dataEnrichment||listeincentivazione,'display:none','')}">
+                                    <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate slds-th__action slds-text-link_reset">
+                                        <span class="slds-truncate" title="Traccia contatto">Traccia contatto</span>
+                                    </div>
+                                </th>
+                                <th aria-label="Crea proposta" class="slds-text-title slds-p-right_none" scope="col" style="width: 6rem; {!IF(dataEnrichment||informativeCamp||listeincentivazione,'display:none','')}">
+                                    <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate slds-th__action slds-text-link_reset">
+                                        <span class="slds-truncate" title="Crea proposta">Crea proposta</span>
+                                    </div>
+                                </th>
+                                <th aria-label="Stato trattativa" class="slds-text-title slds-p-right_none" scope="col" style="{!IF(marketingCamp||agencyCamp,'','display:none')}">
+                                    <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate slds-th__action slds-text-link_reset">
+                                        <span class="slds-truncate" title="Stato trattativa">{!$ObjectType.CampaignMember.Fields.Stato_Opportunit_Custom__c.Label}</span>
+                                    </div>
+                                </th>
+                                <th aria-label="Ultimo contatto" class="slds-text-title slds-p-right_none" scope="col" style="width:7rem; {!IF(dataEnrichment||informativeCamp||listeincentivazione,'display:none','')}">
+                                    <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate slds-th__action slds-text-link_reset">
+                                        <span class="slds-truncate" title="Ultimo contatto">Ultimo contatto</span>
+                                    </div>
+                                </th>
+                                <th aria-label="Cellulare" class="slds-text-title slds-p-right_none" scope="col" style="width: 4rem; {!IF(dataEnrichment,'','display:none')}">
+                                    <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate slds-th__action slds-text-link_reset">
+                                        <span class="slds-truncate" title="Cellulare">Cellulare</span>
+                                    </div>
+                                </th>
+                                <th aria-label="Email" class="slds-text-title slds-p-right_none" scope="col" style="width: 4rem; {!IF(dataEnrichment,'','display:none')}">
+                                    <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate slds-th__action slds-text-link_reset">
+                                        <span class="slds-truncate" title="Email">E-mail</span>
+                                    </div>
+                                </th>
+                                <th aria-label="Consensi" class="slds-text-title slds-p-right_none" scope="col" style="width: 4rem; {!IF(dataEnrichment,'','display:none')}">
+                                    <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate slds-th__action slds-text-link_reset">
+                                        <span class="slds-truncate" title="Consensi">Consensi</span>
+                                    </div>
+                                </th>
+                                <th aria-label="Altri dati" class="slds-text-title slds-p-right_none" scope="col" style="width: 4rem; {!IF(dataEnrichment,'','display:none')}">
+                                    <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate slds-th__action slds-text-link_reset">
+                                        <span class="slds-truncate" title="Altri dati">Altri dati</span>
+                                    </div>
+                                </th>
+                                <th aria-label="Ultima modifica" class="slds-text-title slds-p-right_none" scope="col" style="width:10rem; {!IF(dataEnrichment,'','display:none')}">
+                                    <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate slds-th__action slds-text-link_reset">
+                                        <span class="slds-truncate" title="Ultima modifica">Ultima modifica</span>
+                                    </div>
+                                </th>
+                                <th aria-label="Ultima modifica effettutata" class="slds-text-title slds-p-right_none" scope="col" style="width:10rem; {!IF(informativeCamp,'','display:none')}">
+                                    <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate slds-th__action slds-text-link_reset">
+                                        <span class="slds-truncate" title="Ultima modifica effettutata">Ultima modifica effettutata</span>
+                                    </div>
+                                </th>
+                                
+                                <th aria-label="Stato Certificazione" class="slds-text-title slds-p-right_none" scope="col" style="width:7rem; {!IF(listeincentivazione,'','display:none')}">
+                                    <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate slds-th__action slds-text-link_reset">
+                                        <span class="slds-truncate" title="Stato Certificazione" style = "width:100%; text-align:center">Stato<br/>Certificazione</span>
+                                    </div>
+                                </th>
+                                
+                                <th aria-label="Attivo" class="slds-text-title slds-p-right_none" scope="col" style="width:7rem; {!IF(listeincentivazione,'','display:none')}">
+                                    <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate slds-th__action slds-text-link_reset">
+                                        <span class="slds-truncate" title="Attivo" style = "width:100%; text-align:center">Cliente<br/>Attivo</span>
+                                    </div>
+                                </th>
+                                
+                                <th aria-label="Target 2018" class="slds-text-title slds-p-right_none" scope="col" style="width:7rem; {!IF(listeincentivazione,'','display:none')}">
+                                    <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate slds-th__action slds-text-link_reset">
+                                        <span class="slds-truncate" title="Target 2018" style = "width:100%; text-align:center">Target</span>
+                                    </div>
+                                </th>
+                                
+                                <th aria-label="Stop Carta 2018" class="slds-text-title slds-p-right_none" scope="col" style="width:7rem; {!IF(listeincentivazione,'','display:none')}">
+                                    <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate slds-th__action slds-text-link_reset">
+                                        <span class="slds-truncate" title="Stop Carta 2018" style = "width:100%; text-align:center">Stop Carta</span>
+                                    </div>
+                                </th>
+                                
+                                <th aria-label="Firma Digitale 2018" class="slds-text-title slds-p-right_none" scope="col" style="width:7rem; {!IF(listeincentivazione,'','display:none')}">
+                                    <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate slds-th__action slds-text-link_reset">
+                                        <span class="slds-truncate" title="Firma Digitale 2018" style = "width:100%; text-align:center">Firma Digitale</span>
+                                    </div>
+                                </th>
+                                <th aria-label="Data ultimo aggiornamento" class="slds-text-title slds-p-right_none" scope="col" style="width:7rem; {!IF(listeincentivazione,'','display:none')}">
+                                    <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate slds-th__action slds-text-link_reset">
+                                        <span class="slds-truncate" title="Data ultimo aggiornamento" style = "width:100%; text-align:center">Data ultimo<br/>aggiornamento</span>
+                                    </div>
+                                </th>
+                                <!--> MASSAROTTI ANTONINO 20/11/2019 END <!-->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <apex:repeat value="{!RowRecords}" var="cm">
+                                <tr aria-selected="false" class="slds-hint-parent">
+                                    <td role="gridcell" class="slds-text-align_right">
+                                        <label class="slds-checkbox">
+                                            <apex:inputCheckbox styleclass="slds-input" value="{!cm.IsSelected}" onchange="doCheckboxChange(this)"/>
+                                            <span class="slds-checkbox_faux"></span>
+                                            <span class="slds-form-element__label"></span>
+                                        </label>
+                                    </td>
+                                    <!--> MASSAROTTI ANTONINO 20/11/2019 START<!-->
+                                    
+                                    <td role="gridcell" id="col_cliente">
+                                        <div class="slds-truncate" title="{!cm.tRecord.Contact.Account.Id}">
+                                            <apex:outputLink value="/{!cm.tRecord.Contact.Account.Id}" target="_blank" rendered="{!!dataEnrichment}" title="{!cm.tRecord.Contact.Account.Name}">{!cm.tRecord.Contact.Account.Name}</apex:outputLink>
+                                            <apex:outputLink value="/lightning/n/LightningAccountEdit?c__recordId={!cm.tRecord.Contact.Account.Id}&c__CampMemberId={!cm.tRecord.Id}&c__CampaignId={!cm.tRecord.CampaignId}" target="_blank" rendered="{!dataEnrichment}">{!cm.tRecord.Contact.Account.Name}</apex:outputLink>
+                                            
+                                        </div>
+                                    </td>
+                                    
+                                    <td role="gridcell" id="col_polizze_attive" class="slds-text-align_center" style="{!IF(listeincentivazione,'display:none','')}">
+                                        <div class="slds-truncate" title="{!cm.tRecord.Contact.Account.Active_Insurance_Contracts__c}">{!cm.tRecord.Contact.Account.Active_Insurance_Contracts__c}</div>
+                                    </td>
+                                    <td role="gridcell" id="col_numero_campagne_attive" class="slds-text-align_center" style = "{!IF(listeincentivazione,'display:none','')}">
+                                        <div class="slds-truncate" title="{!cm.tRecord.Contact.Account.Active_Campaigns__c}">{!cm.tRecord.Contact.Account.Active_Campaigns__c}</div>
+                                    </td>
+                                    <td role="gridcell" id="col_indice_cliente" style = "{!IF(listeincentivazione,'display:none','')}">
+                                        <div class="slds-truncate" title="{!cm.tRecord.Contact.Account.Client_Index__c}">{!cm.tRecord.Contact.Account.Client_Index__c}</div>
+                                    </td>
+                                    <td role="gridcell" id="col_propensione_acquisto" style="{!IF(informativeCamp||agencyCamp||listeincentivazione,'display:none','')}">
+                                        <div class="slds-truncate" title="{!cm.tRecord.Contact_Priority__c}">{!cm.tRecord.Contact_Priority__c}</div>
+                                    </td>
+                                    <td role="gridcell" id="col_data_scadenza_p_polizza" style = "{!IF(listeincentivazione,'display:none','')}">
+                                        <div class="slds-truncate" title="{!cm.tRecord.Contact.Account.First_expiration_date__c}">
+                                            <apex:outputField value="{!cm.tRecord.Contact.Account.First_expiration_date__c}"/>
+                                        </div>
+                                    </td>
+                                    <td role="gridcell" id="col_stato">
+                                        <div class="slds-truncate" style="{!cm.style}">{!cm.tRecord.Status}</div>
+                                    </td>
+                                    <td role="gridcell" id="col_esito_contatto_informativo" style="{!IF(informativeCamp,'','display:none')}">
+                                        <div class="slds-truncate" title="{!cm.tRecord.Informative_Contact_Outcome__c}">{!cm.tRecord.Informative_Contact_Outcome__c}</div>
+                                    </td>
+                                    <td role="gridcell" id="col_tracking_contatto" style="{!IF(informativeCamp||agencyCamp||listeincentivazione,'display:none','')}">
+                                        <div class="slds-truncate" title="{!cm.tRecord.Sottostato__c}">{!cm.tRecord.Sottostato__c}</div>
+                                    </td>
+                                    <td role="gridcell" id="col_nodi" style="{!IF(listeincentivazione,'display:none','')}">
+                                        <div class="slds-truncate" title="{!cm.tRecord.Nodes__c}">{!cm.tRecord.Nodes__c}</div>
+                                    </td>
+                                    <td role="gridcell" id="col_nodo" style="{!IF(listeincentivazione,'','display:none')}">
+                                        <div class="slds-truncate" title="{!cm.tRecord.Nodes__c}" style = 'text-align:center;'>{!cm.tRecord.Codice_Nodo_Omnia__c}</div>
+                                    </td>
+                                    <td role="gridcell" id="col_titolare" style = "{!IF(listeincentivazione,'display:none','')}">
+                                        <div class="slds-truncate" title="{!cm.tRecord.Owner__r.Name}">
+                                            <apex:outputLink value="{!cm.tRecord.Owner__c}" target="_blank">{!cm.tRecord.Owner__r.Name}</apex:outputLink>
+                                        </div>
+                                    </td>
+                                    <td role="gridcell" id="col_traccia_contatto" class="slds-text-align_center" style="{!IF(dataEnrichment||listeincentivazione,'display:none','')}">
+                                        <apex:commandButton image="{!$Resource.LC_Positive}" style="margin:0px 5px" styleClass="slds-button slds-button_icon-x-small" action="{!tcPositive}" tabindex="0" title="Interessato" reRender="tracciaContatto_modal" rendered="{!agencyCamp||marketingCamp}">
+                                            <apex:param name="cmId" value="{!cm.tRecord.Id}" assignTo="{!cmID}"/>
+                                        </apex:commandButton>
+                                        <apex:commandButton image="{!$Resource.LC_Phone}" style="margin:0px 5px" styleClass="slds-button slds-button_icon-x-small" action="{!tcRecall}" tabindex="0" title="Da ricontattare" reRender="tracciaContatto_modal" rendered="{!agencyCamp||marketingCamp}">
+                                            <apex:param name="cmId" value="{!cm.tRecord.Id}" assignTo="{!cmID}"/>
+                                        </apex:commandButton>
+                                        <apex:commandButton image="{!$Resource.LC_Negative}" style="margin:0px 5px" styleClass="slds-button slds-button_icon-x-small" action="{!tcNegative}" tabindex="0" title="Non interessato" reRender="tracciaContatto_modal" rendered="{!agencyCamp||marketingCamp}">
+                                            <apex:param name="cmId" value="{!cm.tRecord.Id}" assignTo="{!cmID}"/>
+                                        </apex:commandButton>
+                                        <apex:commandButton image="{!$Resource.Contact_Icon}" styleClass="slds-button slds-button_icon-x-small" action="{!tcInformative}" tabindex="0" title="Traccia Contatto Informativa" reRender="tracciaContatto_modal" rendered="{!informativeCamp}">
+                                            <apex:param name="cmId" value="{!cm.tRecord.Id}" assignTo="{!cmID}"/>
+                                        </apex:commandButton>
+                                    </td>
+                                    <td role="gridcell" id="col_crea_proposta" class="slds-text-align_center" style="{!IF(dataEnrichment||informativeCamp||listeincentivazione,'display:none','')}">
+                                        <apex:commandButton value="Crea" styleClass="slds-button slds-button_neutral btnSubmit" tabindex="0" title="Crea proposta" reRender="tracciaContatto_modal,creaProposta_modal,main_form" status="spinner_main"
+                                                            action="{!createProposal}" oncomplete="cpRedirect('{!checkOpp}','{!urlDAOL}');">
+                                                            <!-- onclick="createProposal('{!cm.tRecord.Contact.Account.Id}','{!cm.tRecord.Id}');"> -->
+                                            <apex:param name="cmId" value="{!cm.tRecord.Id}" assignTo="{!cmID}"/>  <!-- DOES NOT WORK -->
+                                        </apex:commandButton>
+                                    </td>
+                                    <td role="gridcell" id="col_stato_trattativa" style="{!IF(marketingCamp||agencyCamp,'','display:none')}">
+                                        <div class="slds-truncate" title="{!cm.tRecord.Stato_Opportunit_Custom__c}">{!cm.tRecord.Stato_Opportunit_Custom__c}</div>
+                                    </td>
+                                    <td role="gridcell" id="col_ultimo_contatto" class="slds-text-align_center" style="{!IF(dataEnrichment||informativeCamp||listeincentivazione,'display:none','')}">
+                                        <div class="slds-truncate" title="{!cm.lastContactDate}">
+                                            <apex:commandLink onclick="window.open('{!URLBASE}/{!cm.lastContact.Id}','_blank');return false;" value="{!cm.lastContactDateShort}"/>
+                                        </div>
+                                    </td>
+                                    <td role="gridcell" id="col_cellulare" class="slds-text-align_center" style="{!IF(dataEnrichment,'','display:none')}">
+                                        <div class="slds-checkbox" title="Cellulare">
+                                            <!-- <output type="checkbox" name="options" id="CB_Cel-{!cm.tRecord.ContactId}" tabindex="-1" aria-labelledby="CBL_Cel-{!cm.tRecord.ContactId} column-group-header" value="{!cm.tRecord.Data_Enrichment_Target_Phone__c}" /> -->
+                                            <!-- <label class="slds-checkbox__label" for="CB_Cel-{!cm.tRecord.ContactId}" id="CBL_Cel-{!cm.tRecord.ContactId}"> -->
+                                            <label class="slds-checkbox">
+                                                <apex:inputCheckbox style="myCustom" styleClass="slds-checkbox" value="{!cm.tRecord.Data_Enrichment_Target_Phone__c}" onclick="return false" disabled="true" />
+                                                <span class="slds-checkbox_faux"></span>
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td role="gridcell" id="col_email" class="slds-text-align_center" style="{!IF(dataEnrichment,'','display:none')}">
+                                        <div class="slds-checkbox" title="Email">
+                                            <!-- <output type="checkbox" name="options" id="CB_Email-{!cm.tRecord.ContactId}" tabindex="-1" aria-labelledby="CBL_Email-{!cm.tRecord.ContactId} column-group-header" value="{!cm.tRecord.Data_Enrichment_Target_Email__c}" /> -->
+                                            <!-- <label class="slds-checkbox__label" for="CB_Email-{!cm.tRecord.ContactId}" id="CBL_Email-{!cm.tRecord.ContactId}"> -->
+                                            <label class="slds-checkbox">
+                                                <apex:inputCheckbox styleClass="slds-checkbox" value="{!cm.tRecord.Data_Enrichment_Target_Email__c}" onclick="return false" disabled="true"/>
+                                                <span class="slds-checkbox_faux"></span>
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td role="gridcell" id="col_consensi" class="slds-text-align_center" style="{!IF(dataEnrichment,'','display:none')}">
+                                        <div class="slds-checkbox" title="Consensi">
+                                            <!-- <output type="checkbox" name="options" id="CB_Consensi-{!cm.tRecord.ContactId}" tabindex="-1" aria-labelledby="CBL_Consensi-{!cm.tRecord.ContactId} column-group-header" value="{!cm.tRecord.Data_Enrichment_Target_Consensus__c}" /> -->
+                                            <!-- <label class="slds-checkbox__label" for="CB_Consensi-{!cm.tRecord.ContactId}" id="CBL_Consensi-{!cm.tRecord.ContactId}"> -->
+                                            <label class="slds-checkbox">
+                                                <apex:inputCheckbox styleClass="slds-checkbox" value="{!cm.tRecord.Data_Enrichment_Target_Consensus__c}" onclick="return false" disabled="true"/>
+                                                <span class="slds-checkbox_faux"></span>
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td role="gridcell" id="col_altri_dati" class="slds-text-align_center" style="{!IF(dataEnrichment,'','display:none')}">
+                                        <div class="slds-checkbox" title="Altri Dati">
+                                            <!-- <output type="checkbox" name="options" id="CB_Altridati-{!cm.tRecord.ContactId}" tabindex="-1" aria-labelledby="CBL_Altridati-{!cm.tRecord.ContactId} column-group-header" value="{!cm.tRecord.Data_Enrichment_Target_Other__c}" /> -->
+                                            <!-- <label class="slds-checkbox__label" for="CB_Altridati-{!cm.tRecord.ContactId}" id="CBL_Altridati-{!cm.tRecord.ContactId}"> -->
+                                            <label class="slds-checkbox">
+                                                <apex:inputCheckbox styleClass="slds-checkbox" value="{!cm.tRecord.Data_Enrichment_Target_Other__c}" onclick="return false" disabled="true"/>
+                                                <span class="slds-checkbox_faux"></span>
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td role="gridcell" id="col_ultima_modifica" style="{!IF(dataEnrichment,'','display:none')}">
+                                        <div class="slds-truncate" title="{!cm.tRecord.lastmodifieddate}">
+                                            <apex:outputField value="{!cm.tRecord.lastmodifieddate}"/>
+                                        </div>
+                                    </td>
+                                    <td role="gridcell" id="col_ultima_modifica_effettutata" style="{!IF(informativeCamp,'','display:none')}">
+                                        <div class="slds-truncate" title="{!cm.lastContactDate}">
+                                            <apex:outputLabel value="{!cm.lastContactDate}"/>
+                                        </div>
+                                    </td>
+                                    
+                                    <td role="gridcell" id="col_Certificazione" style="{!IF(listeincentivazione,'','display:none')}">
+                                        <div class="slds-truncate" title="Certificazione" style = "text-align:center">
+                                            {!IF(cm.tRecord.ndg_certificato__c,'Si','No')}
+                                        </div>
+                                    </td>
+                                    
+                                    <td role="gridcell" id="col_flag_Attivo" style="{!IF(listeincentivazione,'','display:none')}">
+                                        <div class="slds-truncate" title="Cliente Attivo" style = "text-align:center">
+                                            {!IF(cm.tRecord.flg_attivo__c,'Si','No')}
+                                        </div>
+                                    </td>
+                                    
+                                    <td role="gridcell" id="col_target" style="{!IF(listeincentivazione,'','display:none')}">
+                                        <div class="slds-truncate" title="Target" style = "text-align:center">
+                                            {!IF(cm.tRecord.target_2018__c,'Si','No')}
+                                        </div>
+                                    </td>
+                                    
+                                    <td role="gridcell" id="col_stop_carta" style="{!IF(listeincentivazione,'','display:none')}">
+                                        <div class="slds-truncate" title="Stop Carta" style = "text-align:center">
+                                            {!IF(cm.tRecord.stop_carta_2018__c,'Si','No')}
+                                        </div>
+                                    </td>
+                                    
+                                    <td role="gridcell" id="col_firma" style="{!IF(listeincentivazione,'','display:none')}">
+                                        <div class="slds-truncate" title="Firma Digitale" style = "text-align:center">
+                                            {!IF(cm.tRecord.firma_digitale_2018__c,'Si','No')}
+                                        </div>
+                                    </td>
+                                    
+                                    <td role="gridcell" id="col_firma" style="{!IF(listeincentivazione,'','display:none')}">
+                                        <div class="slds-truncate" title="Data ultimo aggiornamento" style = "text-align:center">
+                                            <apex:outputText value="{0, date, dd/MM/yyyy}" >
+    											<apex:param value="{!cm.tRecord.LastModifiedDate}"/>
+											</apex:outputText>
+                                            
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!--> MASSAROTTI ANTONINO 20/11/2019 START<!-->
+                            </apex:repeat>
+                        </tbody>
+                    </table>
+                    
+                    <apex:outputLabel id="SelectedNum">
+                        <div id="tableUtils">[0 record selezionati]</div>
+                    </apex:outputLabel>
+
+                    <apex:commandLink action="{!doPrevious}"  value=" << Precedente " rendered="{!hasPrevious}" /> 
+                    <apex:outputLabel value=" (Pagina {!pageNumber} di {!totalPages}) " />  
+                    <apex:commandLink action="{!doNext}"  value=" Successivo >> " rendered="{!hasNext}"/> 
+                    
+
+                    <!-- TUGAL SERGER: SPINNER ANIMATION -->
+                    <apex:actionStatus id="spinner_main">
+                        <apex:facet name="start">
+                            <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.75; z-index: 1000; background-color: white;">
+                                <div role="status" class="slds-spinner slds-spinner_brand slds-spinner_large" style="position: fixed; color: default; top:50%; bottom:50%; left:50%; right: 50%;">
+                                    <div class="slds-spinner__dot-a"></div>
+                                    <div class="slds-spinner__dot-b"></div>
+                                    <!-- img src="{!URLFOR($Resource.SLDS, '/assets/images/spinners/slds_spinner.gif')}" / -->
+                                </div>
+                            </div>
+                        </apex:facet>
+                    </apex:actionStatus>
+                    
+                </apex:form>
+
+            </div>
+
+            
+            <!-- Pop-Up Actions -->
+            <apex:form id="popupAction">
+                <apex:outputPanel rendered="{!displayPopUpStato||displayPopupEsclusione||displayPopUpAssegnazione||displayPopupVisibility}">
+                    <section role="alertdialog" tabindex="-1" aria-labelledby="prompt-heading-id" aria-describedby="prompt-message-wrapper" class="slds-modal slds-fade-in-open slds-modal_prompt">
+                        <div class="slds-modal__container">
+                            <header class="slds-modal__header slds-theme_warning slds-theme_alert-texture">
+                                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate"><b>Attenzione</b></h2>
+                            </header>
+                            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                                <h1 class="slds-text-body_regular" id="prompt-heading-id">{!alertMessage}</h1>
+                            </div>
+                            <footer class="slds-modal__footer slds-theme_default">
+                                <div align="center">
+                                    <apex:commandButton value="Sì, procedi con il cambio stato" action="{!changeCampaignMemberStatus}" styleClass="slds-button slds-button_neutral slds-not-selected" rendered="{!displayPopUpStato}" rerender="popupAction,main_form,messages" oncomplete="addChangeListener();" status="spinner_Action"/>
+                                    <apex:commandButton value="Sì, procedi con l'assegnazione" action="{!changeCampaignMemberOwner}" styleClass="slds-button slds-button_neutral slds-not-selected" rendered="{!displayPopUpAssegnazione}" rerender="popupAction,main_form,messages" oncomplete="addChangeListener();" status="spinner_Action"/>
+                                    <apex:commandButton value="Sì, procedi con l'esclusione" action="{!removeCampaignMember}" styleClass="slds-button slds-button_neutral slds-not-selected" rendered="{!displayPopupEsclusione}" rerender="popupAction,main_form,messages" oncomplete="addChangeListener();" status="spinner_Action" />
+                                    <apex:commandButton value="Annulla" action="{!closePopup}" styleClass="slds-button slds-button_neutral slds-not-selected" rendered="{!!displayPopupVisibility}" rerender="popupAction"/>
+                                    
+                                    <apex:commandButton value="SI e assegna i clienti" action="{!gotToVisibilityMngmt}" styleClass="slds-button slds-button_neutral slds-not-selected" rendered="{!displayPopupVisibility}" status="spinner_Action" /><br/>
+                                    <apex:commandButton value="NO, non effettuare alcuna assegnazione" action="{!closePopup}" styleClass="slds-button slds-button_neutral slds-not-selected slds-m-top_xx-small" rendered="{!displayPopupVisibility}" rerender="popupAction,main_form,messages" oncomplete="addChangeListener();" status="spinner_Action" />
+                                    <!-- <apex:commandButton value="NO, ma assegna i clienti visibili" action="{!AssignVisibleOnly}" styleClass="slds-button slds-button_neutral slds-not-selected" rendered="{!CountRequiringVisibility<CountSelected}" rerender="popupAction,main_form,messages" oncomplete="addChangeListener();" status="spinner_Action" /><br/> -->
+                                </div>
+                                <br/>
+                                <div class="slds-checkbox slds-form_horizontal slds-align-middle slds-col_padded slds-size_1-of-2" align="left" style="{!IF(displayPopUpAssegnazione,'','display:none')}">
+                                    <label class="slds-checkbox">
+                                        <apex:inputCheckbox value="{!sendEmailToOwner}" styleClass="slds-checkbox" />
+                                        <span class="slds-checkbox_faux"></span>
+                                        <span> Manda email al nuovo assegnatario?</span>
+                                    </label>
+                                </div>
+                            </footer>
+                        </div>
+                        
+                        <!-- SPINNER ANIMATION -->
+                        <apex:actionStatus id="spinner_Action">
+                            <apex:facet name="start">
+                                <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.75; z-index: 1000; background-color: white;">
+                                    <div role="status" class="slds-spinner slds-spinner_brand slds-spinner_large" style="position: fixed; color: default; top:50%; bottom:50%; left:50%; right:50%;">
+                                        <div class="slds-spinner__dot-a"></div>
+                                        <div class="slds-spinner__dot-b"></div>
+                                        <!-- img src="{!URLFOR($Resource.SLDS, '/assets/images/spinners/slds_spinner.gif')}" / -->
+                                    </div>
+                                </div>
+                            </apex:facet>
+                        </apex:actionStatus>
+                    </section>
+                    <div class="slds-backdrop slds-backdrop_open"></div>
+                </apex:outputPanel>
+            </apex:form>
+            
+            <!-- Pop-Up Traccia Contatto -->
+            <apex:form id="tracciaContatto_modal">
+                <apex:outputPanel rendered="{!displayTCpositive}">
+                    <section role="alertdialog" tabindex="-1" aria-labelledby="prompt-heading-id" aria-describedby="prompt-message-wrapper" class="slds-modal slds-fade-in-open slds-modal_prompt">
+                        <div class="slds-modal__container">
+                            <header class="slds-modal__header slds-theme_success slds-theme_alert-texture">
+                                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate"><b>Traccia Contatto</b></h2>
+                            </header>
+                            <div class="slds-grid slds-wrap" style="{!IF(eventError,'','display:none')}">
+                                <div class="slds-align-middle slds-size_1-of-1" align="center">
+                                    <h2 class="slds-theme_error slds-theme_alert-texture slds-text-body_regular">{!taskErrorMessage}</h2>
+                                </div>
+                            </div>
+                            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                                <h1 class="slds-text-body_regular" id="prompt-heading-id">{!alertMessage}</h1>
+                                <br/>
+                                <div class="slds-grid slds-wrap slds-grid_align-center">
+                                    <div class="slds-col slds-size_1-of-3">
+                                        <div class="slds-checkbox slds-form_horizontal slds-align-middle slds-col_padded slds-size_1-of-1" align="left">
+                                            <label class="slds-checkbox">
+                                                <apex:inputCheckbox value="{!createOpportunity}" styleClass="slds-checkbox" disabled="{!createAppointment}"/>
+                                                <apex:actionSupport event="onchange" reRender="tracciaContatto_modal" />
+                                                <span class="slds-checkbox_faux"></span>
+                                                <span> Crea Trattativa</span>
+                                            </label>
+                                        </div>
+                                        <div class="slds-checkbox slds-form_horizontal slds-align-middle slds-col_padded slds-size_1-of-1" align="left" style="{!IF(createOpportunity,'','display:none')}">
+                                            <label class="slds-checkbox">
+                                                <apex:inputCheckbox value="{!createAppointment}" styleClass="slds-checkbox"/>
+                                                <apex:actionSupport event="onchange" reRender="tracciaContatto_modal" />
+                                                <span class="slds-checkbox_faux"></span>
+                                                <span> Crea Appuntamento</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br/>
+                                <div class="slds-grid slds-wrap slds-grid_pull-padded slds-grid_align-left slds-form slds-form_horizontal" style="{!IF(createAppointment,'','display:none')}">
+                                    <div class="slds-container_large slds-col_padded slds-m-bottom_x-small slds-size_1-of-2">
+                                        <label class="slds-form-element__label" for="task_Appuntamento">Oggetto</label>
+                                        <div class="slds-form-element__control">
+                                            <apex:outputfield styleClass="slds-input" id="task_Appuntamento" value="{!myAppointment.Subject}"/>
+                                        </div>
+                                    </div>
+                                    <div class="slds-container_large slds-col_padded slds-m-bottom_x-small slds-size_1-of-2">
+                                        <label class="slds-form-element__label" for="task_AssegnaA">Assegna a</label>
+                                        <div class="slds-form-element__control">
+                                            <apex:selectList id="task_AssegnaA" styleClass="slds-input" value="{!taskSelectedUser}" size="1">
+                                                <apex:selectOptions value="{!TaskAssignmentUser}"/>
+                                            </apex:selectList>
+                                        </div>
+                                    </div>
+                                    <div class="slds-container_large slds-col_padded slds-m-bottom_x-small slds-size_1-of-2">
+                                        <label class="slds-form-element__label" style="padding-top:0px" for="task_tipologia">Tipologia appuntamento</label>
+                                        <div class="slds-form-element__control">
+                                            <apex:inputfield styleClass="slds-input" id="task_tipologia" value="{!myAppointment.Type}"/>
+                                        </div>
+                                    </div>
+                                    <div class="slds-container_large slds-col_padded slds-m-bottom_x-small slds-size_1-of-2">
+                                        <label class="slds-form-element__label" style="padding-top:0px" for="task_luogo">Luogo appuntamento</label>
+                                        <div class="slds-form-element__control">
+                                            <apex:inputField id="task_luogo" styleClass="slds-input" value="{!myAppointment.Luogo_appuntamento__c}">
+                                                <apex:actionSupport event="onchange" action="{!changeIndirizzo}" status="spinner_TCpositive" />
+                                            </apex:inputField>
+                                        </div>
+                                    </div>
+                                    <div class="slds-container_large slds-col_padded slds-m-bottom_x-small slds-size_1-of-2">
+                                        <label class="slds-form-element__label" for="task_indirizzo">Indirizzo</label>
+                                        <div class="slds-form-element__control">
+                                            <apex:inputfield styleClass="slds-input" id="task_indirizzo" value="{!myAppointment.Location}" />
+                                        </div>
+                                    </div>
+                                    <div class="slds-container_large slds-col_padded slds-m-bottom_x-small slds-size_1-of-2">
+                                        <label class="slds-form-element__label" style="padding-top:0px" for="task_date">Data appuntamento</label>
+                                        <div class="slds-form-element__control">
+                                            <apex:inputField id="task_date" value="{!tmp.Effective_date__c}" styleClass="slds-input" type="text"/>
+                                        </div>
+                                    </div>
+                                    <div class="slds-container_large slds-col_padded slds-m-bottom_x-small slds-size_1-of-2">
+                                        <label class="slds-form-element__label" for="task_description">Descrizione</label>
+                                        <div class="slds-form-element__control">
+                                            <apex:inputField id="task_description" value="{!myAppointment.Description}" styleClass="slds-input"/>
+                                        </div>
+                                    </div>
+                                    <div class="slds-container_large slds-col_padded slds-m-bottom_x-small slds-size_1-of-2">
+                                        <label class="slds-form-element__label" for="task_starttime">Ora inizio</label>
+                                        <div class="slds-form-element__control">
+                                            <apex:selectList id="task_starttime" styleClass="slds-input" value="{!InTime}" size="1">
+                                                <apex:selectOptions value="{!InTimesAppointment}"/>
+                                                <apex:actionSupport event="onchange" action="{!updateEventEndTime}"/>
+                                            </apex:selectList>
+                                        </div>
+                                    </div>
+                                    <div class="slds-container_large slds-col_padded slds-m-bottom_x-small slds-size_1-of-2">
+                                        <label class="slds-checkbox slds-form-element__label">
+                                            <span class="">Promemoria</span>
+                                        </label>
+                                        <label class="slds-checkbox slds-m-left_large slds-p-top_xx-small">
+                                            <apex:inputCheckbox value="{!taskForEvent.IsReminderSet}" styleClass="slds-checkbox" />
+                                            <span class="slds-checkbox_faux"></span>
+                                        </label>
+                                    </div>
+                                    <div class="slds-container_large slds-col_padded slds-m-bottom_x-small slds-size_1-of-2">
+                                        <label class="slds-form-element__label" for="task_endtime">Ora fine</label>
+                                        <div class="slds-form-element__control">
+                                            <apex:selectList id="task_endtime" styleClass="slds-input" value="{!OutTime}" size="1">
+                                                <apex:selectOptions value="{!OutTimesAppointment}"/>
+                                            </apex:selectList>
+                                        </div>
+                                    </div>
+                                    <div class="slds-container_large slds-col_padded slds-m-bottom_x-small slds-size_1-of-2" style="{!IF(taskForEvent.IsReminderSet,'','display:none')}">
+                                        <label class="slds-form-element__label" style="padding-top:0px" for="task_reminderdate">Data promemoria</label>
+                                        <div class="slds-form-element__control">
+                                            <apex:inputField id="task_reminderdate" value="{!tmp3.Effective_date__c}" styleClass="slds-input"/>
+                                        </div>
+                                    </div>
+                                    <div class="slds-container_large slds-col_padded slds-m-bottom_x-small slds-size_1-of-2" style="{!IF(taskForEvent.IsReminderSet,'','display:none')}">
+                                        <label class="slds-form-element__label" style="padding-top:0px" for="task_remindertime">Orario promemoria</label>
+                                        <div class="slds-form-element__control">
+                                            <apex:selectList id="task_remindertime" styleClass="slds-input" value="{!taskAppointmentTime}" size="1">
+                                                <apex:selectOptions value="{!TimesTaskEvent}"/>
+                                            </apex:selectList>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br/>
+                                <div class="slds-grid slds-wrap slds-grid_align-center" style="{!IF(createAppointment,'','display:none')}">
+                                        <div class="slds-checkbox slds-form_horizontal slds-align-middle slds-col_padded slds-m-bottom_x-small slds-size_1-of-1" align="center">
+                                            <label class="slds-checkbox">
+                                                <apex:inputCheckbox value="{!taskEmailtoUser}" styleClass="slds-checkbox"/>
+                                                <span class="slds-checkbox_faux"></span>
+                                                <span> Manda email al nuovo assegnatario?</span>
+                                            </label>
+                                        </div>
+                                </div>
+                            </div>
+                            <footer class="slds-modal__footer">
+                                <div align="center">
+                                    <apex:commandButton value="Annulla" action="{!closeTC}" styleClass="slds-button slds-button_neutral slds-not-selected" reRender="tracciaContatto_modal" status="spinner_TCpositive"/>
+                                    <apex:commandButton value="Salva" action="{!saveTC}" styleClass="slds-button slds-button_brand slds-not-selected" reRender="tracciaContatto_modal,main_form" status="spinner_TCpositive"/>
+                                    <apex:commandButton value="Salva e Invia Email" action="{!saveTC}" styleClass="slds-button slds-button_brand slds-not-selected" reRender="tracciaContatto_modal,main_form" status="spinner_TCpositive" rendered="{!createAppointment}"
+                                                        oncomplete="sendEmail('{!myCM.Contact.Account.Id}','{!taskSelectedUserName}','{!myAppointment.Luogo_appuntamento__c}',
+                                                                              '{!myAppointment.Location}','{!tmp.Effective_date__c}','{!InTime}','{!myAppointment.Subject}','{!eventError}')" />
+                                </div>
+                            </footer>
+                        </div>
+                        
+                        <!-- SPINNER ANIMATION -->
+                        <apex:actionStatus id="spinner_TCpositive">
+                            <apex:facet name="start">
+                                <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.75; z-index: 1000; background-color: white;">
+                                    <div role="status" class="slds-spinner slds-spinner_brand slds-spinner_large" style="position: fixed; color: default; top:50%; bottom:50%; left:50%; right: 50%;">
+                                        <div class="slds-spinner__dot-a"></div>
+                                        <div class="slds-spinner__dot-b"></div>
+                                        <!-- img src="{!URLFOR($Resource.SLDS, '/assets/images/spinners/slds_spinner.gif')}" / -->
+                                    </div>
+                                </div>
+                            </apex:facet>
+                        </apex:actionStatus>
+                    </section>
+                    <div class="slds-backdrop slds-backdrop_open"></div>
+                </apex:outputPanel>
+                
+                <apex:outputPanel rendered="{!displayTCrecall}">
+                    <section role="alertdialog" tabindex="-1" aria-labelledby="prompt-heading-id" aria-describedby="prompt-message-wrapper" class="slds-modal slds-fade-in-open slds-modal_prompt">
+                        <div class="slds-modal__container">
+                            <header class="slds-modal__header slds-theme_warning slds-theme_alert-texture">
+                                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate"><b>Traccia Contatto</b></h2>
+                            </header>
+                            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                                <h1 class="slds-text-body_regular" id="prompt-heading-id">{!alertMessage}</h1>
+                                <br/>
+                                <div class="slds-grid slds-wrap slds-grid_align-center">
+                                    <div class="slds-col slds-size_1-of-3">
+                                        <div class="slds-checkbox slds-form_horizontal slds-align-middle slds-col_padded slds-size_1-of-1" align="left">
+                                            <label class="slds-checkbox">
+                                                <apex:inputCheckbox value="{!myTask.IsReminderSet}" styleClass="slds-checkbox"/>
+                                                <apex:actionSupport event="onchange" reRender="tracciaContatto_modal" oncomplete="addChangeListener();"/>
+                                                <span class="slds-checkbox_faux"></span>
+                                                <span> Crea Promemoria</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br/>
+                                <div class="slds-grid slds-wrap slds-grid_pull-padded slds-grid_align-center slds-form slds-form_horizontal" style="{!IF(myTask.IsReminderSet,'','display:none')}">
+                                    <div class="slds-container_large slds-col_padded slds-m-bottom_x-small slds-size_3-of-4">
+                                        <label class="slds-form-element__label" for="task_reminderdate2">Data promemoria</label>
+                                        <div id="div_task_reminderdate2" class="slds-form-element__control">
+                                            <apex:inputField id="task_reminderdate2" value="{!tmp2.Effective_date__c}" styleClass="slds-input"/>
+                                        </div>
+                                    </div>
+                                    <div class="slds-container_large slds-col_padded slds-m-bottom_x-small slds-size_3-of-4">
+                                        <label class="slds-form-element__label" for="task_remindertime2">Orario promemoria</label>
+                                        <div class="slds-form-element__control">
+                                            <apex:selectList id="task_remindertime2" styleClass="slds-input" value="{!taskTime}" size="1">
+                                                <apex:selectOptions value="{!TimesTask}"/>
+                                            </apex:selectList>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <footer class="slds-modal__footer">
+                                <div align="center">
+                                    <apex:commandButton value="Annulla" action="{!closeTC}" styleClass="slds-button slds-button_neutral slds-not-selected" rerender="tracciaContatto_modal" status="spinner_TCphone"/>
+                                    <apex:commandButton value="Salva" action="{!saveTC}" styleClass="slds-button slds-button_brand slds-not-selected" rerender="tracciaContatto_modal,main_form" oncomplete="addChangeListener();" status="spinner_TCphone"/>
+                                </div>
+                            </footer>
+                        </div>
+                        
+                        <!-- SPINNER ANIMATION -->
+                        <apex:actionStatus id="spinner_TCphone">
+                            <apex:facet name="start">
+                                <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.75; z-index: 1000; background-color: white;">
+                                    <div role="status" class="slds-spinner slds-spinner_brand slds-spinner_large" style="position: fixed; color: default; top:50%;   bottom: 50%;    left: 50%;    right: 50%;">
+                                        <div class="slds-spinner__dot-a"></div>
+                                        <div class="slds-spinner__dot-b"></div>
+                                        <!-- img src="{!URLFOR($Resource.SLDS, '/assets/images/spinners/slds_spinner.gif')}" / -->
+                                    </div>
+                                </div>
+                            </apex:facet>
+                        </apex:actionStatus>
+                    </section>
+                    <div class="slds-backdrop slds-backdrop_open"></div>
+                </apex:outputPanel>
+                
+                <apex:outputPanel rendered="{!displayTCnegative}">
+                    <section role="alertdialog" tabindex="-1" aria-labelledby="prompt-heading-id" aria-describedby="prompt-message-wrapper" class="slds-modal slds-fade-in-open slds-modal_prompt">
+                        <div class="slds-modal__container">
+                            <header class="slds-modal__header slds-theme_error slds-theme_alert-texture">
+                                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate"><b>Traccia Contatto</b></h2>
+                            </header>
+                            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                                <h1 class="slds-text-body_regular" id="prompt-heading-id">{!alertMessage}</h1>
+                                <br/>
+                                <div class="slds-grid slds-wrap slds-grid_align-center">
+                                    <div class="slds-container_large slds-col_padded slds-m-bottom_x-small slds-size_1-of-1">
+                                        <label class="slds-form-element__label" for="motivo_noninter">Motivo </label>
+                                        <div class="slds-form-element__control">
+                                            <apex:inputfield styleClass="slds-input" id="motivo_noninter" value="{!myCM.Not_Interested_Reason__c}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <footer class="slds-modal__footer">
+                                <div align="center">
+                                    <apex:commandButton value="Annulla" action="{!closeTC}" styleClass="slds-button slds-button_neutral slds-not-selected" rerender="tracciaContatto_modal" status="spinner_TCnegative"/>
+                                    <apex:commandButton value="Salva" action="{!saveTC}" styleClass="slds-button slds-button_brand slds-not-selected" rerender="main_form,record_table,tracciaContatto_modal" oncomplete="addChangeListener();" status="spinner_TCnegative"/>
+                                </div>
+                            </footer>
+                        </div>
+                        
+                        <!-- SPINNER ANIMATION -->
+                        <apex:actionStatus id="spinner_TCnegative">
+                            <apex:facet name="start">
+                                <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.75; z-index: 1000; background-color: white;">
+                                    <div role="status" class="slds-spinner slds-spinner_brand slds-spinner_large" style="position: fixed; color: default; top:50%;   bottom: 50%;    left: 50%;    right: 50%;">
+                                        <div class="slds-spinner__dot-a"></div>
+                                        <div class="slds-spinner__dot-b"></div>
+                                        <!-- img src="{!URLFOR($Resource.SLDS, '/assets/images/spinners/slds_spinner.gif')}" / -->
+                                    </div>
+                                </div>
+                            </apex:facet>
+                        </apex:actionStatus>
+                    </section>
+                    <div class="slds-backdrop slds-backdrop_open"></div>
+                </apex:outputPanel>
+                
+                <apex:outputPanel rendered="{!displayTCinformative_p1}">
+                    <section role="alertdialog" tabindex="-1" aria-labelledby="prompt-heading-id" aria-describedby="prompt-message-wrapper" class="slds-modal slds-fade-in-open slds-modal_prompt">
+                        <div class="slds-modal__container">
+                            <header class="slds-modal__header slds-theme_alt-inverse slds-theme_alert-texture">
+                                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate"><b>Contatto con il Cliente</b></h2>
+                            </header>
+                            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                                <h1 class="slds-text-body_regular slds-m-bottom_x-small" id="prompt-heading-id">Esito di chiusura campagna:</h1>
+                                <div class="slds-grid slds-wrap slds-grid_align-center">
+                                    <apex:repeat value="{!buttons}" var="buttonLabel" id="informativeButtons">
+                                        <apex:commandButton value="{!buttonLabel}" action="{!informativaClick}" styleClass="slds-button slds-button_neutral slds-not-selected" rerender="tracciaContatto_modal" status="spinner_TCinformative1">
+                                            <apex:param name="{!buttonLabel}" value="{!buttonLabel}" assignTo="{!buttonValue}"/>
+                                        </apex:commandButton>
+                                    </apex:repeat>
+                                </div>
+                                <br/><br/>
+                                <h1 class="slds-text-body_regular slds-m-bottom_x-small" id="prompt-heading-id">Esito intermedio:</h1>
+                                <div class="slds-grid slds-wrap slds-grid_align-center">
+                                    <apex:commandButton value="Non risponde" action="{!selectEsitoDiServizio}" styleClass="slds-button slds-button_neutral slds-not-selected" rerender="tracciaContatto_modal" status="spinner_TCinformative1">
+                                        <apex:param name="Non risponde" value="Non risponde" assignTo="{!buttonValue}"/>
+                                    </apex:commandButton>
+                                    <apex:commandButton value="Da ricontattare" action="{!selectEsitoDiServizio}" styleClass="slds-button slds-button_neutral slds-not-selected" rerender="tracciaContatto_modal" status="spinner_TCinformative1">
+                                        <apex:param name="Da ricontattare" value="Da ricontattare" assignTo="{!buttonValue}"/>
+                                    </apex:commandButton>
+                                    <apex:commandButton value="Contatto errato" action="{!selectEsitoDiServizio}" styleClass="slds-button slds-button_neutral slds-not-selected" rerender="tracciaContatto_modal" status="spinner_TCinformative1">
+                                        <apex:param name="Contatto errato" value="Contatto errato" assignTo="{!buttonValue}"/>
+                                    </apex:commandButton>
+                                </div>
+                            </div>
+                            <footer class="slds-modal__footer">
+                                <div align="center">
+                                    <apex:commandButton value="Annulla" action="{!closeTC}" styleClass="slds-button slds-button_neutral slds-not-selected" rerender="tracciaContatto_modal" status="spinner_TCinformative1"/>
+                                </div>
+                            </footer>
+                        </div>
+                        
+                        <!-- SPINNER ANIMATION -->
+                        <apex:actionStatus id="spinner_TCinformative1">
+                            <apex:facet name="start">
+                                <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.75; z-index: 1000; background-color: white;">
+                                    <div role="status" class="slds-spinner slds-spinner_brand slds-spinner_large" style="position: fixed; color: default; top:50%;   bottom: 50%;    left: 50%;    right: 50%;">
+                                        <div class="slds-spinner__dot-a"></div>
+                                        <div class="slds-spinner__dot-b"></div>
+                                        <!-- img src="{!URLFOR($Resource.SLDS, '/assets/images/spinners/slds_spinner.gif')}" / -->
+                                    </div>
+                                </div>
+                            </apex:facet>
+                        </apex:actionStatus>
+                    </section>
+                    <div class="slds-backdrop slds-backdrop_open"></div>
+                </apex:outputPanel>
+                
+                <apex:outputPanel rendered="{!displayTCinformative_p2}">
+                    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-id" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                        <div class="slds-modal__container">
+                            <header class="slds-modal__header slds-theme_alt-inverse slds-theme_alert-texture">
+                                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate"><b>Contatto con il Cliente</b></h2>
+                            </header>
+                            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                                <apex:outputText value="{!informativeMessage}" styleClass="slds-text-body_regular" id="prompt-heading-id" escape="false" />
+                                <br/>
+                                <div class="slds-grid slds-wrap slds-grid_align-center" style="{!IF(displayInformativePromemoria,'','display:none')}">
+                                    <div class="slds-col slds-size_1-of-3">
+                                        <div class="slds-checkbox slds-form_horizontal slds-align-middle slds-col_padded slds-size_1-of-1" align="left">
+                                            <label class="slds-checkbox">
+                                                <apex:inputCheckbox value="{!myTask.IsReminderSet}" styleClass="slds-checkbox" />
+                                                <apex:actionSupport event="onchange" rerender="tracciaContatto_modal" />
+                                                <span class="slds-checkbox_faux"></span>
+                                                <span> Crea Promemoria</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br/>
+                                <div class="slds-grid slds-wrap slds-grid_pull-padded slds-grid_align-center slds-form slds-form_horizontal" style="{!IF(displayInformativePromemoria&&myTask.IsReminderSet,'','display:none')}">
+                                    <div class="slds-container_large slds-col_padded slds-m-bottom_x-small slds-size_3-of-4">
+                                        <label class="slds-form-element__label" for="task_reminderdate3">Data promemoria</label>
+                                        <div class="slds-form-element__control">
+                                            <apex:inputField id="task_reminderdate3" value="{!tmp2.Effective_date__c}" styleClass="slds-input"/>
+                                        </div>
+                                    </div>
+                                    <div class="slds-container_large slds-col_padded slds-m-bottom_x-small slds-size_3-of-4">
+                                        <label class="slds-form-element__label" for="task_remindertime3">Orario promemoria</label>
+                                        <div class="slds-form-element__control">
+                                            <apex:selectList id="task_remindertime3" styleClass="slds-input" value="{!taskTime}" size="1">
+                                                <apex:selectOptions value="{!TimesTask}"/>
+                                            </apex:selectList>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <footer class="slds-modal__footer slds-modal__footer_directional">
+                                <apex:commandButton value="Indietro" action="{!backTC}" styleClass="slds-button slds-button_neutral slds-not-selected" rerender="tracciaContatto_modal" status="spinner_TCinformative2"/>
+                                <apex:commandButton value="Annulla" action="{!closeTC}" styleClass="slds-button slds-button_neutral slds-not-selected" rerender="tracciaContatto_modal" status="spinner_TCinformative2"/>
+                                <apex:commandButton value="Salva" action="{!saveTC}" styleClass="slds-button slds-button_brand slds-not-selected" rerender="tracciaContatto_modal,main_form" oncomplete="addChangeListener();" status="spinner_TCinformative2"/>
+                            </footer>
+                        </div>
+                        <!-- SPINNER ANIMATION -->
+                        <apex:actionStatus id="spinner_TCinformative2">
+                            <apex:facet name="start">
+                                <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.75; z-index: 1000; background-color: white;">
+                                    <div role="status" class="slds-spinner slds-spinner_brand slds-spinner_large" style="position: fixed; color: default; top:50%;   bottom: 50%;    left: 50%;    right: 50%;">
+                                        <div class="slds-spinner__dot-a"></div>
+                                        <div class="slds-spinner__dot-b"></div>
+                                        <!-- img src="{!URLFOR($Resource.SLDS, '/assets/images/spinners/slds_spinner.gif')}" / -->
+                                    </div>
+                                </div>
+                            </apex:facet>
+                        </apex:actionStatus>
+                    </section>
+                    <div class="slds-backdrop slds-backdrop_open"></div>
+                </apex:outputPanel>
+            </apex:form>
+            
+            <!-- Pop-Up Crea Proposta -->
+            <apex:form id="creaProposta_modal">
+                <apex:outputPanel rendered="{!displayCP}">
+                    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-id" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-modal_medium slds-fade-in-open">
+                        <div class="slds-modal__container" align="center">
+                            <iframe class="slds-theme_default" style="width: 1200px; height: 330px;" src="{!urlTEST}"></iframe>
+                            <div class="slds-text-align_center slds-theme_default slds-border">
+                                <apex:commandButton value="Annulla" action="{!closeCP}" styleClass="slds-button slds-button_neutral slds-not-selected" rerender="creaProposta_modal" status="spinner_creaProposta"/>
+                            </div>
+                        </div>
+                        <!-- SPINNER ANIMATION -->
+                        <apex:actionStatus id="spinner_creaProposta">
+                            <apex:facet name="start">
+                                <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.75; z-index: 1000; background-color: white;">
+                                    <div role="status" class="slds-spinner slds-spinner_brand slds-spinner_large" style="position: fixed; color: default; top:50%;   bottom: 50%;    left: 50%;    right: 50%;">
+                                        <div class="slds-spinner__dot-a"></div>
+                                        <div class="slds-spinner__dot-b"></div>
+                                        <!-- img src="{!URLFOR($Resource.SLDS, '/assets/images/spinners/slds_spinner.gif')}" / -->
+                                    </div>
+                                </div>
+                            </apex:facet>
+                        </apex:actionStatus>
+                    </section>
+                    <div class="slds-backdrop slds-backdrop_open"></div>
+                </apex:outputPanel>
+            </apex:form>
+        </div>
+        </body>
+
+        <!-- Action Functions -->
+        <apex:form >
+            <!-- Action Function called from createProposal JavaScript - can be deleted if JS is deleted -->
+            <apex:actionFunction name="callCPmethod" action="{!createProposal}" reRender="main_form,creaProposta_modal" oncomplete="addChangeListener();">
+                <apex:param name="oppId" value="" />
+                <apex:param name="mycmId" value="" />
+            </apex:actionFunction>
+        </apex:form>
+        <apex:form >
+            <apex:actionFunction name="closeCPmethod" action="{!closeCP}" reRender="main_form,creaProposta_modal" oncomplete="addChangeListener();"/>
+        </apex:form>
+        <apex:form >
+            <!-- Action Function called from LightningAccountEdit page to refresh the page after Modifying CM in DE -->
+            <apex:actionFunction name="refreshExecuteQuery" action="{!refreshAfterPopup}" reRender="main_form"/>
+        </apex:form>
+        
+        <script>
+        function closeJavaCP() {
+            closeCPmethod();
+        }
+        
+        function cpRedirect(checkOpp,URL) {
+            if (checkOpp == 'true') {
+                window.open(URL);
+            }
+            
+            addChangeListener();
+        }
+        
+        function createProposal(accID,cmID){
+            // not used anymore, can be deleted because the functionality is done in Controller
+            sforce.connection.sessionId = '{!$Api.Session_ID}';
+            sforce.connection.serverUrl = '{!$Site.Prefix}/services/Soap/u/40.0';
+            
+            var Opportunities = sforce.connection.query("SELECT Id FROM Opportunity WHERE Account.Id = '" + accID + "' AND StageName= 'Open' AND Numero_proposte__c = 0");
+            var ProfileName = "{!$Profile.Name}";
+            var Agencycode = "{!$User.Agency_Code__c}";
+            var MyriamUsername="{!$User.CommunityNickname}";
+            
+            records = Opportunities.getArray("records");
+            var oppLength = records.length;
+            
+            if(oppLength == 0)
+            {
+                console.log('oppLength: 0');
+                if((ProfileName=='AAI - Vendite Avanzato') || (ProfileName=='AAI - Vendite Base') || (ProfileName=='System Administrator') || (ProfileName=='Amministratore del sistema'))
+                {
+                    var result = sforce.connection.query("SELECT Id, Name, NDG__c FROM Account WHERE Account.Id ='" + accID + "' LIMIT 1");
+                    var NDG = result.records.NDG__c;
+                    var accountId = result.records.Id;
+                    
+                    var oppRT = sforce.connection.query("SELECT Id FROM RecordType WHERE SObjectType = 'Opportunity' and DeveloperName = 'Opportunita_AXA_Assicurazioni'");
+                    
+                    var newopportunity= new sforce.SObject("Opportunity");
+                    newopportunity.RecordTypeId = oppRT.records.Id;
+                    newopportunity.Name = "my new opportunity";
+                    newopportunity.AccountId= accountId;
+                    newopportunity.StageName="Open";
+                    newopportunity.CloseDate=new Date();
+                    result = sforce.connection.create([newopportunity]);
+                    
+                    var resultOpp = sforce.connection.query("SELECT Id,Name FROM Opportunity WHERE Account.Id ='" + accID + "' ORDER BY CreatedDate DESC LIMIT 1");
+                    var oppId = resultOpp.records.Id;
+                    var oppName = resultOpp.records.Name;
+                    
+                    callCPmethod(oppId,cmID);
+                    
+                    var TargetURL='ServletSalesForce?RGICommand=NewProp&utente='+MyriamUsername+'&codiceAgenzia='+Agencycode+'&codiceNDG='+NDG+'&keySFDC='+oppId+'&descSFDC='+oppName;
+                    var urlDAOL = sforce.connection.query("SELECT Value__c FROM AAI_Code_Variables__c WHERE Name = 'DAOL_URL_Prefix_CreaPropostaAccount' LIMIT 1");
+                    console.log('URL: ' + urlDAOL.records.Value__c+TargetURL);
+                    window.open(urlDAOL.records.Value__c + TargetURL, "_blank");
+                    
+                    /*
+                    var urlFromApex ="/"+oppId;
+                    var pathName = window.location.pathname;
+                    var agencyIndex = pathName.indexOf("agenzie");
+                    var myURL = "https://"+window.location.hostname;
+                    if (agencyIndex!= -1){
+                        myURL = myURL+"/agenzie";
+                    }
+                    myURL = myURL+urlFromApex;
+                    if (urlFromApex!=""){
+                        //document.location = myURL;
+                        window.open(myURL, "_blank");
+                    }
+                    */
+                }
+                else
+                {
+                    //Comunicazione privilegi insufficienti
+                    try{
+                        jQuery(function() {
+                            //Append the jQuery CSS CDN Link to the Head tag.
+                            jQuery('head').append('<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/start/jquery-ui.css" type="text/css" />');
+                            
+                            //Create the HTML(DIV Tag) for the Dialog.
+                            var html = '<div id="dialog" title="Privilegi insufficienti"><p>Non si dispone dei permessi necessari per eseguire l\'operazione</p></div>';
+                            
+                            //Check if the Dialog(DIV Tag) already exists if not then Append the same to the Body tag.
+                            if(!jQuery('[id=dialog]').size()) {
+                                jQuery('body').append(html);
+                            }
+                            
+                            //Open the jQuery Dialog.
+                            jQuery( "#dialog" ).dialog({
+                                autoOpen: true,
+                                modal: true,
+                                show: {
+                                    effect: "blind",
+                                    duration: 200
+                                },
+                                hide: {
+                                    effect: "blind",
+                                    duration: 200
+                                },
+                                buttons: {
+                                    "Chiudi": function() {
+                                        jQuery( this ).dialog( "close" );
+                                    } 
+                                } 
+                            }); 
+                        }); 
+                    } catch(e) { 
+                        alert('An Error has Occured. Error: ' + e); 
+                    }
+                } 
+            }
+            
+            else
+            {
+                callCPmethod('',cmID);
+                
+                if (typeof(srcSelf) == 'function')
+                {
+                    srcUp('/apex/CreaPropostaAccount?Id=' + accID);
+                }
+                else
+                {
+                    if((ProfileName=='AAI - Vendite Avanzato') || (ProfileName=='AAI - Vendite Base'))
+                    {
+                        document.body.innerHTML += "<link rel=\"stylesheet\" type=\"text/css\" class=\"user\" href=\"/agenzie/resource/PopIn/Style1.css\">";
+                        createPopIn('/agenzie/apex/CreaPropostaAccount?Id=' + accID,330,1100,1);
+                    }
+                    else 
+                    { 
+                        document.body.innerHTML += "<link rel=\"stylesheet\" type=\"text/css\" class=\"user\" href=\"/resource/PopIn/Style1.css\">"; 
+                        createPopIn('/apex/CreaPropostaAccount?Id=' + accID,500,1100,1); 
+                    }   
+                }
+                
+            }
+        }
+        </script>
+        
+    </html>
+</apex:page>

@@ -1,0 +1,18 @@
+.modal-container {
+  background-color: rgba(0, 0, 0, 0.6);
+  background-size: cover;
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10001;
+}
+
+.close-button {
+  position: absolute;
+  z-index: 2;
+  background: transparent;
+  right: 15px;
+  top: 15px;
+}

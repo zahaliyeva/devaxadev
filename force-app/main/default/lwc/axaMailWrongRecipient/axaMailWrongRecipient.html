@@ -1,0 +1,55 @@
+<template>
+  <c-mobility-spinner show={spinner} show-overlay={spinnerOverlay}></c-mobility-spinner>
+  <tamplate if:false={waitCallBack}>
+  <template if:false={withError}>
+    <article class="card" if:true={showConfirm}>
+      <img src={logo} alt="Axa logo" />
+      <div class="slds-text-align_center">
+        <img src={inboxIcon} alt="inbox icon" />
+      </div>
+      <h1 class="slds-text-align_center title">Richiesta cancellazione</h1>
+      <br />
+      <p align="center">
+        Clicca sul bottone sotto per confermare la richiesta di rimozione del
+        tuo contatto dai nostri sistemi
+      </p>
+
+      <br />
+      <footer class="slds-text-align_center">
+        <button title="CONFERMA" onclick={handleConfirm} class="button">
+          CONFERMA
+        </button>
+      </footer>
+    </article>
+
+    <article class="card" if:true={showSuccessConfirm}>
+      <img src={logo} alt="Axa logo" />
+      <div class="slds-text-align_center">
+        <img src={tickIcon} alt="Tick icon" />
+      </div>
+      <h1 class="slds-text-align_center title">
+        Richiesta avvenuta con successo
+      </h1>
+      <br />
+      <p align="center">
+        La richiesta di rimozione del tuo contatto
+        <template if:true={showEmail}> {email} </template>
+        <template if:false={showEmail}> {sms} </template> dai nostri sistemi è
+        stata presa in carico
+      </p>
+
+      <!-- <p align="center">
+                Le nuove impostazioni saranno attive
+                <strong> entro 36 ore.</strong>
+            </p> -->
+
+      <br />
+      
+    </article>
+  </template>
+  <template if:true={withError}>
+    <c-axa-mail-errors errors={errorState} email={email} sms={sms}>
+    </c-axa-mail-errors>
+  </template>
+  </tamplate>
+</template>

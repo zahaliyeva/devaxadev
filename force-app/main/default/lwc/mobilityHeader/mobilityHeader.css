@@ -1,0 +1,48 @@
+.outer {
+  overflow: hidden;
+  padding-bottom: 10px;
+}
+
+.axaNav {
+  background: #FFFFFF;
+  height: 40px;
+  display: flex;
+}
+
+.title {
+  display: inline;
+  text-align: left;
+  font-weight: 700;
+  font-size: 16px;
+  font-family: 'Publico Headline Web', Georgia, 'Times New Roman', Times, serif;
+  color: #00008F;
+
+  padding-left: 10px;
+}
+
+.a-custom {
+  font: Bold 14px Source Sans Pro;
+  color: #00008F;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.h3-custom {
+  font: Bold 14px Source Sans Pro;
+}
+
+img {
+  margin-top: -4px;
+}
+
+.col-custom {
+  width: 50%
+}
+
+.col-custom-2 {
+  text-align: right;
+}
+
+.show-simple .col-custom-2 {
+  padding-top: 10px;
+}

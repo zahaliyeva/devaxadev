@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>Run Batch Account</label>
+    <protected>false</protected>
+    <values>
+        <field>Daily_Hour_End__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Daily_Hour_Start__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>IsAutoSchedulable__c</field>
+        <value xsi:type="xsd:boolean">true</value>
+    </values>
+    <values>
+        <field>Limit__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>MinutesRange__c</field>
+        <value xsi:type="xsd:double">5.0</value>
+    </values>
+    <values>
+        <field>Need_Information_Log__c</field>
+        <value xsi:type="xsd:boolean">false</value>
+    </values>
+    <values>
+        <field>Query__c</field>
+        <value xsi:type="xsd:string">Select id,NeedAsyncTriggerExecution__c, AAI_Agency_Reference_Code__c,Ccod_Produttore__c, TECH_COMPANY__C, ownerid, AAI_Agency__c, RecordTypeId, Nodes_tree__c,Nodes__c,Blacklist_Proce_Last_Mod_UserProfile__c,Blacklist_Processi__c   from account where NeedAsyncTriggerExecution__c = true and Last_Node_Modify_Date__c = last_N_Days:3 and LastModifiedDate =  last_N_Days:3  limit 10000</value>
+    </values>
+    <values>
+        <field>ScopeSize__c</field>
+        <value xsi:type="xsd:double">100.0</value>
+    </values>
+    <values>
+        <field>is_Testing_only__c</field>
+        <value xsi:type="xsd:boolean">false</value>
+    </values>
+</CustomMetadata>

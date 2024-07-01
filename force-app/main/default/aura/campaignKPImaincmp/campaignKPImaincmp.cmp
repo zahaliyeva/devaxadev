@@ -1,0 +1,518 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" controller="campaignKPI_CTRL" access="global" >
+    <lightning:spinner aura:id="mySpinner" alternativeText="Wait for few seconds please"/>
+    <aura:handler name="init" action="{!c.retrievePageValues}" value="{!this}"/> 
+    <aura:attribute name="CampaignId" type="String" />
+    <aura:attribute name="CollaboratoreId" type="String" />
+    <aura:attribute name="AreaManagerID" type="String" />
+    <aura:attribute name="SalesManagerID" type="String" />
+    <aura:attribute name="CodiceAgenzia" type="String" />
+    <aura:attribute name="StdUsr" type="Boolean"/>
+    <aura:attribute name="CampType" type="String"/>
+    <aura:attribute name="UserRole" type="String"/>
+    <aura:attribute name="PartnerUrl" type="String"/>
+    <aura:attribute name='UserProfile' type="String"/>
+    <aura:attribute name='IsPartnerUser' type="Boolean"/>
+    <aura:attribute name="SessionId" type="String"/>
+    <aura:attribute name="AgencyList" type="String[]"/>
+    <aura:handler name="change" value="{!v.NoClientsinTarget}" action="{!c.doHandleClick}"/>
+    <aura:handler name="change" value="{!v.UserId}" action="{!c.InitFilters}"/> 
+    <aura:attribute name="ShowCollFilter" type="boolean"/>
+    <aura:attribute name="ShowDirFilter" type="boolean"/>
+    <aura:attribute name="CollList" type="List"/>
+    <aura:attribute name="AreaList" type="List"/>
+    <aura:attribute name="SalesList" type="List"/>
+    <aura:attribute name="AgenciesList" type="List"/>
+    <aura:attribute name="MapAMtoSM" type="List"/>
+    <aura:attribute name='UserId' type="String"/>
+    <aura:attribute name='getURL' type="String"/>
+    <aura:attribute name='isMobile' type="Boolean" default="false"/>
+    <aura:attribute name='UserName' type="String"/>
+    <aura:attribute name='AreaManagerList' type="List"/>
+    <aura:attribute name='SalesManagerList' type="List"/>
+    <aura:attribute name='isSetAreaManager' type="boolean" default="false"/>
+    <aura:attribute name='isSetSalesManager' type="boolean" default="false"/>   
+
+    <aura:attribute name="QueryCalls" type="Integer[]"/>
+    <aura:attribute name="NoClientsinTarget" type="boolean" default="false"/>
+
+
+    <aura:handler name="change" value="{!v.RevenueTrattativeInCorso}" action="{!c.itemsChange}"/>
+    
+    <aura:attribute name='ClientiInTarget' type="Integer" default="0"/>
+    <aura:attribute name='ClientiLavorati' type="Integer" default="0"/>
+    <aura:attribute name='ClientiPrioritari' type="Integer" default="0"/>
+    <aura:attribute name='ClientiPrioritariLavorati' type="Integer" default="0"/>
+    <aura:attribute name='TrattativeCreate' type="Integer" default="0"/>
+    <aura:attribute name='TrattativeVinte' type="Integer" default="0"/>
+    <aura:attribute name='ClientiConEmailSMSInTarget' type='Integer' default="0"/>
+    <aura:attribute name='EmailSMSNonRecapitabili' type='Integer' default="0"/>
+    <aura:attribute name='ClientiConEmailInTarget' type='Integer' default="0"/>
+    <aura:attribute name='ClientiEmailApertaRichiestaContatto' type='Integer' default="0"/>
+    <aura:attribute name='ClientiConSMSInTarget' type='Integer' default="0"/>
+    <aura:attribute name='ClientiSMSApertoRichiestaContatto' type='Integer' default="0"/>
+    <aura:attribute name='ClientiConEmailSMSAperti' type='Integer' default="0"/>
+    <aura:attribute name='perClientiLavorati' type="Integer" default="0" />
+    <aura:attribute name='perTrattativeVinteClientiTarget' type="Integer" default="0" />
+    <aura:attribute name='perTrattativeCreateClientiLavorati' type="Integer" default="0" />
+    <aura:attribute name='perTrattativeVinteClientiLavorati' type="Integer" default="0"/>
+    <aura:attribute name='perClientiPLavoratiClientiPrioritari' type="Integer" default="0"/>
+    <aura:attribute name='perTrattativeVinteClientiPrioritari' type="Integer" default="0"/>
+    <aura:attribute name='perEmailSMSNonRecapitabiliClientiEmailSMSTarget' type="Integer" default="0"/>
+    <aura:attribute name='perClientiPrioritari' type="Integer" default="0"/>
+    <aura:attribute name='perEmailApertaRichiestaricontatto' type="Integer" default="0"/>
+    <aura:attribute name='perClientiPrioritariconEmail' type="Integer" default="0"/>
+    <aura:attribute name='perSMSApertoRichiestaricontatto' type="Integer" default="0"/>
+    <aura:attribute name='perClientiPrioritariconSMS' type="Integer" default="0"/>
+    <aura:attribute name='TrattativeVinteClientiPrioritari' type="Integer" default="0"/>
+    <aura:attribute name='RevenueTrattativeVinte' type="Integer" default="0"/>
+    <aura:attribute name='TrattativeIncorso' type="Integer" default="0"/>
+    <aura:attribute name='RevenueTrattativeInCorso' type="Integer" default="0"/>
+    <aura:attribute name='ClientiPrioritariEmail' type="Integer" default="0"/>
+    <aura:attribute name='ClientiPrioritariSMS' type="Integer" default="0"/>
+    <aura:attribute name='EmailSMSrecapitati' type="Integer" default="0"/>
+    
+    
+    
+    <aura:if isTrue="{!v.ShowCollFilter}">
+        <div class="slds-grid slds-wrap slds-grid_pull-padded">   
+            <fieldset class="slds-form_compound slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3">
+                <div id="container_Collaboratori" class="slds-form_horizontal ">
+                    <label class="slds-form-element__label " style="max-width:100%;" for="Scegliere il collaboratore:">Scegliere il collaboratore:</label>
+                    <div class="slds-form-element__control" style="width:80%;padding-left:0%!important">
+                        <ui:inputSelect class="slds-input" aura:id="inputList_collaboratori" change="{!c.SetCollaboratore}">
+                            <aura:iteration items="{!v.CollList}" var="level">
+                                
+                                <ui:inputSelectOption text="{!level.value}" label="{!level.label}"/>
+                            </aura:iteration>
+                        </ui:inputSelect>  
+                    </div> 
+                </div>
+            </fieldset>
+            
+            <div id="spazio_vuoto" class="slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3">
+                <div class="slds-form-element">
+                </div> 
+            </div>
+            
+            <div id="spazio_vuoto" class="slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3">
+                <div class="slds-form-element">
+                </div> 
+            </div>
+        </div> 
+    </aura:if> 
+    
+    
+    
+    <aura:if isTrue="{!v.ShowDirFilter}">
+        
+        
+        
+        <div class="slds-grid slds-wrap slds-grid_pull-padded">
+            <fieldset class="slds-form_compound slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3">
+                <div id="container_AM" class="slds-form_horizontal ">
+                    <label class="slds-form-element__label " style="max-width:100%;" for="Scegliere l'Area Manager:">Scegliere l'Area Manager:</label>
+                    <div class="slds-form-element__control" style="width:80%;padding-left:0%!important">
+                        
+                        
+                        
+                        <ui:inputSelect class="slds-input" aura:id="inputList_AreaMgr" change="{!c.SetAreaMgr}">
+                            <aura:iteration items="{!v.AreaList}" var="level">
+                                
+                                <ui:inputSelectOption text="{!level.value}" label="{!level.label}"/>
+                            </aura:iteration>
+                        </ui:inputSelect>
+                        
+                        
+                        
+                        
+                        
+                    </div> 
+                </div>
+            </fieldset>
+            
+            
+            
+            <fieldset class="slds-form_compound slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3">
+                <div id="container_SM" class="slds-form_horizontal ">
+                    <label class="slds-form-element__label " style="max-width:100%;" for="Scegliere il Sales Manager:">Scegliere il Sales Manager:</label>
+                    <div class="slds-form-element__control" style="width:80%;padding-left:0%!important">
+                        
+                        
+                        
+                        <ui:inputSelect class="slds-input" aura:id="inputList_SalesMgr" disabled="{!v.isSetAreaManager==false}" change="{!c.SetSalesMgr}">
+                            <aura:iteration items="{!v.SalesList}" var="level">
+                                
+                                <ui:inputSelectOption text="{!level.value}" label="{!level.label}"/>
+                            </aura:iteration>
+                        </ui:inputSelect>
+                    </div> 
+                </div>
+            </fieldset>
+            
+            
+            <fieldset class="slds-form_compound slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3">
+                <div id="container_Agenzie" class="slds-form_horizontal ">
+                    <label class="slds-form-element__label " style="max-width:100%;" for="Scegliere il codice Agenzia:">Scegliere il codice Agenzia:</label>
+                    <div class="slds-form-element__control" style="width:80%;padding-left:0%!important">
+                        
+                        <ui:inputSelect class="slds-input" aura:id="inputList_Agencies" disabled="{!v.isSetSalesManager==false}" change="{!c.SetAgency}">
+                            <aura:iteration items="{!v.AgenciesList}" var="level">
+                                
+                                <ui:inputSelectOption text="{!level.value}" label="{!level.label}"/>
+                            </aura:iteration>
+                        </ui:inputSelect> 
+                    </div> 
+                </div>
+            </fieldset>
+        </div>
+        
+    </aura:if>
+    
+    <div id="spazio_vuoto" class="slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1">
+        <div class="slds-form-element">
+        </div> 
+    </div>
+    
+    <aura:if isTrue="{!v.ShowDirFilter}">   
+        <div class="slds-grid slds-wrap slds-grid_pull-padded">
+            <div class="slds-align_absolute-center">
+                <div class="slds-m-around_x-small">
+                    <lightning:button label="Applica filtri" iconName="action:apex" iconPosition="centre" onclick="{!c.findagency}"/>
+                    <lightning:button label="Reset filtri" iconName="action:apex" iconPosition="centre" onclick="{!c.resetValues}"/>
+                </div>
+            </div>
+        </div>
+    </aura:if>
+    
+    <div class="slds-grid slds-wrap slds-grid_pull-padded">
+        <div class="slds-align_absolute-center">
+            <aura:if isTrue="{!v.NoClientsinTarget == true}"> 
+                <ui:message severity="Information" >
+                    Attenzione! L’utente selezionato non ha clienti da lavorare per questa campagna
+                </ui:message>
+            </aura:if> 
+        </div>
+    </div>
+    
+    
+    <div id="container_headerlavorazioneredemption" class="slds-col_padded slds-wrap  slds-p-bottom_x-small slds-m-top_small  slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1 " style="padding-left:0px;padding-right:0px;">
+        <h3 class="slds-section__title"> Lavorazione e Redemption Campagna</h3> 
+    </div>
+    
+    <div class="slds-grid slds-wrap slds-grid_pull-padded slds-grid_vertical-stretch">    
+        
+        <div id="container_ClientiTarget" class="slds-col_padded slds-container slds-form_horizontal slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3 slds-border_bottom">
+            <div class="slds-form-element">
+                <label class="slds-form-element__label slds-form_stacked" for="Clienti in target:">
+                    Clienti in target:
+                </label>
+                <div class="slds-form-element__control" style="width:65%">
+                    <ui:outputText class="slds-output " aura:id="ClientiinTarget"  value="{!v.ClientiInTarget}" title="Numero di clienti inseriti nella campagna"/> 
+                </div> 
+            </div>
+        </div>
+        
+        <aura:if isTrue="{!v.CampType == 'Informative_Campaign'}">
+            <div id="container_ClientiLavorati" class="slds-col_padded slds-container slds-form_horizontal slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3 slds-border_bottom">
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label" for="Clienti in target:">
+                        Clienti lavorati:
+                    </label>
+                    <div class="slds-form-element__control" style="width:65%">
+                        <ui:outputText class="slds-output" aura:id="Clientilavorati" value="{!v.ClientiLavorati}"/> 
+                    </div> 
+                </div>
+            </div>
+        </aura:if>
+        
+        <aura:if isTrue="{!v.isMobile == false}">
+            <div id="container_%ClientiLavorati" class="slds-col_padded slds-container slds-form_horizontal slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3 slds-border_bottom">
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label" for="ClientiLavorati">
+                        % Clienti lavorati:
+                    </label> 
+                    <div class="slds-form-element__control">
+                        <lightning:formattedNumber value="{!v.perClientiLavorati}" style="percent"></lightning:formattedNumber> 
+                    </div>   
+                </div>
+                
+            </div>
+            
+            <aura:if isTrue="{! not(v.CampType == 'Informative_Campaign')}">
+                <div id="container_TrattativevinteClientiTarget" class="slds-col_padded slds-container slds-form_horizontal slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3 slds-border_bottom">
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="TrattativevinteClientiTarget">
+                            % Trattative vinte:
+                        </label> 
+                        <div class="slds-form-element__control">
+                            <lightning:formattedNumber value="{!v.perTrattativeVinteClientiTarget}" style="percent"></lightning:formattedNumber> 
+                        </div>   
+                    </div>  
+                </div>
+            </aura:if>
+        </aura:if>
+        
+        
+        <aura:if isTrue="{! not(v.CampType == 'Informative_Campaign')}">
+            <div id="container_ClientiLavorati" class="slds-col_padded slds-container slds-form_horizontal slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3 slds-border_bottom">
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label " for="Clienti in target:">
+                        Clienti lavorati:
+                    </label>
+                    <div class="slds-form-element__control" style="width:65%">
+                        <ui:outputText class="slds-output" aura:id="Clientilavorati"  value="{!v.ClientiLavorati}" title="Numero dei clienti interessati, non interessati e da ricontattare"/> 
+                    </div> 
+                </div> 
+            </div>
+            
+            <aura:if isTrue="{!v.isMobile == false}">
+                <div id="container_TrattativecreateClientiLavorati" class="slds-col_padded slds-container slds-form_horizontal slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3 slds-border_bottom">
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="TrattativevinteClientiTarget">
+                            % Trattative create:
+                        </label> 
+                        <div class="slds-form-element__control">
+                            <lightning:formattedNumber value="{!v.perTrattativeCreateClientiLavorati}" style="percent"></lightning:formattedNumber> 
+                        </div>   
+                    </div> 
+                </div>
+                
+                
+                
+                <div id="container_TrattativevinteClientiLavorati" class="slds-col_padded slds-container slds-form_horizontal slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3 slds-border_bottom">
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="TrattativevinteClientiLavorati">
+                            % Trattative vinte:
+                        </label> 
+                        <div class="slds-form-element__control">
+                            <lightning:formattedNumber value="{!v.perTrattativeVinteClientiLavorati}" style="percent"></lightning:formattedNumber> 
+                        </div>   
+                    </div>  
+                </div>
+            </aura:if>
+            
+            
+            <div id="container_ClientiPrioritari" class="slds-col_padded slds-container slds-form_horizontal slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3 slds-border_bottom">
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label " for="Clienti prioritari:">
+                        Clienti prioritari:
+                    </label>
+                    <div class="slds-form-element__control" style="width:65%">
+                        <ui:outputText class="slds-output" aura:id="ClientiPrioritari"  value="{!v.ClientiPrioritari}" title="Numero di clienti che ha chiesto di essere ricontattato dopo aver ricevuto e-mail/sms"/> 
+                    </div> 
+                </div>
+            </div>
+            
+            <aura:if isTrue="{!v.isMobile == false}">
+                <div id="container_ClientiPLavoratiClientiPrioritari" class="slds-col_padded slds-container slds-form_horizontal slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3 slds-border_bottom">
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="ClientiPLavoratiClientiPrioritari">
+                            % Clienti lavorati:
+                        </label> 
+                        <div class="slds-form-element__control">
+                            <lightning:formattedNumber value="{!v.perClientiPLavoratiClientiPrioritari}" style="percent"></lightning:formattedNumber> 
+                        </div>   
+                    </div>  
+                </div>
+                
+                
+                
+                <div id="container_TrattativeVinteClientiPrioritari" class="slds-col_padded slds-container slds-form_horizontal slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3 slds-border_bottom">
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="TrattativeVinteClientiPrioritari">
+                            % Trattative vinte:
+                        </label> 
+                        <div class="slds-form-element__control">
+                            <lightning:formattedNumber value="{!v.perTrattativeVinteClientiPrioritari}" style="percent"></lightning:formattedNumber> 
+                        </div>   
+                    </div>  
+                </div>
+            </aura:if>
+            
+            
+            
+            <div id="container_TrattativeVinte" class="slds-col_padded slds-container slds-form_horizontal slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3 slds-border_bottom">
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label " for="Trattative Vinte:">
+                        Trattative vinte:
+                    </label>
+                    <div class="slds-form-element__control" style="width:65%">
+                        <ui:outputText class="slds-output" aura:id="TrattativeVinte"  value="{!v.TrattativeVinte}" title="Numero di polizze emesse risultanti dal CRM"/>
+                    </div> 
+                </div>  
+            </div>
+            
+            <aura:if isTrue="{!v.isMobile == false}">
+                <div id="container_TrattativeVinte€" class="slds-col_padded slds-container slds-form_horizontal slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3 slds-border_bottom">
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label " for="Trattative Vinte €:">
+                            Trattative vinte €:
+                        </label>
+                        <div class="slds-form-element__control">
+                            <ui:outputText class="slds-output" aura:id="RevenueTrattativeVinte"  value="{!v.RevenueTrattativeVinte}"/> 
+                        </div> 
+                    </div> 
+                </div>
+            </aura:if>
+            
+            
+            <div id="spazio_vuoto" class="slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3">
+                <div class="slds-form-element">
+                </div> 
+            </div>
+            
+            
+            <div id="container_TrattativeInCorso" class="slds-col_padded slds-container slds-form_horizontal slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3 slds-border_bottom">
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label " for="Trattative in corso:">
+                        Trattative in corso:
+                    </label>
+                    <div class="slds-form-element__control" style="width:65%">
+                        <ui:outputText class="slds-output" aura:id="TrattativeInCorso"  value="{!v.TrattativeIncorso}" title="Numero di trattative in corso che risultano dal CRM"/> 
+                    </div> 
+                </div> 
+            </div>
+            
+            <aura:if isTrue="{!v.isMobile == false}">  
+                <div id="container_TrattativeInCorso€" class="slds-col_padded slds-container slds-form_horizontal slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3 slds-border_bottom">
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label " for="Trattative in corso €:">
+                            Trattative in corso €:
+                        </label>
+                        <div class="slds-form-element__control">
+                            <ui:outputText class="slds-output" aura:id="RevenueTrattativeInCorso"  value="{!v.RevenueTrattativeInCorso}"/> 
+                        </div> 
+                    </div> 
+                </div>
+            </aura:if>
+            <div id="spazio_vuoto" class="slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3">
+                <div class="slds-form-element">
+                </div> 
+            </div>
+            <div id="spazio_vuoto" class="slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3">
+                <div class="slds-form-element">
+                </div> 
+            </div>
+        </aura:if>        
+        
+        
+        <div id="spazio_vuoto" class="slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3">
+            <div class="slds-form-element">
+            </div> 
+        </div>
+        
+    </div>   
+    
+    <aura:if isTrue="{!v.isMobile == false}">
+        <aura:if isTrue="{!v.CampType == 'Marketing_campaign'}">
+            <div id="container_headerbontaanagraficaeffcomunicaz" class="slds-col_padded slds-wrap slds-p-bottom_x-small slds-m-top_small  slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1" style="padding-left:0px;padding-right:0px;">
+                <h3 class="slds-section__title"> Bontà anagrafica ed efficacia della comunicazione</h3> 
+            </div>
+            
+            <div class="slds-grid slds-wrap slds-grid_pull-padded slds-grid_vertical-stretch"> 
+                
+                <div id="container_ClientiEmailSMSTarget" class="slds-col_padded slds-container slds-form_horizontal slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3 slds-border_bottom">
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label " for="ClientiEmailSMSTarget:">
+                            Email/SMS inviati:
+                        </label>
+                        <div class="slds-form-element__control" style="width:65%">
+                            <ui:outputText class="slds-output" aura:id="ClientiEmailSMSTarget"  value="{!v.ClientiConEmailSMSInTarget}" title="Numero di clienti a cui sono state inviate e-mail ed sms"/> 
+                        </div> 
+                    </div>
+                </div>
+                
+                <div id="container_%EmailSMSNonRecapitabili" class="slds-col_padded slds-container slds-form_horizontal slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3 slds-border_bottom">
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="EmailSMSNonRecapitabili">
+                            % non recapitati:
+                        </label> 
+                        <div class="slds-form-element__control">
+                            <lightning:formattedNumber value="{!v.perEmailSMSNonRecapitabiliClientiEmailSMSTarget}" style="percent"></lightning:formattedNumber> 
+                        </div>   
+                    </div>  
+                </div>
+                
+                <div id="container_%ClientiPrioritari" class="slds-col_padded slds-container slds-form_horizontal slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3 slds-border_bottom">
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="%ClientiPrioritari">
+                            % Clienti prioritari:
+                        </label> 
+                        <div class="slds-form-element__control">
+                            <lightning:formattedNumber value="{!v.perClientiPrioritari}" style="percent" title="# clienti che hanno richiesto il ricontatto / # Email/SMS recapitati"></lightning:formattedNumber> 
+                        </div>   
+                    </div>    
+                </div>
+                
+                <div id="container_ClientiEmailTarget" class="slds-col_padded slds-container slds-form_horizontal slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3 slds-border_bottom">
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label " for="ClientiEmailTarget:">
+                            Email recapitate:
+                        </label>
+                        <div class="slds-form-element__control" style="width:65%">
+                            <ui:outputText class="slds-output" aura:id="ClientiEmailTarget"  value="{!v.ClientiConEmailInTarget}" title="Numero di e-mail effettivamente recapitate"/> 
+                        </div> 
+                    </div>
+                </div>
+                
+                <div id="container_%EmailapertaRichiestaRicontattoEmail" class="slds-col_padded slds-container slds-form_horizontal slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3 slds-border_bottom">
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="%EmailapertaRichiestaRicontattoEmail">
+                            % apertura:
+                        </label> 
+                        <div class="slds-form-element__control">
+                            <lightning:formattedNumber value="{!v.perEmailApertaRichiestaricontatto}" style="percent"></lightning:formattedNumber> 
+                        </div>   
+                    </div>  
+                </div>
+                
+                <div id="container_%ClientiprioritarisuClientiEmail" class="slds-col_padded slds-container slds-form_horizontal slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3 slds-border_bottom">
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="%ClientiPrioritarisuClientiEmail">
+                            % Clienti prioritari:
+                        </label> 
+                        <div class="slds-form-element__control">
+                            <lightning:formattedNumber value="{!v.perClientiPrioritariconEmail}" style="percent" title="# richieste di ricontatto da Email/ # Email aperte"></lightning:formattedNumber> 
+                        </div>   
+                    </div>  
+                </div>
+                
+                <div id="container_ClientiSMSTarget" class="slds-col_padded slds-container slds-form_horizontal slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3 slds-border_bottom">
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label " for="ClientiEmailTarget:">
+                            SMS recapitati:
+                        </label>
+                        <div class="slds-form-element__control" style="width:65%">
+                            <ui:outputText class="slds-output" aura:id="ClientiSMSTarget"  value="{!v.ClientiConSMSInTarget}" title="Numero di SMS effettivamente recapitati"/> 
+                        </div> 
+                    </div>
+                </div>
+                
+                <div id="container_%SMSapertoRichiestaRicontattoEmail" class="slds-col_padded slds-container slds-form_horizontal slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3 slds-border_bottom">
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="%SMSApertoRichiestaRicontattoEmail">
+                            % apertura:
+                        </label> 
+                        <div class="slds-form-element__control">
+                            <lightning:formattedNumber value="{!v.perSMSApertoRichiestaricontatto}" style="percent"></lightning:formattedNumber> 
+                        </div>   
+                    </div>  
+                </div>
+                
+                <div id="container_%ClientiprioritarisuClientiSMS" class="slds-col_padded slds-container slds-form_horizontal slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3 slds-border_bottom">
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="%ClientiPrioritarisuClientiSMS">
+                            % Clienti prioritari:
+                        </label> 
+                        <div class="slds-form-element__control">
+                            <lightning:formattedNumber value="{!v.perClientiPrioritariconSMS}" style="percent" title="# richiesta di ricontatto da SMS/ # SMS aperti"></lightning:formattedNumber> 
+                        </div>   
+                    </div>  
+                </div>
+                
+            </div>
+        </aura:if>
+    </aura:if>
+
+    
+</aura:component>

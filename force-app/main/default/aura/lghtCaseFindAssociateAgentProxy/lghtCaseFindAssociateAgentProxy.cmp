@@ -1,0 +1,27 @@
+<aura:component implements="force:appHostable,lightning:isUrlAddressable,flexipage:availableForAllPageTypes,force:hasRecordId,force:hasSObjectName" access="global">
+	<aura:attribute name="visibilities" type="Object"/>
+	<aura:attribute name="debugMode" type="Boolean"/>
+	
+	<section role="dialog" tabindex="-1" aria-labelledby="modal-find-associate" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open slds-modal_large">
+		<div class="slds-modal__container">
+			<header class="slds-modal__header">
+				<h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Associa Agente</h2>
+				<lightning:buttonIcon iconName="utility:close"
+					onclick="{!c.onClose}"
+				 	alternativeText="close"
+				 	variant="bare-inverse"
+				 	class="slds-modal__close"/>
+			</header>
+			<div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+				<c:lghtCaseFindAssociateAgent
+					recordId="{!v.recordId}"
+					onclosetab="{!c.handleCloseTab}" 
+					debugMode="{!v.debugMode}"
+					visibilities="{!v.visibilities}"
+				/>
+			</div>
+		</div>
+	</section>
+	<div class="slds-backdrop slds-backdrop_open"></div>
+
+</aura:component>

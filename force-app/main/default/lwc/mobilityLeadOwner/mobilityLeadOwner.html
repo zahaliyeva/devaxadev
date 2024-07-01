@@ -1,0 +1,38 @@
+<template>
+	<c-mobility-spinner show={spinner} show-overlay="true"></c-mobility-spinner>
+	<c-mobility-messages model={messages} confirm-success-callback={onConfirmSuccess}></c-mobility-messages>
+
+	<template if:true={authorized}>
+		<div class="overload-contain overload-on-top" style="z-index: 10000;">
+			<div class="overload-contain-child">
+				<div class="overload-element">
+					<div class="row">
+						<div class="col-12">
+							<h3>{_label.leadOwner_changeOwner}</h3>
+						</div>
+						<div class="col-12">
+							<select class="form-control" style="width: 200px;" onchange={typeChange}>
+								<template for:each={typesOwner} for:item='typeOwner'>
+									<option key={typeOwner.value} value={typeOwner.value}>{typeOwner.label}</option>
+								</template>
+							</select>
+							<template if:true={isUserPartner}>
+								<c-s-object-data-grid tabledata={userPartnerData} backgound-color="#ffffff"></c-s-object-data-grid>
+							</template>
+							<template if:true={isQueue}>
+								<c-s-object-data-grid tabledata={queueData} backgound-color="#ffffff"></c-s-object-data-grid>
+							</template>
+						</div>
+						<div class="col-12 text-right">
+							<div class="btn" onclick={onClose}>{_label.leadOwner_cancel}</div>
+							<button class="btn btn-primary" onclick={onSave} disabled={isDisabledConfirm}>{_label.leadOwner_saveEdit}</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</template>
+	<template if:false={authorized}>
+		<c-mobility-unauthorized></c-mobility-unauthorized>
+	</template>
+</template>

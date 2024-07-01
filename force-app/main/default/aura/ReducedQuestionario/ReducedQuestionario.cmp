@@ -1,0 +1,355 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction,lightning:actionOverride" access="global" controller="VFC30_NewQuestionarioCAICTRL" >
+    
+    <!-- *** ATTRIBUTE BLOCK *** -->
+    <lightning:navigationItemAPI aura:id="navigationItem" />
+    <lightning:workspaceAPI aura:id="workspace" />
+    <lightning:utilityBarAPI aura:id="utilityBar" />
+    
+    <aura:attribute name="sinistro" type="Boolean" default="false"/> <!--ZA prima salva per prendere l'id del questionario -->
+
+    <aura:attribute name="UsrProfile" type="String"/>
+    <aura:attribute name="ShowLess" type="Boolean"/>
+    
+    <aura:attribute name="jsDebug" type="Boolean"/> 
+    <aura:attribute name="isLoading" type="Boolean" default="false"/>
+    <aura:attribute name="fiscalCode" type="String"/>
+    <aura:attribute name="accountId" type="String"/>
+    <aura:attribute name="policyNumber" type="String"/>
+    <aura:attribute name="showPreDenunciations" type="Boolean" default="true"/>
+    <aura:attribute name="isSuccess" type="Boolean" default="true" />
+    <aura:attribute name="errorMessage" type="String" />
+    <aura:attribute name="title" type="String" default="Nuovo Questionario" />
+    <aura:attribute name="questionarioCA" type="Questionario_CA__c" default="{sobjectType : 'Questionario_CA__c'}" />
+    <aura:attribute name="condUgualeContr" type="Boolean" default="false"/>
+    <aura:attribute name ="questionarioCaID" type="String" />
+    <aura:attribute name ="method" type="String" />
+    <aura:attribute name="questionario" type="Questionario_CA__c" default="{sobjectType : 'Questionario_CA__c'}" />
+    <aura:attribute name="pickFields" type="String[]" default="['Compagnia__c','Ambulanza__c','Autorit__c','Carro__c','Claim_Type__c','Event_Type__c','Feriti__c','Tipo_controparte__c','Note_ambulanza__c','Note_autorit__c','Note_carroattrezzi__c']"/> 
+    <aura:attribute name="Compagnia__c" type="String[]" default="[]"/>
+    <aura:attribute name="Feriti__c" type="String[]" default="[]"/>
+    <aura:attribute name="Ambulanza__c" type="String[]" default="[]"/>
+    <aura:attribute name="Autorit__c" type="String[]" default="[]"/>
+    <aura:attribute name="Carro__c" type="String[]" default="[]"/>
+    <aura:attribute name="Tipo_controparte__c" type="String[]" default="[]"/>
+    <aura:attribute name="Note_ambulanza__c" type="String[]" default="[]"/>
+    <aura:attribute name="Note_autorit__c" type="String[]" default="[]"/>
+    <aura:attribute name="Note_carroattrezzi__c" type="String[]" default="[]"/>
+    <aura:attribute name="picklistMap" type="Map" default="{}" />
+    <aura:attribute name="getPolizzeModal" type="boolean" default="false"/>
+    <aura:attribute name="findClientModal" type="boolean" default="false"/>
+    <aura:attribute name="tipoCliente" type="String" />
+    <aura:attribute name="isVisibleNoteFeriti" type="boolean" default="false"/>
+    <aura:attribute name="isVisibleNoteAmbulanza" type="boolean" default="false"/>
+    <aura:attribute name="isVisibleNoteAutorita" type="boolean" default="false"/>
+    <aura:attribute name="isVisibleNoteCarroattrezzi" type="boolean" default="false"/>
+    <aura:attribute name="oraEvento" type="String" />
+    <aura:attribute name="minutiEvento" type="String" />
+    <aura:attribute name="oraRecall" type="String" />
+    <aura:attribute name="minutiRecall" type="String" />
+    <aura:attribute name="phone" type="String" />
+    <aura:attribute name="caller" type="String" />
+    <aura:attribute name="lob" type="String"/>
+    <aura:attribute name="category" type="String" />
+    <aura:attribute name="subcategory" type="String" />
+    <aura:attribute name="showToast" type="Boolean" default="false" />
+    <aura:attribute name="typeToast" type="String"  />
+    <aura:attribute name="messageToast" type="String"  />
+    <aura:attribute name="HOURSList" type="String[]" default="[]"/>
+    <aura:attribute name="HOURSListRecall" type="String[]" default="[]"/>
+    <aura:attribute name="MINUTESList" type="String[]" default="[]"/>
+    <aura:attribute name="caseId" type="String"  />
+    <aura:attribute name="source" type="String"  />
+    <aura:attribute name="RecordsDeleted" type="Boolean"  default="false"/>
+    <aura:registerEvent name="tabclosing" type="c:tabclosing" />
+    <aura:attribute name="AlreadyOpened" type="Boolean"/>
+    <aura:attribute name="SaveButtonPressed" type="String"/>
+    <aura:attribute name="persone" type="List" default="[
+                                                        {'label': 'Persona Fisica', 'value': 'fisica'},
+                                                        {'label': 'Persona giuridica', 'value': 'giuridica'}
+                                                        ]"/>
+    <aura:attribute name="personaContr" type="String" default="fisica"/>
+    <aura:attribute name="AnnullaModal" type="Boolean" default="false" />
+    <aura:attribute name="accountIdToUpdate" type="String" />
+    <aura:attribute name="DetailsMessageToast" type="String" />
+    <aura:attribute name="CaseIDFromNEW" type="String" />
+    <aura:attribute name="todayISODateTime" type="String" />   
+    <aura:attribute name="msgMissMatch" type="String" default="{!$Label.c.InvalidFormat}"/>
+    <aura:attribute name="patternFiscalCode" type="String" default="{!$Label.c.patternCheckFiscalCode}" /> 
+    <aura:attribute name="patternEmail" type="String"  /> 
+    <!-- *** ATTRIBUTE BLOCK *** -->
+    <!-- *** HANDLER BLOCK *** -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="associatePolicyToQuestionarioCA" event="c:associatePolicyToQuestionarioCA" action="{!c.handleAssociatePolicyToQuestionarioCA}"/>
+    <aura:handler name="associateClientToQuestionarioCA" event="c:associateClientToQuestionarioCA" action="{!c.handleAssociateClientToQuestionarioCA}"/>
+    <!-- *** HANDLER BLOCK *** -->
+    <!-- *** EVENT BLOCK *** -->
+    <aura:registerEvent name="refreshOpener" type="c:refreshOpener" />
+    <!-- *** EVENT BLOCK *** -->
+    
+    <force:recordData aura:id="recordEditor"
+                      layoutType="FULL"
+                      recordId="{!v.recordId}"
+                      targetError="{!v.recordError}"
+                      targetRecord="{!v.record}"
+                      targetFields ="{!v.simpleRecord}"
+                      mode="EDIT"
+                      />
+    
+
+    <article class="slds-card ">
+        <div class="slds-card__header slds-grid slds-p-vertical_x-small borderNone slds-p-top_none" style="display:block;">
+
+            <div class="c-container" style="margin: 2%;">
+                
+                <div class="slds-page-header" role="banner" >
+                    <div class="slds-media">
+                        <div class="slds-media__figure">
+                            <lightning:icon iconName="action:new_case"  />
+                        </div>
+                        <div class="slds-media__body">
+                            <h1 class="slds-text-heading_medium">{! v.title } </h1>
+                        </div>
+                    </div>
+                </div>             
+                <br/>
+                <center>
+                    <lightning:button variant="Brand" name="Apri_Sinistro" label="Apri sinistro su SOL" title="Apri sinistro su SOL" onclick="{! c.creaSinistro }" disabled="{!v.AlreadyOpened}"/>
+                </center>
+                
+                    <div class="slds-card__header slds-grid" style="padding: 0.75rem 0rem 0;">
+                        <header class="slds-media slds-media--center slds-has-flexi-truncate">
+                            <div class="slds-media__body slds-truncate">
+                                <div class="slds-section-title_divider">
+                                    <h2>
+                                        <span class="slds-text-heading--small">Dati del contraente</span>
+                                    </h2>
+                                </div>
+                            </div>
+                        </header>
+                    </div>
+                    <br/>
+                    <center>
+                        <lightning:radioGroup 	name="personaGroupButton"
+                                              label=""
+                                              options="{! v.persone }"
+                                              value="{! v.personaContr }"
+                                              type="button"/>
+                        <lightning:button class="marginTOPAssociaCliente" variant="Neutral" name="contraente" label="Cerca e associa contraente" title="Cerca e associa contraente" onclick="{! c.findAssociateClient }"/>
+                    </center>
+                    <lightning:layout horizontalAlign="center" multipleRows="true">
+                        <lightning:layoutItem flexibility="auto" padding="around-small" size="12" largeDeviceSize="6" mediumDeviceSize="6" smallDeviceSize="12">
+                            <div class="slds-form-element">
+                                <label class="slds-form-element__label" for="nomeForm">{!if( v.personaContr == 'fisica','Nome','Ragione Sociale')}</label>
+                                <div class="slds-form-element__control">
+                                    <ui:inputText aura:id="nomeForm" class="slds-input" value="{!v.questionarioCA.Nome_contraente__c}" />
+                                </div>
+                                <aura:if isTrue="{! v.personaContr == 'fisica'}" >
+                                    <label class="slds-form-element__label" for="cognomeForm">Cognome</label>
+                                    <div class="slds-form-element__control">
+                                        <ui:inputText aura:id="cognomeForm" class="slds-input" value="{!v.questionarioCA.Cognome_Contraente__c}" />
+                                    </div>
+                                    <div class="slds-form-element__control">
+                                        <lightning:input type="date" name="Data di nascita" label="Data di nascita" value="{!v.questionarioCA.Data_di_nascita_contraente__c}"/>
+                                    </div>
+                                </aura:if>
+                                <aura:if isTrue="{! v.personaContr == 'fisica'}" >
+                                   
+                                    <div class="slds-form-element__control">
+                                        <lightning:input  label="Codice fiscale" pattern ="{!v.patternFiscalCode}" messageWhenPatternMismatch="{!v.msgMissMatch}" aura:id="CodFiscaleForm"  value="{!v.questionarioCA.Codice_fiscale_contraente__c}" />
+                                    </div>
+                                </aura:if>
+                                <aura:if isTrue="{! v.personaContr == 'giuridica'}" >
+                                    <label class="slds-form-element__label" for="CodFiscaleForm">Partita IVA</label>
+                                    <div class="slds-form-element__control">
+                                        <ui:inputText aura:id="CodFiscaleForm" class="slds-input" value="{!v.questionarioCA.Codice_fiscale_contraente__c}" />
+                                    </div>
+                                </aura:if>
+                                <lightning:input pattern ="{!v.patternEmail}" messageWhenPatternMismatch="{!v.msgMissMatch}" aura:id="EmailForm" type="email" name="Email" value="{!v.questionarioCA.Email_Contraente__c}" label="Email" />
+                            </div>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem flexibility="auto" padding="around-medium" size="12" largeDeviceSize="6" mediumDeviceSize="6" smallDeviceSize="12">
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                    <div class="slds-card__header slds-grid" style="padding: 0.75rem 0rem 0;">
+                        <header class="slds-media slds-media--center slds-has-flexi-truncate">
+                            <div class="slds-media__body slds-truncate">
+                                <div class="slds-section-title_divider">
+                                    <h2>
+                                        <span class="slds-text-heading--small">Polizza</span>
+                                    </h2>
+                                </div>
+                            </div>
+                        </header>
+                    </div>
+                    <br/>
+                    <lightning:layout horizontalAlign="center" multipleRows="true">
+                        <center>
+                            <lightning:button variant="Neutral" label="Recupera polizze" title="Recupera polizze" onclick="{! c.getPolizze }"/>
+                        </center>
+                    </lightning:layout>
+                    <lightning:layout horizontalAlign="center" multipleRows="true">
+                        <lightning:layoutItem flexibility="auto" padding="around-small" size="12" largeDeviceSize="6" mediumDeviceSize="6" smallDeviceSize="12">
+                            <aura:if isTrue="{! v.personaContr == 'fisica'}" >
+                                <div class="slds-form-element">
+                                    <label class="slds-form-element__label" for="targaForm">Targa</label>
+                                    <div class="slds-form-element__control">
+                                        <ui:inputText aura:id="targaForm" class="slds-input" value="{!v.questionarioCA.Targa__c}" disabled="true"/>
+                                    </div>
+                                </div>
+                            </aura:if>
+                            <div class="slds-form-element">
+                                <label class="slds-form-element__label" for="numPolizzaForm">N° polizza</label>
+                                <div class="slds-form-element__control">
+                                    <ui:inputText aura:id="numPolizzaForm" class="slds-input" value="{!v.questionarioCA.Numero_Polizza__c}" disabled="true"/>
+                                </div>
+                            </div>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem flexibility="auto" padding="around-small" size="12" largeDeviceSize="6" mediumDeviceSize="6" smallDeviceSize="12">
+                            <div class="slds-form-element">
+                                <label class="slds-form-element__label" for="targaForm">Compagnia</label>
+                                <div class="slds-form-element__control">
+                                    <ui:inputText aura:id="compagniaForm" class="slds-input" value="{!v.questionarioCA.Compagnia__c}" disabled="true"/>
+                                </div>
+                            </div>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                
+                <div class="slds-card__header slds-grid" style="padding: 0.75rem 0rem 0;">
+                    <header class="slds-media slds-media--center slds-has-flexi-truncate">
+                        <div class="slds-media__body slds-truncate">
+                            <div class="slds-section-title_divider">
+                                <h2>
+                                    <span class="slds-text-heading--small">Informazioni su sinistro</span>
+                                </h2>
+                            </div>
+                        </div>
+                    </header>
+                </div>
+                <lightning:layout horizontalAlign="center" multipleRows="true">
+                    <lightning:layoutItem flexibility="auto" padding="around-small" size="12" largeDeviceSize="6" mediumDeviceSize="6" smallDeviceSize="12">
+                        <div class="slds-form-element">
+                            <div class="slds-form-element__control">
+                                <lightning:input type="date" name="Data evento" label="Data evento" value="{!v.questionarioCA.Data_Evento__c}"/>
+                            </div>
+                            
+                        </div>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem flexibility="auto" padding="around-medium" size="12" largeDeviceSize="6" mediumDeviceSize="6" smallDeviceSize="12">
+                        
+                    </lightning:layoutItem>
+                </lightning:layout>
+                
+                
+                
+                <br/>
+                <br/>
+                <div class="slds-align_absolute-center">
+                    <lightning:button variant="Neutral" label="Salva in bozza" title="Salva in bozza" onclick="{!c.salvaQuestionario}"/>
+                    <aura:if isTrue="{!v.caseId!=null}" >
+                        &nbsp;&nbsp;
+                        <lightning:button variant="Neutral" label="Annulla" title="Indietro" name="previous" onclick="{!c.showModalAnnulla}"/>
+                    </aura:if>
+                    
+                        &nbsp;&nbsp;
+                    	<lightning:button variant="Brand" name="Apri_Sinistro" label="Apri sinistro su SOL" title="Apri sinistro su SOL" onclick="{! c.creaSinistro }" disabled="{!v.AlreadyOpened}"/>
+                        <!--lightning:button variant="Neutral" label="Fine" title="Fine" onclick="{!c.endQuestionario}"/-->
+                </div>
+            </div>
+            <!--  </lightning:card> -->
+            
+        </div>
+    </article>
+    
+    
+    <aura:if isTrue="{! v.isLoading }">
+        <lightning:spinner alternativeText="Loading" class="spinnerFixed"/>
+    </aura:if>
+    <aura:if isTrue="{!v.getPolizzeModal}">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open slds-modal_large">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <h2 id="modal-get-all-policies" class="slds-modal__title slds-hyphenate">Polizze sottoscritte</h2>
+                    <lightning:buttonIcon iconName="utility:close"
+                         onclick="{!c.chiudiModalePolizze}"
+                         alternativeText="close"
+                         variant="bare-inverse"
+                         class="slds-modal__close"/>
+                </header> 
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1" style="padding: 0;">
+                    <c:GetAllPolicies fiscalCode="{!v.questionarioCA.Codice_fiscale_contraente__c}" accountId="{!v.accountId}" CaseId="{!v.caseId}" UsrProfile="{!v.UsrProfile}" startDate="{!v.questionarioCA.Data_Evento__c}" mode="CaringProperty"/>
+                </div>
+                <footer class="slds-modal__footer"  style="padding: 1px;">
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+    <aura:if isTrue="{!v.findClientModal}">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open slds-modal_large">
+            <div class="slds-modal__container" style="padding: 1.4rem !important">
+                <header class="slds-modal__header" style="padding: 1px;">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick="{!c.chiudiModalfindAssociateClient}">
+                        <lightning:icon iconName="utility:close" alternativeText="Chiudi" class="whiteIcon"/>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1" style="padding: 0; height: 90%;">
+                    <c:FindAssociateClient tipoCliente="{!v.tipoCliente}" tipoAccount="{!v.personaContr}"/>
+                </div>
+                <footer class="slds-modal__footer"  style="padding: 1px;">
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+    <aura:if isTrue="{! v.showToast }">
+        <div class="slds-notify_container slds-is-relative" style="position: fixed;margin-top: 10%;">
+            <div class="{!'slds-notify slds-notify_toast slds-theme_'+v.typeToast}" role="status" style="height: 4rem;">
+                <span class="slds-assistive-text">warning</span>
+                <span class="{!'slds-icon_container slds-m-right_small slds-no-flex slds-align-top slds-icon-utility-'+v.typeToast}" title="{!v.typeToast}">
+                    <lightning:icon iconName="{!'utility:'+v.typeToast}" alternativeText="Approved" class="whiteIcon"/>
+                </span>
+                <div class="slds-notify__content">
+                    <h2 class="slds-text-heading_small ">{!v.messageToast}</h2>
+                    <p>{!v.DetailsMessageToast}</p>
+                </div>
+                <div class="slds-notify__close">
+                    <button class="slds-button slds-button_icon slds-button_icon-inverse" title="Chiudi" onclick="{!c.chiudiToast}">
+                        <lightning:icon iconName="utility:close" alternativeText="Approved"  class="whiteIcon"/>
+                        <span class="slds-assistive-text">Chiudi</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+    <aura:if isTrue="{!v.AnnullaModal}">
+        <section style="min-width: 10rem; " role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open ">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header" style="padding: 1px;">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick="{!c.chiudiModalAnnulla}">
+                        <lightning:icon iconName="utility:close" alternativeText="Chiudi" class="whiteIcon" />
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1" style="padding: 0;">
+                    <center>
+                        <br/>
+                        <p>Sei sicuro di voler annullare la compilazione del questionario?</p>
+                        <p>Tutti i dati non salvati verranno persi.</p>
+                        <br/>
+                    </center>
+                </div>
+                <footer class="slds-modal__footer"  style="">
+                    <div class="slds-align_absolute-center" style="margin-right: 0;">
+                        <lightning:button variant="Neutral" label="Conferma" title="Conferma" name="confermaAnnulla" onclick="{!c.returnToCase}"/>
+                        <lightning:button variant="Neutral" label="Ritorna al questionario" title="Ritorna al questionario" name="Annulla" onclick="{!c.chiudiModalAnnulla}"/>                    
+                    </div>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+</aura:component>

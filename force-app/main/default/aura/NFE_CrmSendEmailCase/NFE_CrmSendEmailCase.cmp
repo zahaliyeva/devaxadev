@@ -1,0 +1,9 @@
+<aura:component description="NFE_CrmSendEmailCase" controller="NFE_CrmSendEmailCase" implements="force:lightningQuickAction,force:hasRecordId,forceCommunity:availableForAllPageTypes" access="global">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="recordId" type="String" default="" />
+    <aura:attribute name="toAddresses" type="String" default="" />
+    <aura:attribute name="senderAddress" type="String" default="" />
+    <aura:attribute name="defaultTemplate" type="String" default="" />
+
+    <c:sendEmailCaseMainCmp recordId="{!v.recordId}" toAddresses="{!v.toAddresses}" senderAddress="{!v.senderAddress}" defaultTemplate="{!v.defaultTemplate}" />
+</aura:component>

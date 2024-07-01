@@ -1,0 +1,186 @@
+<template> 
+	<c-mobility-spinner show={spinner} show-overlay={spinnerOverlay}></c-mobility-spinner>
+	<c-mobility-messages model={messages}></c-mobility-messages>
+
+	<template if:true={authorized}>
+
+		<div class="row">
+			<div class="col-12">
+				<c-mobility-breadcrumb params={params} current={componentView}></c-mobility-breadcrumb>
+				<span class="queue-manage">
+					<a onclick={onShowLeadQueue} data-toggle="modal" data-target=".modal">
+						<span>
+							{_label.leadListView_queueManage}
+						</span>
+					</a>
+				</span>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-6">
+				<div style=" position: relative; display: flex;
+				align-items: left;
+				"> 
+				<h1>{_label.leadListView_leadList}</h1>
+					<c-mobility-help-text text = "Consulta la sezione su AXA Planet dedicata al Lead Management per visualizzare la descrizione delle voci presenti in Dettaglio Fonte Lead.<br>
+					<a target = '_blank' href = 'https://axaplanet.axa-italia.it/-/lead-management-1?redirect=%2Fstrumenti-e-supporti#puac_section5'> Visita la sezione </a>"></c-mobility-help-text>
+				</div>
+				
+			</div>
+			<div class="col-6 text-right">
+				<a onclick={navigateToEvent} data-component="mobilityLeadNew">
+					<span>
+						{_label.leadListView_new}
+						<span class="new-icon">
+							<c-mobility-icon name='plus' width='10.5px' height='10.5px'></c-mobility-icon>
+						</span>
+					</span>
+				</a>
+			</div>
+		</div>
+		<div class="page-border"></div>
+
+		<div class="row justify-content-between">
+			<div class="col-2">
+				<span>Tipologia Lead</span>
+			</div>
+			<div class="col-2">
+				<span>Stato</span>
+			</div>
+			<div class="col-2">
+				<span>Fonte Lead</span>
+			</div>
+			<div class="col-2">
+				<span>Dettaglio Fonte Lead</span>
+			</div>
+			<div class="col-2">
+				<span>Origine Lead</span>
+			</div>
+		</div>
+
+		<div class='row justify-content-between'>
+			<div class="col-2">
+				<select class="empty" onchange={filterChange} >
+					<template for:each={filters} for:item='leadSourceItem'>
+						<option key={leadSourceItem.value} value={leadSourceItem.value} selected = {leadSourceItem.selected}>{leadSourceItem.label}</option>
+					</template>
+				</select>
+				
+			</div>
+
+			<div class="col-2">
+				<select class="empty reset" onchange={leadStatusChange}>
+					
+					<template for:each={status} for:item='statusItem'>
+						<option key={statusItem.value} value={statusItem.value} selected = {statusItem.selected} disabled = {statusItem.disabled}>{statusItem.label}</option>
+					</template>
+					
+				</select>
+			</div>
+			<div class="col-2">
+				
+				<select class="empty reset" onchange={leadSourceChange}>
+					<template for:each={leadSource} for:item='leadSourceItem'>
+						<option key={leadSourceItem.value} value={leadSourceItem.value} selected = {leadSourceItem.selected} disabled = {leadSourceItem.disabled}>{leadSourceItem.label}</option>
+					</template>
+				</select>
+			</div>
+			<div class="col-2">
+				<select class="empty reset" onchange = {leadDettaglioChange}>
+					<template for:each={dettagliFonte} for:item='statusItem'>
+						<option key={statusItem.value} value={statusItem.value} selected = {statusItem.selected} disabled = {statusItem.disabled}>{statusItem.label}</option>
+					</template>
+				</select>
+			</div>
+
+			<div class="col-2">
+				<select class="" onchange={originChange} >
+					
+					<template for:each={Origin} for:item='originItem'>
+						<option key={originItem.value} value={originItem.value} selected = {originItem.selected} disabled = {originItem.disabled}>{originItem.label}</option>
+					</template>
+					
+				</select>
+			
+			</div>
+			
+		</div>
+
+		<template if:true = {showCharts}>
+			<br><br>
+		
+			<div class='row select nowrap justify-content-between mb-1'>
+				<div class="col">
+					<c-mobility-chart-card params = {params1}></c-mobility-chart-card>
+				</div>
+
+				<div class="col mr-auto">
+					<c-mobility-chart-card params = {params2}></c-mobility-chart-card>
+				</div>
+
+				<div class="col">
+					<c-mobility-chart-card params = {params3}></c-mobility-chart-card>
+				</div>
+			</div>
+		</template>
+		<template if:true = {showList}>
+		<div class="shadow-bottom">
+			<c-s-object-data-grid tabledata={records}></c-s-object-data-grid>
+		</div>
+		</template>
+		<div class="bottom-space"></div>
+
+		<!-- Inizio Footer -->
+		<div class="footer row justify-content-between fixed-bottom">
+			<div class="col-2 up">
+				<a onclick={scroll} onmouseout={onOutScrollTop} onmouseover={onOverScrollTop}>
+					{_label.leadListView_up}
+					<span class="pl-2">
+						<c-mobility-icon name='arrow-up' width='12px' height='12px'>
+						</c-mobility-icon>
+					</span>
+				</a>
+			</div>
+			<div class="col-4 action ml-auto text-right">
+				<div class="row" style="flex-flow: nowrap;">
+					<!--<div class="btn-box btn-box-last">
+						<div class="btn btn-outline-primary btn-square p-auto" onmouseover={onOverTrash}
+							onmouseout={onOutTrash}>
+							<span class="btn-icon">
+								<c-mobility-icon name={iconTrash} width='28px' height='28px'></c-mobility-icon>
+							</span>
+						</div>
+					</div>-->
+					<div class="btn-box-action">
+						<button class="btn btn-primary btn-action" onclick={onShowLeadOwner}
+							disabled={isDisabledChangeOwner}>
+							{_label.leadListView_changeOwner}
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Fine Footer -->
+
+		<template if:true={showLeadQueue}>
+			<c-mobility-lead-queue 
+				hook={hookLeadQueue} 
+				parent={currentParent} 
+				close-callback={onShowLeadQueue}
+			>
+			</c-mobility-lead-queue>
+		</template>
+
+		<template if:true={showLeadOwner}>
+			<c-mobility-lead-owner 
+				parent={currentParent} 
+				list-selected={records.listSelected}
+				close-callback={onShowLeadOwner}
+				change-callback={onChangeCallback}
+			></c-mobility-lead-owner>
+		</template>
+	</template>
+	<template if:false={authorized}>
+		<c-mobility-unauthorized></c-mobility-unauthorized>
+	</template>
+</template>

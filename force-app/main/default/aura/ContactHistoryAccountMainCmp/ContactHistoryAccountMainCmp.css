@@ -1,0 +1,55 @@
+.THIS {
+}
+
+.THIS .cursor {
+    cursor: pointer;
+}
+
+.THIS .info-icon-m-left-centered {
+    margin-left: .6rem;
+}
+.THIS .info-icon-m-left-extra-small {
+    margin-left: 2px;
+}
+
+.THIS .li-element {
+    /*padding-top: 8px;
+    padding-bottom: 4px;*/
+}
+.THIS .slds-form-element__icon.slds-align-middle{
+    padding-top: unset;
+    position: relative;
+    bottom: 2px;
+}
+
+.THIS .slds-timeline__trigger:hover {
+    background-color: rgb(236, 240, 247);
+}
+
+.THIS .detail-list {
+    display: inline-flex;
+    margin-right: 16px;
+}
+
+.THIS .title.slds-truncate {
+    color: #698fc7;
+    font-weight: bold;
+}
+
+.THIS .detail-list-element.slds-truncate {
+}
+
+.THIS .slds-timeline__date {
+}
+
+.THIS .time-checkmark {
+    display: inline;
+}
+
+.THIS .details-date.slds-grid.slds-grid_align-spread {
+    margin-top: 2px;
+}
+
+.THIS .bottom-show-link{
+    display: inline-flex;
+}

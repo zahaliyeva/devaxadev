@@ -1,0 +1,70 @@
+<apex:page standardController="Case" extensions="ModelloAssistenzaCtrl" tabStyle="Assistenza__tab" showHeader="true" standardStylesheets="false" sidebar="false" applyHtmlTag="true" applyBodyTag="false" docType="html-5.0">
+
+    <head>
+            <meta http-equiv="X-UA-Compatible" content="IE=edge"/>      
+    </head>
+
+    <apex:includeScript value="/support/console/43.0/integration.js"/><!--MOSCATELLI_M 12/04/2018: Enhancement Data Enrichment contatti-->      
+    <apex:includeScript value="/soap/ajax/35.0/connection.js"/>
+    <apex:includeScript value="/soap/ajax/35.0/apex.js"/>
+    <apex:slds />
+    <apex:includeLightning />
+    <apex:includeScript value="/lightning/lightning.out.js" />
+    <!-- <apex:stylesheet value="/resource/lds/assets/styles/salesforce-lightning-design-system-vf.css"/> -->
+    <apex:includeLightning />
+    <apex:includeScript value="https://code.jquery.com/jquery-1.8.1.min.js" />
+
+    <div id="lightning" />
+	
+    <!-- OAVERSANO 03/12/2018 : FIX IE11 - START -->
+    <style>
+    	@media screen and (-ms-high-contrast: active), screen and (-ms-high-contrast: none) {  
+			.slds-scope .slds-wrap
+        	{
+        		width:100vw;
+        	}
+        	.alignCenterButton
+            {
+        		display:inline-table !important;
+            }
+		}
+    </style>
+    <!-- OAVERSANO 03/12/2018 : FIX IE11 - END -->
+    
+    <script>
+        var width = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth);
+        var UserMainNode = "{!$User.Main_Node__c}";
+        var ProfileName  = "{!$Profile.Name}";
+        console.log('UserMainNode'+UserMainNode);
+        console.log('ProfileName'+ProfileName);
+        console.log('screenwidth'+width);
+
+     
+   
+        $Lightning.use("c:ModelloAssistenzaApp", function() {
+          $Lightning.createComponent("c:ModelloAssistenza",
+          {
+             "jsDebug" :  {!jsDebug},
+             "UserMainNode" : UserMainNode,
+             "ProfileName"  : ProfileName,
+             "screenwidth" : width
+           
+          },
+          "lightning",
+          function(cmp) {
+            // do some stuff
+          });
+        });
+     
+
+    </script>
+    <script> 
+      var a = navigator.userAgent; 
+      if ((a.indexOf('Salesforce') != -1) && (a.indexOf('iPhone') != -1 || a.indexOf('iPad') != -1) && (a.indexOf('Safari') == -1)) { 
+      var s = document.createElement('style'); 
+      s.innerHTML = "html,html body{overflow-x:hidden;overflow:scroll;-webkit-overflow-scrolling:touch;zindex:0;}body{position:absolute;left:0;right:0;top:0;bottom:0;}"; 
+      document.getElementsByTagName('head')[0].appendChild(s); 
+      } 
+    </script> 
+
+</apex:page>

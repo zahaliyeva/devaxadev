@@ -1,0 +1,10 @@
+<template>
+    <div>
+        <div if:true={ShowCase}>
+            <c-s-object-data-grid tabledata={Case}></c-s-object-data-grid>
+        </div>
+        <div if:true={ShowFeedback}>
+            <c-s-object-data-grid tabledata={FeedBack}></c-s-object-data-grid>
+        </div>
+    </div>
+</template>

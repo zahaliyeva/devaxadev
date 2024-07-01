@@ -1,0 +1,21 @@
+.THIS li.slds-tabs_default__item:first-child{
+	margin-left:39%;
+}
+.THIS .slds-tabs_default__item {
+	font-weight:bold;
+}
+.THIS .slds-tabs_default__link{
+	font-weight:700 !important;
+}
+.THIS .tableHeader thead th {
+	background-color: #fafaf9;
+}
+.THIS .tableHeader thead th:hover {
+	background-color: #fafaf9;
+}
+.THIS th:not(.dayOfWeek):nth-last-of-type(1) {
+    width: 67px !important;
+}
+.THIS .whiteIcon svg {
+    fill : white;
+}

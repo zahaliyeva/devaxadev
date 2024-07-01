@@ -1,0 +1,60 @@
+.THIS .small-picklist {
+    width: 55px;
+}
+
+.THIS .slds-checkbox_faux:before {
+    background: none;
+}
+
+.THIS .slds-checkbox_faux:after {
+    background: none;
+}
+
+.THIS .slds-checkbox_faux {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+
+.THIS .uiInputCheckbox {
+  
+    background: transparent;
+    height: 17px;
+    width: 17px;
+}
+
+
+
+
+.THIS .inputStyle {
+      
+       opacity:1;
+}
+
+.THIS .right {
+     padding-right: 0;
+     padding-left: .35rem;
+}
+
+
+.THIS .slds-text-heading_label {
+
+font-size: 1.25rem;
+}
+
+
+.THIS .slds-card__header{
+
+    
+    padding-right: 0px;
+    padding-left: 0px;
+
+}
+
+@media (min-width: 1281px) {
+    
+    .THIS .c-container{
+        width:128px !important;
+        
+    }     
+}

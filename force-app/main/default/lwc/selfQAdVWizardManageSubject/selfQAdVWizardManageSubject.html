@@ -1,0 +1,108 @@
+<template>
+    <!--section role="dialog" tabindex="0" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open slds-modal_large" style = "z-index:9002"-->
+		<div class="slds-card">
+			<header class="slds-modal__header">
+				<button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" onclick={closeCallback} title="Close">
+                    <lightning-icon icon-name="utility:close" size="medium">
+                    </lightning-icon>
+					<span class="slds-assistive-text">Close</span>
+				</button>
+				<h2 id="modal-heading-02" class="slds-modal__title slds-hyphenate">Gestione Soggetto</h2>
+			</header>
+		<div class="list-container slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+				<template if:true={spinner}>
+					<lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+				</template>
+            <template if:true={ready}>
+                <div class="slds-section slds-is-open">
+                    <h1 class="slds-section__title slds-theme_shade">
+                        <center>
+                            <span class="slds-truncate slds-p-horizontal_small" title="Pratica Documentale">Soggetto</span>
+                        </center>
+                    </h1>
+                    <div aria-hidden="false" class="slds-section__content">
+                        <c-form-generate
+                            form-name="wizard-qadv-soggetto"
+                            record-id={recordId}
+                            record-type="Soggetto_Documentale"
+                            s-object-name="DocumentAccount__c"
+                            change-callback={onChange}
+                            validate-callback={onValidate}
+                            disable-all={disableInputs}
+                            hide-header="true"
+                            cols="3"
+                        ></c-form-generate>    
+                    </div>
+                </div>
+            
+            <!--INFO just in case -->
+            <div if:true={showUploadDoc} class="Modal">
+                <c-self-q-ad-v-wizard-attachment-manager
+                    case-id={caseRecordId}
+                    close-callback={closeUploadDoc}
+                    confirm-callback={handleConfirmFile}
+                        old-file-id={startingDocument}
+                    >
+                </c-self-q-ad-v-wizard-attachment-manager>
+            </div>
+
+            <template  for:each={allDocuments} for:item='document' >
+                <div class="slds-card_boundary" key={document.documentId} >
+                    <lightning-card  icon-name="utility:contact" title={document.documentType} key={document.documentId} >
+                        <lightning-layout vertical-align="stretch" multiple-rows="true" class="x-large" >
+                            <lightning-layout-item size="8"  padding="around-small" class="custom-box">
+                            <c-form-generate
+                            form-name="wizard-qadv-document-item"
+                            current-data={document.document}
+                            record-id={document.documentId}
+                            record-type="Master" 
+                            s-object-name="DocumentChecklistItem__c"
+                            change-callback={onChangeDocument}
+                            validate-callback={onValidate}
+                                disable-all={disableDocInputs}
+                                hide-header="true"
+                                number-identifier={document.documentListNumber}
+                            cols="4"
+                            ></c-form-generate>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="4"  padding="around-small" class="custom-box slds-align_absolute-center">
+                            <lightning-button-group>
+                                <lightning-button label="Visualizza" data-selected={document.documentListNumber} name={document.Name} disabled={document.disableVisualizza} variant="brand" icon-name="utility:zoomin" onclick={onViewFileNet} ></lightning-button>
+                                <lightning-button  label="Carica" data-selected={document.documentListNumber} variant="brand" disabled={document.disableOverrideDocument} icon-name="utility:upload"  onclick={onUploadFile}></lightning-button>
+                            </lightning-button-group>
+                            </lightning-layout-item>
+                        </lightning-layout>
+                    </lightning-card>
+                </div>
+            </template >
+            </template>
+            <!-- bottone ADD per un futuro ADD option duo essere dinamica la creazione dei DOCs
+            <div class="slds-align_absolute-center slds-box">
+                <lightning-button-icon icon-name="utility:add"   alternative-text="Aggiungi Documento" variant="brand"  style="slds-float_left" onclick={addDocumento}></lightning-button-icon>
+            </div>
+            -->
+		</div>
+        <footer class="slds-modal__footer">
+            <template if:true={disableConfirm}>
+                <p style="color:red;font-weight: bold;">{confirmHelpText}</p>
+            </template>
+            <br>
+            <button class="slds-button slds-button_brand" onclick={handleConfirm} disabled={disableConfirm}>Conferma e indietro</button>
+            <button class="slds-button slds-button_brand" onclick={handleSave} disabled={disableConfirm}>Salva</button>
+            <button class="slds-button slds-button_neutral" onclick={handleAnnulla} >Annulla</button>
+        </footer>
+		</div>
+	<!--/section>
+
+	<div class="slds-backdrop slds-backdrop_open" style = "z-index:9001"></div-->
+    
+        <template if:true={showConfirmationModal}>
+            <c-lght-confirmation-modal
+                text={confirmationText}
+                close-callback={closeConfirmationModal}
+                confirm-callback={confirmationModalCallback}
+                
+                >
+            </c-lght-confirmation-modal>
+        </template>
+</template>

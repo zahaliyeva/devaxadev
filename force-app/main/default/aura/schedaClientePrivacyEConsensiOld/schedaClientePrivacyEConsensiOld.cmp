@@ -1,0 +1,261 @@
+<aura:component>
+    <aura:attribute name="wrapper" type="Object" />
+    <aura:handler name="init" value="{! this }" action="{! c.doInit }"/> 
+
+    <div class="slds-grid slds-wrap slds-var-m-top_x-large">
+        <div class="slds-col slds-large-size_2-of-12 title">
+            <strong>Privacy</strong>
+        </div>
+        <aura:if isTrue="{!v.wrapper.isAAI}">
+            <div class="slds-col slds-large-size_4-of-12">      
+                <div class="slds-wrap slds-var-m-bottom_x-small">
+                    <label class="slds-checkbox_toggle slds-grid">
+                        <lightning:input type="toggle"
+                            aura:id="trattamentoDatiPersonali"
+                            label=""
+                            name="trattamentoDatiPersonali"
+                            messageToggleActive=""
+                            messageToggleInactive=""
+                            disabled="true"/>
+                        <span class="slds-form-element__label slds-m-bottom_none slds-var-m-left_x-small">Trattamento dei dati personali</span>
+                    </label>
+                </div>
+                
+                <div class="slds-wrap slds-var-m-bottom_x-small">
+                    <label class="slds-checkbox_toggle slds-grid">                  
+                        <lightning:input type="toggle"
+                            aura:id="attPromoVendita"
+                            label=""
+                            name="attPromoVendita"
+                            messageToggleActive=""
+                            messageToggleInactive=""
+                            disabled="true"/>
+                    <span class="slds-form-element__label slds-m-bottom_none slds-var-m-left_x-small">Attività promozionali e di vendita</span>
+                    </label>
+                </div>
+                <div class="slds-wrap slds-var-m-bottom_x-small">
+                    <label class="slds-checkbox_toggle slds-grid">                  
+                        <lightning:input type="toggle"
+                        aura:id="ricercheMercato"
+                        label=""
+                        name="ricercheMercato"
+                        messageToggleActive=""
+                        messageToggleInactive=""
+                        disabled="true"/>
+                    <span class="slds-form-element__label slds-m-bottom_none slds-var-m-left_x-small">Ricerche di mercato</span>
+                    </label>
+                </div>
+                <div class="slds-wrap slds-var-m-bottom_x-small">
+                    <label class="slds-checkbox_toggle slds-grid">                  
+                        <lightning:input type="toggle"
+                        aura:id="attPromoVendMerc"
+                        label=""
+                        name="attPromoVendMerc"
+                        messageToggleActive=""
+                        messageToggleInactive=""
+                        disabled="true"/>
+                    <span class="slds-form-element__label slds-m-bottom_none slds-var-m-left_x-small">Att promoz-vendita-ric merc di partner</span>
+                    </label>
+                </div>                                    
+            </div>
+        </aura:if>
+        <aura:if isTrue="{! !v.wrapper.isAAI}">
+            <div class="slds-col slds-large-size_4-of-12">      
+                <div class="slds-wrap slds-var-m-bottom_x-small">
+                    <label class="slds-checkbox_toggle slds-grid">
+                        <lightning:input type="toggle"
+                            aura:id="privacyIndustriale"
+                            label=""
+                            name="privacyIndustriale"
+                            checked="{!v.wrapper.account.Industrial_privacy__c}"
+                            messageToggleActive=""
+                            messageToggleInactive=""
+                            disabled="true"/>
+                        <span class="slds-form-element__label slds-m-bottom_none slds-var-m-left_x-small">Privacy Industriale</span>
+                    </label>
+                </div>
+                <div class="slds-wrap slds-var-m-bottom_x-small">
+                    <label class="slds-checkbox_toggle slds-grid">
+                        <lightning:input type="toggle"
+                            aura:id="privacyRicMercato"
+                            label=""
+                            name="privacyRicMercato"
+                            checked="{!v.wrapper.account.Market_research_privacy__c}"
+                            messageToggleActive=""
+                            messageToggleInactive=""
+                            disabled="true"/>
+                        <span class="slds-form-element__label slds-m-bottom_none slds-var-m-left_x-small">Privacy per ricerche di mercato</span>
+                    </label>
+                </div>
+                
+                <div class="slds-wrap slds-var-m-bottom_x-small">
+                    <label class="slds-checkbox_toggle slds-grid">                  
+                        <lightning:input type="toggle"
+                            aura:id="privacyPromo"
+                            label=""
+                            name="privacyPromo"
+                            checked="{!v.wrapper.account.Promotional_privacy__c}"
+                            messageToggleActive=""
+                            messageToggleInactive=""
+                            disabled="true"/>
+                    <span class="slds-form-element__label slds-m-bottom_none slds-var-m-left_x-small">Privacy promozionale</span>
+                    </label>
+                </div>
+                <div class="slds-wrap slds-var-m-bottom_x-small">
+                    <label class="slds-checkbox_toggle slds-grid">                  
+                        <lightning:input type="toggle"
+                        aura:id="privacySpeciale"
+                        label=""
+                        name="privacySpeciale"
+                        checked="{!v.wrapper.account.Special_privacy__c}"
+                        messageToggleActive=""
+                        messageToggleInactive=""
+                        disabled="true"/>
+                    <span class="slds-form-element__label slds-m-bottom_none slds-var-m-left_x-small">Privacy speciale</span>
+                    </label>
+                </div>
+                <div class="slds-wrap slds-var-m-bottom_x-small">
+                    <label class="slds-checkbox_toggle slds-grid">                  
+                        <lightning:input type="toggle"
+                        aura:id="privacyCessTerzi"
+                        label=""
+                        name="privacyCessTerzi"
+                        checked="{!v.wrapper.account.Third_party_transfer_privacy__c}"
+                        messageToggleActive=""
+                        messageToggleInactive=""
+                        disabled="true"/>
+                    <span class="slds-form-element__label slds-m-bottom_none slds-var-m-left_x-small">Privacy in cessione a terzi</span>
+                    </label>
+                </div>                                    
+            </div>
+        </aura:if>
+        
+        <div class="slds-col slds-large-size_6-of-12">   
+            &nbsp; 
+        </div>
+    </div>
+
+    
+    <aura:if isTrue="{!v.wrapper.isAAI}">
+        <div class="slds-grid slds-wrap slds-var-m-top_x-large">
+            <div class="slds-col slds-large-size_2-of-12 title">
+                <strong>Cliente Digitale</strong>
+            </div>
+            <div class="slds-col slds-large-size_4-of-12">           
+                <div class="slds-wrap slds-var-m-bottom_x-small">
+                    <label class="slds-checkbox_toggle slds-grid">                  
+                        <lightning:input type="toggle"
+                        label=""
+                        aura:id="invioDocDigit"
+                        name="invioDocDigit"
+                        messageToggleActive=""
+                        messageToggleInactive=""
+                        disabled="true"/>
+                    <span class="slds-form-element__label slds-m-bottom_none slds-var-m-left_x-small">Invio documentazione in formato digitale</span>
+                    </label>
+                </div>
+                <div class="slds-wrap slds-var-m-bottom_x-small">
+                    <label class="slds-checkbox_toggle slds-grid">                  
+                        <lightning:input type="toggle"
+                        label=""
+                        aura:id="utilizzFirmGrafo"
+                        name="utilizzFirmGrafo"
+                        messageToggleActive=""
+                        messageToggleInactive=""
+                        disabled="true"/>
+                    <span class="slds-form-element__label slds-m-bottom_none slds-var-m-left_x-small">Utilizzo della firma grafometrica</span>
+                    </label>
+                </div> 
+                <div class="slds-wrap slds-var-m-bottom_x-small">
+                    <label class="slds-checkbox_toggle slds-grid">                  
+                        <lightning:input type="toggle"
+                        label=""
+                        name="adesioneSrvOtp"
+                        aura:id="adesioneSrvOtp"
+                        messageToggleActive=""
+                        messageToggleInactive=""
+                        disabled="true"/>
+                    <span class="slds-form-element__label slds-m-bottom_none slds-var-m-left_x-small">Adesione al servizio OTP</span>
+                    </label>
+                </div>                         
+            </div>
+            <div class="slds-col slds-large-size_6-of-12">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_12-of-12 slds-large-size_12-of-12">
+                    <div class="slds-form__item" role="listitem">
+                        <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_horizontal slds-hint-parent">
+                        <span class="slds-form-element__label">Contatto email</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static not-active">
+                            <a class="slds-text-color_default" href="javascript:void(0);">{!v.wrapper.account.CIF_Mail_contact__c}</a>
+                            </div>
+                        </div>
+                        </div>
+                    </div> 
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_12-of-12 slds-large-size_12-of-12">
+                    <div class="slds-form__item" role="listitem">
+                        <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_horizontal slds-hint-parent">
+                        <span class="slds-form-element__label">Contatto telefonico OTP</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">
+                            <a href="javascript:void(0);">{!v.wrapper.account.CIF_OTP_Phone_contact__c}</a>
+                            </div>
+                        </div>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+        </div>
+    
+    <div class="slds-grid slds-wrap slds-var-m-top_x-large">
+        <div class="slds-col slds-large-size_2-of-12 title">
+                <strong>Preferenze di Contatto</strong>
+        </div>
+        <div class="slds-col slds-large-size_4-of-12">           
+            <div class="slds-wrap slds-var-m-bottom_x-small">
+                <label class="slds-checkbox_toggle slds-grid">                  
+                    <lightning:input type="toggle"
+                    label=""
+                        aura:id="Preferenze"
+                        name="Preferenze"
+                    messageToggleActive=""
+                    messageToggleInactive=""
+                    disabled="true"/>
+                    <span class="slds-form-element__label slds-m-bottom_none slds-var-m-left_x-small">Contattabile per comunicazioni informative</span>
+                </label>
+            </div>          
+                
+        </div>
+    </div>
+    
+
+    </aura:if>
+    <!--
+    <div class="slds-grid slds-wrap slds-var-m-top_x-large">
+        <div class="slds-col slds-large-size_6-of-12">
+            <div class="slds-form__item" role="listitem">
+                <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_horizontal slds-hint-parent">
+                    <span class="slds-form-element__label">Tipo di documento</span>
+                    <div class="slds-form-element__control">
+                    <div class="slds-form-element__static">
+                        <a href="javascript:void(0);">xxxxxxxxxx</a>
+                    </div>
+                    </div>
+                </div>
+            </div> 
+        </div>
+        <div class="slds-col slds-large-size_6-of-12">
+            <div class="slds-form__item" role="listitem">
+                <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_horizontal slds-hint-parent">
+                    <span class="slds-form-element__label">Numero</span>
+                    <div class="slds-form-element__control">
+                    <div class="slds-form-element__static">
+                        <a href="javascript:void(0);">xxxxxxxxxx</a>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    -->
+</aura:component>

@@ -1,0 +1,4 @@
+<aura:event type="COMPONENT" description="Event template">
+    <aura:attribute type="String" name="RTid" default=""/>
+    <aura:attribute type="Boolean" name="isCaseRapido" default="false"/> <!-- AXA Assistance Enhancement Fase II -->
+</aura:event>

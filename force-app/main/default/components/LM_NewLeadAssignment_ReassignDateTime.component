@@ -1,0 +1,27 @@
+<apex:component controller="LM_Email_CTRL" access="global" >
+    <apex:attribute name="LeadId" type="Id" description="Id of the lead" assignTo="{!relatedToLeadId}"/>
+    <!--apex:attribute name="ReassignDateTime" type="String" description="reassigning calculation" assignTo="{!minDateTimeForReassignString}"/-->
+
+
+
+<!--Gentile Agente, <br/><br/>
+ti è stato assegnato il Lead {!theLead.FirstName}  {!theLead.LastName}
+<br/><br/>
+Se sei già collegato al CRM clicca sul seguente link per visualizzare il lead
+<br/>  https://masterdev3-axaitalia.cs86.force.com/agenzie/{!theLead.Id}
+<br/>
+oppure accedi al CRM tramite AXAPlanet <br/>
+https://aispp.axa-italia.it 
+<br/><br/>
+Ti ricordiamo che se lo stato del lead non sarà modificato entro {!ReassignDateTime} il lead sarà riassegnato.
+<br/><br/>
+{!theLead.Text_Email_Sub_agenzia__c}
+<br/><br/>
+Cordiali saluti.<br/><br/><br/>-->
+
+
+{!ReassignDateTime}
+
+
+
+</apex:component>

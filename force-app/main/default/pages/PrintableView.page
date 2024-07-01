@@ -1,0 +1,144 @@
+<apex:page controller="PrintableView" sidebar="false" id="pgid" standardStylesheets="true" showHeader="false" lightningStylesheets="false">
+	<head>
+		<title>Case : {!CaseList[0].Casenumber}</title>
+	</head>
+    
+    <style>
+    	/*
+		 * This code is for Internal Salesforce use only, and subject to change without notice.
+		 * Customers shouldn't reference this file in any web pages.
+		 */
+		body{margin:14px}table{padding:0}.printControls{float:right}.printHeader{overflow:hidden;height:1%}.printableView .print .bPageBlock{padding:0;border:none;background:none;margin-bottom:17px}.printableView .print .bPageBlock .pbBody .detailList{border-top-width:0;border-bottom-width:0}.printableView .print .bPageBlock .pbFooter{display:none}.printableView .print .pbHeader{border-bottom:2px solid black;padding:2px 2px 2px 4px;margin:0;background-color:#fff}.printableView .print h1{font-size:140%;font-weight:bold;padding-left:2px}.printableView .print h2{font-size:120%}.printableView .print h3{font-size:109%;font-weight:bold}.printableView .print .bHeader{clear:both}.printableView .print table.twoCol{width:100%}.printableView .print table.twoCol td{width:50%;vertical-align:top}.printableView .print .bPageFooter{clear:both}.printableView .print .bPageBlock .pbSubheader h3{color:black}.printableView .print .pbBody{padding:0;background:none}.printableView .print .bPageBlock .list{padding:0}.printableView .print .pbBody .list td{text-align:left;font-weight:bold;padding-left:4px;border-left-color:#eee;width:100%}.printableView .print .pbBody .list th{text-align:right;font-weight:normal;border-right:1px solid #eee;padding-left:4px;border-left:none}.printableView .print .pbBody .list td,.printableView .print .pbBody .list th{border-bottom:none;padding-top:2px;padding-bottom:2px}.printableView .print .pbBody td,.printableView .print .pbBody th{color:black}.printableView .print .bPageBlock .detailList .col02,body .print .topics-list{border-right:none;margin-right:20px}.bPageBlock .detailList tr td,.bPageBlock .detailList tr th{border-bottom:0 solid #000}.printableView .print .primaryPalette,.printableView .print .secondaryPalette{background-color:transparent;border-color:black}.printableView .print .tertiaryPalette{background-color:#eee;border-color:#eee}.printableView .print .detailAreaChoices{clear:both;margin-bottom:12px}.printableView .print .detailAreaChoices p.choiceLabel{font-weight:bold;display:inline;margin-right:5px}.printableView .print .detailAreaChoices ul,.printableView .print .detailAreaChoices li{display:inline;margin:0 5px 0 0;padding:0}.printableView .print .detailAreaChoices li{white-space:nowrap}@media print{.printableView .print .detailAreaChoices{display:none}}.printableView .print .taskList .pbBody .list td{text-align:left;width:auto}.printableView .print .taskList .pbBody .list th{text-align:left}.printableView .print .calendarMonthView td{height:80px}@media print{.printableView .print .compactFullLayoutToggle{display:none}}.wealthMgmt{margin:0}@media print{.wealthMgmt .printHeader .printControls{display:none}}table.wealthList{width:100%}.print .bPageBlock .wealthList td,.print .bPageBlock .wealthList th{border-left:none;border-right:none;border-bottom:none;padding-right:8px;white-space:normal}.print .bPageBlock .wealthList td{border-top:1px solid #e3deb8}.print .bPageBlock .wealthLTA td{padding-left:1em;border-left:none;border-top:none;border-right:none;border-bottom:none}.print .bPageBlock .wealthLTA span.wealthLTAheader{font-style:italic}.htmlDetailElementDiv{display:block}.htmlDetailElementDiv p{margin-top:0;margin-bottom:0}
+    	
+    	.bEditBlock .pbHeader>table, .apexp .bPageBlock.apexDefaultPageBlock .pbHeader>table, #ep.bLayoutBlock .pbHeader>table 
+    	{
+    		border-bottom: 2px solid #000000;
+		}
+		
+    	@media print 
+		{
+			.apexp .bPageBlock.apexDefaultPageBlock .pbBody .pbSubheader {border-bottom: 2px solid #eeeeee;}
+			.hiddenPrint {display: none;}
+		}
+		
+		.notify-error{background-image: linear-gradient(45deg, rgba(0, 0, 0, 0.025) 25%, transparent 25%, transparent 50%, rgba(0, 0, 0, 0.025) 50%, rgba(0, 0, 0, 0.025) 75%, transparent 75%, transparent); background-size: 64px 64px; color: white; background-color: #c23934;justify-content: center; position: relative; font-weight: 300; padding: 0.5rem 2rem 0.5rem 0.5rem; text-align: center; }
+    	
+    	
+    </style>   
+    
+    
+    <body class="printableView ">
+        <div class="DD_LDS" >
+      		<apex:form id="msgform">
+        		<apex:outputPanel styleClass="myCustomMessage" rendered="{!showError}" id="msgs">
+          		<br/>            
+	          		<div class="notify-error" role="alert">         
+	           			<span class="slds-assistive-text"></span>
+	          			<h2>                                       
+	              			<apex:outputtext id="error-Message" value="{!errorMessage}" escape="false"/>
+	            		</h2>                                
+	          		</div>                            
+        		</apex:outputPanel>
+      		</apex:form>
+    	</div>
+        <div class="print">
+        	<apex:form rendered="{!!showError}">
+		       	<apex:pageBlock title="Case : {!CaseList[0].Casenumber}" >
+		       		<apex:pageBlockButtons >
+	                	<apex:commandButton onclick="window.print();return false;" value="Stampa" style="float: right;" styleClass="hiddenPrint"/>
+	            	</apex:pageBlockButtons>
+		        	<apex:repeat value="{!dettaglioPagina.sections}" var="sezione" >
+			            <apex:pageBlockSection title="{!sezione.labelSection}" columns="{!sezione.N_columns}" collapsible="true" >
+			            	<apex:repeat value="{!sezione.field_s}" var="field" >
+				                <apex:pageBlockSectionItem >
+				                    <apex:outputLabel value="{!field.labelField}" styleClass="labelCol"/>
+				                    <apex:outputText value="{!field.value}" /> 
+				                </apex:pageBlockSectionItem>
+			                </apex:repeat>
+			            </apex:pageBlockSection>
+		            </apex:repeat>
+		        </apex:pageBlock>
+        	
+        
+		        <!-- Begin RelatedListPrintableElement -->
+		        <apex:repeat value="{!dettaglioPagina.relatedLists}" var="relatedList" >
+		        	<apex:outputPanel rendered="{!relatedList.records!=null}">
+			        	<apex:outputPanel rendered="{!relatedList.records.size>0}">
+				        	<div class="listRelatedObject customnotabBlock">
+				            	<div class="bHeader">
+				                	<h2>{!relatedList.title}</h2>
+				            	</div>
+				            	<apex:repeat value="{!relatedList.records}" var="record" >
+						            <div class="bPageBlock secondaryPalette">
+						                <div class="pbHeader">
+						                    <h3>{!record.nameRecord}</h3>
+						                </div>
+						                <div class="pbBody">
+						                    <table class="list" border="0" cellpadding="0" cellspacing="0">
+						                        <apex:repeat value="{!record.field_s}" var="field" >
+							                        <tr>
+							                            <TH scope="row">{!field.labelField}</TH>
+							                            <td>{!field.value}</td>
+							                        </tr>
+						                        </apex:repeat>
+						                    </table>
+						                </div>
+						                <div class="pbFooter secondaryPalette">
+						                    <div class="bg"></div>
+						                </div>
+						            </div>
+					            </apex:repeat>
+				        	</div>
+				        </apex:outputPanel>
+					</apex:outputPanel>
+		        </apex:repeat>
+		        <!-- End RelatedListPrintableElement -->
+		        
+		        
+		        
+		        
+		        <!-- Begin RelatedListPrintableElement -->
+		        <apex:repeat value="{!dettaglioPagina.relatedListsTable}" var="relatedList" >
+		        	<apex:outputPanel rendered="{!relatedList.records!=null}">
+			        	<apex:outputPanel rendered="{!relatedList.records.size>0}">
+		        			<div class="listRelatedObject caseBlock">
+					            <div class="bHeader">
+					                <h2>{!relatedList.title}</h2>
+					            </div>
+		            			<table class="twoCol" cellpadding="0" cellspacing="2">
+				                	<apex:repeat value="{!relatedList.records}" var="record" >
+						                <tr>
+						                    <td>
+						                        <div class="bPageBlock secondaryPalette">
+						                            <div class="pbBody">
+						                                <table class="list" border="0" cellpadding="0" cellspacing="0">
+						                                    <apex:repeat value="{!record.field_s}" var="field" >
+							                                    <tr>
+							                                        <TH scope="row">{!field.labelField}</TH>
+										                            <td>{!field.value}</td>
+							                                    </tr>
+						                                    </apex:repeat>
+						                                </table>
+						                            </div>
+						                            <div class="pbFooter secondaryPalette">
+						                                <div class="bg"></div>
+						                            </div>
+						                        </div>
+						                    </td>
+						                </tr>
+				               		</apex:repeat>
+				            	</table>
+				        	</div>
+			        	</apex:outputPanel>
+		        	</apex:outputPanel>
+	        	</apex:repeat>
+	        	<!-- End RelatedListPrintableElement -->
+		        
+		        <div class="bPageFooter" id="bodyFooter">
+		            <div class="footer"></div>
+		        </div>
+	        </apex:form>
+        </div>
+    </body>
+     
+</apex:page>

@@ -1,0 +1,49 @@
+<template>
+	<c-mobility-spinner show={spinner} show-overlay={spinnerOverlay}></c-mobility-spinner>
+	<c-mobility-messages model={messages}></c-mobility-messages>
+
+	<template if:true={authorized}>
+		<form onchange={onChangeForm} onsubmit={onSubmit}>
+			<button type="submit" id="bsubmit" name="bsubmit" value="submit"
+			    style="position: absolute; left: -9999px; width: 1px; height: 1px;" tabindex="-1"></button>
+			<div class="form-group">
+				<c-mobility-select-input 
+					class-name="col-12" 
+					label="Template" 
+					search-invoke={invokeGetTemplates}
+					search-select={templateSearch}
+					key-name="listTemplates"
+				></c-mobility-select-input>
+			</div>
+			<div class="form-group">
+				<label>{_label.email_from}</label>
+				<input type="text" disabled={disabledFrom} name="from" value={dataEmail.from} class="form-control" />
+			</div>
+			<!-- <template> --> 
+				<div class="form-group">
+					<label>{_label.email_to}</label>
+					<input type="text" disabled={disabledTo} name="to" value={dataEmail.to} class="form-control" />
+				</div>
+			<!-- </template> --> 
+			<div class="form-group">
+				<label>{_label.email_cc}</label>
+				<input type="text" disabled={disabledCC} name="cc" value={dataEmail.cc} class="form-control" />
+			</div>
+			<div class="form-group">
+				<label>{_label.email_subject}</label>
+				<input type="text" name="subject" value={dataEmail.subject} class="form-control" />
+			</div>
+			<!-- <template> --> 
+				<div class="form-group">
+					<label>{_label.email_message}</label>
+					<div class="slds-scope">
+						<lightning-input-rich-text name="message" value={dataEmail.message}></lightning-input-rich-text>
+					</div>
+				</div>
+			<!-- </template> --> 
+		</form>
+	</template>
+	<template if:false={authorized}>
+		<c-mobility-unauthorized></c-mobility-unauthorized>
+	</template>
+</template>

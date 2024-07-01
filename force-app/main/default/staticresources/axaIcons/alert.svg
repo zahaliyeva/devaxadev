@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 23.0.6, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Livello_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 40 40" style="enable-background:new 0 0 40 40;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;}
+	.st1{fill:#C91432;}
+	.st2{fill:#1CC54E;}
+	.st3{fill:#F6A473;}
+	.st4{fill:#FFFFFF;}
+	.st5{fill:#91B4EB;}
+	.st6{fill:#00008F;}
+	.st7{fill:#B5D0EE;}
+	.st8{fill:#FFFFFF;stroke:#00008F;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+</style>
+<g id="Group_5099" transform="translate(-492 -311)">
+	<g id="Union_9" transform="translate(-6802.756 -6493.024) rotate(45)">
+		<g>
+			<path class="st0" d="M9995.1-338.5v-6h-6c-1.4,0-2.5-1.1-2.5-2.5s1.1-2.5,2.5-2.5h6v-6c0-1.4,1.1-2.5,2.5-2.5s2.5,1.1,2.5,2.5v6
+				h6c1.4,0,2.5,1.1,2.5,2.5s-1.1,2.5-2.5,2.5h-6v6c0,1.4-1.1,2.5-2.5,2.5S9995.1-337.1,9995.1-338.5z"/>
+		</g>
+		<g>
+			<path class="st1" d="M9997.6-337c0.8,0,1.5-0.7,1.5-1.5v-6v-1h1h6c0.8,0,1.5-0.7,1.5-1.5c0-0.8-0.7-1.5-1.5-1.5h-6h-1v-1v-6
+				c0-0.8-0.7-1.5-1.5-1.5c-0.8,0-1.5,0.7-1.5,1.5v6v1h-1h-6c-0.8,0-1.5,0.7-1.5,1.5c0,0.8,0.7,1.5,1.5,1.5h6h1v1v6
+				C9996.1-337.7,9996.8-337,9997.6-337 M9997.6-336c-1.4,0-2.5-1.1-2.5-2.5v-6h-6c-1.4,0-2.5-1.1-2.5-2.5c0-1.4,1.1-2.5,2.5-2.5h6
+				v-6c0-1.4,1.1-2.5,2.5-2.5c1.4,0,2.5,1.1,2.5,2.5v6h6c1.4,0,2.5,1.1,2.5,2.5c0,1.4-1.1,2.5-2.5,2.5h-6v6
+				C10000.1-337.1,9999-336,9997.6-336z"/>
+		</g>
+	</g>
+	<g id="Ellipse_93" transform="translate(492 311)">
+		<g>
+			<circle class="st0" cx="20" cy="20" r="20"/>
+		</g>
+		<g>
+			<path class="st1" d="M20,40C9,40,0,31,0,20C0,9,9,0,20,0s20,9,20,20C40,31,31,40,20,40z M20,1C9.5,1,1,9.5,1,20s8.5,19,19,19
+				s19-8.5,19-19S30.5,1,20,1z"/>
+		</g>
+	</g>
+</g>
+</svg>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>NonMotorHD1</label>
+    <protected>false</protected>
+    <values>
+        <field>Conditions__c</field>
+        <value xsi:type="xsd:string">NonMotor;HD1;HD3_Fornitore_Esterno;No_Motor;Axa_Assicurazioni;AMF</value>
+    </values>
+    <values>
+        <field>RecordType__c</field>
+        <value xsi:type="xsd:string">NonMotor</value>
+    </values>
+    <values>
+        <field>Values__c</field>
+        <value xsi:type="xsd:string">Logistica;Datlas;Sed Log;Life in Force;Jointly Welfare;Polizze Dormienti;IT;Verifica attività dispositiva;AML;Registrazione DM</value>
+    </values>
+</CustomMetadata>

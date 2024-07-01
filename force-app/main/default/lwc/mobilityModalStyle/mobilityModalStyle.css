@@ -1,0 +1,97 @@
+.modal-style * {
+    --font-family: Helvetica;
+    
+    font-family: var(--font-family);
+    font-size: 1rem;
+}
+
+.modal-style__column {
+    display: flex;
+    flex-direction: column;
+    row-gap: 2.1875rem;
+}
+
+.modal-style h1, .modal-style__h1 {
+    font-family: var(--font-family);
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.8125rem;
+    margin: 0;
+    text-align: center;
+}
+
+.modal-style h2, .modal-style__h2 {
+    color: var(--gray-700, #333);
+    font-family: var(--font-family);
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.5625rem;
+    margin: 0;
+}
+
+.modal-style .modal-style__actions {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+}
+
+.modal-style .modal-style__actions .btn {
+    padding: 17px 20px;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 13px;
+    letter-spacing: 1.3px;
+    text-transform: uppercase;
+}
+
+.modal-style .modal-style__actions .btn.btn-outline-primary {
+    color: var(--uiaxa-blue, var(--primary, #00008F));
+    border: 2px solid var(--uiaxa-blue, var(--primary, #00008F));
+}
+
+.modal-style .modal-style__actions .btn.btn-primary {
+    background-color: var(--uiaxa-blue, var(--primary, #00008F));
+    border: 2px solid var(--uiaxa-blue, var(--primary, #00008F));
+}
+
+.modal-style .table thead {
+    background: #F9FAFB;
+    color: var(--uiaxa-blue, #00008F);
+    font-family: Helvetica;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 16px; /* 114.286% */
+    letter-spacing: 0.7px;
+    border-bottom: 1px solid var(--gray-200, #E5E7EB);
+}
+
+.modal-style .table th,
+.modal-style .table td {
+    border-top: none;
+}
+
+.modal-style .table th {
+    padding: 8px 16px;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.modal-style .table td {
+    padding: 8px 16px;
+    color: var(--greys-grey-900, #111B1D);
+    font-family: Helvetica;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px; /* 166.667% */
+    vertical-align: middle;
+}
+
+.modal-style .table td .slds-form-element__label {
+    display: none;
+}
+
+.modal-style .combo-box .slds-listbox.slds-listbox_vertical.slds-dropdown {
+    max-height: 300px;
+}

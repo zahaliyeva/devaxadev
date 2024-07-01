@@ -1,0 +1,22 @@
+<aura:component>
+    <aura:attribute name="wrapper" type="Object" />
+
+    <div class="tab-polizze-h-100"> 
+        <div class="slds-grid slds-gutters slds-wrap slds-grid-custom"> 
+            <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-3">
+                <c:schedaClientePolizzeVita wrapper="{!v.wrapper}" accountId="{!v.wrapper.account.Id}" />
+            </div>    
+            <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-3">
+                <c:schedaClientePolizzeAuto wrapper="{!v.wrapper}" accountId="{!v.wrapper.account.Id}" fiscalCode="{! v.wrapper.account.Codice_fiscale_ListView__c }" techCompany="{! v.wrapper.account.TECH_Company__c }" />
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-3">
+                <c:schedaClientePolizzeRE wrapper="{!v.wrapper}" accountId="{!v.wrapper.account.Id}" fiscalCode="{! v.wrapper.account.Codice_fiscale_ListView__c }"  techCompany="{! v.wrapper.account.TECH_Company__c }" />
+            </div>
+        </div>
+    </div>
+    <c:schedaClienteCase accountId="{!v.wrapper.account.Id}" />
+    <c:schedaClienteVoiceCall accountId="{!v.wrapper.account.Id}" />
+    <c:schedaClienteStoricoContatti accountId="{!v.wrapper.account.Id}" />
+    <c:schedaClienteSinistri account="{!v.wrapper.account}" />
+    <c:schedaClienteCampagne accountId="{!v.wrapper.account.Id}" /> 
+</aura:component>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>Lob144</label>
+    <protected>false</protected>
+    <values>
+        <field>AgentProfile__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Article_Type_Knolwedge__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>CRMAgenzieChatButtonId__c</field>
+        <value xsi:type="xsd:string">573080000008SEq</value>
+    </values>
+    <values>
+        <field>CaseTriggerRecordType__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Categoria__c</field>
+        <value xsi:type="xsd:string">Copertura assicurativa</value>
+    </values>
+    <values>
+        <field>Category_Knowledge_API__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Category_Knowledge__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Coda_MdC__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Dettaglio__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Email_Template__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Gestito_con_TTP8__c</field>
+        <value xsi:type="xsd:boolean">false</value>
+    </values>
+    <values>
+        <field>HD1BIZProfile__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>HD1BIZQueue__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>HD1Profile__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>HD1Queue__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>HD2BIZProfile__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>HD2BIZQueue__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>HD2Profile__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>HD2Queue__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Id_Bottone_Chat__c</field>
+        <value xsi:type="xsd:string">5731p000000blLl</value>
+    </values>
+    <values>
+        <field>Key__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Lob__c</field>
+        <value xsi:type="xsd:string">Contabilità Danni</value>
+    </values>
+    <values>
+        <field>OrgLink__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Pilota__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Record_type_name__c</field>
+        <value xsi:type="xsd:string">Assistenza_Agenti</value>
+    </values>
+    <values>
+        <field>Sotto_Categoria__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>StatusAgenti__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Status__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Value__c</field>
+        <value xsi:nil="true"/>
+    </values>
+</CustomMetadata>

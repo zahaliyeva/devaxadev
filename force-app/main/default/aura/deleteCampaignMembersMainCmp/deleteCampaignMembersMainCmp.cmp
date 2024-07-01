@@ -1,0 +1,85 @@
+<aura:component implements="flexipage:availableForAllPageTypes" access="global" controller="deleteCampaignMembersCTRL" >
+    <aura:dependency resource="markup://force:navigateToSObject" type="EVENT"/>
+    <lightning:spinner aura:id="mySpinner" />
+    <!--aura:attribute name="currentAccount" type="Account" default="{ 'sobjectType': 'Account' }"/--> 
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="jsDebug" type="Boolean"/> 
+    <aura:attribute name="isError" type="Boolean" default="false"/> 
+    <aura:attribute name="errorTitle" type="String" default=""/>
+    <aura:attribute name="errorMsg" type="String" default=""/>
+    <aura:attribute name="isFinish" type="Boolean" default="false"/> 
+    <aura:attribute name="screenWidth" type="String" default="1920"/>
+    <aura:attribute name="messages" type="Aura.Component[]" access="GLOBAL"/>
+    <aura:handler name="init" action="{!c.Initialize}" value="{!this}"/>
+    <aura:dependency resource="force:navigateToURL" type="EVENT"/>
+    
+
+    
+    <aura:if isTrue="{!v.isError == true}">
+        <div role="alertdialog" tabindex="-1" aria-labelledby="prompt-heading-id" aria-describedby="prompt-message-wrapper" class="slds-modal slds-fade-in-open slds-modal_prompt">
+            <div class="slds-modal__container">
+                <div class="slds-modal__header slds-theme_error slds-theme_alert-texture">
+                    <h2 class="slds-text-heading_medium" id="prompt-heading-id">{!v.errorTitle}</h2>
+                </div>
+                <div class="slds-modal__content slds-p-around_medium">
+                    <p class="slds_paragraph">{!v.errorMsg}</p>
+                </div>
+                <div class="slds-modal__footer slds-theme_default">
+                    <lightning:button class="slds-button slds-button__neutral" onclick="{!c.closeError}">Torna alla campagna</lightning:button>
+                    <!--lightning:button class="slds-button slds-button__neutral" onclick="{!c.gotoEdit}">Continua</lightning:button-->
+                </div>
+            </div>
+        </div>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>  
+    
+    <aura:if isTrue="{!v.isFinish == true}">
+        <div role="alertdialog" tabindex="-1" aria-labelledby="prompt-heading-id" aria-describedby="prompt-message-wrapper" class="slds-modal slds-fade-in-open slds-modal_prompt">
+            <div class="slds-modal__container">
+                <div class="slds-modal__header slds-theme_success slds-theme_alert-texture">
+                    <h2 class="slds-text-heading_medium" id="prompt-heading-id">Richiesta presa in carico</h2>
+                </div>
+                <div class="slds-modal__content slds-p-around_medium">
+                    <p class="slds_paragraph">La richiesta di cancellazione dei membri campagna non contattati è stata presa in carico</p>
+                </div>
+                <div class="slds-modal__footer slds-theme_default">
+                    <lightning:button class="slds-button slds-button__neutral" onclick="{!c.finish}">Torna alla campagna</lightning:button>
+                    <!--lightning:button class="slds-button slds-button__neutral" onclick="{!c.gotoEdit}">Continua</lightning:button-->
+                </div>
+            </div>
+        </div>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>      
+    
+    
+    <div style="{!'max-width:'+v.screenWidth+'px'}"> 
+        <div class="slds-page-header" role="banner" >
+            <div class="slds-grid">
+                <div class="slds-col">
+                    <p class="slds-text-heading_label">Membri campagna</p>
+                    <h1 class="slds-text-heading_medium">
+                        Eliminazione membri campagna non contattati  </h1>
+                </div>
+            </div>
+        </div>
+        <div class="slds-grid">
+            <!--div class="slds-card__body"--> 
+
+            <!--/div-->
+            
+            
+            
+            
+        </div>
+        <div class="slds-align_absolute-center">
+            
+            <div class="slds-form-element ">
+                <div class="slds-form-element__control slds-m-vertical_medium">
+                    <lightning:button variant="brand" label="Conferma cancellazione" onclick="{!c.saveUpdates }" /> <!--onclick="{! c.handleClick }"-->
+                    <lightning:button variant="brand" label="Annulla" onclick="{!c.gotoURL}" /> <!--onclick="{! c.handleClick }"-->
+                </div>
+            </div>    
+        </div>   
+    </div>
+    
+</aura:component>

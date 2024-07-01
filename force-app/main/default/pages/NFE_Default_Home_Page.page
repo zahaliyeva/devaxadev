@@ -1,0 +1,3 @@
+<apex:page controller="NFE_Default_Home_Page_CTRL" action="{!getHomePageUrl}" cache="false" sidebar="false" showHeader="false">
+    <!-- Automatically redirect the user to the PassPortal home page -->
+</apex:page>

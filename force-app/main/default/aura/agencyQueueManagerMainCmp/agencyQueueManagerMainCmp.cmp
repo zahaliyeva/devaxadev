@@ -1,0 +1,187 @@
+<aura:component implements="flexipage:availableForAllPageTypes" access="global" controller="agencyQueueManagerCTRL" >
+    <aura:dependency resource="markup://force:navigateToSObject" type="EVENT"/>
+    <!--aura:attribute name="currentAccount" type="Account" default="{ 'sobjectType': 'Account' }"/--> 
+    <aura:attribute name="patternEmail" type="String" />
+    <aura:attribute name="userList" type="Object" /> 
+    <aura:attribute name="jsDebug" type="Boolean"/> 
+    <aura:attribute name="insufficientPermissions" type="Boolean" default="false"/> 
+    <aura:attribute name="isError" type="Boolean" default="false"/> 
+    <aura:attribute name="errorTitle" type="String" default=""/>
+    <aura:attribute name="errorMsg" type="String" default=""/>
+    <aura:attribute name="isFinish" type="Boolean" default="false"/> 
+    <aura:attribute name="showMain" type="Boolean" default="true"/> 
+    <aura:attribute name="screenWidth" type="String" default="1920"/>
+    <aura:attribute name="messages" type="Aura.Component[]" access="GLOBAL"/>
+    <aura:attribute name="showWarningMessageSaveEmail" type="Boolean" default="false"/>
+    <aura:handler name="init" action="{!c.Initialize}" value="{!this}"/>
+    <aura:dependency resource="force:navigateToURL" type="EVENT"/>
+    <aura:attribute name="queueType" type="String" default="Lead"/>
+    <aura:attribute name="officialEmail" type="String" default=""/>
+    <aura:attribute name="toggleSpinner" type="boolean" default="true"/> 
+
+    <aura:if isTrue="{!v.toggleSpinner}">
+        <lightning:spinner aura:id="mySpinner" />
+    </aura:if>
+    <!-- MOBILITY - START -->
+    <aura:attribute name="isMobility" type="Boolean"/>
+    <!-- MOBILITY - END -->
+
+    <aura:if isTrue="{!v.insufficientPermissions == true}">
+        <div role="alertdialog" tabindex="-1" aria-labelledby="prompt-heading-id" aria-describedby="prompt-message-wrapper" class="slds-modal slds-fade-in-open slds-modal--prompt">
+            <div class="slds-modal__container">
+                <div class="slds-modal__header slds-theme--error slds-theme--alert-texture">
+                    <h2 class="slds-text-heading--medium" id="prompt-heading-id">Privilegi insufficienti</h2>
+                </div>
+                <div class="slds-modal__content slds-p-around--medium">
+                    <p class="slds_paragraph">La funzionalità è riservata agli utenti profilati sul CRM come:<br/>
+                        -Vendite Avanzato<br/>
+                        -Manager<br/>
+						-sul nodo di Agenzia</p>
+                </div>
+                <div class="slds-modal__footer slds-theme--default">
+                    <lightning:button variant="brand" label="{!'Torna ai ' + v.queueType}" onclick="{!c.gotoURL}" />
+                </div>
+            </div>
+        </div>
+        <div class="slds-backdrop slds-backdrop--open"></div>
+    </aura:if>
+    
+    <aura:if isTrue="{!v.isError == true}">
+        <div role="alertdialog" tabindex="-1" aria-labelledby="prompt-heading-id" aria-describedby="prompt-message-wrapper" class="slds-modal slds-fade-in-open slds-modal--prompt">
+            <div class="slds-modal__container">
+                <div class="slds-modal__header slds-theme--error slds-theme--alert-texture">
+                    <h2 class="slds-text-heading--medium" id="prompt-heading-id">{!v.errorTitle}</h2>
+                </div>
+                <div class="slds-modal__content slds-p-around--medium">
+                    <p class="slds_paragraph">{!v.errorMsg}</p>
+                </div>
+                <div class="slds-modal__footer slds-theme--default">
+                    <lightning:button class="slds-button slds-button__neutral" onclick="{!c.closeError}">Torna a modificare</lightning:button>
+                </div>
+            </div>
+        </div>
+        <div class="slds-backdrop slds-backdrop--open"></div>
+    </aura:if>  
+    
+    <aura:if isTrue="{!v.isFinish == true}">
+        <div role="alertdialog" tabindex="-1" aria-labelledby="prompt-heading-id" aria-describedby="prompt-message-wrapper" class="slds-modal slds-fade-in-open slds-modal--prompt">
+            <div class="slds-modal__container">
+                <div class="slds-modal__header slds-theme--success slds-theme--alert-texture">
+                    <h2 class="slds-text-heading--medium" id="prompt-heading-id">Richiesta presa in carico</h2>
+                </div>
+                <div class="slds-modal__content slds-p-around--medium">
+                    <p class="slds_paragraph">La richiesta di modifica della coda è stata presa in carico e verrà completata a breve</p>
+                </div>
+                <div class="slds-modal__footer slds-theme--default">
+                    <lightning:button class="slds-button slds-button__neutral" onclick="{!c.finish}">Torna ai {!v.queueType}</lightning:button>
+                </div>
+            </div>
+        </div>
+        <div class="slds-backdrop slds-backdrop--open"></div>
+    </aura:if>  
+    
+    <aura:if isTrue="{!v.showWarningMessageSaveEmail == true}">
+        <div role="alertdialog" tabindex="-1" aria-labelledby="prompt-heading-id" aria-describedby="prompt-message-wrapper" class="slds-modal slds-fade-in-open ">
+            <div class="slds-modal__container">                
+                <div class="slds-modal__header slds-theme--warning slds-theme--alert-texture">
+                    <h2 class="slds-text-heading--medium" id="prompt-heading-id">Attenzione</h2>
+                    <lightning:buttonIcon iconName="utility:close"
+                                          onclick="{!c.closeWarning}"
+                                          alternativeText="close"
+                                          variant="bare-inverse"
+                                          class="slds-modal__close"/>
+                </div>           
+                <div class="slds-modal__content slds-p-around--medium">
+                    <p class="slds_paragraph">Gli indirizzi e-mail inseriti in questo campo, sono gli unici ai quali verranno inviate le mail di notifica ricezione Feedback/assegnazione Case (NO Richieste Clienti).<br/> Vuoi procedere con il salvataggio degli indirizzi indicati?<br/> In caso contrario, le stesse verranno inviate a tutti gli utenti attivi facenti parte della coda di Agenzia.</p>
+                <lightning:button class="slds-m-top_medium slds-align_absolute-center slds-button slds-button__neutral" onclick="{!c.saveEmail}">Conferma</lightning:button>
+                </div>              
+            </div>
+        </div>
+        <div class="slds-backdrop slds-backdrop--open"></div>
+    </aura:if>       
+    
+    
+    
+    <div style="{!'max-width:'+v.screenWidth+'px'}"> 
+        <div class="slds-page-header" role="banner" >
+            <div class="slds-grid">
+                <div class="slds-col">
+                    <p class="slds-text-heading_label">{!v.queueType}</p>
+                    <h1 class="slds-text-heading_medium">
+                        Gestione coda di agenzia  </h1>
+                </div>
+                <aura:if isTrue="{!v.queueType == 'Case'}">                
+                    <div class="slds-col">
+                        <div class="">
+                            <span class="slds-text-title slds-p-bottom_x-small" style="width: 80%; float: left;">
+                                <lightning:textarea name="email-ufficiale-agenzia" value="{!v.officialEmail}"
+                                 label="Destinatario/i notifiche di ricezione Feedback/assegnazione Case ICF (NO Richieste Clienti)" maxlength="255" />                              
+                            </span>
+                            <lightning:button variant="brand" label="Salva Email" onclick="{!c.openWarning}" class="saveEmail"  />
+                        </div>
+                    </div>
+                </aura:if>
+            </div>
+        </div>
+        <div class="slds-grid">
+            <table class="slds-table slds-table_bordered slds-max-medium-table_stacked-horizontal">
+                <thead>
+                    <tr class="slds-text-heading_label">
+                       <aura:if isTrue="{!v.queueType == 'Case'}">
+                        <th scope="col"><div class="slds-truncate" title="CTL">CTL</div></th>
+                        <th scope="col"><div class="slds-truncate" title="IVASS41">Richieste Clienti</div></th>
+                        </aura:if>
+                        <aura:if isTrue="{!v.queueType == 'Lead'}">
+                            <th scope="col"><div class="slds-truncate" title="In coda">In coda</div></th>
+                        </aura:if>
+                        <!--th scope="col"><div class="slds-truncate" title="Attivo">Attivo</div></th-->
+                        <th scope="col"><div class="slds-truncate" title="Nome">Nome</div></th>
+                        <th scope="col"><div class="slds-truncate" title="Cognome">Cognome</div></th>
+                        <th scope="col"><div class="slds-truncate" title="Utenza">Utenza</div></th>
+                        <th scope="col"><div class="slds-truncate" title="Nodi">Nodi</div></th>
+                        <th scope="col"><div class="slds-truncate" title="Email">Email</div></th>
+                        <th scope="col"><div class="slds-truncate" title="Profilo">Profilo</div></th>
+                        <th scope="col"><div class="slds-truncate" title="Ruolo">Ruolo</div></th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    <aura:iteration items="{!v.userList}" var="userList">
+                        <tr>
+                            <aura:if isTrue="{!v.queueType == 'Case'}">
+                            <th scope="row">
+                                <lightning:input type="checkbox" class="slds-truncate" label="CTL" name="CTL" checked="{!userList.AbilitazioneCTL}"/>
+                            </th>
+                            <th scope="row">
+                                <lightning:input type="checkbox" class="slds-truncate" label="Richieste Clienti" name="Richieste Clienti" checked="{!userList.AbilitazioneIvass}"/>
+                            </th>
+                            </aura:if>
+                            <aura:if isTrue="{!v.queueType == 'Lead'}">
+                                <th scope="row">
+                                	<lightning:input type="checkbox" class="slds-truncate" label="In coda" name="In coda" checked="{!userList.isInQueue}"/>
+                            	</th>
+                            </aura:if>
+                            <td><div class="slds-truncate" title="{!userList.singleUser.FirstName}">{!userList.singleUser.FirstName}</div></td>
+                            <td><div class="slds-truncate" title="{!userList.singleUser.LastName}">{!userList.singleUser.LastName}</div></td> 
+                            <td><div class="slds-truncate" title="{!userList.singleUser.CommunityNickname}">{!userList.singleUser.CommunityNickname}</div></td> 
+                            <td><div title="{!userList.singleUser.Nodes__c}">{!userList.singleUser.Nodes__c}</div></td> 
+                            <td><div class="slds-truncate" title="{!userList.singleUser.Email}">{!userList.singleUser.Email}</div></td>
+                            <td><div title="{!userList.singleUser.Profile.Name}">{!userList.singleUser.Profile.Name}</div></td> 
+                            <td><div title="{!userList.singleUser.UserRole.Name}">{!userList.singleUser.UserRole.Name}</div></td> 
+                        </tr>
+                    </aura:iteration>
+                </tbody>
+            </table>
+        </div>
+        <div class="slds-align_absolute-center">
+            
+            <div class="slds-form-element ">
+                <div class="slds-form-element__control slds-m-vertical_medium">
+                    <lightning:button variant="brand" label="Salva modifiche" onclick="{!c.saveUpdates }" /> 
+                    <lightning:button variant="brand" label="Annulla" onclick="{!c.gotoURL}" />
+                </div>
+            </div>    
+        </div>   
+    </div>
+    
+</aura:component>

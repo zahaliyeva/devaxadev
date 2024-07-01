@@ -1,0 +1,162 @@
+<template>
+    <!--section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open slds-modal_large">
+		<div class="slds-modal__container"-->
+        <template if:false={manageSubject}>
+        <div class="slds-card">
+			<header class="slds-modal__header">
+				<h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Gestione Pratica Documentale</h2>
+			</header>
+		<div class="list-container slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+				<template if:true={spinner}>
+					<lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+				</template>
+            <template if:true={ready}>
+				<div class="slds-section slds-is-open">
+                    <h1 class="slds-section__title slds-theme_shade">
+                        <center>
+                            <span class="slds-truncate slds-p-horizontal_small" title="Pratica Documentale">Pratica Documentale</span>
+                        </center>
+                    </h1>
+                    <div aria-hidden="false" class="slds-section__content">
+                        <c-form-generate
+                            form-name="wizard-qadv-case"
+                            record-id={recordId}
+                            record-type="*"
+                            record-type-id={recordTypeId}
+                            s-object-name="Case"
+                            change-callback={onChange}
+                            
+                            hide-header="true"
+                            disable-all={disableInputs}
+                            cols="4"
+                        ></c-form-generate>
+                        <div class="slds-card__body slds-card__body_inner">
+                            <div class="slds-grid">
+                                <div class="form-field slds-col slds-size_3-of-12">
+                                    <lightning-input type="text" disabled="true" label="Numero Polizza" placeholder="e.g.: 111111111"  value={policynum}></lightning-input>
+                                </div>
+                                <div class="form-field div slds-col slds-size_1-of-12">
+                                    <button class="slds-button slds-button_brand" onclick={showValidatePolizza} disabled={isDisabled}>Ricerca</button >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-section slds-is-open">
+                    <h1 class="slds-section__title slds-theme_shade">
+                        <center>
+                            <span class="slds-truncate slds-p-horizontal_small" title="Pratica Documentale">Richiedente</span>
+                        </center>
+                    </h1>
+                    <div aria-hidden="false" class="slds-section__content">
+                        <c-form-generate
+                            form-name={formNameRichiedente}
+                            record-id={richiedenteId}
+                            record-type="Soggetto_Documentale"
+                            s-object-name="DocumentAccount__c"
+                            change-callback={onChangeRichiedente}
+                            hide-header="true"
+                            cols="3"
+                            disable-all={disableInputs}
+                        ></c-form-generate>
+                        <div class="slds-card__body slds-card__body_inner">
+                            <center>
+                                <template if:true={isDisabledSalva}>
+                                    <p style="color:red;font-weight: bold;">{saveHelpText}</p>
+                                </template>
+                                <br>
+                                <button class="slds-button slds-button_brand" onclick={onValidate} disabled={isDisabledSalva}>Salva</button >
+                            </center>
+                        </div>
+                    </div>
+                </div>
+                <div if:true={showSubjects} class="slds-section slds-is-open">
+                                            
+                    <div class="slds-grid slds-section__title slds-gutters slds-theme_shade slds-m-horizontal_xx-small">
+                        <div class="slds-col slds-size_11-of-12 ">
+                            <h1>Soggetti</h1>
+                        </div>
+                        <div class="slds-col slds-size_1-of-12 slds-float_right">
+                            <span><lightning-button-icon icon-name="utility:loop" variant="container" alternative-text="Reset"  title="Aggiorna" onclick={loadOnlySubjectTable} ></lightning-button-icon></span>
+                        </div>
+                    </div>                 
+                    
+                    <template if:false={showTable}>
+                        <div aria-hidden="false" class="slds-section__content">
+                            <div class="slds-align_absolute-center slds-box">
+                                <lightning-button-icon icon-name="utility:add"   alternative-text="Aggiungi Soggetto"  variant="brand" class="slds-float_left" onclick={addSubject} disabled={disableAddSubject}></lightning-button-icon>
+                            </div>
+                        </div>
+                    </template>
+                    <template if:true={showTable} > 
+                        <div aria-hidden="false" class="slds-section__content">
+                            <c-data-grid-generate
+                                hook={hookDataGrid}
+                                set-data={data}
+                                grid-name="soggetti"
+                                s-object-name="DocumentAccount__c"
+                                columns-definition-callback={onColumnsDefinition}
+                                load-callback={onLoadDataGrid}
+                                row-action-callback={handleRowAction}
+                                hide-checkbox-column
+                            >
+                            </c-data-grid-generate>
+                            <br>
+                            <div class="slds-align_absolute-center slds-box">
+                            <lightning-button-icon icon-name="utility:add"   alternative-text="Aggiungi Soggetto"  variant="brand" class="slds-float_left" onclick={addSubject} disabled={disableAddSubject}></lightning-button-icon>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </template>
+		</div>
+			<footer class="slds-modal__footer" >
+                
+                    <div>
+                        <template if:true={disabledConferma}>
+                            <p style="color:red;font-weight: bold;">{confirmHelpText}</p>
+                        </template>
+                        <br>
+                        <button class="slds-button slds-button_brand" onclick={onConfirmClick} disabled={disabledConferma} >Conferma</button>
+                        <button class="slds-button slds-button_neutral" onclick={onCloseClick}>Esci</button>
+                    </div>
+                
+			</footer>
+        </div>
+    </template>
+		<!--/div>
+	</section-->
+   
+    <template if:true={manageSubject}>
+        <c-self-q-ad-v-wizard-manage-subject 
+        disable-inputs-w-f-c-l={disableInputsWFCL}
+        integration-done={integrationDone}
+        record-id={selectedSubject} 
+        case-record-id={recordId} 
+        close-callback={handleCloseSubject}
+        operation-type ={OperationType}
+        ></c-self-q-ad-v-wizard-manage-subject>
+    </template>
+
+    <template if:true={validatePolizza}>
+        <c-dh-validate-policy 
+        case-id={recordId}
+        case-data={context.Case}
+        record-type-id={recordTypeId}
+        close-callback={closeValidatePolizza}
+        confirm-callback={onConfirmValidatePolicy}
+        reset={resetPolicy}
+        disable-inputs={disableInputs}
+        ></c-dh-validate-policy>
+    </template>
+    
+    <template if:true={showConfirmationModal}>
+        <c-lght-confirmation-modal
+            text={confirmationText}
+            close-callback={closeConfirmationModal}
+            confirm-callback={confirmationCallback}
+            
+            >
+        </c-lght-confirmation-modal>
+    </template>
+</template>

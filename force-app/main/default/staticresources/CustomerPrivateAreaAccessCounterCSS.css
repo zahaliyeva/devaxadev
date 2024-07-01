@@ -1,0 +1,47 @@
+/* customerPrivateAreaAccessCounterCSS */
+html {
+    margin: -3px -2px -3px -10px;
+}
+
+tr td.last.dataCol {
+    padding-left: 0;
+}
+
+.bPageBlock.brandSecondaryBrd.apexDefaultPageBlock.secondaryPalette {
+    border: none;
+    background: transparent;
+}
+
+.apexp .bPageBlock.apexDefaultPageBlock .pbBody {
+    margin: 0;
+}
+
+body .bPageBlock .pbBody .labelCol {
+    padding: 3px 11px 3px 3px;
+    color: #4a4a56;
+}
+
+body .data2Col.first.last {
+    padding: 3px 3px 3px 11px;
+    width: 32% !important;
+}
+
+body.hasMotif {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+th.labelCol label {
+    white-space: nowrap;
+    font-size: 105%;
+    width: 18% !important;
+}
+
+.lightning-block {
+    padding: 3px 2px 0 10px;
+    display: grid;
+
+}
+.lightning-label {
+    margin-right: 20px;
+}

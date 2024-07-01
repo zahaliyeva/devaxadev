@@ -1,0 +1,69 @@
+<apex:page controller="LeadCSVLoaderCtr" sidebar="false" id="id1" > <!-- tabStyle="Lead"-->
+    <apex:form >
+        <apex:sectionHeader title="Caricamento Lead da File" />
+            <apex:pageBlock title="Step {!(step+1)} di 4">
+                <apex:pageMessages />   
+                
+                <!-- Primo Step -->
+                
+                <apex:pageBlockSection title="Seleziona la tipologia di Lead"  columns="1" rendered="{!AND(step==0)}" collapsible="false">     
+                </apex:pageBlockSection>
+                
+                <!-- Secondo Step -->
+                
+                <apex:pageBlockSection title="Seleziona il file da caricare"  columns="1" rendered="{!AND(step==1)}" collapsible="false">     
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLink value="{!URLFOR($Action.Document.Download, d.id)}"> Scarica Template </apex:outputLink>
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem rendered="{!cc.Status__c!='Elaborato'}">
+                        <apex:outputLabel value="File"/>
+                        <apex:inputFile value="{!file_contenuto}" filename="{!file_nome}" />
+                    </apex:pageBlockSectionItem>
+                   
+                </apex:pageBlockSection>
+            
+                <!-- Terzo Step -->
+                              
+                <apex:pageBlockSection title="Esito della validazione" columns="1" rendered="{!AND(step==2)}" collapsible="false">
+                    <apex:pageBlockSectionItem > 
+                        <apex:outputText value="{!numVal} record sono stati validati correttamente. Procedendo questi record saranno inseriti a sistema" />
+                        <apex:outputLink value="{!URLFOR($Action.Attachment.Download, a.id)}"> Scarica lead validi</apex:outputLink>
+                    </apex:pageBlockSectionItem>
+                    
+                    <apex:pageBlockSectionItem >
+                        <apex:outputText value="Si sono riscontrati {!numErr} errori durante la validazione. Questi record non verranno inseriti." />
+                        <apex:outputLink value="{!URLFOR($Action.Attachment.Download, b.id)}"> Scarica lead errati</apex:outputLink>
+                    </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+                
+                <!-- Quarto Step -->
+                
+                <apex:pageBlockSection title="Esito caricamento" columns="1" rendered="{!AND(step==3)}" collapsible="false">                    
+                    
+                    <apex:pageBlockSectionItem >
+                            <apex:outputText style="text-align:center">I Lead validati con successo sono stati presi in carico per l'inserimento. Visualizzare la storicizzazione per controllare lo stato di caricamento
+                            </apex:outputText>
+                    </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+
+            <!--   <apex:pageBlockButtons location="bottom" id="bottoni">-->
+                <div align="center">    
+                    <apex:commandButton value="Auto" action="{!auto}" rendered="{!step==0}" style="width: 200px; height:30px;"/>    
+                    <apex:commandButton value="Rami Elementari" action="{!nonAuto}" rendered="{!step==0}" style="width: 200px; height:30px;"/>
+                    <apex:commandButton value="Previdenza" action="{!previdenza}" rendered="{!step==0}" style="width: 200px; height:30px;"/>
+                    <apex:commandButton value="Protezione" action="{!protezione}" rendered="{!step==0}" style="width: 200px; height:30px;"/>
+   
+                    <apex:commandButton value="Valida file" action="{!validaFile}" rendered="{!step==1}" style="width: 100px;"/>
+                    <apex:commandButton value="Indietro" action="{!cancel}" rendered="{!step==1}" style="width: 100px;"/>
+                    
+                    <apex:commandButton value="Inserimento" action="{!importa}" rendered="{!step==2}" style="width: 100px;"/>
+                    <apex:commandButton value="Indietro" action="{!cancel}" rendered="{!step==2}" style="width: 100px;"/>
+
+                    <apex:commandButton value="Nuovo caricamento" action="{!nuovoCaricamento}" rendered="{!step==3}" style="width: 200px; height:30px;"/>    
+                    <apex:commandButton value="Visualizza Storicizzazione" onclick="window.open('{!urlAmb}{!cc.id}');" rendered="{!step==3}" style="width: 200px; height:30px;"/>
+                    <apex:commandButton value="Vai alla HomePage" action="{!uscita}" rendered="{!step==3}" style="width: 200px; height:30px;"/>
+                </div>    
+         <!--     </apex:pageBlockButtons>-->
+            </apex:pageBlock>
+    </apex:form>
+</apex:page>

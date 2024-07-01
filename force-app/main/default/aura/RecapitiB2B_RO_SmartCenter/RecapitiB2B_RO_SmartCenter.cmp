@@ -1,0 +1,320 @@
+<aura:component controller="accountEditLightningCTRL">
+
+    <aura:attribute name="RecapitiB2B_RO_SmartCenter" type="Account"/>
+    <aura:attribute name="telephoneWithPrefix" type="object"/>
+    <aura:handler event="c:AccountEvent" action="{!c.handleAccountReceived}"/>
+    <aura:registerEvent name="sendchangedEmail" type="c:ChangeEmailEvent"/>
+    <aura:attribute name="InitialInfo" type="Array"/>
+    <aura:attribute name="MPSEnrichment" type="Boolean"/>
+    <aura:attribute name="currentAccount" type="Account" default="{ 'sobjectType': 'Account' }"/>
+    
+    <aura:attribute name="OpenTask" type="Boolean"/>
+    <aura:attribute name="EmailConsenso" type="String"/>
+    <aura:attribute name="BlockedPersEmail" type="Boolean"/>
+    <aura:attribute name="BlockedWorkEmail" type="Boolean"/>
+    <aura:attribute name="BlockFlagPersEmail" type="Boolean"/>
+    <aura:attribute name="BlockFlagWorkEmail" type="Boolean"/>
+
+    <!-- FM_02/05/2018 : GDPR - START -->
+
+    <aura:attribute name="ContactDPO" type="Boolean" default="false"/>
+    <!-- FM_02/05/2018 : GDPR - END -->
+
+
+
+    
+    
+   <div id="container_recapiti" class="slds-col--padded slds-p-bottom--x-small  slds-m-top--small slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--1-of-1">
+       <h3 class="slds-section-title--divider"> Recapiti</h3> 
+   </div>
+    
+
+  <div id="spazio_vuoto" class="slds-col--padded slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+             <div class="slds-form-element">
+             </div> 
+  </div>
+
+ <div id="spazio_vuoto" class="slds-col--padded slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+      <div class="slds-form-element">
+      </div>
+   </div>
+
+   <div id="spazio_vuoto" class="slds-col--padded slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--1-of-1">
+      <div class="slds-form-element"  >
+      </div>
+   </div>
+
+   <div id="spazio_vuoto" class="slds-col--padded slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-1">
+      <div class="slds-form-element">
+         &nbsp;
+      </div>
+   </div>
+
+<aura:if isTrue="{!v.ContactDPO == true}">   
+   
+  <fieldset class="slds-form-element slds-form-element_compound slds-large-size_4-of-12">
+    <div class="slds-form-element__control">
+    <div class="slds-form-element__row">
+        <div class="slds-size_3-of-12 slds-m-right_none" >
+        <div class="slds-form-element">
+            <label class="slds-form-element__label" for="TelefonocellularePrefisso">Telefono principale:</label>
+            <div class="slds-form-element__control">
+              <ui:outputText aura:id="CIF_Phone_IntPrefix"   value="{!v.telephoneWithPrefix.CIF_Phone__c.prefix}"/> 
+            </div>
+        </div>
+        </div>
+        <div class="slds-size_9-of-12 slds-m-left_none">
+        <div class="slds-form-element">
+            <label class="slds-form-element__label" for="Telefonocellulare"></label>
+            <div class="slds-form-element__control">
+              <ui:outputText aura:id="CIF_Phone"   value="{!v.telephoneWithPrefix.CIF_Phone__c.telephoneNumber}" /> 
+            </div>
+        </div>
+        </div>
+    </div>
+    </div>
+  </fieldset> 
+    <aura:set attribute="else">
+  <fieldset class="slds-form-element slds-form-element_compound slds-large-size_4-of-12">
+    <div class="slds-form-element__control">
+    <div class="slds-form-element__row">
+        <div class="slds-size_3-of-12 slds-m-right_none" >
+        <div class="slds-form-element">
+            <label class="slds-form-element__label" for="TelefonocellularePrefisso">Telefono principale:</label>
+            <div class="slds-form-element__control">
+              <ui:inputPhone aura:id="CIF_Phone_IntPrefix" class="slds-input" placeholder="e.g. +39" value="{!v.telephoneWithPrefix.CIF_Phone__c.prefix}"/>  
+            </div>
+        </div>
+        </div>
+        <div class="slds-size_9-of-12 slds-m-left_none">
+        <div class="slds-form-element">
+            <label class="slds-form-element__label" for="Telefonocellulare"></label>
+            <div class="slds-form-element__control">
+              <ui:inputPhone aura:id="CIF_Phone" class="slds-input"  value="{!v.telephoneWithPrefix.CIF_Phone__c.telephoneNumber}"/>
+            </div>
+        </div>
+        </div>
+    </div>
+    </div>
+  </fieldset> 
+    </aura:set>
+    </aura:if>
+    
+    <div id="spazio_vuoto" class="slds-col--padded slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-1">
+      <div class="slds-form-element">
+      </div> 
+</div>
+
+    <aura:if isTrue="{!v.ContactDPO == true}">   
+  <fieldset class="slds-form-element slds-form-element_compound slds-large-size_4-of-12">
+    <div class="slds-form-element__control">
+    <div class="slds-form-element__row">
+        <div class="slds-size_3-of-12 slds-m-right_none" >
+        <div class="slds-form-element">
+            <label class="slds-form-element__label" for="TelefonocellularePrefisso">Telefono cellulare:</label>
+            <div class="slds-form-element__control">
+              <ui:outputText aura:id="CIF_MobilePhone_IntPrefix" value="{!v.telephoneWithPrefix.CIF_MobilePhone__c.prefix}"/> 
+            </div>
+        </div>
+        </div>
+        <div class="slds-size_9-of-12 slds-m-left_none">
+        <div class="slds-form-element">
+            <label class="slds-form-element__label" for="Telefonocellulare"></label>
+            <div class="slds-form-element__control">
+              <ui:outputText aura:id="CIF_Person_Mobile_Phone" value="{!v.telephoneWithPrefix.CIF_MobilePhone__c.telephoneNumber}"/> 
+            </div>
+        </div>
+        </div>
+    </div>
+    </div>
+  </fieldset> 
+        <aura:set attribute="else"> 
+  <fieldset class="slds-form-element slds-form-element_compound slds-large-size_4-of-12">
+    <div class="slds-form-element__control">
+    <div class="slds-form-element__row">
+        <div class="slds-size_3-of-12 slds-m-right_none" >
+        <div class="slds-form-element">
+            <label class="slds-form-element__label" for="TelefonocellularePrefisso">Telefono cellulare:</label>
+            <div class="slds-form-element__control">
+              <ui:inputPhone aura:id="CIF_MobilePhone_IntPrefix" class="slds-input" placeholder="e.g. +39" value="{!v.telephoneWithPrefix.CIF_MobilePhone__c.prefix}"/> 
+            </div>
+        </div>
+        </div>
+        <div class="slds-size_9-of-12 slds-m-left_none">
+        <div class="slds-form-element">
+            <label class="slds-form-element__label" for="Telefonocellulare"></label>
+            <div class="slds-form-element__control">
+              <ui:inputPhone aura:id="CIF_Person_Mobile_Phone" class="slds-input" value="{!v.telephoneWithPrefix.CIF_MobilePhone__c.telephoneNumber}"/> 
+            </div>
+        </div>
+        </div>
+    </div>
+    </div>
+  </fieldset>      
+        </aura:set>
+    </aura:if>
+
+    <div id="spazio_vuoto" class="slds-col--padded slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-1">
+      <div class="slds-form-element">
+      </div> 
+</div>
+
+ 
+ <aura:if isTrue="{!v.ContactDPO == true}">  
+  <fieldset class="slds-form-element slds-form-element_compound slds-large-size_4-of-12">
+    <div class="slds-form-element__control">
+    <div class="slds-form-element__row">
+        <div class="slds-size_3-of-12 slds-m-right_none" >
+        <div class="slds-form-element">
+            <label class="slds-form-element__label" for="TelefonocellularePrefisso">Fax:</label>
+            <div class="slds-form-element__control">
+              <ui:outputText aura:id="Fax_IntPrefix" value="{!v.telephoneWithPrefix.Fax.prefix}"/> 
+            </div>
+        </div>
+        </div>
+        <div class="slds-size_9-of-12 slds-m-left_none">
+        <div class="slds-form-element">
+            <label class="slds-form-element__label" for="Telefonocellulare"></label>
+            <div class="slds-form-element__control">
+              <ui:outputText aura:id="Fax_" value="{!v.telephoneWithPrefix.Fax.telephoneNumber}"/> 
+            </div>
+        </div>
+        </div>
+    </div>
+    </div>
+  </fieldset>    
+        <aura:set attribute="else">
+  <fieldset class="slds-form-element slds-form-element_compound slds-large-size_4-of-12">
+    <div class="slds-form-element__control">
+    <div class="slds-form-element__row">
+        <div class="slds-size_3-of-12 slds-m-right_none" >
+        <div class="slds-form-element">
+            <label class="slds-form-element__label" for="TelefonocellularePrefisso">Fax:</label>
+            <div class="slds-form-element__control">
+              <ui:inputPhone aura:id="Fax_IntPrefix" class="slds-input" placeholder="e.g. +39" value="{!v.telephoneWithPrefix.Fax.prefix}"/> 
+            </div>
+        </div>
+        </div>
+        <div class="slds-size_9-of-12 slds-m-left_none">
+        <div class="slds-form-element">
+            <label class="slds-form-element__label" for="Telefonocellulare"></label>
+            <div class="slds-form-element__control">
+              <ui:inputPhone aura:id="Fax_" class="slds-input" value="{!v.telephoneWithPrefix.Fax.telephoneNumber}"/> 
+            </div>
+        </div>
+        </div>
+    </div>
+    </div>
+  </fieldset>       
+        </aura:set>
+    </aura:if>
+
+  <div id="spazio_vuoto" class="slds-col--padded slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-1">
+   <div class="slds-form-element">
+   </div> 
+</div>
+
+
+
+<aura:if isTrue="{!v.ContactDPO == true}">    
+  <fieldset class="slds-form-element slds-form-element_compound slds-large-size_4-of-12">
+    <div class="slds-form-element__control">
+    <div class="slds-form-element__row">
+        <div class="slds-size_3-of-12 slds-m-right_none" >
+        <div class="slds-form-element">
+            <label class="slds-form-element__label" for="TelefonocellularePrefisso">Telefono ufficio:</label>
+            <div class="slds-form-element__control">
+              <ui:outputText aura:id="CIF_Work_phone_IntPrefix" value="{!v.telephoneWithPrefix.CIF_Work_phone__c.prefix}"/> 
+            </div>
+        </div>
+        </div>
+        <div class="slds-size_9-of-12 slds-m-left_none">
+        <div class="slds-form-element">
+            <label class="slds-form-element__label" for="Telefonocellulare"></label>
+            <div class="slds-form-element__control">
+              <ui:outputText aura:id="CIF_Work_phone"  value="{!v.telephoneWithPrefix.CIF_Work_phone__c.telephoneNumber}" />
+            </div>
+        </div>
+        </div>
+    </div>
+    </div>
+  </fieldset> 
+    <aura:set attribute="else"> 
+  <fieldset class="slds-form-element slds-form-element_compound slds-large-size_4-of-12">
+    <div class="slds-form-element__control">
+    <div class="slds-form-element__row">
+        <div class="slds-size_3-of-12 slds-m-right_none" >
+        <div class="slds-form-element">
+            <label class="slds-form-element__label" for="TelefonocellularePrefisso">Telefono ufficio:</label>
+            <div class="slds-form-element__control">
+              <ui:inputPhone aura:id="CIF_Work_phone_IntPrefix" class="slds-input" placeholder="e.g. +39" value="{!v.telephoneWithPrefix.CIF_Work_phone__c.prefix}"/> 
+            </div>
+        </div>
+        </div>
+        <div class="slds-size_9-of-12 slds-m-left_none">
+        <div class="slds-form-element">
+            <label class="slds-form-element__label" for="Telefonocellulare"></label>
+            <div class="slds-form-element__control">
+              <ui:inputPhone aura:id="CIF_Work_phone" class="slds-input" value="{!v.telephoneWithPrefix.CIF_Work_phone__c.telephoneNumber}"/>
+            </div>
+        </div>
+        </div>
+    </div>
+    </div>
+  </fieldset>  
+    </aura:set>
+    </aura:if>
+    
+    <div id="spazio_vuoto" class="slds-col--padded slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-1">
+      <div class="slds-form-element">
+      </div> 
+</div>
+
+
+<aura:if isTrue="{!v.ContactDPO == true}">    
+<fieldset class="slds-form--compound slds-col--padded slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+<div id="container_email" class="slds-form--horizontal "> 
+      <label class="inputStyle slds-form-element__label" for="Email:">Email:</label> 
+                  <div id="container_Emailpersonale" class="slds-form-element__control" style="width:65%">
+                   <ui:outputText aura:id="CIF_Personal_email" value="{!v.RecapitiB2B_RO_SmartCenter.CIF_Personalemail__c}"/><br/> 
+                            
+          </div>
+      </div>
+</fieldset>  
+    <aura:set attribute="else">
+  <fieldset class="slds-form--compound slds-col--padded slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+<div id="container_email" class="slds-form--horizontal "> 
+      <label class="inputStyle slds-form-elementinput__label" for="Email:">Email:</label> 
+                  <div id="container_Emailpersonale" class="slds-form-element__control" style="width:65%">
+                   <ui:inputEmail class="slds-input" aura:id="CIF_Personal_email" value="{!v.RecapitiB2B_RO_SmartCenter.CIF_Personalemail__c}" change="{!c.PersEmailChange}" disabled="{!v.BlockedPersEmail}"/><br/> 
+                            
+          </div>
+      </div>
+</fieldset>
+    </aura:set>
+    </aura:if>
+
+    <div id="spazio_vuoto" class="slds-col--padded slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-1">
+      <div class="slds-form-element">
+      </div> 
+</div>
+ 
+  
+<aura:if isTrue="{!v.ContactDPO == true}"> 
+           <div id="container_work_email" class="slds-col--padded slds-col--padded slds-form--horizontal  slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">    
+            <label class="slds-form-element__label" for="Email:">Email ufficio:</label> 
+                  <div id="container_Emaillavoro" class="slds-form-element__control" style="width:65%">
+                   <ui:outputText aura:id="CIF_Work_email"  value="{!v.RecapitiB2B_RO_SmartCenter.CIF_Work_email__c}" /><br/>               
+            </div>
+            </div>
+    <aura:set attribute="else">    
+           <div id="container_work_email" class="slds-col--padded slds-col--padded slds-form--horizontal  slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">    
+            <label class="slds-form-elementinput__label" for="Email:">Email ufficio:</label> 
+                  <div id="container_Emaillavoro" class="slds-form-element__control" style="width:65%">
+                   <ui:inputEmail aura:id="CIF_Work_email" class="slds-input" value="{!v.RecapitiB2B_RO_SmartCenter.CIF_Work_email__c}" change="{!c.WorkEmailChange}" disabled="{!v.BlockedWorkEmail}"/><br/>               
+            </div>
+            </div>
+        </aura:set>
+    </aura:if>
+
+</aura:component>

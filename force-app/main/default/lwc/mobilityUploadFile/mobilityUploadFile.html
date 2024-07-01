@@ -1,0 +1,52 @@
+<template>
+	<c-mobility-spinner show={spinner} show-overlay="true"></c-mobility-spinner>
+	<c-mobility-messages model={messages} confirm-warning-callback={confirmWarningCallback}></c-mobility-messages>
+
+	<input type="file" style="display: none;" onchange={handleFilesChange}>
+	<div class='row justify-content-between mx-0'>
+		<div class="col-5">
+			<h2>{_label.uploadFile_attachments}</h2>
+		</div>
+		<div class="col-2 text-right">
+			<a onclick={handleSave}>
+				<span>
+					{_label.uploadFile_upload}
+					<span class="ml-2">
+						<c-mobility-icon name="plus" width='10.5px' height='10.5px'></c-mobility-icon>
+					</span>
+				</span>
+			</a>
+		</div>
+		<div class="page-border w-100"></div>
+		<div class='col-12'>
+			<c-mobility-no-data show={noData} no-image='true'></c-mobility-no-data>
+			<template for:each={data} for:item="file">
+				<div key={file.Id} class='row justify-content-between align-items-center'>
+					<div class='mr-2'>
+						<c-mobility-icon name='doc' width='30px' height='30px'></c-mobility-icon>
+					</div>
+					<div class='col-5 mr-auto'>
+						<h3 class="text-primary">&nbsp;{file.Title}</h3>
+					</div>
+					<div class="col-1 text-right">{file.Size}</div>
+					<div class="col-1 text-right">{file.CreateDateString}</div>
+					<div class='text-nowrap text-right'>
+						<!--<a>
+		                    <c-mobility-icon name='edit' width='16px' height='16px'></c-mobility-icon>
+		                </a>-->
+						<a onclick={deleteFile} data-id={file.ContentDocumentId}>
+							<c-mobility-icon name='delete' width='16px' height='16px'></c-mobility-icon>
+						</a>
+						<!--<a>
+		                    <c-mobility-icon name='download' width='16px' height='16px'></c-mobility-icon>
+		                </a>-->
+					</div>
+					<div class="page-border w-100 my-2"></div>
+				</div>
+			</template>
+		</div>
+	</div>
+	<template if:false={noData}>
+		<c-mobility-pagination pagination={pagination} change-page={onChangePage}></c-mobility-pagination>
+	</template>
+</template>

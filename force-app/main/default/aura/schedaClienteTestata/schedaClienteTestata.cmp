@@ -1,0 +1,127 @@
+<aura:component>
+    <aura:attribute name="wrapper" type="Object" />
+    <aura:attribute name = "ShowModal" type = "Boolean" default = "false"/>
+    <aura:handler name="init" value="{! this }" action="{! c.doInit }"/> 
+
+    <lightning:navigation aura:id="navService"/>
+
+    <div class='slds-page-header'> 
+        <div class="slds-page-header__row">
+            <div class="slds-page-header__col-title">
+                <div class="slds-media">
+                    <div class="slds-media__figure">
+                        <aura:if isTrue="{!v.wrapper.isPerson}">
+                          <lightning:icon class="icon-blue-axa" size="large" src="{!$Resource.IconeSchedaCliente + '/IconeSchedaCliente/man_blue.svg#man_blue'}"/>
+                        </aura:if>
+                        <aura:if isTrue="{! !v.wrapper.isPerson}">
+                          <lightning:icon class="icon-blue-axa" size="large" src="{!$Resource.IconeSchedaCliente + '/IconeSchedaCliente/briefcase_blue.svg#briefcase_blue'}"/>
+                        </aura:if>
+                    </div>
+                    <div class="slds-media__body">
+                        <div class="slds-page-header__name">
+                          <div class="slds-page-header__name-title">
+                            <h1>
+                                <aura:if isTrue="{!v.wrapper.isPerson}">
+                                    <span>Cliente Personale</span>
+                                </aura:if>
+                                <aura:if isTrue="{! !v.wrapper.isPerson}">
+                                    <span>Persona Giuridica</span>
+                                 </aura:if>
+                              <span class="slds-page-header__title slds-truncate" title="Recently Viewed">{! v.wrapper.account.Name }</span>
+                              <div class="slds-badge badge-axa" aura:id="companyNameClass">
+                                <span id="company-name">{!v.wrapper.companyName}</span>
+                              </div>
+                                <aura:if isTrue="{!v.wrapper.isQuadra}">
+                                    <div class="slds-badge badge-axa badge-axa-blue">
+                                        <span id="company-name">Quadra</span>
+                                    </div>
+                                </aura:if>
+                                <aura:if isTrue="{!v.wrapper.isAMAV}">
+                                    <div class="slds-badge badge-axa badge-axa-blue">
+                                        <span id="company-name">AMAV</span>
+                                    </div>
+                                </aura:if>
+                                <aura:if isTrue="{!v.wrapper.isAMAD}">
+                                    <div class="slds-badge badge-axa badge-axa-blue">
+                                        <span id="company-name">AMAD</span>
+                                    </div>
+                                </aura:if>
+                            </h1>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <aura:if isTrue="{! v.wrapper.canEditAccount }">
+                <div class="slds-no-flex">
+                    <button class="slds-button slds-button_neutral" onclick="{!c.onModifica}">Modifica</button>
+                </div>
+            </aura:if>
+            <aura:if isTrue="{!v.wrapper.showResetModal}">
+                <div class="slds-no-flex">
+                    <button class="slds-button slds-button_neutral" onclick="{!c.openModal}">Reset Password Area Clienti</button>
+                </div>
+            </aura:if>
+        </div>
+        
+        <ul class="slds-grid slds-page-header__detail-row">
+            <aura:if isTrue="{!v.wrapper.isAAI}">
+                <li class="slds-col_padded slds-size_1-of-6">
+                    <p class="slds-text-heading_label slds-truncate slds-m-bottom_x-small">NDG</p>
+                    <p class="slds-text-body_regular slds-truncate">{! v.wrapper.account.NDG__c }</p>
+                </li>
+            </aura:if>
+                <li class="slds-col_padded slds-size_1-of-6"> 
+                    <p class="slds-text-heading_label slds-truncate slds-m-bottom_x-small">Stato</p>
+                    <p class="slds-text-body_regular slds-truncate">{! v.wrapper.account.State__c }</p>
+                </li>
+            <aura:if isTrue="{!v.wrapper.isAAI}">
+                <li class="slds-col_padded slds-size_1-of-6">
+                    <p class="slds-text-heading_label slds-truncate slds-m-bottom_x-small">Assurbanking</p>
+                    <p class="slds-text-body_regular slds-truncate">
+                        <lightning:input type="toggle"
+                        aura:id="Assurbanking__c"
+                        label=""
+                        name="Assurbanking__c"
+                        checked="{!v.wrapper.account.Assurbanking__c }"
+                        messageToggleActive=""
+                        messageToggleInactive=""
+                        disabled="true"/>
+                    </p>
+                </li>
+                <li class="slds-col_padded slds-size_1-of-6">
+                    <p class="slds-text-heading_label slds-truncate slds-m-bottom_x-small">Data Inizio Assurbanking</p>
+                    <p class="slds-text-body_regular slds-truncate">
+                        <ui:outputDate value="{!v.wrapper.account.Data_inizio_assurbanking__c }" format="DD/MM/YYYY"/>
+                    </p>
+                </li>
+                <aura:if isTrue="{! and(v.wrapper.account.Cprivacy_Profilazione_Ndg_AAI__c == 'Sì', v.wrapper.account.Bcert_Privacy_Profilazione_Ndg_AAI__c == 'Sì')}">
+                    <li class="slds-col_padded slds-size_1-of-6"> 
+                        <p class="slds-text-heading_label slds-truncate slds-m-bottom_x-small">Client Index</p>
+                        <p class="slds-text-body_regular slds-truncate">{! v.wrapper.account.Client_Index__c }</p>
+                    </li>
+                </aura:if>
+            </aura:if>
+                <li class="slds-col_padded slds-size_1-of-6"> 
+                    <p class="slds-text-heading_label slds-truncate slds-m-bottom_x-small">Net Promoter Score (NPS)</p>
+                    <p class="slds-text-body_regular slds-truncate"><lightning:formattedRichText value="{! v.wrapper.account.Net_Promoter_Score_NPS__c }"/></p>
+                </li>
+                </ul>
+        
+        <aura:if isTrue = "{!v.ShowModal}">
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <center>Reset Password</center>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <c:resetPasswordAccount origin = "CRM" closeMethod = "{!c.closeModal}" personId = "{!v.wrapper.account.Codice_fiscale_ListView__c}"/> 
+                    </div>
+                
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </aura:if>
+    </div>
+</aura:component>

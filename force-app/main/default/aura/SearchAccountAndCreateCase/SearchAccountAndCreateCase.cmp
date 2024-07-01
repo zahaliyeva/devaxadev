@@ -1,0 +1,644 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction,lightning:actionOverride,lightning:isUrlAddressable" access="global" controller="NewLightningCase_CTRL">
+
+    <!-- *** ATTRIBUTE BLOCK *** --> 
+    <lightning:navigationItemAPI aura:id="navigationItem"/>
+    <lightning:navigation aura:id="navService"/>
+    <lightning:workspaceAPI aura:id="workspace"/>
+    <!--<aura:handler event="aura:waiting" action="{!c.showSpinner}"/>
+    <aura:handler event="aura:doneWaiting" action="{!c.hideSpinner}"/>-->
+    <!--<aura:handler name="RTEvent" event="c:CaseRecordTypeSelectionEvt" action="{!c.handleRTEvent}"/>-->
+    <aura:attribute name="SelectedCaseType" type="String"/>
+    <aura:attribute name="VoiceCall" type="String"/>
+    <aura:attribute name="SelectedCaseTypeName" type="String"/>
+    <aura:attribute name="SelectedCaseTypeDeveloperName" type="String"/>
+    <aura:attribute name="CaseWithRT" type="Boolean"/> 
+    <aura:attribute name="CaseNewAction" type="String"/>
+    <lightning:utilityBarAPI aura:id="utilityBar"/>
+    <aura:attribute type="String" name="CustomerName"/>
+    <aura:attribute type="String" name="CustomerSurname"/>
+    <aura:attribute type="String" name="CustomerBirthDate"/> 
+    <aura:attribute type="String" name="FiscalId"/>
+    <aura:attribute type="String" name="Policy"/>
+    <aura:attribute type="String" name="Plate"/>
+    <aura:attribute type="String" name="ClaimNumber"/>
+    <aura:attribute type="Map" name="MapIdToFounds" default="{}"/>
+    <aura:attribute type="String" name="FormType"/>
+    <aura:attribute type="Boolean" name="ShowRTSelection" default="false"/>
+    <aura:attribute type="Boolean" name="ClienteIsFound" default="false"/>
+    <aura:attribute type="Boolean" name="ShowCustomerTable" default="false"/>
+    <aura:attribute name="data" type="Object"/>
+    <aura:attribute name="columns" type="List"/>
+    <aura:attribute name="SelectedFiscal" type="String"/>
+    <aura:attribute name="SelectedAccountId" type="String"/>
+    <aura:attribute name="SelectedCaseId" type="String"/>
+    <aura:attribute name="SelectedCaseNumber" type="String"/>
+
+    <aura:attribute name="OpenClaim" type="Boolean" default="false"/>
+    <aura:attribute name="CasesAreFound" type="Boolean" default="false"/>
+    <aura:attribute name="ShowCaseTable" type="Boolean" default="false"/>
+    <aura:attribute name="dataCases" type="Object"/>
+    <aura:registerEvent name="tabclosing" type="c:tabclosing"/>
+    <aura:attribute name="page" type="integer" description="using for store page Number" default="1"/>
+    <aura:attribute name="pages" type="integer" description="using for store All Pages page Number"/>
+    <aura:attribute name="total" type="integer" description="total records count store "/>
+    <aura:attribute name="CustomerResultedMap" type="Map" default="{}"/>
+    <aura:attribute name="FirstRecordOnPage" type="Integer" access="private" default="0"/>
+    <aura:attribute name="LastRecordOnPage" type="Integer" access="private" default="0"/>
+    <aura:attribute name="recordToDisplay" type="Integer" default="5"/>
+    <aura:attribute name="CasesFoundMap" type="Map" default="{}"/>
+
+    <aura:attribute name="pageCase" type="integer" description="using for store page Number" default="1"/>
+    <aura:attribute name="pagesCase" type="integer" description="using for store All Pages page Number"/>
+    <aura:attribute name="totalCase" type="integer" description="total records count store "/>
+    <aura:attribute name="FirstRecordOnPageCase" type="Integer" access="private" default="0"/>
+    <aura:attribute name="LastRecordOnPageCase" type="Integer" access="private" default="0"/>
+    <aura:attribute name="ErrorSearchCase" type="String" default=""/>
+    <aura:attribute name="ErrorSearchCustomer" type="String" default=""/>
+    <aura:attribute name="ShowToast" type="Boolean" default="false"/>
+    <aura:attribute name="NewCaseNumber" type="String" default=""/>
+    <aura:attribute name="NewCaseId" type="String" default=""/>
+    <aura:attribute name="typeToast" type="String"/>
+    <aura:attribute name="messageToast" type="String"/>
+    <!--MOSCATELLI_M 13/03/2019: Axa Assistance-START-->
+    <aura:attribute name="persone" type="List" default="[
+                                                        {'label': 'Persona Fisica', 'value': 'fisica'},
+                                                        {'label': 'Persona giuridica', 'value': 'giuridica'}
+                                                        ]"/>
+    <aura:attribute name="personaContr" type="String" default="fisica"/>
+    <aura:attribute name="CustomerIVA" type="String"/>
+    <!--MOSCATELLI_M 13/03/2019: Axa Assistance-START-->
+    <!-- Giorgio Bonifazi 23/07/2019 : Caring Angel fase 2 - START -->
+    <aura:attribute type="Boolean" name="ShowButtonNoAnagrafica" default="false"/>
+    <!-- Giorgio Bonifazi 23/07/2019 : Caring Angel fase 2 - END -->
+    <!--loading spinner start... style=Brand Medium (blue dots)-->
+    <!--MOSCATELLI_M 13/03/2019: Axa Assistance-START-->
+
+    <!-- FOZDEN 26/06/2019: AXA Assistance Enhancement Fase II - START -->
+    <aura:attribute name="isCaseRapidoEnabled" type="Boolean" default="false"/>
+    <aura:attribute name="showCaseRapidoModal" type="Boolean" default="false"/>
+    <!-- FOZDEN 26/06/2019: AXA Assistance Enhancement Fase II - END -->
+
+
+    <!--loading spinner start... style=Brand Medium (blue dots)-->
+    <aura:attribute name="Spinner" type="boolean" default="false"/>
+
+    <aura:attribute name="visibilities" type="Object"/>
+    <aura:attribute name="visibilitiesCallback" type="Object"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <aura:if isTrue="{!v.Spinner}">
+        <div aura:id="spinnerId" class="slds-spinner_container">
+            <div class="slds-spinner--neutral  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </aura:if>
+    <!-- Loading spinner end-->
+
+    <div class="slds-page-header" role="banner">
+        <div class="slds-media">
+            <div class="slds-media__figure">
+                <lightning:icon iconName="action:new_case"/>
+            </div>
+            <div class="slds-media__body">
+                <h1 class="slds-text-heading_medium">Case <i class="slds-text-heading_small">{!v.SelectedCaseTypeName}</i></h1>
+                <p class="slds-text-heading_label">Creazione nuova richiesta</p>
+            </div>
+            <!-- FOZDEN 26/06/2019: AXA Assistance Enhancement Fase II - START -->
+            <aura:if isTrue="{!and(v.FormType == 'Sinistri',
+                             or(v.SelectedCaseTypeName == 'Sinistri Danni Banca',
+                             v.SelectedCaseTypeName == 'Sinistri AAI'))}">
+                <div class="slds-float--right">
+                    <!-- <lightning:button variant="Neutral" label="Apri case rapido" title="Apri case rapido"
+                                      onclick="{!c.showCaseRapidoModal}"/> -->
+                    <lightning:button variant="Neutral" label="Apri case rapido" title="Apri case rapido" onclick="{!c.onCreateCaseRapido}"/>
+                </div>
+            </aura:if>
+            <!-- FOZDEN 26/06/2019: AXA Assistance Enhancement Fase II - END -->
+        </div>
+
+    </div>
+    <br/>
+    <div id="container_riicerca" class="slds-p-bottom_x-small slds-m-top_small slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1">
+        <h3 class="slds-section-title_divider">Ricerca Cliente</h3>  
+    </div>	
+    <!--MOSCATELLI_M 13/03/2019: Axa Assistance-START-->
+    <aura:if isTrue="{!v.FormType == 'Sinistri'}">
+        <center>
+            <lightning:radioGroup 	name="personaGroupButton"
+                                  label=""
+                                  options="{! v.persone }"
+                                  value="{! v.personaContr }"
+                                  type="button"
+                                  onchange="{!c.resetFilters}"/>
+        </center>
+        <br/>
+    </aura:if>
+    <!--MOSCATELLI_M 13/03/2019: Axa Assistance-END-->
+    <lightning:layout horizontalAlign="center" multipleRows="true">
+        
+        <lightning:layoutItem size="6" flexibility="auto" padding="horizontal-small">
+            <label class="slds-form-element__label" for="nomeForm">{!if( v.personaContr == 'fisica','Nome','Ragione Sociale')}</label>
+            
+            <ui:inputText aura:id="nomeForm" class="slds-input custom_input" value="{!v.CustomerName}" />
+        </lightning:layoutItem>
+        <aura:if isTrue="{! v.personaContr == 'fisica'}" >
+            <lightning:layoutItem size="6" flexibility="auto" padding="horizontal-small">                    
+                <label class="slds-form-element__label" for="CognomeForm">Cognome</label>
+                <ui:inputText aura:id="CognomeForm" class="slds-input custom_input" value="{!v.CustomerSurname}" />
+            </lightning:layoutItem>
+            <aura:set attribute="else">
+                <lightning:layoutItem size="6" flexibility="auto" padding="horizontal-small">                        
+                    <label class="slds-form-element__label" for="Partita IVA">Partita IVA</label>
+                    <ui:inputText aura:id="IVAForm" class="slds-input custom_input" value="{!v.CustomerIVA}" />
+                </lightning:layoutItem>
+            </aura:set>
+        </aura:if>
+        <aura:if isTrue="{! v.personaContr == 'fisica'}" >
+            <lightning:layoutItem size="6" flexibility="auto" padding="horizontal-small">                    
+                
+                <lightning:input aura:id="NascitaForm" type="date" label="Data di nascita" class="custom_input" value="{!v.CustomerBirthDate}"/>
+                
+            </lightning:layoutItem>                
+            
+            <lightning:layoutItem size="6" flexibility="auto" padding="horizontal-small">                    
+                <label class="slds-form-element__label" for="FiscaleForm">Codice Fiscale</label>
+                <ui:inputText aura:id="FiscaleForm" class="slds-input custom_input" value="{!v.FiscalId}" />
+            </lightning:layoutItem>
+        </aura:if>
+        <lightning:layoutItem size="6" flexibility="auto" padding="horizontal-small">                
+            <label class="slds-form-element__label" for="PolizzaForm">Numero polizza</label>
+            <ui:inputText aura:id="PolizzaForm" class="slds-input custom_input" value="{!v.Policy}" />
+        </lightning:layoutItem>
+        
+        
+            <lightning:layoutItem size="6" flexibility="auto" padding="horizontal-small">
+                <aura:if isTrue="{!v.SelectedCaseTypeName != 'Caring Angel Property'}">
+                    <label class="slds-form-element__label" for="TargaForm">Numero Targa</label>
+                    <ui:inputText aura:id="TargaForm" class="slds-input custom_input" value="{!v.Plate}" />
+                </aura:if>
+            </lightning:layoutItem> 
+
+
+        <!-- FOZDEN 26/06/2019: AXA Assistance Enhancement Fase II - START -->
+        <aura:if isTrue="{!v.FormType == 'Sinistri'}">
+            <lightning:layoutItem size="6" flexibility="auto" padding="horizontal-small">
+
+                <label class="slds-form-element__label" for="SinistroForm">Numero sinistro</label>
+                <ui:inputText aura:id="SinistroForm" class="slds-input custom_input" value="{!v.ClaimNumber}"/>
+
+            </lightning:layoutItem>
+            <lightning:layoutItem size="6" flexibility="auto" padding="horizontal-small"/>
+        </aura:if>
+        <!-- FOZDEN 26/06/2019: AXA Assistance Enhancement Fase II - END -->
+
+    </lightning:layout>  
+    
+    <br/>
+    <div class="slds-align_absolute-center">  
+        <lightning:button variant="Neutral" label="Cerca cliente" title="Cerca cliente" onclick="{! c.searchCustomers}"/>
+    </div>
+    <aura:if isTrue="{!v.ShowCustomerTable}">
+        <aura:if isTrue="{!v.ClienteIsFound}">
+            <br/>
+            <div id="container_riicerca" class="slds-p-bottom_x-small slds-m-top_small slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1">
+                <h3 class="slds-section-title_divider">Cliente</h3>  
+            </div>	
+            
+            <br/>
+            <!--tabella clienti-->
+            
+            <table aria-multiselectable="true" class="tableHeader slds-table slds-table_bordered slds-table_fixed-layout slds-table_resizable-cols" role="grid">
+                <thead>
+                    <tr class="slds-line-height_reset">
+                        
+                        <th aria-label="Nome Cliente" aria-sort="none" class="slds-text-title_caps slds-is-resizable slds-is-sortable" scope="col">
+                            <a id="Id" class="slds-th__action slds-text-link_reset"  role="button" tabindex="-1" >
+                                <span class="slds-assistive-text" name="Id">Ordina per: </span>
+                                <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate"  >
+                                    <span class="slds-truncate"  title="Nome Cliente">Nome Cliente</span>
+                                    <span class="slds-icon_container slds-icon-utility-arrowdown" id="Id" onclick="{!c.updateColumnSorting}">
+                                        <lightning:icon iconName="{!v.sortIconName}" alternativeText="Ordina" size="xx-small"/>
+                                    </span>
+                                </div>
+                            </a>
+                            <div class="slds-resizable">
+                                <input aria-label="Name column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-8" max="1000" min="20" tabindex="-1" type="range" />
+                                <span draggable="true" class="slds-resizable__handle" onmousedown="{!c.calculateWidth}" ondrag="{!c.setNewWidth}" >
+                                    <span class=""></span> 
+                                </span>
+                            </div>
+                        </th>
+                        <th aria-label="Codice Fiscale" aria-sort="none" class="slds-text-title_caps slds-is-resizable slds-is-sortable" scope="col">
+                            <a class="slds-th__action slds-text-link_reset" role="button" tabindex="-1">
+                                <span class="slds-assistive-text">Ordina per: </span>
+                                <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate">
+                                    <span class="slds-truncate" title="Codice Fiscale">{!if(v.personaContr=='fisica','Codice Fiscale','Partita IVA')}</span>
+                                    <span class="slds-icon_container slds-icon-utility-arrowdown" id="lossNotificationDate" onclick="{!c.updateColumnSorting}">
+                                        <lightning:icon iconName="{!v.sortIconName}" alternativeText="Ordina" size="xx-small"/>
+                                    </span>
+                                </div>
+                            </a>
+                            <div class="slds-resizable">
+                                <input aria-label="Account Name column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-9" max="1000" min="20" tabindex="-1" type="range" />
+                                <span draggable="true" class="slds-resizable__handle" onmousedown="{!c.calculateWidth}" ondrag="{!c.setNewWidth}" >
+                                    <span class=""></span> 
+                                </span>
+                            </div>
+                        </th>
+                        <th aria-label="Provenienza Cliente" aria-sort="none" class="slds-text-title_caps slds-is-resizable slds-is-sortable" scope="col">
+                            <a class="slds-th__action slds-text-link_reset" href="javascript:void(0);" role="button" tabindex="-1">
+                                <span class="slds-assistive-text">Ordina per: </span>
+                                <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate">
+                                    <span class="slds-truncate" title="Data chiusura sinistro">Provenienza Cliente</span>
+                                    <span class="slds-icon_container slds-icon-utility-arrowdown" id="closureDate" onclick="{!c.updateColumnSorting}">
+                                        <lightning:icon iconName="{!v.sortIconName}" alternativeText="Ordina" size="xx-small"/>
+                                    </span>
+                                </div>
+                            </a>
+                            <div class="slds-resizable">
+                                <input aria-label="Close Date column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-10" max="1000" min="20" tabindex="-1" type="range" />
+                                <span draggable="true" class="slds-resizable__handle" onmousedown="{!c.calculateWidth}" ondrag="{!c.setNewWidth}" >
+                                    <span class=""></span> 
+                                </span>
+                            </div>
+                        </th>
+                        
+                        
+                        <th aria-label="Agenzia" aria-sort="none" class="slds-text-title_caps slds-is-resizable slds-is-sortable" scope="col">
+                            <a class="slds-th__action slds-text-link_reset" href="javascript:void(0);" role="button" tabindex="-1">
+                                <span class="slds-assistive-text">Ordina per: </span>
+                                <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate">
+                                    <span class="slds-truncate" title="Data chiusura sinistro">Agenzia</span>
+                                    <span class="slds-icon_container slds-icon-utility-arrowdown" id="AAI_Agency__r.Name" onclick="{!c.updateColumnSorting}">
+                                        <lightning:icon iconName="{!v.sortIconName}" alternativeText="Ordina" size="xx-small"/>
+                                    </span>
+                                </div>
+                            </a>
+                            <div class="slds-resizable">
+                                <input aria-label="Close Date column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-10" max="1000" min="20" tabindex="-1" type="range" />
+                                <span draggable="true" class="slds-resizable__handle" onmousedown="{!c.calculateWidth}" ondrag="{!c.setNewWidth}" >
+                                    <span class=""></span> 
+                                </span>
+                            </div>
+                        </th>  
+
+
+
+
+
+
+
+                    <th aria-label="Azioni" aria-sort="none" class="slds-text-title_caps slds-is-resizable slds-is-sortable" scope="col">
+                            <a class="slds-th__action slds-text-link_reset" href="javascript:void(0);" role="button" tabindex="-1">
+                                <span class="slds-assistive-text">Ordina per: </span>
+                                <div class="slds-grid slds-grid_vertical-align-center slds-grid_vertical-align-center   slds-has-flexi-truncate">
+                                    <span class="slds-truncate" title="Data chiusura sinistro"></span>
+                                    <span class="slds-icon_container slds-icon-utility-arrowdown" id="closureDate" onclick="{!c.updateColumnSorting}">
+                                        <lightning:icon iconName="{!v.sortIconName}" alternativeText="Ordina" size="xx-small"/>
+                                    </span>
+                                </div>
+                            </a>
+                            <div class="slds-resizable">
+                                <input aria-label="Close Date column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-10" max="1000" min="20" tabindex="-1" type="range" />
+                                <span draggable="true" class="slds-resizable__handle" onmousedown="{!c.calculateWidth}" ondrag="{!c.setNewWidth}" >
+                                    <span class=""></span> 
+                                </span>
+                            </div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="ClientiRows">
+                    <aura:iteration items="{!v.data}" var="Cliente">
+                        <tr aria-selected="false" class="slds-hint-parent">
+                            <th scope="row" tabindex="0">
+                                <div class="slds-truncate" title="{!Cliente.Nome}">{!Cliente.Nome}</div>
+                            </th>
+                            <th scope="row" tabindex="0">
+                                <div class="slds-truncate" title="{!Cliente.Fiscale}">{!Cliente.Fiscale}</div>
+                            </th>     
+                            <th scope="row" tabindex="0">
+                                <div class="slds-truncate" title="{!Cliente.Company}">{!Cliente.Company}</div>
+                            </th>
+                            <th scope="row" tabindex="0">
+                                <div class="slds-truncate" title="{!Cliente.Agenzia}">{!Cliente.Agenzia}</div>
+                            </th>
+                            
+                            <th scope="row" tabindex="0">
+                                
+                                <div class="slds-truncate  slds-button_neutral custom_button slds-button" title="Visualizza sinistri"><a id="{!Cliente.Fiscale}" name="{!Cliente.Id}" onclick="{!c.viewClaims}" tabindex="-1">Visualizza sinistri</a></div>
+                                <div class="slds-truncate  slds-button_neutral custom_button slds-button" title="Vedi Case"><a id="{!Cliente.Id}" onclick="{!c.viewCases}" tabindex="-1">Vedi Case</a></div>           
+                                <aura:if isTrue="{!!v.ShowRTSelection}">
+                                    <div class="slds-truncate  slds-button_neutral custom_button slds-button" title="Crea nuovo Case"><a id="{!Cliente.Id}" onclick="{!c.createNewCase}" tabindex="-1">Crea nuovo Case</a></div>        
+                                    <aura:set attribute="else">
+                                        <div class="slds-truncate  slds-button_neutral custom_button slds-button" title="Crea nuovo Case"><a id="{!Cliente.Id}" onclick="{!c.CreateCaseRT}" tabindex="-1">Crea nuovo Case</a></div>                               
+                                    </aura:set>
+                                </aura:if>
+                            </th>                                   
+                        </tr>
+                    </aura:iteration>
+                </tbody>
+            </table>
+            
+            
+            
+            <div class="slds-page-header" role="banner">
+                <div class="slds-grid">
+                    
+                    <div class="slds-align_absolute-center">            
+                        <lightning:button disabled="{!v.page == 1}" class="slds-button slds-button--neutral" label="Indietro" onclick="{! c.navigate }" />            
+                        <lightning:button disabled="{!v.page == v.pages}" aura:id="previousPage" class="slds-button slds-button--neutral" label="Avanti" onclick="{! c.navigate }" />
+                    </div>
+                    <p class="slds-hint-parent">{!v.total} Clienti • pagina {!v.page} / {!v.pages}</p>
+                </div>
+                
+            </div>
+            
+            
+            <aura:if isTrue="{!v.ShowCaseTable}">
+                <br/>
+                <div id="container_riicerca" class="slds-p-bottom_x-small slds-m-top_small slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1">
+                    <h3 class="slds-section-title_divider">Case</h3>  
+                </div>  
+                
+                <!--tabella Case-->
+                <aura:if isTrue="{!v.CasesAreFound}">
+                    <br/>
+                    
+                    <table aria-multiselectable="true" class="tableHeader slds-table slds-table_bordered slds-table_fixed-layout slds-table_resizable-cols" role="grid">
+                        <thead>
+                            <tr class="slds-line-height_reset">
+                                
+                                <th aria-label="Numero Case" aria-sort="none" class="slds-text-title_caps slds-is-resizable slds-is-sortable" scope="col">
+                                    <a id="Id" class="slds-th__action slds-text-link_reset"  role="button" tabindex="-1" >
+                                        <span class="slds-assistive-text" name="Id">Ordina per: </span>
+                                        <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate"  >
+                                            <span class="slds-truncate"  title="Numero Case">Numero Case</span>
+                                            <span class="slds-icon_container slds-icon-utility-arrowdown" id="Id" onclick="{!c.updateColumnSorting}">
+                                                <lightning:icon iconName="{!v.sortIconName}" alternativeText="Ordina" size="xx-small"/>
+                                            </span>
+                                        </div>
+                                    </a>
+                                    <div class="slds-resizable">
+                                        <input aria-label="Name column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-8" max="1000" min="20" tabindex="-1" type="range" />
+                                        <span draggable="true" class="slds-resizable__handle" onmousedown="{!c.calculateWidth}" ondrag="{!c.setNewWidth}" >
+                                            <span class=""></span> 
+                                        </span>
+                                    </div>
+                                </th>
+                                <th aria-label="Data creazione" aria-sort="none" class="slds-text-title_caps slds-is-resizable slds-is-sortable" scope="col">
+                                    <a class="slds-th__action slds-text-link_reset" role="button" tabindex="-1">
+                                        <span class="slds-assistive-text">Ordina per: </span>
+                                        <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate">
+                                            <span class="slds-truncate" title="Data creazione">Data creazione</span>
+                                            <span class="slds-icon_container slds-icon-utility-arrowdown" id="lossNotificationDate" onclick="{!c.updateColumnSorting}">
+                                                <lightning:icon iconName="{!v.sortIconName}" alternativeText="Ordina" size="xx-small"/>
+                                            </span>
+                                        </div>
+                                    </a>
+                                    <div class="slds-resizable">
+                                        <input aria-label="Account Name column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-9" max="1000" min="20" tabindex="-1" type="range" />
+                                        <span draggable="true" class="slds-resizable__handle" onmousedown="{!c.calculateWidth}" ondrag="{!c.setNewWidth}" >
+                                            <span class=""></span> 
+                                        </span>
+                                    </div>
+                                </th>
+                                <th aria-label="Oggetto" aria-sort="none" class="slds-text-title_caps slds-is-resizable slds-is-sortable" scope="col">
+                                    <a class="slds-th__action slds-text-link_reset" href="javascript:void(0);" role="button" tabindex="-1">
+                                        <span class="slds-assistive-text">Ordina per: </span>
+                                        <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate">
+                                            <span class="slds-truncate" title="Oggetto">Oggetto Apertura Case</span>
+                                            <span class="slds-icon_container slds-icon-utility-arrowdown" id="closureDate" onclick="{!c.updateColumnSorting}">
+                                                <lightning:icon iconName="{!v.sortIconName}" alternativeText="Ordina" size="xx-small"/>
+                                            </span>
+                                        </div>
+                                    </a>
+                                    <div class="slds-resizable">
+                                        <input aria-label="Close Date column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-10" max="1000" min="20" tabindex="-1" type="range" />
+                                        <span draggable="true" class="slds-resizable__handle" onmousedown="{!c.calculateWidth}" ondrag="{!c.setNewWidth}" >
+                                            <span class=""></span> 
+                                        </span>
+                                    </div>
+                                </th>
+                                <!-- Giorgio Bonifazi 23/07/2019 : Caring Angel fase 2 - START -->
+                                <th aria-label="Stato" aria-sort="none" class="slds-text-title_caps slds-is-resizable slds-is-sortable" scope="col">
+                                    <a id="Id" class="slds-th__action slds-text-link_reset"  role="button" tabindex="-1" >
+                                        <span class="slds-assistive-text" name="Id">Ordina per: </span>
+                                        <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate"  >
+                                            <span class="slds-truncate"  title="Stato">Stato</span>
+                                            <span class="slds-icon_container slds-icon-utility-arrowdown" id="Id" onclick="{!c.updateColumnSorting}">
+                                                <lightning:icon iconName="{!v.sortIconName}" alternativeText="Ordina" size="xx-small"/>
+                                            </span>
+                                        </div>
+                                    </a>
+                                    <div class="slds-resizable">
+                                        <input aria-label="Name column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-8" max="1000" min="20" tabindex="-1" type="range" />
+                                        <span draggable="true" class="slds-resizable__handle" onmousedown="{!c.calculateWidth}" ondrag="{!c.setNewWidth}" >
+                                            <span class=""></span> 
+                                        </span>
+                                    </div>
+                                </th>
+                                <!-- Giorgio Bonifazi 23/07/2019 : Caring Angel fase 2 - END -->
+                                <th aria-label="Origine" aria-sort="none" class="slds-text-title_caps slds-is-resizable slds-is-sortable" scope="col">
+                                    <a class="slds-th__action slds-text-link_reset" href="javascript:void(0);" role="button" tabindex="-1">
+                                        <span class="slds-assistive-text">Ordina per: </span>
+                                        <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate">
+                                            <span class="slds-truncate" title="Origine">Origine</span>
+                                            <span class="slds-icon_container slds-icon-utility-arrowdown" id="closureDate" onclick="{!c.updateColumnSorting}">
+                                                <lightning:icon iconName="{!v.sortIconName}" alternativeText="Ordina" size="xx-small"/>
+                                            </span>
+                                        </div>
+                                    </a>
+                                    <div class="slds-resizable">
+                                        <input aria-label="Close Date column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-10" max="1000" min="20" tabindex="-1" type="range" />
+                                        <span draggable="true" class="slds-resizable__handle" onmousedown="{!c.calculateWidth}" ondrag="{!c.setNewWidth}" >
+                                            <span class=""></span> 
+                                        </span>
+                                    </div>
+                                </th>
+                                <th aria-label="Azioni" aria-sort="none" class="slds-text-title_caps slds-is-resizable slds-is-sortable" scope="col">
+                                    <a class="slds-th__action slds-text-link_reset" href="javascript:void(0);" role="button" tabindex="-1">
+                                        <span class="slds-assistive-text">Ordina per: </span>
+                                        <div class="slds-grid slds-grid_vertical-align-center slds-grid_vertical-align-center   slds-has-flexi-truncate">
+                                            <span class="slds-truncate" title="Data chiusura sinistro"></span>
+                                            <span class="slds-icon_container slds-icon-utility-arrowdown" id="closureDate" onclick="{!c.updateColumnSorting}">
+                                                <lightning:icon iconName="{!v.sortIconName}" alternativeText="Ordina" size="xx-small"/>
+                                            </span>
+                                        </div>
+                                    </a>
+                                    <div class="slds-resizable">
+                                        <input aria-label="Close Date column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-10" max="1000" min="20" tabindex="-1" type="range" />
+                                        <span draggable="true" class="slds-resizable__handle" onmousedown="{!c.calculateWidth}" ondrag="{!c.setNewWidth}" >
+                                            <span class=""></span> 
+                                        </span>
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="CaseRows">
+                            <aura:iteration items="{!v.dataCases}" var="Case">
+                                <tr aria-selected="false" class="slds-hint-parent">
+                                    <th scope="row" tabindex="0">
+                                        <div class="slds-truncate" title="{!Case.CaseNumber}">{!Case.CaseNumber}</div>
+                                    </th>
+                                    <th scope="row" tabindex="0">
+                                        <div class="slds-truncate" title="{!Case.creazione}">{!Case.creazione}</div>
+                                    </th>     
+                                    <th scope="row" tabindex="0">
+                                        <div class="slds-truncate" title="{!Case.Oggetto_apertura_case__c}">{!Case.Oggetto_apertura_case__c}</div>
+                                    </th>
+                                    <!-- Giorgio Bonifazi 23/07/2019 : Caring Angel fase 2 - START -->
+                                    <th scope="row" tabindex="0">
+                                        <div class="slds-truncate" title="{!Case.Status}">{!Case.Status}</div>
+                                    </th>
+                                    <!-- Giorgio Bonifazi 23/07/2019 : Caring Angel fase 2 - END -->
+                                    <th scope="row" tabindex="0">
+                                        <div class="slds-truncate" title="{!Case.Origin}">{!Case.Origin}</div>
+                                    </th>                                    
+                                    <th scope="row" tabindex="0">
+                                        
+                                        <div class="slds-truncate  slds-button_neutral custom_button slds-button" title="Visualizza"><a id="{!Case.Id}" name="{!Case.CaseNumber}" onclick="{!c.openCasePage}" tabindex="-1">Visualizza</a></div>
+                                        
+                                    </th>                                   
+                                </tr>
+                            </aura:iteration>
+                        </tbody>
+                    </table>  
+                    
+                    
+                    <div class="slds-page-header" role="banner">
+                        <div class="slds-grid">
+                            
+                            <div class="slds-align_absolute-center">            
+                                <lightning:button disabled="{!v.pageCase == 1}" class="slds-button slds-button--neutral" label="Indietro" onclick="{! c.navigateCase }" />            
+                                <lightning:button disabled="{!v.pageCase == v.pagesCase}" aura:id="previousPage" class="slds-button slds-button--neutral" label="Avanti" onclick="{! c.navigateCase }" />
+                            </div>
+                            <p class="slds-hint-parent">{!v.totalCase} Case • pagina {!v.pageCase} / {!v.pagesCase}</p>
+                        </div>
+                        
+                    </div>
+                    
+                    
+                    
+                    
+                    
+                    
+                    <aura:set attribute="else">
+                        <br/>
+                        <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_info" role="alert">
+                            <span class="slds-assistive-text">info</span>
+                            <h2>{!v.ErrorSearchCase}
+                            </h2>
+                        </div>
+                        
+                        
+                    </aura:set>
+                </aura:if>  
+            </aura:if>
+            
+            
+            <aura:if isTrue="{!v.CaseWithRT}">
+                <div class="demo-only" style="height: 640px;">
+                    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                        <div class="slds-modal__container">
+                            <header class="slds-modal__header">
+                                <!-- FOZDEN 26/06/2019: AXA Assistance Enhancement Fase II - START -->
+                                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                                        title="Close">
+                                    <lightning:buttonIcon iconName="utility:close" variant="bare"
+                                                          onclick="{!c.closeCaseWithRT}"
+                                                          alternativeText="Chiudi popup"/>
+                                    <span class="slds-assistive-text">Close</span>
+                                </button>
+                                <!--  FOZDEN 26/06/2019: AXA Assistance Enhancement Fase II - END -->
+                                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Selezione
+                                    Tipologia Richiesta</h2>
+                            </header>
+                            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                                <c:CaseRecordTypeSelection/>
+                            </div>
+                        </div>
+                    </section>
+                    <div class="slds-backdrop slds-backdrop_open"></div>
+                </div>              
+            </aura:if>            
+            
+            <aura:if isTrue="{! v.visibilities.GetAllClaims }">
+                <c:lghtGetAllClaimsModal  source="Phone" CallerType="Customer" accountId="{!v.SelectedAccountId}" fiscalCode="{!v.SelectedFiscal}"
+                                                        caseRT = "{!v.SelectedCaseTypeDeveloperName}" showIncompleteReports="true" visibilities="{!v.visibilitiesCallback}"/>
+            </aura:if>                   <!--modal claims-->
+            <aura:set attribute="else">
+                <br/>
+                <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_info" role="alert">
+                    <span class="slds-assistive-text">info</span>
+                    <h2>{!v.ErrorSearchCustomer}
+                    </h2>
+                </div>
+            </aura:set>
+        </aura:if> 
+        <!-- Giorgio Bonifazi 23/07/2019 : Caring Angel fase 2 - START -->
+        <aura:if isTrue="{!v.ShowButtonNoAnagrafica}">
+                <div class="slds-align_absolute-center" style="height:5rem">
+                    <lightning:button  label="Crea Nuovo Case senza Anagrafica" onclick="{!c.creaCaseSenzaAnagrafica}"  />
+                </div>  
+        </aura:if>
+
+    </aura:if>
+    <!--tabella clienti-->
+
+    <aura:if isTrue="{!v.ShowToast}">
+        <div class="slds-notify_container slds-is-relative" style="position: fixed;margin-top: 19% !important;">
+            <div class="{!'slds-notify slds-notify_toast slds-theme_'+v.typeToast}" role="status">
+                <span class="slds-assistive-text">warning</span>
+                <span class="{!'slds-icon_container slds-m-right_small slds-no-flex slds-align-top slds-icon-utility-'+v.typeToast}" title="{!v.typeToast}">
+                    <lightning:icon iconName="{!'utility:'+v.typeToast}" alternativeText="Approved" class="whiteIcon"/>
+                </span>
+                <div class="slds-notify__content">
+                    <h2 class="slds-text-heading_small ">{!v.messageToast}</h2>
+                </div>
+                <div class="slds-notify__close">
+                    <aura:if isTrue="{!v.typeToast =='error'}">
+                        <button class="slds-button slds-button_icon slds-button_icon-inverse" title="Chiudi" onclick="{!c.chiudiToast}">
+                            <lightning:icon iconName="utility:close" alternativeText="Approved" class="whiteIcon"/>
+                            <span class="slds-assistive-text">Chiudi</span>
+                        </button>
+                    </aura:if>
+                </div>
+            </div>
+        </div>
+
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+
+    <!-- FOZDEN 26/06/2019: AXA Assistance Enhancement Fase II - START -->
+    <aura:if isTrue="{!v.showCaseRapidoModal}">
+        <div class="demo-only" style="height: 640px;">
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+                     aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container" style="padding:0;">
+                    <header class="slds-modal__header">
+                        <!-- FOZDEN 26/06/2019: AXA Assistance Enhancement Fase II - START -->
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                                title="Close">
+                            <lightning:buttonIcon iconName="utility:close" variant="bare"
+                                                  onclick="{!c.closeCaseRapidoModal}" alternativeText="Chiudi popup"/>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                        <!--  FOZDEN 26/06/2019: AXA Assistance Enhancement Fase II - END -->
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Selezione Tipologia
+                            Richiesta</h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        <c:CaseRecordTypeSelection parentCmp="NewLightningCase"/>
+                    </div>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </div>
+    </aura:if>
+    <!-- FOZDEN 26/06/2019: AXA Assistance Enhancement Fase II - END -->
+
+</aura:component>

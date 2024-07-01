@@ -1,0 +1,7 @@
+.THIS .slds-text-heading--small{
+    font-size: .75rem;
+}
+
+.THIS .slds-table td {
+    white-space: unset !important;
+}

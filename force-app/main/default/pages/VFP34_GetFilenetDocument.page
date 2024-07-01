@@ -1,0 +1,80 @@
+<!--
+ - Created by francesco on 2019-07-09.
+ -->
+
+<apex:page id="VFP34_GetFilenetDocument" controller="VFC34_GetFilenetDocumentCTRL" action="{!getDocument}"
+           showHeader="false" sidebar="false" standardStylesheets="true">
+
+    <apex:includeScript value="{!URLFOR($Resource.PDFJS, '/build/pdf.js')}"/>
+
+    <script id="script">
+
+    window.onload = function displayPDF(){
+
+        if({!isSuccess}) {
+
+            var a = '{!pdf}';
+            var pdfData = atob(a);
+
+            var scale = 1.2;
+
+            PDFJS.disableWorker = true;
+            // The workerSrc property shall be specified.
+            PDFJS.workerSrc = "{!URLFOR($Resource.PDFJS, '/build/pdf.worker.js')}";
+
+            // Opening PDF by passing its binary data as a string. It is still preferable
+            // to use Uint8Array, but string or array-like structure will work too.
+            PDFJS.getDocument({data: pdfData}).then(function(pdf) {
+                thePdf = pdf;
+                viewer = document.getElementById('pdf-viewer');
+
+                for(page = 1; page <= pdf.numPages; page++) {
+                    canvas = document.createElement("canvas");
+                    canvas.className = 'pdf-page-canvas';
+                    canvas.style = "border:1px  solid black; margin-bottom: 5px;";
+                    viewer.appendChild(canvas);
+                    renderPage(page, canvas);
+                }
+            })
+
+            function renderPage(pageNumber, canvas) {
+                thePdf.getPage(pageNumber).then(function(page) {
+                    viewport = page.getViewport(scale);
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+                    page.render({canvasContext: canvas.getContext('2d'), viewport: viewport});
+                });
+            }
+        }
+    }
+
+    </script>
+
+    <apex:slds />
+
+    <apex:pageBlock rendered="{!isSuccess}">
+        <div style="text-align: center; text-decoration: underline">
+            <a href="data:application/pdf;base64,{!pdf}" download="file.pdf" style="text-align:center" target="_blank">Download PDF</a>
+        </div>
+        <div id='pdf-viewer' style="text-align: center;">
+        </div>
+    </apex:pageBlock>
+    
+
+    <apex:pageBlock rendered="{!not(isSuccess)}">
+        <div class="slds-scope">
+
+            <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error" role="alert">
+                <span class="slds-assistive-text">error</span>
+                <span class="slds-icon_container slds-icon-utility-error slds-m-right_x-small"
+                      title="Error">
+                </span>
+                <h2>{!message}
+                </h2>
+            </div>
+
+
+        </div>
+    </apex:pageBlock>
+
+</apex:page>

@@ -1,0 +1,95 @@
+<aura:component description="NFE_CrmModelloAssistenza" implements="forceCommunity:availableForAllPageTypes" access="global" controller="ModelloAssistenzaCtrl">
+    <aura:dependency resource="force:navigateToURL" type="EVENT"/>
+    <aura:handler name="init" action="{!c.Initialize}" value="{!this}"/>
+    <aura:attribute name="UserMainNode" type="String" />
+    <aura:attribute name="ProfileName" type="String"/>
+    <aura:attribute name="screenwidth" type="Integer"/>
+    <aura:attribute name="StdUsr" type="Boolean" default="true"/>
+    <aura:attribute name="CodiceAgenzia" type="String" />
+    <aura:attribute name="UserRole" type="String"/>
+    <aura:attribute name="UserProfile" type="String"/>
+    <aura:attribute name="UserId" type="String"/>
+    <aura:attribute name="UserName" type="String"/>
+    <aura:attribute name="isPilota" type="String" default=""/>
+
+    <aura:if isTrue="{!v.isPilota=='false'}">
+        <div class="slds-backdrop slds-backdrop_open"></div>
+        <div role="alertdialog" tabindex="-1" aria-labelledby="prompt-heading-id" aria-describedby="prompt-message-wrapper" class="slds-modal slds-fade-in-open slds-modal_prompt">
+            <div class="slds-modal__container">
+                <div class="slds-modal__header slds-theme_error slds-theme_alert-texture">
+                    <h2 class="slds-text-heading_medium" id="prompt-heading-id">Attenzione!</h2>
+                </div>
+                <div class="slds-modal__content slds-p-around_medium">
+                    <p class="slds_paragraph">Il ticketing tool su Salesforce non è al momento disponibile per la tua Agenzia. Utilizza Axa Planet per inviare la tua richiesta</p>
+                </div>
+                <div class="slds-modal__footer slds-theme_default">
+                    <lightning:button class="slds-button slds-button_neutral" onclick="{!c.gotoPreviousPage}">Continua</lightning:button>
+                </div>
+
+            </div>
+        </div>
+    </aura:if>
+    <aura:if isTrue="{!v.isPilota == 'true'}">
+        <aura:if isTrue="{!and(v.UserMainNode.length > 6, v.ProfileName != 'System Administrator', v.ProfileName != 'Amministratore del sistema')}">
+            <div class="slds-backdrop slds-backdrop_open"></div>
+            <div role="alertdialog" tabindex="-1" aria-labelledby="prompt-heading-id" aria-describedby="prompt-message-wrapper" class="slds-modal slds-fade-in-open slds-modal_prompt">
+                <div class="slds-modal__container">
+                    <div class="slds-modal__header slds-theme_error slds-theme_alert-texture">
+                        <h2 class="slds-text-heading_medium" id="prompt-heading-id">Attenzione!</h2>
+                    </div>
+                    <div class="slds-modal__content slds-p-around_medium">
+                        <p class="slds_paragraph">Il ticketing tool su Salesforce non è al momento disponibile per la tua Agenzia. Ti invitiamo a contattare l’agenzia principale per la tua richiesta</p>
+                    </div>
+                    <div class="slds-modal__footer slds-theme_default">
+                        <lightning:button class="slds-button slds-button_neutral" onclick="{!c.gotoPreviousPage}">Continua</lightning:button>
+                    </div>
+
+                </div>
+            </div>
+        </aura:if>
+        <div class="c-container slds-cell-wrap" style="white-space: normal;">
+            <div class="slds-page-header" role="banner" >
+                <div class="slds-media">
+                    <div class="slds-media__figure">
+                        <lightning:icon iconName="action:new_case"  />
+                    </div>
+                    <div class="slds-media__body">
+                        <h1 class="slds-text-heading_medium">Assistenza</h1>
+                        <p class="slds-text-heading_label" style="font-size: .75rem;">Vista Personale - {!v.CodiceAgenzia}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="spazio_vuoto" class="slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1">
+            <div class="slds-form-element">
+            </div>
+        </div>
+        <div class="slds-grid slds-wrap slds-grid--pull-padded slds-cell-wrap" style="white-space: normal;">
+            <c:News UserProfile="{!v.UserProfile}"/>
+            <div id="spazio_vuoto" class="slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1">
+                <div class="slds-form-element">
+                </div>
+            </div>
+        </div>
+        <div class="slds-align_absolute-center">
+            <lightning:button label="Nuova richiesta" iconName="action:apex" iconPosition="center" onclick="{!c.createNewCase}" variant="brand"/>
+        </div>
+        <div class="slds-grid slds-wrap slds-grid--pull-padded slds-cell-wrap" style="white-space: normal;">
+            <c:IMieiCase UserProfile="{!v.UserProfile}"/>
+            <div id="spazio_vuoto" class="slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1">
+                <div class="slds-form-element">
+                </div>
+            </div>
+            <div id="spazio_vuoto" class="slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1">
+                <div class="slds-form-element">
+                </div>
+            </div>
+            <c:ActionsNeeded UserId="{!v.UserId}" UserProfile="{!v.UserProfile}"/>
+            <div id="spazio_vuoto" class="slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1">
+                <div class="slds-form-element">
+                </div>
+            </div>
+            <c:agencyHdCaseChartsWrapper/>
+        </div>
+    </aura:if>
+</aura:component>

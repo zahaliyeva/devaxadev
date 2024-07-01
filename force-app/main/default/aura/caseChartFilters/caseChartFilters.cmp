@@ -1,0 +1,134 @@
+<aura:component access="global" controller="caseChartFiltersCTRL" >
+
+    <aura:handler name="init" value="{!this}" action="{!c.startFilters}" />
+    <aura:method name="reInit" action="{!c.startFilters}" description="Runs the init method again "/>
+
+    <aura:attribute name="yearOptions" type="List" />
+    <aura:attribute name="monthOptions" type="List" />
+    <aura:attribute name="weekOptions" type="List" />
+    <aura:attribute name="lobOptions" type="List" />
+    <aura:attribute name="categoryOptions" type="List" />
+    <aura:attribute name="subCategoryOptions" type="List" />
+    <aura:attribute name="ownershipOptions" type="List" />
+
+    <aura:attribute name="selectedYear" type="String" default="None"/>
+    <aura:attribute name="selectedMonth" type="String" default="None"/>
+    <aura:attribute name="selectedWeek" type="String" default="None"/>
+    <aura:attribute name="selectedLob" type="String" default="None"/>
+    <aura:attribute name="selectedSubCategory" type="String" default="None"/>
+    <aura:attribute name="selectedCategory" type="String" default="None"/>
+    <aura:attribute name="selectedOwnership" type="String" default="None"/>
+
+    <aura:attribute name="monthDisabled" type="Boolean" default="false"/>
+    <aura:attribute name="weekDisabled" type="Boolean" default="false"/>
+    <aura:attribute name="categoryDisabled" type="Boolean" default="false"/>
+    <aura:attribute name="subCategoryDisabled" type="Boolean" default="false"/>    
+    
+<!--    <div class="slds-p-horizontal_small slds-size_1-of-3 slds-text-align__center">
+        <div class="slds-align__absolute-center">
+            <div class="slds-button-group" role="group">
+                <lightning:select name="yearSelect" label="Anno di riferimento" aura:id="yearSelect" value="{!v.selectedYear}" onchange="{!c.changedYear}">
+                    <aura:iteration items="{!v.yearOptions}" var="item">
+                        <option text="{!item.label}" value="{!item.value}" selected="{!item.selected}"/>
+                    </aura:iteration>
+                </lightning:select> 
+                <lightning:select name="monthSelect" label="Mese di riferimento" aura:id="monthSelect" value="{!v.selectedMonth}" onchange="{!c.changedMonth}" disabled="{!v.monthDisabled}">
+                    <aura:iteration items="{!v.monthOptions}" var="item">
+                        <option text="{!item.label}" value="{!item.value}" selected="{!item.selected}"/>
+                    </aura:iteration>
+                </lightning:select>   
+                <lightning:select name="weekSelect" label="Settimana di riferimento" aura:id="weekSelect" value="{!v.selectedWeek}" disabled="{!v.weekDisabled}">
+                    <aura:iteration items="{!v.weekOptions}" var="item">
+                        <option text="{!item.label}" value="{!item.value}" selected="{!item.selected}"/>
+                    </aura:iteration>
+                </lightning:select>  
+            </div>
+        </div>
+    </div> -->
+
+    <div class="slds-grid slds-wrap">
+    	<!-- OAVERSANO 21/02/2019 - NMA Fix - START -->
+        <!-- div class="slds-p-horizontal_small slds-size_1-of-4"-->
+        <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-4 slds-small-size_1-of-1">
+        <!-- OAVERSANO 21/02/2019 - NMA Fix - END -->
+            <lightning:select name="yearSelect" label="Anno di riferimento" aura:id="yearSelect" value="{!v.selectedYear}" onchange="{!c.changedYear}">
+                 <aura:iteration items="{!v.yearOptions}" var="item">
+                    <option text="{!item.label}" value="{!item.value}" selected="{!item.selected}"/>
+                </aura:iteration>
+            </lightning:select>   
+        </div>
+        
+        <!-- OAVERSANO 21/02/2019 - NMA Fix - START -->
+        <!-- div class="slds-p-horizontal_small slds-size_1-of-4"-->
+        <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-4 slds-small-size_1-of-1">
+        <!-- OAVERSANO 21/02/2019 - NMA Fix - END -->
+            <lightning:select name="monthSelect" label="Mese di riferimento" aura:id="monthSelect" value="{!v.selectedMonth}" onchange="{!c.changedMonth}" disabled="{!v.monthDisabled}">
+                 <aura:iteration items="{!v.monthOptions}" var="item">
+                    <option text="{!item.label}" value="{!item.value}" selected="{!item.selected}"/>
+                </aura:iteration>
+            </lightning:select>    
+        </div>
+        
+        <!-- OAVERSANO 21/02/2019 - NMA Fix - START -->
+        <!-- div class="slds-p-horizontal_small slds-size_1-of-4"-->
+        <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-4 slds-small-size_1-of-1">
+        <!-- OAVERSANO 21/02/2019 - NMA Fix - END -->
+            <lightning:select name="weekSelect" label="Settimana di riferimento" aura:id="weekSelect" value="{!v.selectedWeek}" disabled="{!v.weekDisabled}">
+                 <aura:iteration items="{!v.weekOptions}" var="item">
+                    <option text="{!item.label}" value="{!item.value}" selected="{!item.selected}"/>
+                </aura:iteration>
+            </lightning:select>   
+        </div> 
+		
+		<!-- OAVERSANO 21/02/2019 - NMA Fix - START -->
+		<aura:if isTrue="{!$Browser.formFactor == 'DESKTOP'}" >
+		<!-- OAVERSANO 21/02/2019 - NMA Fix - END -->
+         <div class="slds-p-horizontal_small slds-size_1-of-4">
+            &nbsp;
+        </div> 
+        <!-- OAVERSANO 21/02/2019 - NMA Fix - START -->
+		</aura:if>
+        <!-- div class="slds-p-horizontal_small slds-size_1-of-4"-->
+        <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-4 slds-small-size_1-of-1">
+        <!-- OAVERSANO 21/02/2019 - NMA Fix - END -->
+            <lightning:select name="lobSelect" label="Area" aura:id="lobSelect" value="{!v.selectedLob}" onchange="{!c.changedLob}">
+                 <aura:iteration items="{!v.lobOptions}" var="item">
+                    <option text="{!item.label}" value="{!item.value}" selected="{!item.selected}"/>
+                </aura:iteration>
+            </lightning:select>
+        </div>
+
+        <!-- OAVERSANO 21/02/2019 - NMA Fix - START -->
+        <!-- div class="slds-p-horizontal_small slds-size_1-of-4"-->
+        <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-4 slds-small-size_1-of-1">
+        <!-- OAVERSANO 21/02/2019 - NMA Fix - END -->
+            <lightning:select name="categorySelect" label="Categoria" aura:id="categorySelect" value="{!v.selectedCategory}" onchange="{!c.changedCategory}" disabled="{!v.categoryDisabled}">
+                 <aura:iteration items="{!v.categoryOptions}" var="item">
+                    <option text="{!item.label}" value="{!item.value}" selected="{!item.selected}"/>
+                </aura:iteration>
+            </lightning:select>
+        </div>
+
+        <!-- OAVERSANO 21/02/2019 - NMA Fix - START -->
+        <!-- div class="slds-p-horizontal_small slds-size_1-of-4"-->
+        <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-4 slds-small-size_1-of-1">
+        <!-- OAVERSANO 21/02/2019 - NMA Fix - END -->
+            <lightning:select name="subCategorySelect" label="Sottocategoria" aura:id="subCategorySelect" value="{!v.selectedSubCategory}" disabled="{!v.subCategoryDisabled}">
+                 <aura:iteration items="{!v.subCategoryOptions}" var="item">
+                    <option text="{!item.label}" value="{!item.value}" selected="{!item.selected}"/>
+                </aura:iteration>
+            </lightning:select>
+        </div>
+
+        <!-- OAVERSANO 21/02/2019 - NMA Fix - START -->
+        <!-- div class="slds-p-horizontal_small slds-size_1-of-4"-->
+        <div class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-4 slds-small-size_1-of-1">
+        <!-- OAVERSANO 21/02/2019 - NMA Fix - END -->
+            <lightning:select name="ownershipSelect" label="Titolarità richiesta" aura:id="ownershipSelect" value="{!v.selectedOwnership}" >
+                 <aura:iteration items="{!v.ownershipOptions}" var="item">
+                    <option text="{!item.label}" value="{!item.value}" selected="{!item.selected}"/>
+                </aura:iteration>
+            </lightning:select>   
+        </div> 
+    </div>
+</aura:component>

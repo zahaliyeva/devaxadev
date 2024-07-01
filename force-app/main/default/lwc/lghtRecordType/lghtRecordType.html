@@ -1,0 +1,25 @@
+<template>
+	<template if:true={show}>
+		<header class="slds-modal__header">
+			<button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close">
+				<svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+					<use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+				</svg>
+				<span class="slds-assistive-text">Close</span>
+			</button>
+			<h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Seleziona Recordtype</h2>
+		</header>
+		<div class="list-container slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+			<ul class="list">
+			    <template for:each={getData} for:index="index" for:item="record">
+			    	<li key={record.name} class={record.class} data-value={record.recordTypeId} onclick={onSelect}>{record.name}</li>
+			    </template>
+			</ul>
+		</div>
+		<footer class="slds-modal__footer">
+			<button class="slds-button slds-button_neutral" onclick={onHide}>Annulla</button>
+			<button class="slds-button slds-button_brand" onclick={onConfirm} disabled={isDisabled}>Continua</button>
+		</footer>
+	</template>
+
+</template>

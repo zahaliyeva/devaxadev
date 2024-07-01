@@ -1,0 +1,946 @@
+<apex:page showHeader="true" standardStylesheets="false" sidebar="false" applyHtmlTag="true" applyBodyTag="false" docType="html-5.0" controller="DashboardRemoter">
+
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">    
+
+        <head>
+            <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+            <title>Monitoraggio Commerciale</title>
+            <apex:stylesheet value="{!URLFOR($Resource.LDS, 'assets/styles/salesforce-lightning-design-system-vf.css')}" />
+            <apex:stylesheet value="{!URLFOR($Resource.D3C3, '/c3.css')}"/>
+            <apex:includeScript value="{!URLFOR($Resource.D3C3, '/c3.min.js')}"/>
+            <apex:includeScript value="{!URLFOR($Resource.D3C3, '/d3.v3.js')}"/>
+            <apex:includeScript value="{!URLFOR($Resource.JQuery_DD)}"/>            
+
+        </head>
+
+        <body>
+            <div class="DD_LDS" style="display: none"><!-- here disply as none--> 
+                <div aria-labelledby="newgraphform">
+                    <!-- BOXED AREA -->
+                    <div class="slds-grid">
+                        <div class="slds-col" >
+                            <fieldset class="slds-box slds-theme--default">
+                                <legend id="newgraphform" class="slds-text-heading--medium">Parametri di selezione</legend>
+                                <div class="slds-box slds-theme--shade slds-m-around--small">
+
+                                    <div class="slds-grid slds-wrap slds-grid--pull-padded">
+                                        <div class="slds-col--padded slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--1-of-4" >
+                                            <!--Picklist for Area Manager-->
+                                            <div class="slds-form-element">
+                                                <label class="slds-form-element__label" for="AreaManager">Area Manager</label>
+                                                <div class="slds-form-element__control">
+                                                    <div class="slds-select_container">
+                                                        <select id="AreaManager" class="slds-select">
+                                                            <!-- to be replaced by javascript-->
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div >
+                                        <div class="slds-col--padded slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--1-of-4" >
+
+                                            <!--Picklist for Area Manager-->
+                                            <div class="slds-form-element">
+                                                <label class="slds-form-element__label" for="SalesManager">Sales/Welfare Manager</label>
+                                                <div class="slds-form-element__control">
+                                                    <div class="slds-select_container">
+                                                        <select id="SalesManager" class="slds-select" name="SalesManager" >
+                                                            <!-- to be replaved by javascript-->
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div >
+
+                                        <div class="slds-col--padded slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--1-of-4" >
+                                            <!--Picklist for Agenzia-->
+                                            <div class="slds-form-element">
+                                                <label class="slds-form-element__label" for="Agenzia">Agenzia</label>
+                                                <div class="slds-form-element__control">
+                                                    <div class="slds-select_container">
+                                                        <select id="Agenzia" class="slds-select" name="Agenzia" >
+                                                            <!-- to be replaved by javascript-->
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div >
+
+                                        <div class="slds-col--padded slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--1-of-4" >
+                                            <!--Picklist for Utente-->
+                                            <div class="slds-form-element">
+                                                <label class="slds-form-element__label" for="Utente">Utente</label>
+                                                <div class="slds-form-element__control">
+                                                    <div class="slds-select_container">
+                                                        <select id="Utente" class="slds-select" name="Utente" >
+                                                            <!-- to be replaved by javascript-->
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="slds-box slds-theme--shade slds-m-around--small">
+                                    <div class="slds-grid slds-wrap slds-grid--pull-padded">
+                                        <div class="slds-col--padded slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--1-of-4" >
+                                            <!--Picklist for Anno-->
+                                            <div class="slds-form-element">
+                                                <label class="slds-form-element__label" for="Anno">Anno</label>
+                                                <div class="slds-form-element__control">
+                                                    <div class="slds-select_container">
+                                                        <select id="Anno" class="slds-select" name="Anno" >
+                                                            <!-- to be replaved by javascript-->
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="slds-col--padded slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--1-of-4" >
+                                            <!--Picklist for Mese-->
+                                            <div class="slds-form-element">
+                                                <label class="slds-form-element__label" for="Mese">Mese</label>
+                                                <div class="slds-form-element__control">
+                                                    <div class="slds-select_container">
+                                                        <select id="Mese" class="slds-select" name="Mese" >
+                                                            <!-- to be replaved by javascript-->
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="slds-col--padded slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--1-of-4" >
+                                            <!--Picklist for Settimana-->
+                                            <div class="slds-form-element">
+                                                <label class="slds-form-element__label" for="Settimana">Settimana</label>
+                                                <div class="slds-form-element__control">
+                                                    <div class="slds-select_container">
+                                                        <select id="Settimana" class="slds-select" name="Settimana" >
+                                                            <!-- to be replaved by javascript-->
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="slds-col--padded slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--1-of-4" >
+                                            <!--Picklist for Focus-->
+                                            <div class="slds-form-element">
+                                                <label class="slds-form-element__label" for="Focus">Focus</label>
+                                                <div class="slds-form-element__control">
+                                                    <div class="slds-select_container">
+                                                        <select id="Focus" class="slds-select" name="Focus" >
+                                                            <!-- to be replaved by javascript-->
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div id="UserRunBox" class="slds-box slds-theme--shade slds-m-around--small">
+                                    <div class="slds-grid slds-grid--pull-padded slds-grid--vertical-align-center slds-grid--align-center">
+                                        <div class="slds-col--padded slds-size--1-of-3" >
+                                            <!--Input for admin for Administrators-->
+                                            <div class="slds-form-element">
+                                                <label class="slds-form-element__label" for="UserRun">UserRun</label>
+                                                <div class="slds-form-element__control">
+                                                    <input id="UserRun" class="slds-input" type="text" placeholder="User Id (18 digit)" />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="slds-col--padded slds-size--1-of-3" >
+                                            <!--output for admin for Administrators-->
+                                            <div class="slds-form-element">
+                                                <label class="slds-form-element__label" for="UserRunInfo">UserRunInfo</label>
+                                                <div class="slds-form-element__control">
+                                                    <p id="UserRunInfo" type="text" >Mario Rossi</p> 
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="slds-col--padded slds-size--1-of-3" >
+                                            <!--output for admin for Administrators-->
+                                            <div class="slds-align--absolute-center ">
+                                                <button  class="slds-button slds-button--brand" type="button" id ="B_SetUser">Set User</button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+<!--
+                                <div class="slds-grid slds-wrap slds-grid--pull-padded slds-grid--vertical-align-center">
+                                    <div class="slds-col--padded slds-size--1-of-1 slds-align--absolute-center" >
+                                        <div class="slds-button-group" role="group">
+                                            <button  class="slds-button slds-button--brand" type="button" id="B_ApplyFilters">Applica filtri</button>
+                                            <button  class="slds-button slds-button--brand" type="button" id="B_reset">Reset filtri</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                -->
+                            </fieldset>
+                        </div><!--the buttons column-->
+                    </div> <!-- / the grid for the buttons -->
+                </div><!-- / BOXED AREA -->
+
+                <div class="slds-box slds-m-top--small slds-theme--default">      
+                    <div class="slds-grid slds-wrap slds-grid--pull-padded">
+                        <div class="slds-col--padded slds-size--1-of-1 slds-align--absolute-center" >
+                            <fieldset class="slds-form-element">
+                                <legend class="slds-form-element__legend slds-form-element__label"></legend>
+                                <div class="slds-form-element__control">
+                                    <div class="slds-radio--button-group">
+                                        <label class="slds-button slds-radio--button" for="Campaign">
+                                            <input name="scope" type="radio" id="Campaign" checked="checked" value="Campaign"/>
+                                            <span class="slds-radio--faux">Campagne</span>
+                                        </label>
+                                        <label class="slds-button slds-radio--button" for="Lead">
+                                            <input name="scope" type="radio" id="Lead" value="Lead"/>
+                                            <span class="slds-radio--faux">Lead</span>
+                                        </label>
+                                        <label class="slds-button slds-radio--button" for="Client">
+                                            <input name="scope" type="radio" id="Client" value="Client" />
+                                            <span class="slds-radio--faux">Cliente</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                    
+                    <div  id="chart"/><!--Here the C3 Library writes the chart-->
+                    
+                    <div class="slds-grid slds-wrap slds-grid--pull-padded">
+                            <div class=" slds-col--padded slds-align--absolute-center" id="alertchart"/><!--Here the alert to refresh-->
+                    </div>
+                    
+                    <div class="slds-box slds-theme--shade slds-m-around--small">
+                        <div class="slds-grid slds-wrap slds-grid--pull-padded slds-m-vertical--small"><!-- First Table for KPI-->
+                            <div class="slds-col--padded slds-size--1-of-1" >
+                                <h1 class="slds-text-heading--medium">KPI Aggregati</h1>
+                            </div>
+
+                            <div class="slds-col--padded slds-size--1-of-1 slds-align--absolute-center" >
+                                <table class="slds-table slds-table--bordered slds-table--cell-buffer" id="KPITable">
+                                    <thead>
+                                        <tr class="slds-text-heading--label">
+                                            <th scope="col">
+                                                <div class="slds-truncate" title="Media Contatti">Media Contatti</div>
+                                            </th>
+                                            <th scope="col">
+                                                <div class="slds-truncate" title="Media Opp Lavorate">Media Opp. Lavorate</div>
+                                            </th>
+                                            <th scope="col">
+                                                <div class="slds-truncate" title="Media Opp Vinte">Media Opp. Vinte</div>
+                                            </th>
+                                            <th scope="col">
+                                                <div class="slds-truncate" title="Redemption contatti">Redemption Contatti (Opp. Lavorate/Contatti)</div>
+                                            </th>
+                                            <th scope="col">
+                                                <div class="slds-truncate" title="Redemption Opp">Redemption Opp. (Vinte/Lavorate)</div>
+                                            </th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <!-- example of row entry-->
+                                        <!--
+                                        <tr>
+                                            <th scope="row" data-label="Media Contatti">
+                                                <div class="slds-truncate" title="12">12</div>
+                                            </th>
+                                            <td data-label="Media Opp Lavorate">
+                                                <div class="slds-truncate" title="6">6</div>
+                                            </td>
+                                            <td data-label="Media Opp. Vinte">
+                                                <div class="slds-truncate" title="2">2</div>
+                                            </td>
+                                            <td data-label="Redemption contatti">
+                                                <div class="slds-truncate" title="50%">50%</div>
+                                            </td>
+                                            <td data-label="Redemption Opp">
+                                                <div class="slds-truncate" title="20%">33%</div>
+                                            </td>
+                                        </tr>
+                                        -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="slds-box slds-theme--shade slds-m-around--small">
+                        <div class="slds-grid slds-wrap slds-grid--pull-padded slds-m-vertical--small"><!-- Second Table for Details-->
+                            <div class="slds-col--padded slds-size--1-of-1" >
+                                <h1 class="slds-text-heading--medium">Lista Risultati</h1>
+                            </div>
+
+                            <div class="slds-col--padded slds-size--1-of-1 slds-align--absolute-center" >
+                                <table class="slds-table slds-table--bordered slds-table--cell-buffer" id="ResultTable">
+                                    <thead>
+                                        <tr class="slds-text-heading--label">
+                                            <th scope="col" class="slds-truncate">
+                                                <div class="slds-truncate" title="Area Manager">Area Manager</div>
+                                            </th>
+                                            <th scope="col" class="slds-truncate ">
+                                                <div class="slds-truncate" title="Sales Manager">Sales/Welfare Manager</div>
+                                            </th>
+                                            <th scope="col" class="slds-truncate">
+                                                <div class="slds-truncate" title="Agenzia">Agenzia</div>
+                                            </th>
+                                            <th scope="col" class="slds-truncate slds-has-flexi-truncate">
+                                                <div class="slds-truncate slds-has-flexi-truncate" title="Coll.">Coll</div>
+                                            </th>
+                                            <th scope="col" class="slds-truncate">
+                                                <div class="slds-truncate" title="#Contatti" >#Contatti</div>
+                                            </th>
+                                            <th scope="col" class="slds-truncate ">
+                                                <div class="slds-truncate" title="#Opp. lavorate">#Opp<br/>lavorate*</div>
+                                            </th>
+                                            <th scope="col" class="slds-truncate">
+                                                <div class="slds-truncate" title="#Opp. Vinte">#Opp<br/>vinte*</div>
+                                            </th>                                           
+                                            <th scope="col" class="slds-truncate">
+                                                <div class="slds-truncate" title="Media contatti">Media<br/>contatti</div>
+                                            </th>
+                                            <th scope="col" class="slds-truncate">
+                                                <div class="slds-truncate" title="Media opp. lavorate">Media<br/>opp<br/>lavorate</div>
+                                            </th>
+                                            <th scope="col" class="slds-truncate">
+                                                <div class="slds-truncate" title="Media opp. vinte">Media<br/>opp<br/>vinte</div>
+                                            </th>
+                                            <th scope="col"  class="slds-truncate">
+                                                <div class="slds-truncate" title="Redemption contatti">Redemption<br/>contatti</div>
+                                            </th>
+                                            <th scope="col"  class="slds-truncate">
+                                                <div class="slds-truncate" title="Redemption opp.">Redemption<br/>opp</div>
+                                            </th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <!-- example of row entry-->
+                                        <!--
+                                        <tr>
+                                            <th class="slds-truncate" data-label="Area Manager" scope="row">
+                                                <div class="slds-truncate" title="Mario Rossi">Mario Rossi</div>
+                                            </th>
+                                            <td class="slds-truncate" data-label="Sales Manager">
+                                                <div class="slds-truncate" title="Luca Verdi">Luca Verdi</div>
+                                            </td>
+                                            <td class="slds-truncate " data-label="Agenzia">
+                                                <div class="slds-truncate" title="000828">000828</div>
+                                            </td>
+                                            <td class="slds-truncate" data-label="Collaboratore">
+                                                <div class="slds-truncate" title="Fabio Antonelli">Fabio Antonelli</div>
+                                            </td>
+                                            <td class="slds-truncate" data-label="#Contatti">
+                                                <div class="slds-truncate" title="3">3</div>
+                                            </td>
+                                            <td class="slds-truncate" data-label="#Opp. lavorate">
+                                                <div class="slds-truncate" title="2">2</div>
+                                            </td>
+                                            <td class="slds-truncate" data-label="#Opp. Vinte">
+                                                <div class="slds-truncate" title="2">2</div>
+                                            </td>
+                                            <td class="slds-truncate" data-label="Media contatti">
+                                                <div class="slds-truncate" title="1">1</div>
+                                            </td>
+                                            <td class="slds-truncate" data-label="Media opp. lavorate">
+                                                <div class="slds-truncate" title="1.1">1.1</div>
+                                            </td>
+                                            <td class="slds-truncate" data-label="Media opp. vinte">
+                                                <div class="slds-truncate" title="0.5">0.5</div>
+                                            </td>
+                                            <td class="slds-truncate" data-label="Redemption contatti">
+                                                <div class="slds-truncate" title="1%">1%</div>
+                                            </td>
+                                            <td class="slds-truncate" data-label="Redemption opp">
+                                                <div class="slds-truncate" title="10%">10%</div>
+                                            </td>
+                                        </tr>
+                                        -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div>* tra parentesi sono presenti le opportunità create nella settimana corrente e quelle create nella settimana precedente (sett. Corrente | sett. Precedente)</div>
+                    </div>
+                </div>
+                
+<div class="slds-spinner_container slds-hide" id="theSpinner">
+  <div class="slds-spinner--brand slds-spinner slds-spinner--large" aria-hidden="false" role="alert">
+    <div class="slds-spinner__dot-a"></div>
+    <div class="slds-spinner__dot-b"></div>
+  </div>
+</div>
+
+    <p id="thep" style="display:none">nothing here</p>
+    
+            </div><!-- / LDS WRAPPER AREA -->
+        </body>
+
+        <script type="text/javascript">
+//Initialise some variables
+var jq = jQuery.noConflict();
+Visualforce.remoting.timeout = 30000; // Set timeout at page level (ms, max is 2min=120000)
+var Type = ''; //
+var chart;//Where to store the chart info;
+
+
+
+//JQUERY METHODS START AT DOC READY
+jq(document).ready(function(){ //Waiting that the doc is ready before running methods
+    InitialisePage();
+    
+    //EVENTS MANAGED
+    jq('[id="AreaManager"]').on("change",  function() {handlePicklistChange(jq(this))});
+    jq('[id="SalesManager"]').on("change",  function() {handlePicklistChange(jq(this))});
+    jq('[id="Agenzia"]').on("change",  function() {handlePicklistChange(jq(this))});
+    jq('[id="Utente"]').on("change",  function() {handlePicklistChange(jq(this))});    
+
+    jq('[id="Anno"]').on("change",  function() {handlePicklistChange(jq(this))});    
+    jq('[id="Mese"]').on("change",  function() {handlePicklistChange(jq(this))});    
+    jq('[id="Settimana"]').on("change",  function() {handlePicklistChange(jq(this))});    
+    
+    
+    //Buttons Click
+    jq('[id="B_reset"]').on("click",  function() {location.reload()});
+    jq('[id="B_ApplyFilters"]').on("click",  function() {ApplyFilters()});
+    jq('[id="B_SetUser"]').on("click",  function() {SetUser()});
+    
+    jq('[name="scope"]').on("click",  function() {setScope()});
+    jq('[name="Focus"]').on("change",  function() {retrievetableRows()});
+
+
+    
+    
+});
+
+//FUNCTIONS TO HANDLE EVENTS 
+function ApplyFilters() {
+    jq('#alertchart').empty();
+    retrievePlotPoints();//Inside here I also get the table rows and KPI
+};
+
+function showSpinner() {
+jq('#theSpinner').removeClass('slds-hide');
+jq('#theSpinner').addClass('slds-show');
+};
+
+function hideSpinner() {
+jq('#theSpinner').addClass('slds-hide');
+jq('#theSpinner').removeClass('slds-show');
+};
+
+
+function SetUser() {
+    InitialisePage();
+};
+function displayNoAccessError() {
+    jq(".DD_LDS").empty();//A bit brutal but delete the whole page
+    jq(".DD_LDS").css("display","");//I show the page
+    jq(".DD_LDS").append('<div class="slds-box slds-theme--warning slds-align--absolute-center"><h1>Non si dispone dei permessi necessari per visualizare questa pagina</h1></div>');
+};
+
+function displayGeneralError() {
+    jq(".DD_LDS").empty();//A bit brutal but delete the whole page
+    jq(".DD_LDS").css("display","");//I show the page
+    jq(".DD_LDS").append('<div class="slds-box slds-theme--error slds-align--absolute-center"><h1>Si è verificato un errore</h1></div>');
+};
+
+function handlePicklistChange(picklist) {
+    //jq('#alertchart').empty();
+    //jq('#alertchart').append('--Selezionare "Applica filtri" per aggiornare i dati--');
+    console.log('handling picklist change');
+    console.log(picklist);
+    var thePicklist = picklist.attr('id')+'';//this is the way to get the id
+    console.log('----'+thePicklist);
+    retrieveFilterOptions(true,thePicklist);//-->Can set to true for continuous update
+}
+
+function InitialisePage() {
+    retrieveFilterOptions(true,'');//with TRUE I also call the retrievePlotPoints so that I populate the focus options
+};
+
+function setScope() {
+    //alert(jq('input[name="scope"]:checked').val());
+
+    Type = jq('input[name="scope"]:checked').val();
+    console.log('passing type--'+Type);
+    retrievePlotPoints();
+}
+function retrieveFilterOptions(updateData, idPicklist) {
+    console.log('++START retrieveFilterOptions');
+    
+    var UserId = jq('[id="UserRun"]').val();
+    console.log(UserId+' USerid input');
+    if (UserId==undefined) {//partner user dont see their id
+        UserId = '';
+    }
+    
+    var Anno = ''+jq('#Anno').val();
+    var Mese = ''+jq('#Mese').val();
+    console.log('found as input date'+Anno+Mese);
+    
+    var AreaManager = ''+jq('#AreaManager').val();
+    var SalesManager = ''+jq('#SalesManager').val();
+    var Agenzia = ''+jq('#Agenzia').val();
+    
+    console.log('found as input '+AreaManager+SalesManager+Agenzia);
+    
+    console.log('Calling remote Action');
+    showSpinner();
+    Visualforce.remoting.Manager.invokeAction(
+    '{!$RemoteAction.DashboardRemoter.retrieveFilterOptions}',
+    UserId,
+    Anno,
+    Mese,
+    AreaManager,
+    SalesManager,
+    Agenzia,
+    function(result, event){
+        if (event.status) {
+            // Get DOM IDs for HTML and Visualforce elements like this
+            document.getElementById('thep').innerHTML = result;
+            console.log(result);
+            if (result.hasAccess) {
+                jq(".DD_LDS").css("display","");//I show the page
+                applyOptionsToPage(result,idPicklist);
+                if (updateData) {
+                    retrievePlotPoints();//<--Inside here retrieve also the Table Rows AND KPI to assure they happen one after another
+                } else {
+                    hideSpinner();
+                };
+            } else {
+                hideSpinner();
+                displayNoAccessError();
+            }
+        } else if (event.type === 'exception') {
+            document.getElementById("thep").innerHTML = 
+            event.message + "<br/>\n<pre>" + event.where + "</pre>";
+            displayGeneralError();
+        } else {
+            document.getElementById("thep").innerHTML = event.message;
+            displayGeneralError();
+        }
+    }, 
+    {escape: true, buffer: false}
+    );
+    console.log('++END retrieveFilterOptions');
+
+}
+
+function applyOptionsToPage(PageDetails,idPicklist) {
+    console.log('APPLYING Options to Page');
+    console.log(idPicklist);
+    if (PageDetails.isAdmin) {
+        jq('#UserRunBox').hide();
+        jq('#UserRunBox').show(100);
+    } else {
+        jq('#UserRunBox').remove();
+    }
+    
+    if(idPicklist=='') {//I have to set all picklist values at the beginning
+        setOptionOnPicklist('AreaManager', PageDetails.AreaManagerOptions);
+        setOptionOnPicklist('SalesManager', PageDetails.SalesManagerOptions);
+        setOptionOnPicklist('Agenzia', PageDetails.AgencyOptions);
+        setOptionOnPicklist_withValues('Utente',PageDetails.CollaboratorOptions,PageDetails.CollaboratorOptionsID);
+        setOptionOnPicklist('Anno',PageDetails.AnnoOptions);
+        setOptionOnPicklist_withValues('Mese',PageDetails.MonthOptionsName,PageDetails.MonthOptionsNum);
+        jq('#Mese').val(PageDetails.SelectedMonth);
+        jq('#Anno').val(PageDetails.SelectedYear);
+        setOptionOnPicklist_withValues('Settimana',PageDetails.WeekOptions, PageDetails.WeekOptionsId);
+
+    }
+    
+    if (idPicklist=='AreaManager') {
+        setOptionOnPicklist('SalesManager', PageDetails.SalesManagerOptions);
+        setOptionOnPicklist('Agenzia', PageDetails.AgencyOptions);
+        setOptionOnPicklist_withValues('Utente',PageDetails.CollaboratorOptions,PageDetails.CollaboratorOptionsID);
+    }
+    
+    if (idPicklist=='SalesManager') {
+        setOptionOnPicklist('Agenzia', PageDetails.AgencyOptions);
+        setOptionOnPicklist_withValues('Utente',PageDetails.CollaboratorOptions,PageDetails.CollaboratorOptionsID);
+    }
+    
+    if (idPicklist=='Agenzia') {
+        setOptionOnPicklist_withValues('Utente',PageDetails.CollaboratorOptions,PageDetails.CollaboratorOptionsID);
+    }
+    
+    if (idPicklist=='Anno' || idPicklist=='Mese') {
+        console.log('Setting these week options');
+        console.log(PageDetails.WeekOptions);
+        setOptionOnPicklist_withValues('Settimana',PageDetails.WeekOptions, PageDetails.WeekOptionsId);
+        jq('#Mese').val(PageDetails.SelectedMonth);
+        jq('#Anno').val(PageDetails.SelectedYear);
+    }
+    
+    setTextOnDiv('UserRunInfo',PageDetails.UserDetails);
+
+    
+    
+    console.log('FINISHED APPLYING Options to Page');
+}
+
+function setOptionOnPicklist(id,options) {//Takes the id of the picklist and a list of strings
+    jq('#'+id).empty();
+    jq.each(options, function (index,value) {
+        //console.log(value);
+        //console.log(jq('<div/>').html(value).text());
+        jq('#'+id).append(
+        jq('<option/>')
+        .attr('value', value)
+        .prop('selected', false)
+        .text(value)
+        );
+    });
+}
+
+function setOptionOnPicklist_withValues(id,options, values) {//Takes the id of the picklist and a list of strings
+    jq('#'+id).empty();
+    console.log('Setting-'+id+'-Options');
+    console.log(options);
+    console.log(values);
+    for (i = 0; i < options.length; i++) { 
+        jq('#'+id).append(
+        jq('<option/>')
+        .attr('value', values[i])
+        .prop('selected', false)
+        .text(options[i]));
+    };
+};
+
+
+
+
+function setTextOnDiv(id,option) {
+    console.log('currentUser is');
+    console.log(option);
+    jq('#'+id).text(option);
+}
+
+function RetrieveSalesManagerOptions() {
+
+};
+
+
+function setTablerows(result) {
+    console.log(result);
+    var theTable = jq("#ResultTable").find('tbody').empty();//Remove what is there
+    var fieldNames =['AreaManager','SalesManager','Agenzia','Utenti', 'Contatti','OppLavorate','OppVinte','MediaContatti','MediaOppLavorate','MediaOppVinte','RedContatti','RedOpp'];
+    
+    //First the tabel details
+    var list = result.Data.tableRows;
+    
+    if (list.length==0) {
+        //inserting fake data
+        var fakerecord = {};
+        for(field_j=0; field_j<fieldNames.length; field_j++){
+            fakerecord[fieldNames[field_j]]='N.D.';
+        }
+        list.push(fakerecord);
+    }
+    
+    for(record_i=0; record_i<list.length; record_i++){
+        var thisrecord = list[record_i];
+        //console.log(list[record_i]);
+        var row = jq('<tr>');
+        for(field_j=0; field_j<fieldNames.length; field_j++){
+            var thisField = fieldNames[field_j];
+            //console.log(thisField);
+            var td_entry = jq('<td>');
+            td_entry.addClass('slds-truncate'); 
+            td_entry.attr('data-label', fieldNames[field_j]);
+            
+            var thediv = jq('<div>');
+            thediv.addClass('slds-truncate');
+            thediv.attr('title',thisrecord[thisField]);
+            thediv.text(thisrecord[thisField]);
+            
+            row.append(td_entry.append(thediv));
+            //console.log('written this row');
+            //console.log(row);
+        }
+        theTable.append(row);
+    };
+    
+};
+
+function setKPIValues(result) {
+    console.log(result);
+    //Then the KPI
+    var KPITable =  jq("#KPITable").find('tbody').empty();//Remove what is there
+    var KPI_fields = ['MediaContatti','MediaOppLavorate','MediaOppVinte','RedContatti','RedOpp'];
+    //Only one Row
+    var KPIrow = jq('<tr>');
+    var KPI_Data = result.Data.KPI;
+    for(field_i=0; field_i<KPI_fields.length; field_i++){
+        var thisField = KPI_fields[field_i];
+        //console.log(thisField);
+        var td_entry = jq('<td>');
+        td_entry.addClass('slds-truncate'); 
+        td_entry.attr('data-label', KPI_fields[field_i]);
+        
+        var thediv = jq('<div>');
+        thediv.addClass('slds-truncate');
+        thediv.attr('title',KPI_Data[thisField]);
+        thediv.text(KPI_Data[thisField]);
+        
+        KPIrow.append(td_entry.append(thediv));
+        //console.log('written this row');
+        //console.log(KPIrow);
+    }
+    KPITable.append(KPIrow);
+    
+};
+
+function retrievePlotPoints() {
+    console.log('+++START retrievePlotPoints');
+    //Retrieving all parameters
+    var AreaManager = jq('#AreaManager').val();
+    console.log('AreaManager');
+    console.log(AreaManager);
+    
+    var SalesManager = jq('#SalesManager').val();
+    console.log('SalesManager');
+    console.log(SalesManager);
+    
+    var Agency =jq('#Agenzia').val();
+    console.log('Agency');
+    console.log(Agency);
+    
+    var UserId =jq('#Utente').val();
+    console.log('Utente');
+    console.log(UserId);
+
+    var Anno =jq('#Anno').val();
+    console.log('Utente');
+    console.log(Anno);
+
+    var Mese =jq('#Mese').val();
+    console.log('Mese');
+    console.log(Mese);  
+
+    var Settimana =jq('#Settimana').val();
+    console.log('Settimana');
+    console.log(Settimana); 
+
+    var Focus =jq('#Focus').val();
+    console.log('Focus');
+    console.log(Focus); 
+
+    console.log('Type');
+    console.log(Type); 
+    showSpinner();
+    Visualforce.remoting.Manager.invokeAction(
+    '{!$RemoteAction.DashboardRemoter.retrievePlotPoints}',
+    AreaManager,
+    SalesManager,
+    Agency,
+    UserId,
+    Anno,
+    Mese,
+    Settimana,
+    Focus, 
+    Type,
+    function(result, event){
+        if (event.status) {
+            // Get DOM IDs for HTML and Visualforce elements like this
+            console.log('retrievePlotPoints OK');
+            console.log(result);
+            generategraph(result.Data.PlotPoints);
+            setOptionOnPicklist_withValues('Focus',result.FocusOptions,result.FocusOptionsId);
+            retrievetableRows();
+            document.getElementById('thep').innerHTML = result
+        } else if (event.type === 'exception') {
+            document.getElementById("thep").innerHTML = 
+            event.message + "<br/>\n<pre>" + event.where + "</pre>";
+            displayGeneralError();
+        } else {
+            document.getElementById("thep").innerHTML = event.message;
+            displayGeneralError();
+        }
+    }, 
+    {escape: true, buffer: false}
+    );
+    
+    
+    
+    
+};
+
+function retrievetableRows() {
+    console.log('+++START retrieveTableRows');
+    //Retrieving all parameters
+    var AreaManager = jq('#AreaManager').val();
+    console.log('AreaManager');
+    console.log(AreaManager);
+    
+    var SalesManager = jq('#SalesManager').val();
+    console.log('SalesManager');
+    console.log(SalesManager);
+    
+    var Agency =jq('#Agenzia').val();
+    console.log('Agency');
+    console.log(Agency);
+    
+    var UserId =jq('#Utente').val();
+    console.log('Utente');
+    console.log(UserId);
+
+    var Anno =jq('#Anno').val();
+    console.log('Utente');
+    console.log(Anno);
+
+    var Mese =jq('#Mese').val();
+    console.log('Mese');
+    console.log(Mese);  
+
+    var Settimana =jq('#Settimana').val();
+    console.log('Settimana');
+    console.log(Settimana); 
+
+    var Focus =jq('#Focus').val();
+    console.log('Focus');
+    console.log(Focus); 
+    
+    console.log('Type');
+    console.log(Type); 
+    showSpinner();
+    
+    Visualforce.remoting.Manager.invokeAction(
+    '{!$RemoteAction.DashboardRemoter.retrieveTableRows}',
+    AreaManager,
+    SalesManager,
+    Agency,
+    UserId,
+    Anno,
+    Mese,
+    Settimana,
+    Focus,    
+    Type,
+    function(result, event){
+        if (event.status) {
+            // Get DOM IDs for HTML and Visualforce elements like this
+            console.log('retrieveTableRows OK');
+            console.log(result);
+            setTablerows(result);
+            setKPIValues(result);
+            setShadedChartRegion();
+            document.getElementById('thep').innerHTML = result
+            hideSpinner();
+        } else if (event.type === 'exception') {
+            document.getElementById("thep").innerHTML = 
+            event.message + "<br/>\n<pre>" + event.where + "</pre>";
+            displayGeneralError();
+        } else {
+            document.getElementById("thep").innerHTML = event.message;
+            displayGeneralError();
+        }
+        chart.flush();
+    }, 
+    {escape: true, buffer: false}
+    );
+
+}
+//JQUERY METHODS END
+
+//
+function generategraph(PlotPoints) {
+    //Example
+    /*
+var test = [
+                {x: '20160613', Cont: 1, Opp: 5, Vinte: 9},
+                {x: '20160713', Cont: 2, Opp: 6, Vinte: 10},
+                {x: '20160813', Cont: 3, Opp: 7, Vinte: 11},
+                {x: '20160913', Cont: 4, Opp: 8, Vinte: 12},
+
+            ];
+*/
+    if (PlotPoints.length>0){
+        jq('#chart').empty();//In case there was an error before
+        
+        
+        var keyValue = ['Opp','Vinte'];
+        var Names = {Opp:'Opportunità',Vinte:'Opportunità Vinte'}
+        if (Type!='Client') {
+            keyValue.unshift('Contatti');
+            Names.Contatti='Contatti';
+        }
+        
+        
+        chart = c3.generate({
+            bindto: '#chart',
+            data: {
+                x:'x',
+                xFormat: '%Y%m%d', // 'xFormat' can be used as custom format of 'x'
+                json: PlotPoints,
+                keys: {
+                    x: 'x', // it's possible to specify 'x' when category axis
+                    //value: ['Contatti', 'Opp','Vinte'],
+                    value: keyValue,
+                },
+                type:'bar',
+                //names: {
+                //   Contatti: 'Contatti',
+                //   Opp: 'Opportunità',
+                //   Vinte: 'Opportunità Vinte'
+                //}
+                names:Names
+            },
+            axis: {
+                x: {
+                    type: 'timeseries',
+                    tick: {
+                        format: '%d/%m/%Y',
+                        culling:false
+                    }
+                }
+            }
+        });
+        setShadedChartRegion();
+
+    } else {
+        //No data points
+        jq('#chart').empty();
+        jq('#chart').append('<div class="slds-box slds-theme--info slds-m-around-xxx-small slds-text-align--center">Nessun dato disponibile per i filtri impostati</div>');
+    }
+    
+setTimeout(function () {
+    chart.flush();
+    console.log('flushed');
+}, 1000);
+    
+};
+
+function setShadedChartRegion() {
+    console.log(chart);
+    //To highligh focus regin
+    var inputfocus = jq('#Focus').val();
+    console.log('inputfocus'+inputfocus);
+    if (inputfocus =='' || inputfocus==null) {
+        inputfocus = jq('#Settimana').val();
+    };
+    
+    var inputdate = inputfocus.substr(0, 4)+'-'+inputfocus.substr(4, 2)+'-'+inputfocus.substr(6, 2);
+    var StartDate = new Date(inputdate);
+    var EndDate = new Date(StartDate);
+    EndDate.setDate(StartDate.getDate() + 3);
+    StartDate.setDate(StartDate.getDate() - 3);
+    console.log('++startdate'+StartDate);
+    console.log('++EndDate'+EndDate);  
+      if (chart) {
+        chart.regions([{start: StartDate, end: EndDate}]);
+    }
+}
+        </script>
+    </html>
+</apex:page>

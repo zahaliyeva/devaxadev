@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+	<apiVersion>57</apiVersion>
+	<isExposed>true</isExposed>
+	<masterLabel>Modale con Tabella</masterLabel>
+	<targets>
+		<target>analytics__Dashboard</target>
+	</targets>
+		<targetConfigs>
+        <targetConfig targets="analytics__Dashboard">
+            <hasStep>true</hasStep>
+			<property name="DynamicColumns" type="String" label="Colonne aggiuntive" description="Nomi delle colonne aggiuntive, separate da ';'" />
+			<property name="DynamicLabels" type="String" label="Label Colonne aggiuntive" description="Label delle colonne aggiuntive, separate da ';'" />
+        	<property name="CallerType" type="String" label="Push o Ecollab" description="Riconocere se dashboard push o ecollab " />
+			<property name="CommunicationCode" type="String" label="Codice della iniziativa MKT per invio" description="Codice utilizato per popolare i campi della Iniziativa" />
+		</targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

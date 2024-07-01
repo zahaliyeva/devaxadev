@@ -1,0 +1,21 @@
+<aura:component controller="SchedaClienteController" implements="flexipage:availableForRecordHome,force:hasRecordId">
+    <aura:attribute name="recordId" type="String" default="0015r00000JOlUfAAL"/>
+    <aura:attribute name="wrapper" type="Object" />
+    <aura:handler name="init" value="{! this }" action="{! c.doInit }"/>
+
+    <aura:if isTrue="{!v.wrapper.account.Id}">
+
+
+        <aura:if isTrue="{!v.wrapper.schedaClienteType == 'New'}">
+            <c:schedaClienteTestata wrapper="{!v.wrapper}" />
+            <c:schedaClienteSottoTestata wrapper="{!v.wrapper}"/>
+            <c:schedaClienteSchede wrapper="{!v.wrapper}" />
+        </aura:if>
+        <aura:if isTrue="{!v.wrapper.schedaClienteType == 'Old'}">
+            <c:schedaClienteTestataOld wrapper="{!v.wrapper}" />
+            <c:schedaClienteSottoTestataOld wrapper="{!v.wrapper}"/>
+            <c:schedaClienteSchedeOld wrapper="{!v.wrapper}" />
+        </aura:if>
+
+    </aura:if> 
+</aura:component>

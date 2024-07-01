@@ -1,0 +1,175 @@
+<template>
+	<c-mobility-spinner show={spinner} show-overlay={spinnerOverlay}></c-mobility-spinner>
+	<c-mobility-messages model={messages} confirm-warning-callback={onConfirmConvert}></c-mobility-messages>
+
+	<template if:true={authorized}>
+		<!-- Inizio Header -->
+		<div class="row shadow-bottom bg-gray-100 mb-5">
+
+			<!-- Breadcrumb -->
+			<div class="col-12">
+				<c-mobility-breadcrumb params={params} current={componentView}></c-mobility-breadcrumb>
+			</div>
+
+			<!-- Alert -->
+			<div class="col-12 lead-alert">
+				<h4 class="alert-heading">
+					<span class="mr-1 align-bottom">
+						<c-mobility-icon name='alert-counter' width='18px' height='18px'></c-mobility-icon>
+					</span> {_label.leadDetail_stockTime} {timeStockLabel}
+				</h4>
+			</div>
+
+			<!-- Sections -->
+			<div class="col-12 mt-2">
+				<span class="lead-edit">
+					<template if:true={leadCanModified}>
+						<a onclick={navigateToEvent} data-component="mobilityLeadEdit" data-record-id={params.recordId}>
+							<span>
+								{_label.leadDetail_edit}
+								<span class="pl-2">
+									<c-mobility-icon name='edit' width='10.5px' height='10.5px'></c-mobility-icon>
+								</span>
+							</span>
+						</a>
+					</template>
+				</span>
+				<c-mobility-layout hook={hookCustomLayout} type-layout='detail' object-name='Lead'
+					record-id={params.recordId} ready-callback={readyCallback} save-callback={saveCallback}
+					params={params} load-callback={loadCallback}>
+				</c-mobility-layout>
+			</div>
+
+		</div>
+		<!-- Fine Header -->
+
+		<!-- Inizio Main -->
+		<div class="row mb-5">
+			<div class="col-12 lead-tab-nav bg-white col-negative mb-0" style="padding: 0;">
+				<ul class="nav nav-tabs nav-fill">
+					<li class={quotationsTab} onclick={activeTab} data-target='0'>
+						<a class="nav-link">
+							<c-mobility-icon name='quotations' width='40px' height='40px'></c-mobility-icon>
+							<div>{_label.leadDetail_quotations}</div>
+						</a>
+					</li>
+					<li class={taskTab} onclick={activeTab} data-target='1'>
+						<a class="nav-link">
+							<c-mobility-icon name='task-blue' width='40px' height='40px'></c-mobility-icon>
+							<div>{_label.leadDetail_task}</div>
+						</a>
+					</li>
+					<li class={eventTab} onclick={activeTab} data-target='2'>
+						<a class="nav-link">
+							<c-mobility-icon name='event' width='40px' height='40px'></c-mobility-icon>
+							<div>{_label.leadDetail_event}</div>
+						</a>
+					</li>
+				</ul>
+			</div>
+
+			<div class="col-12 tab-content bg-white lead-tab-content mb-5">
+				<div class={quotationsPane}>
+					<c-s-object-data-grid tabledata={quotations}></c-s-object-data-grid>
+				</div>
+				<div class={taskPane}>
+					<c-s-object-data-grid hook={handlerTaskDataGrid} tabledata={task}></c-s-object-data-grid>
+				</div>
+				<div class={eventPane}>
+					<c-s-object-data-grid hook={handlerEventDataGrid} tabledata={event}></c-s-object-data-grid>
+				</div>
+			</div>
+
+			<div class="col-12 bg-white shadow-bottom" style="min-height: 250px;">
+				<div class="col-12 title page-border my-2">
+					<h2>{_label.leadDetail_contactHistoryTitle}</h2>
+				</div>			
+			<c-mobility-contact-history-page lead-id={params.recordId} per-page='5' max-per-page='10'
+				length-list='2'>
+			</c-mobility-contact-history-page>		   
+			</div>
+
+			<template if:true={showEvent}>
+				<c-mobility-event type-layout='edit' record-type='AAI_Event' record-default={eventData}
+					close-callback={toggleEvent} save-callback={closeEventLoad}>
+				</c-mobility-event>
+			</template>
+			<template if:true={showTask}>
+				<c-mobility-task type-layout='edit' record-type='Generico' record-default={taskData}
+					close-callback={toggleTask} save-callback={closeTaskLoad}>
+				</c-mobility-task>
+			</template>
+			<template if:true={showEmail}>
+				<c-mobility-lead-email params={params} close-callback={toggleEmail} send-callback={toggleEmail}>
+				</c-mobility-lead-email>
+			</template>
+			<template if:true={showSearchDuplicate}>
+				<c-mobility-lead-search-duplicate params={params} lead={lead} close-callback={toggleSearchDuplicate}>
+				</c-mobility-lead-search-duplicate>
+			</template>
+		</div>
+		<div class="bottom-space"></div>
+		<!-- Fine Main -->
+
+		<!-- Inizio Footer -->
+		<div class="footer row justify-content-between fixed-bottom">
+			<div class="col-2 up">
+				<a onclick={scroll} onmouseout={onOutScrollTop} onmouseover={onOverScrollTop}>
+					{_label.leadListView_up}
+					<span class="pl-2">
+						<c-mobility-icon name='arrow-up' width='10.5px' height='10.5px'>
+						</c-mobility-icon>
+					</span>
+				</a>
+			</div>
+			<div class="col-4 action ml-auto text-right">
+				<div class="row" style="flex-flow: nowrap;">
+ 					<div class="btn-box">
+						<div class="btn btn-outline-primary btn-square p-auto" onclick={onSearchDuplicate}
+							onmouseover={onOverSearchDublicate} onmouseout={onOutSearchDuplicate}>
+							<span class="btn-icon">
+								<c-mobility-icon name={iconSearchDublicate} width='28px' height='28px'></c-mobility-icon>
+							</span>
+						</div>
+					</div>
+					<div class="btn-box">
+						<div class="btn btn-outline-primary btn-square p-auto" onclick={onSendEmail}
+							onmouseover={onOverEmail} onmouseout={onOutEmail}>
+							<span class="btn-icon">
+								<c-mobility-icon name={iconEmail} width='28px' height='28px'></c-mobility-icon>
+							</span>
+						</div>
+					</div>
+					<div class="btn-box">
+						<div class="btn btn-outline-primary btn-square p-auto" onclick={toggleTask}
+							onmouseover={onOverDocument} onmouseout={onOutDocument}>
+							<span class="btn-icon">
+								<c-mobility-icon name={iconDocument} width='28px' height='28px'></c-mobility-icon>
+							</span>
+						</div>
+					</div>
+					<div class="btn-box btn-box-last">
+						<div class="btn btn-outline-primary btn-square p-auto" onclick={toggleEvent}
+							onmouseover={onOverCalendar} onmouseout={onOutCalendar}>
+							<span class="btn-icon">
+								<c-mobility-icon name={iconCalendar} width='28px' height='28px'></c-mobility-icon>
+							</span>
+						</div>
+					</div>
+					<div class="btn-box-action">
+						<button class="btn btn-primary btn-action" onclick={onConvertLead}
+							disabled={leadDisableConvert}>
+							{_label.leadDetail_convert}
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Fine Footer -->
+	</template>
+
+	<template if:false={authorized}>
+		<c-mobility-unauthorized></c-mobility-unauthorized>
+	</template>
+
+</template>

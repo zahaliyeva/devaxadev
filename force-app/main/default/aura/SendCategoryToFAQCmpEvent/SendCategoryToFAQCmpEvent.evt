@@ -1,0 +1,5 @@
+<aura:event type="COMPONENT">
+    <aura:attribute name="Category" type="String"/>
+    <aura:attribute name="SubCategory" type="String"/>
+    <aura:attribute name="Lob" type="String"/>
+</aura:event>

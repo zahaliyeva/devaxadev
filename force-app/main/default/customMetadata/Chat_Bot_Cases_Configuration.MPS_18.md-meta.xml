@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>MPS_polizza_vita_documenti</label>
+    <protected>false</protected>
+    <values>
+        <field>area_case__c</field>
+        <value xsi:type="xsd:string">Protezione Vita</value>
+    </values>
+    <values>
+        <field>categoria_case__c</field>
+        <value xsi:type="xsd:string">Richiesta documenti di polizza</value>
+    </values>
+    <values>
+        <field>chat_level_1__c</field>
+        <value xsi:type="xsd:string">Assistenza generica sulle tue polizze</value>
+    </values>
+    <values>
+        <field>chat_level_2__c</field>
+        <value xsi:type="xsd:string">Protezione Vita</value>
+    </values>
+    <values>
+        <field>chat_level_3__c</field>
+        <value xsi:type="xsd:string">Richiesta documenti</value>
+    </values>
+    <values>
+        <field>homePageFrom__c</field>
+        <value xsi:type="xsd:string">AXA MPS</value>
+    </values>
+    <values>
+        <field>record_type_case__c</field>
+        <value xsi:type="xsd:string">NonMotor</value>
+    </values>
+    <values>
+        <field>titolare_iniziale_case__c</field>
+        <value xsi:type="xsd:string">Skill_No_Motor_Protezione_Vita</value>
+    </values>
+</CustomMetadata>

@@ -1,0 +1,13 @@
+.link {
+    height: 1.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.link > span {
+    
+   
+    line-height: 50px;
+    text-align: center;
+    
+}

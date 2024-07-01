@@ -1,0 +1,21 @@
+<template>
+    <template if:true={spinner}>
+    	<lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+    </template>
+
+    <template if:false={hidden}>
+        <template if:false={spinner}>
+            <c-data-table-override
+                key-field={keyField}
+                selected-rows={selectedRows}
+                onrowselection={rowSelectionCallback}
+                max-row-selection={maxRowSelection}
+                data={data}
+                columns={columns}
+                hide-checkbox-column={hideCheckboxColumn}
+                onrowaction={rowActionCallback}>
+            >
+            </c-data-table-override>
+        </template>
+    </template>
+</template>

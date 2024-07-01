@@ -1,0 +1,5 @@
+<aura:event type="APPLICATION" description="The event fires when Mobile Phone from Recapiti section change">
+
+ <aura:attribute name="changedMobilePhone" type="Map"/>
+
+</aura:event>

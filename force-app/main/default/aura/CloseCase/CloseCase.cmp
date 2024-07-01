@@ -1,0 +1,89 @@
+<aura:component controller="CloseCaseServer" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <!--  <lightning:spinner aura:id="mySpinner" class="slds-hide" />-->
+    <aura:handler event="aura:waiting" action="{!c.showSpinner}"/>
+    <aura:handler event="aura:doneWaiting" action="{!c.hideSpinner}"/>
+    <aura:attribute name="Spinner" type="boolean" default="false"/>
+    <aura:attribute name="isMobility" type="Boolean" default="false"/>
+    
+    <aura:attribute name="caseStatus" type="String" /> <!-- OAVERSANO 05/12/2018 : FIX -->
+    
+    <!--loading spinner start... style=Brand Medium (blue dots)-->
+    <aura:if isTrue="{!v.Spinner}">
+        <div aura:id="spinnerId" class="slds-spinner_container">
+            <div class="slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </aura:if>
+    <!-- Loading spinner end-->     
+    
+    <!-- OAVERSANO 23/01/2019 : NMA Fix Mobile - START -->
+    <aura:registerEvent name="tabclosing" type="c:tabclosing" />
+    <!-- OAVERSANO 23/01/2019 : NMA Fix Mobile - END -->
+    
+    <aura:attribute name="jsDebug" type="Boolean" default="true" required="true" /> <!-- SOLO PER DEBUG -->
+    <aura:attribute name="comment" type="String" default="" required="true" />
+    <aura:attribute name="caseId" type="Id" default="" />
+    <aura:attribute name="error" type="String" default="" />
+    <aura:attribute name="MandatoryInputsMissing" type="Boolean" default="false" /> 
+    <aura:attribute name="OrgLink" type="String" default="" required="true" /> 
+    <aura:attribute name="isCommentToBeInsert" type="Boolean" default="true"/>
+    <aura:attribute name="isFunctionalityAvailable" type="Boolean" default="false"/><!--new-->
+    <aura:attribute name="showWhite" type="Boolean" default="true" required="true" />    
+    <aura:attribute name="remainingCharacters" type="String" default="1000" /> <!-- OAVERSANO 30/10/2018 : Nuovo Modello di Assistenza ENHANCEMENT -->
+
+    <aura:if isTrue="{! not(v.showWhite) }">
+       <aura:if isTrue="{!v.isFunctionalityAvailable == false}">
+       <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error" role="alert">
+           <h3>Attenzione! Non è possibile annullare richieste già evase.</h3>
+       </div>                
+                    
+        <aura:set attribute="else">
+        <div>
+            <aura:if isTrue="{!not(v.isMobility)}">
+            <div>
+                <img src="{!$Resource.LogoAxaAssistenza}" style="width:275px;" />
+            </div>
+			</aura:if>
+            <form class="slds-form--stacked">
+                
+                
+                <h1 class="slds-text-heading_medium" title="Chiudi case" style="margin-top: 20px;">Annulla Richiesta</h1>
+                <br></br>          
+
+                        <aura:if isTrue="{!v.isCommentToBeInsert}">
+                            <!-- <lightning:textarea label="Inserisci la motivazione per l'annullamento del Case" value="{! v.comment }" required="true" />-->
+                            <label class="slds-form-element__label" for="comment">
+                                <abbr class="slds-required" title="required">*</abbr> Inserisci la motivazione per l'annullamento della richiesta </label>                       
+                            <lightning:textarea  value="{! v.comment }" aura:id="comment"  maxlength="1000" onchange="{!c.countCharacters}"/> <!-- OAVERSANO 30/10/2018 : Nuovo Modello di Assistenza ENHANCEMENT -->
+                            	<div class="slds-text-font_monospace slds-text-align_right">Caratteri rimanenti : {!v.remainingCharacters}</div> <!-- OAVERSANO 30/10/2018 : Nuovo Modello di Assistenza ENHANCEMENT --> 
+                            
+                            <div class="slds-clearfix" style="margin-top: 20px;">
+                                <div class="slds-align_absolute-center" style="margin-bottom: 10px;">
+                                    <lightning:button label="Indietro" onclick="{!c.cancelBtn}" />
+                                    <lightning:button class="slds-button_brand" label="Annulla richiesta" onclick="{!c.closeCaseBtn}" />
+                                </div>
+                                <aura:if isTrue="{!v.MandatoryInputsMissing}">      
+                                    <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error" role="alert">
+                                        <h3>{! v.error }</h3>
+                                    </div>
+                                </aura:if>
+                            </div>
+                            <aura:set attribute="else">                    
+                                <div class="slds-align_absolute-center" style="margin-bottom: 10px;"> 
+                                    <label class="slds-form-element__label">La tua richiesta è stata annullata con successo.</label>
+                                </div>                
+                                <div class="slds-align_absolute-center" style="margin-bottom: 10px;"> 
+                                    <lightning:button label="Termina" onclick="{!c.closePage}" />
+                                </div>
+                            </aura:set>
+                        </aura:if>  
+                </form>
+            </div>
+            </aura:set>   
+         </aura:if>           
+    </aura:if>
+</aura:component>

@@ -1,0 +1,54 @@
+<template>
+    <template if:true={spinner}>
+        <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+    </template>
+    <article class="slds-card">
+        <div class="slds-card__header slds-grid">
+            <!-- CARD HEADER START -->
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__body">
+                    <h2 class="slds-card__header-title">
+                        <a href="javascript:void(0);" class="slds-card__header-link slds-truncate" title="Azienda">
+                            <span>Polizze Associate</span>
+                        </a>
+                    </h2>
+                </div>
+            </header>
+            <!-- CARD HEADER END -->
+        </div>
+        <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+            <thead>
+                <tr class="slds-line-height_reset">
+                    <th scope="col">Polizza Numero</th>
+                    <th scope="col">Nome Contraente</th>
+                    <th scope="col">Codice Fiscale/P.Iva Contraente</th>                    
+                    <th scope="col">Prodotto</th>
+                    <th scope="col">Compagnia</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>            
+            <template for:each={policiesResult.listPolicyResult} for:index="index" for:item="record">
+                <tr key={record.Id}>
+                    <td>{record.Name}</td>
+                    <td>{record.CUID__r.Name}</td>
+                    <td>{record.Policy_Holder_Fiscal_Id__c}</td>
+                    <td>{record.Product__c}</td>  
+                    <td>{techCompany}</td>
+                    <td><button class="slds-button slds-button_neutral" onclick={onAssociate} data-index={index}>Associa</button></td>
+                </tr>
+            </template>            
+            <template for:each={policiesResult.listPolicyResultAAF} for:index="index" for:item="record">
+                <tr key={record.Id}>
+                    <td>{record.Name}</td>
+                    <td>{record.Subscriber_national_identifier__r.Name}</td>
+                    <td>{record.Subscriber_national_identifier__r.Codice_Fiscale_AAF__c}</td>
+                    <td>{record.Product_code_ADP__c}</td>  
+                    <td><button class="slds-button slds-button_neutral" onclick={onAssociate} data-index={index}>Associa</button></td>              
+                </tr>
+            </template>
+        </tbody>
+        </table>
+    </article>
+    
+</template>

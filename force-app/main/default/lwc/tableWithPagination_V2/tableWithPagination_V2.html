@@ -1,0 +1,65 @@
+<template>
+    <!-- Tabella -->
+    <div class="container slds-m-bottom_x-small">
+        <div class="container slds-m-bottom_x-small">
+    <c-custom-data-table-flow 
+               data={recordsToDisplay}
+               columns={columnsToDisplay}
+               key-field="Id"
+               hide-checkbox-column="true"
+               onrowaction={handleRowAction}
+               default-sort-direction={defaultSortDirection}
+               sorted-direction={sortDirection}
+               sorted-by={sortedBy}
+               onsort={onHandleSort}
+    ></c-custom-data-table-flow >
+    </div>
+
+    <span style="display: none" class="slds-p-horizontal_x-small">{dynamicFilters}</span>
+    <!-- Bottoni -->
+    <div style="display: flex; justify-content: space-between; align-items: center;" class="container slds-m-bottom_x-small">
+        <lightning-button
+                    disabled={bDisableFirst}
+                    icon-name="utility:jump_to_left"
+                    label="Inizio"
+                    class="slds-p-horizontal_x-small"
+                    alternative-text="first page"
+                    onclick={firstPage}>
+        </lightning-button>
+
+        <lightning-button
+                   disabled={bDisableFirst}
+                   icon-name="utility:chevronleft"
+                   label="Indietro"
+                   class="slds-p-horizontal_x-small"
+                   alternative-text="Indietro"
+                   onclick={previousPage}
+                   icon-position="left"
+        ></lightning-button>
+    &nbsp;
+    <span class="slds-badge slds-p-horizontal_x-small">Pagina {pageNumber}&nbsp;di&nbsp;{totalPages}&nbsp;&nbsp;Pagine</span>
+    &nbsp;
+
+
+    <lightning-button
+                   class="slds-p-horizontal_x-small"
+                   disabled={bDisableLast}
+                   icon-name="utility:chevronright"
+                   label="Avanti"
+                   alternative-text="Avanti"
+                   onclick={nextPage}
+                   icon-position="right"
+    ></lightning-button>
+    <lightning-button
+                    class="slds-p-horizontal_x-small"
+                    disabled={bDisableLast}
+                    icon-name="utility:jump_to_right"
+                    label="Fine"
+                    alternative-text="last page"
+                    onclick={lastPage}
+                    icon-position="right">
+    </lightning-button>
+
+    </div>
+</div>
+    </template>

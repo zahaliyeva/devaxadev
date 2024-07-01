@@ -1,0 +1,27 @@
+<template>
+	<div class="mobility-report">
+		<template if:true={setData}>
+			<div class="info text-right">
+				<table class="info-table text-left">
+					<tbody>
+						<template for:each={setData.groupings} for:item='group'>
+							<tr key={group.key}>
+								<th>
+									<span class="info-color" style={group.style}>&nbsp;</span>
+								</th>
+								<th>{group.label}</th>
+							</tr>
+						</template>
+					</tbody>
+				</table>
+			</div>
+			<c-mobility-doughnut width="160px" height="160px" set-data={setData}></c-mobility-doughnut>
+			<span class="d-block mx-auto">
+				<!-- <a class='text-center' onclick={onOpenReport}>{_label.campaignDetail_moreInfo}</a> -->
+			</span>
+		</template> 
+		<template if:false={setData}>
+			<c-mobility-no-data show='true' no-image='true'></c-mobility-no-data>
+		</template>
+	</div>
+</template>

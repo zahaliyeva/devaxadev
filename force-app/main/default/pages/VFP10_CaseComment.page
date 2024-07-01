@@ -1,0 +1,24 @@
+<apex:page standardcontroller="Case"
+    extensions="VFC10_CaseCommentExtension" showHeader="false">
+    <!-- Uses publisher.js rather than interaction.js -->
+    <apex:includeScript value="/canvas/sdk/js/28.0/publisher.js"/>
+    <div>
+        <apex:form >
+            <!-- Creates a case comment and on complete notifies the Case Feed page
+                that a related list and the feed have been updated -->
+            <apex:actionFunction action="{!addComment}" name="addComment" rerender="out" 
+            oncomplete="Sfdc.canvas.publisher.publish(
+            {name : 'publisher.refresh',  payload : 
+            {feed: true, objectRelatedLists: {}}});"/>   
+            <apex:outputPanel id="out">
+            <apex:outputLabel value="Commento" style="padding:2px;color: #103184;font-weight: bold;font-size: 16px;font-family:Arial,Tahoma,Sans-Serif;" />
+                <apex:inputField value="{!comment.commentbody}"  style="width:98%; height:160px;" required="true" /> 
+                <apex:outputText style="color: #103184;font-weight: bold;position:relative;padding:2px;font-size: 14px;" value="Pubblico"/>
+                <apex:inputcheckbox value="{!comment.Ispublished}"  style="width:0,5%; height:15px;position:relative;top:3px;"/>
+            </apex:outputPanel>
+        </apex:form><br />
+        <button type="button" onclick="addComment();" style="position:fixed; bottom:0px; 
+        right:2px; padding: 5px 10px; font-size:13px;" id="cpbutton" > Salva Commento
+        </button>
+    </div>              
+</apex:page>

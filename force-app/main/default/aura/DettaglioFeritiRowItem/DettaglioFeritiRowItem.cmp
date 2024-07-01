@@ -1,0 +1,97 @@
+<!-- d.pirelli CAI DIGITALE START -->
+<!-- Child Lightning Component for Create New Row Instance-->
+<aura:component controller="VFC30_NewQuestionarioCAICTRL" >    
+    <!-- Aura Attribute for store single Testimone_Ferito__c Instance
+         And Store Index of Particular Instance -->
+    <aura:attribute name="TestimoniFeritiInstance" type="Testimone_Ferito__c"/>
+    <aura:attribute name="rowIndex" type="String"/>
+    <aura:attribute name="pickFields" type="String[]" default="['Veicolo__c']"/>
+    <aura:attribute name="Veicolo__c" type="String[]" default="[]"/>
+    <aura:attribute name="msgMissMatch" type="String" default="{!$Label.c.InvalidFormat}"/>
+    <aura:attribute name="patternPhone" type="String" /> 
+    <aura:attribute name="patternEmail" type="String" /> 
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <!-- Register 2 Lightning Event for handle add or Delete rows on Parent Component  -->
+    <aura:registerEvent name="DeleteRowEvt" type="c:deleteRowEvt"/>
+    <aura:registerEvent name="AddRowEvt" type="c:AddNewRowEvt"/>
+
+    <!-- Table Row -->  
+    <tr class="slds-text-title_caps">
+        <td>
+        Ferito    {!v.rowIndex + 1}
+        </td>
+        <td>
+                <lightning:layout horizontalAlign="center" multipleRows="true">
+                        <lightning:layoutItem flexibility="auto" padding="around-small" size="12" largeDeviceSize="6" mediumDeviceSize="6" smallDeviceSize="12">
+                            <div class="slds-form-element">
+                          
+                                <label class="slds-form-element__label" for="nomeFormFeriti">Nome</label>
+                                <div class="slds-form-element__control">
+                                    <ui:inputText aura:id="nomeFormFeriti" class="slds-input" value="{!v.TestimoniFeritiInstance.Nome__c}" />
+                                </div>
+                                <label class="slds-form-element__label" for="cognomeFormFeriti">Cognome</label>
+                                <div class="slds-form-element__control">
+                                    <ui:inputText aura:id="cognomeFormFeriti" class="slds-input" value="{!v.TestimoniFeritiInstance.Cognome__c}" />
+                                </div>
+                                <div class="slds-form-element__control">
+                                    <lightning:input type="date" name="Data di nascita" label="Data di nascita" value="{!v.TestimoniFeritiInstance.Data_Di_Nascita__c}"/>
+                                </div>
+                               <label class="slds-form-element__label" for="LuogoDiNascitaFormFeriti">Luogo Di Nascita</label>
+                                <div class="slds-form-element__control">
+                                    <ui:inputText aura:id="LuogoDiNascitaFormFeriti" class="slds-input" value="{!v.TestimoniFeritiInstance.Luogo_Di_Nascita__c}" />
+                                </div>
+                                <lightning:input  pattern ="{!v.patternEmail}" messageWhenPatternMismatch="{!v.msgMissMatch}" aura:id="EmailFormFeriti" type="email" name="Email" value="{!v.TestimoniFeritiInstance.Email__c}" label="Email" /> 
+                            </div>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem flexibility="auto" padding="around-small" size="12" largeDeviceSize="6" mediumDeviceSize="6" smallDeviceSize="12">
+                                <div class="slds-form-element">
+                              
+                                    <label class="slds-form-element__label" for="IndirizzoFormFeriti">Indirizzo Residenza</label>
+                                    <div class="slds-form-element__control">
+                                        <ui:inputText aura:id="IndirizzoFormFeriti" class="slds-input" value="{!v.TestimoniFeritiInstance.Indirizzo_Residenza__c}" />
+                                    </div>
+                                    <label class="slds-form-element__label" for="cittFormFeriti">Città Residenza</label>
+                                    <div class="slds-form-element__control">
+                                        <ui:inputText aura:id="cittFormFeriti" class="slds-input" value="{!v.TestimoniFeritiInstance.Citt_Residenza__c}" />
+                                    </div>
+                                    
+                                   <label class="slds-form-element__label" for="CapFormFeriti">Cap Residenza</label>
+                                    <div class="slds-form-element__control">
+                                        <ui:inputText aura:id="CapFormFeriti" class="slds-input" value="{!v.TestimoniFeritiInstance.CAP_Residenza__c}" />
+                                    </div>
+                                    <lightning:input pattern ="{!v.patternPhone}" messageWhenPatternMismatch="{!v.msgMissMatch}" aura:id="telFormFeriti" type="tel" label="Telefono" name="Telefono" value="{!v.TestimoniFeritiInstance.Telefono__c}" />
+                                    <div class="slds-form-element">
+                                            <lightning:select name="Veicolo" label="Veicolo" aura:id="mySelect" value="{!v.TestimoniFeritiInstance.Veicolo__c}" onchange="{!c.toggle}"  >
+                                                    <option></option>
+                                                <option>VEICOLO A (veicolo assicurato)</option>
+                                                <option>VEICOLO B (veicolo di controparte)</option>
+                                            </lightning:select>
+                                        </div>
+                                </div>
+                            </lightning:layoutItem>
+                    </lightning:layout>
+         </td>
+        <td>
+            <!-- conditionally Display Add or Delete Icons
+                 if rowIndex is 0 then show Add New Row Icon else show delete Icon
+             -->
+            <aura:if isTrue="{!v.rowIndex == 0}">
+                <a onclick="{!c.AddNewRow}">
+                  <lightning:icon iconName="utility:add" class="slds-icon slds-icon_small" size="small" alternativeText="add"/>
+                  <span class="slds-assistive-text">Add Icon</span>
+                </a>    
+              <aura:set attribute="else">
+                  <a onclick="{!c.removeRow}">
+                   <lightning:icon variant="error" iconName="utility:delete" class="slds-icon slds-icon_small" size="small" alternativeText="icon"/>
+                   <span class="slds-assistive-text">Delete Icon</span>
+                  </a>
+              </aura:set>
+            </aura:if>
+        </td>
+    </tr>
+    
+    
+</aura:component>
+
+<!-- d.pirelli CAI DIGITALE END -->

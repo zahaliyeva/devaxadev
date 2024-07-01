@@ -1,0 +1,110 @@
+<aura:component controller="SchedaClienteVoiceCallController">
+  <aura:attribute name="accountId" type="String" />
+  <aura:attribute name="vCall" type="VoiceCall[]" />
+  <lightning:navigation aura:id="navService"/>
+  <aura:attribute name="loading" type="Boolean" default="true"/>
+  <aura:handler name="init" value="{! this }" action="{! c.doInit }"/> 
+  
+    <article class="slds-card slds-card_boundary slds-m-top_medium">
+        <div class="slds-card__header slds-grid">
+          <header class="slds-media slds-media_center slds-has-flexi-truncate">
+            <div class="slds-media__figure">
+              <span class="slds-icon_container slds-icon-standard-account" title="Voice Call">
+                    <lightning:icon iconName="standard:call"/>
+              </span>
+            </div>
+            <div class="slds-media__body">
+              <h2 class="slds-card__header-title">
+                <a href="javascript:void(0);" class="slds-card__header-link slds-truncate not-active" title="Voice Call">
+                  <span>Voice Call</span>
+                </a>
+              </h2>
+            </div>
+          </header>
+        </div>
+        <div class="slds-card__body slds-card__body_inner">
+          <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_fixed-layout slds-table_resizable-cols">
+            <thead>
+              <tr class="slds-line-height_reset">
+                <th class="" scope="col">
+                  <div class="slds-truncate" title="Voice Call Id">ID</div>
+                </th>
+                <th class="" scope="col">
+                  <div class="slds-truncate" title="Area"> Area</div>
+                </th>
+                <th class="" scope="col">
+                  <div class="slds-truncate" title="Data Apertura"> Data Apertura</div>
+                </th>
+                <th class="" scope="col">
+                  <div class="slds-truncate" title="Mittente"> Mittente</div>
+                </th>
+                <th class="" scope="col">
+                  <div class="slds-truncate" title="Titolare"> Titolare</div>
+                </th>
+                <th class="" scope="col">
+                  <div class="slds-truncate" title="Stato"> Stato</div>
+                </th>
+                <th class="" scope="col">
+                  <div class="slds-truncate" title="IVR"> IVR</div>
+                </th>
+              </tr>
+            </thead>
+              <tbody>
+                <aura:if isTrue="{!v.loading}">
+                    <div class="spinner-container">
+                        <lightning:spinner alternativeText="Loading..." size="medium"/>
+                    </div>
+                </aura:if>
+                <aura:if isTrue="{!and(not(v.loading), v.vCall.length > 0)}">
+                    <aura:iteration items="{!v.vCall}" var="vc">
+                        <tr class="slds-hint-parent">
+                            <th data-label="Voice Call Id" scope="row">
+                            <div id="{!vc.Id}" class="slds-truncate link" onclick="{!c.navigateToSObject}">
+                                {!vc.Id}
+                            </div>
+                            </th> 
+                            <td data-label="Area">
+                            <div class="slds-truncate">{!vc.LOB__c}</div>
+                            </td>
+                            <td data-label="Data Apertura">
+                              <div class="Titolare slds-truncate"><ui:outputDateTime value="{!vc.CreatedDate}" format="DD/MM/YYYY hh:mm"/>
+                              </div>
+                              </td>
+                            <td data-label="Mittente">
+                            <div class="slds-truncate">{!vc.FromPhoneNumber}</div>
+                            </td>
+                           
+                          
+                          
+                            <td data-label="Titolare">
+                              <div class="slds-truncate">{!vc.Owner.Name}</div>
+                            </td>
+
+                            <td data-label="Stato">
+                              <div class="slds-truncate">{!vc.Gestione_Chiamata__c}</div>
+                              </td>
+
+                            <td data-label="IVR">
+                              <div class="slds-truncate">{!vc.IVR_Name__c}</div>
+                              </td>
+                        </tr>
+                    </aura:iteration>
+                </aura:if>
+                <aura:if isTrue="{!and(not(v.loading), empty(v.vCall))}">
+                    <tr>
+                      <td align="center" colspan="7">  
+                      <div class="slds-text-heading_small no-result slds-text-align_center slds-m-vertical_large"
+                    title="{!v.errorMessageResult ? 'Errore: non è possibile mostrare i risultati' : 'Non sono presenti chiamate vocali'}">
+                            {!v.errorMessageResult ? 'Errore: non è possibile mostrare i risultati' : 'Non sono presenti chiamate vocali'}
+                        </div>
+                      </td>
+                  </tr>    
+                </aura:if>
+              </tbody>
+            </table>
+        </div>
+        <footer class="slds-card__footer slds-border_top slds-align_absolute-center">
+            <button class="slds-button slds-button_neutral" disabled="{! empty(v.vCall) }" onclick="{!c.onVisualizzaTutto}">Visualizza Tutto</button>
+        </footer>
+      </article>
+</aura:component>

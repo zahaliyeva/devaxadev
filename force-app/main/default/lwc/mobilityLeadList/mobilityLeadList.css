@@ -1,0 +1,13 @@
+.padding-border {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #E5E5E5;
+}
+
+.arrow {
+    min-width: 10px;
+    width: 15px;
+    max-width: 20px;
+    margin-top: 10px;
+    cursor: pointer;
+}

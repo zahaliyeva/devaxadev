@@ -1,0 +1,37 @@
+<template>
+	<c-mobility-spinner show={spinner} show-overlay="true"></c-mobility-spinner>
+	<c-mobility-messages model={messages} confirm-success-callback={closeCallbackReload}></c-mobility-messages>
+
+	<template if:true={authorized}>
+		<div class="overload-contain overload-on-top" style="z-index: 10000;">
+			<div class="overload-contain-child">
+				<div class="overload-element">
+					<div class="row">
+						<div class="col-12">
+							<h1>Perchè non era interessato?</h1>
+							<h3>Motivo</h3>
+							
+							<div class='row select nowrap justify-content-between mb-1'>
+								<div class='col-12 mr-auto'>
+									<select class="empty" onchange={reasonChange}>
+										<template for:each={reason} for:item='reasonItem'>
+											<option key={reasonItem.value} value={reasonItem.value}>{reasonItem.label}</option>
+										</template>
+									</select>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-12 text-right mt-4">
+							<div class="btn" onclick={onClose}>Annulla</div>
+							<div class="btn btn-primary" onclick={onProccessNotInterested}>Salva</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</template>
+	<template if:false={authorized}>
+		<c-mobility-unauthorized></c-mobility-unauthorized>
+	</template>
+</template>

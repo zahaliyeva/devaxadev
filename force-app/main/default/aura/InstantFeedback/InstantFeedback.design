@@ -1,0 +1,4 @@
+<design:component label="Instant Feedback">
+    <design:attribute name="origin" label="Feedback origin" />
+    <design:attribute name="recordType" label="Record Type" />
+</design:component>

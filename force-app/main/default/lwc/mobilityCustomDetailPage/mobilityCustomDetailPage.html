@@ -1,0 +1,35 @@
+<template>
+    <template if:true={showDetail} class = "slds-scope-removed">
+        <c-mobility-layout hook={hookCustomLayout} type-layout='detail' object-name={recordType}
+            record-id={recordId} ready-callback={readyCallback} save-callback={saveCallback}
+            params={params} load-callback={loadCallback}>
+        </c-mobility-layout>
+    </template>
+
+
+
+    	<!-- Inizio Footer solo per recordtype -->
+        <template if:true={showFooter}>
+                    <div class="footer row justify-content-between fixed-bottom">
+                        <div class="col-2 up"> 
+                            <a onclick={scroll} onmouseout={onOutScrollTop} onmouseover={onOverScrollTop}>
+                                {_label.leadListView_up}
+                                <span class="pl-2">
+                                    <c-mobility-icon name='arrow-up' width='10.5px' height='10.5px'>
+                                    </c-mobility-icon>
+                                </span>
+                            </a>
+                        </div>
+                        <div class="col-4 action ml-auto text-right">
+                            <div class="row" style="flex-flow: nowrap;">
+                                <div class="btn-box-action" onclick={gotoURL} >
+                                    <div class="btn btn-outline-primary btn-action">
+                                        Visualizza documento
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        </template>
+		<!-- Fine Footer -->
+</template>

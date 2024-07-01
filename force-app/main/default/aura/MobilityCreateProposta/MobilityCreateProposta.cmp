@@ -1,0 +1,23 @@
+<aura:component controller="MobilityCreatePropostaController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader" access="global" >
+    <aura:attribute name="userInfo" type="User" default=""/> 
+    <aura:attribute name="opportunityInfo" type="Opportunity" default=""/> 
+    <aura:attribute name="recordId" type="String" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <aura:html tag="style">
+        .slds-backdrop {
+        background: rgba(43, 40, 38, 0) !important;
+        }
+        .modal-body {
+        background: rgba(0, 0, 0, 0) !important;
+        box-shadow: none !important;
+        }
+        .closeIcon {
+        display:none !important;
+        }
+        .desktop {
+        overflow: visible !important;
+        }        
+    </aura:html>   
+    
+</aura:component>

@@ -1,0 +1,11 @@
+<template>
+    <div class="slds-box slds-theme--default">
+        <lightning-button label="Lavora Lead" title="Lavora Lead" onclick={OpenModal} class="slds-m-left_x-small" style = "border-left:-5"></lightning-button>
+    </div>
+    <template if:true={openModal}>
+        <c-lead-m-p-s-manager-modal
+        record-id={recordId}
+        close-callback={OnCloseModal}>
+        </c-lead-m-p-s-manager-modal>
+    </template>
+</template>

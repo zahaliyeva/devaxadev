@@ -1,0 +1,1 @@
+<aura:event type="COMPONENT" description="Evento lanciato dal componente storicoContatti in caso di errore o di assenza di interazioni"/>

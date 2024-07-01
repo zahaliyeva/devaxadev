@@ -1,0 +1,648 @@
+<apex:page standardStylesheets="true" applyBodyTag="false" docType="html-5.0" standardController="Event" extensions="NewEventLeadCtrl" sidebar="false" id="NewEventLead" > 
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" lang="en">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+        <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+        
+        
+        <script type="text/javascript">
+        
+        $(function() {
+            if ( $('#data_nascita').type != 'date' ){
+                
+                $('#data_nascita').datepicker( { dateFormat: 'dd/mm/yy' });
+                
+                var dataNascita = new Date($('#data_nascita').val());
+                
+                
+                if(!isNaN(dataNascita.getDate()))
+                    document.getElementById("data_nascita").value = getFormattedDate(dataNascita);
+                
+                
+            }   
+            
+        });   
+        
+        $(function() {
+            if ( $('#Mortgage_Expiration_Date').type != 'date' ){
+                
+                $('#Mortgage_Expiration_Date').datepicker( { dateFormat: 'dd/mm/yy' });
+                
+                var dataMutuo = new Date($('#Mortgage_Expiration_Date').val());
+                
+                
+                if(!isNaN(dataMutuo.getDate()))
+                    document.getElementById("Mortgage_Expiration_Date").value = getFormattedDate(dataMutuo);
+                
+                
+            }   
+            
+        });     
+        
+        jQuery.browser = {};
+        (function () {
+            jQuery.browser.msie = false;
+            jQuery.browser.version = 0;
+            if (navigator.userAgent.match(/MSIE ([0-9]+)\./)) {
+                jQuery.browser.msie = true;
+                jQuery.browser.version = RegExp.$1;
+            }
+        })();
+        
+        function getFormattedDate(date) {
+            var year = date.getFullYear();
+            var month = (1 + date.getMonth()).toString();
+            month = month.length > 1 ? month : '0' + month;
+            var day = date.getDate().toString();
+            day = day.length > 1 ? day : '0' + day;
+            return day + '/' + month + '/' + year;
+        }
+
+        </script>
+        
+         
+        <head>
+            <apex:slds />       
+        </head> 
+        <style > 
+            span.dateFormat { display:none; } 
+        </style>
+        <style type="text/css"> 
+            .myheight{
+            min-height: 10px!important;
+            height:20px!important;
+            line-height: 0.875rem!important;
+            }
+
+            .myheightarea{
+            min-height: 10px!important;
+            height:80px!important;
+            line-height: 0.875rem!important;
+            }
+            
+            #modalStyle{
+            background-color: yellow;
+            height:640px;
+            }
+            
+            
+        </style>
+        
+        
+        <body class="slds-scope">
+            <div class="slds" id="myDiv">
+                <div class="slds-m-left--x-small slds-p-right--x-small">
+                    
+                    
+                    <!-- PAGE HEADER -->    
+                    <div class="slds-page-header" role="banner">
+                        <div class="slds-grid">
+                            <div class="slds-col">
+                                <!-- HEADING AREA -->
+                                
+                                <div class="slds-media slds-no-space slds-grow">
+                                    <div class="slds-media__figure">
+                                        <svg aria-hidden="true" class="slds-icon slds-icon-standard-lead slds-icon--large">
+                                            <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/standard-sprite/svg/symbols.svg#event')}"></use>
+                                        </svg>
+                                    </div>
+                                    <div class="slds-media__body">
+                                        <p class="slds-text-title--caps slds-line-height--reset">Nuovo Evento</p>
+                                        
+                                    </div>
+                                </div>
+                                
+                                <!-- / HEADING AREA -->
+                                
+                                
+                            </div>
+                            
+                        </div>
+                        
+                        
+                    </div> 
+                        
+                    <apex:form id="msgform">
+                        <apex:outputPanel styleClass="myCustomMessage" rendered="{!showError}" id="msgs">
+                            <br/>            
+                            <div class="slds-notify slds-notify--alert slds-theme--error slds-theme--alert-texture" role="alert">                                                       
+                                <span class="slds-assistive-text">Error</span>
+                                <h2>         
+                                    <apex:outputtext value="{!errorMessage}" escape="false"/>
+                                </h2>
+                                
+                            </div>
+                            
+                        </apex:outputPanel>
+                    </apex:form>
+                    <!-- / PAGE HEADER -->
+                    
+                    
+                    
+                    <!-- BUTTONS -->
+                    <apex:form >
+                        
+                        <div class="slds-align--absolute-center">
+                            <div class="slds-text-align--center" role="group">
+                                
+                                <br/>  
+                                <apex:commandButton value="Salva" action="{!save}" styleClass="slds-button slds-button--neutral" id="BottoneSalva" status="status_spinner" >                                     
+                                </apex:commandButton> 
+                                <apex:commandButton value="Annulla" action="{!cancel}" styleClass="slds-button slds-button--neutral" id="BottoneCancella" /> 
+                                
+                            </div> 
+                        </div>  
+
+                        <!-- START - INFORMAZIONI LEAD -->
+                        <div id="container_dettagliEvento" class="slds-m-top--small slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--1-of-1" >
+                            <h3 class="slds-section-title--divider"> Dettagli calendario</h3>    
+                        </div>
+                        <br/>      
+                        
+                        <div class="slds-grid slds-wrap slds-grid--pull-padded ">
+                            <div class="slds-container--large slds-form--horizontal slds-col--padded slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                <div class="slds-form--stacked">
+                                    <div class="slds-lookup" data-select="multi" data-scope="single" data-typeahead="true">
+                                        <div class="slds-form-element">
+                                            <label class="slds-form-element__label" for="lookup" style ="vertical-align: middle"><abbr class="slds-required" title="required">*</abbr>Assegnato a:</label>
+                                            <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon--right">
+                                                <svg aria-hidden="true" class="slds-input__icon">
+                                                    <use xlink:href="{!URLFOR ($Resource.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#search')}"></use>
+                                                </svg>                              
+                                                <input id="lookup" value="{!DefaultLookup}" class="slds-input myheight" type="text" aria-autocomplete="list" role="combobox" aria-expanded="false" aria-activedescendant="" onchange="checkvalue()" />    
+                                            </div>
+                                        </div>
+                                        <div class="slds-lookup__menu slds-dropdown_right_xx-small slds-popover" role="listbox" id="results" style="display:none">
+                                            <div class="slds-lookup__item">
+                                                <button class="slds-button">
+                                                    <svg aria-hidden="true" class="slds-icon slds-icon-text-default slds-icon--small">
+                                                        <use xlink:href="{!URLFOR ($Resource.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#search')}"></use>
+                                                    </svg>&quot;<span id="keyword"></span>&quot; in Users</button>
+                                            </div>
+                                            <ul class="slds-lookup__list" role="presentation" id="ui_results"></ul> 
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                     
+                            <br/>
+                            <div id="container_vuoto1" class="slds-container--large slds-form--horizontal slds-col--padded slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">    
+                                <div class="slds-form-element__control"></div>
+                            </div>
+                            <br/>
+                            <div id="container_subject" class="slds-container--large slds-col--padded slds-form--horizontal slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    <label class="slds-form-element__label" style="vertical-align: middle" for="subject"><abbr class="slds-required" title="required">*</abbr>Oggetto:</label> 
+                                    <div class="slds-form-element" style="display:inline"> 
+                                        <div class="slds-form-element__control">
+                                            <apex:selectlist styleClass="slds-input myheight"  id="subject" value="{!Event.Subject}" multiselect="false" size="1">  
+                                                <apex:selectOptions value="{!SubjectList}"/>         
+                                            </apex:selectlist>                           
+                                        </div>
+                                    </div>
+                                </div>  
+                            <br/> 
+                            <div class="slds-container--large slds-form--horizontal slds-col--padded slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                <div class="slds-form--stacked">
+                                    <div class="slds-lookup" data-select="multi" data-scope="single" data-typeahead="true">
+                                        <div class="slds-form-element">
+                                            <label class="slds-form-element__label" for="lookup2" style ="vertical-align: middle">Nome:</label>
+                                            <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon--right">
+                                                <svg aria-hidden="true" class="slds-input__icon">
+                                                    <use xlink:href="{!URLFOR ($Resource.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#search')}"></use>
+                                                </svg>                              
+                                                <input id="lookup2" value="{!DefaultLookupLead}" class="slds-input myheight" type="text" aria-autocomplete="list" role="combobox" aria-expanded="false" aria-activedescendant="" onchange="checkvalue2()" disabled="true" />    
+                                            </div>
+                                        </div>
+                                        <div class="slds-lookup__menu slds-dropdown_right_xx-small slds-popover" role="listbox" id="results2" style="display:none">
+                                            <div class="slds-lookup__item">
+                                                <button class="slds-button">
+                                                    <svg aria-hidden="true" class="slds-icon slds-icon-text-default slds-icon--small">
+                                                        <use xlink:href="{!URLFOR ($Resource.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#search')}"></use>
+                                                    </svg>&quot;<span id="keyword2"></span>&quot; in Leads</button>
+                                            </div>
+                                            <ul class="slds-lookup__list" role="presentation" id="ui_results2"></ul> 
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                     
+                            <br/>
+                            <div id="container_data_inizio" class="slds-container--large slds-form--horizontal slds-col--padded slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">    
+                                    <label class="slds-form-element__label" style ="vertical-align: middle" for="data_inizio"><abbr class="slds-required" title="required">*</abbr>Inizio:</label>  
+                                    <div class="slds-form-element" style="display:inline">                            
+                                        <div class="slds-form-element__control">
+                                            
+                                            <apex:inputField id="data_inizio" value="{!dateContainer.Effective_date__c}" styleclass="slds-input myheight" type="text"/>
+                                            <script type="text/javascript">
+                                            // Wrap the datePicker control within slds div to stylish it 
+                                            var datePickerLexWrapper;
+                                            if (datePickerLexWrapper == null) {
+                                                datePickerLexWrapper = document.createElement('div');
+                                                datePickerLexWrapper.className = 'slds';
+                                                datePickerLexWrapper.id = 'datePicker_slds_wrapper';
+                                                document.addEventListener("DOMContentLoaded", function(event) { 
+                                                    var dtp = document.getElementById('datePicker');
+                                                    if (dtp != null) {
+                                                        var dtpParent = dtp.parentElement;
+                                                        dtpParent.appendChild(datePickerLexWrapper);
+                                                        datePickerLexWrapper.appendChild(dtp);
+                                                    }
+                                                });
+                                            }
+                                            </script>
+                                        </div>
+                                    </div>
+                                    <div class="slds-form-element" style="display:inline">                            
+                                        <div class="slds-form-element__control">
+                                            <apex:selectlist styleClass="slds-input myheight"  id="hourpicker" value="{!inTime}" multiselect="false" size="1">  
+                                                <apex:selectOptions value="{!InTimesAppointment}"/>   
+                                                <apex:actionSupport event="onchange" action="{!updateEventEndTime}" rerender="hourpicker2"/>      
+                                            </apex:selectlist>                                         
+                                        </div>
+                                    </div>                                       
+                                    
+                            </div>       
+                            <br/>
+                            <div id="container_private" class="slds-container--large slds-form--horizontal slds-col--padded slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">    
+                                    <label class="slds-form-element__label " style="vertical-align: middle" for="isprivate">Privato:</label> 
+                                    <div class="slds-form-element" style="display:inline">
+                                        <div class="slds-form-element__control">
+                                            <label class="slds-checkbox">
+                                                <apex:inputcheckbox id="isprivate" styleclass="slds-input myheight" value="{!Event.IsPrivate}" />
+                                                <span class="slds-checkbox--faux"></span>
+                                            </label> 
+                                        </div>  
+                                    </div>
+                            </div>
+                            <br/>
+                            <div id="container_data_fine" class="slds-container--large slds-form--horizontal slds-col--padded slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">    
+                                    <label class="slds-form-element__label" style ="vertical-align: middle" for="data_fine"><abbr class="slds-required" title="required">*</abbr>Fine:</label>  
+                                    <div class="slds-form-element" style="display:inline">                            
+                                        <div class="slds-form-element__control">
+                                            
+                                            <apex:inputField id="data_fine" value="{!dateContainer2.Effective_date__c}" styleclass="slds-input myheight" type="text"/>
+                                            <script type="text/javascript">
+                                            // Wrap the datePicker control within slds div to stylish it 
+                                            var datePickerLexWrapper;
+                                            if (datePickerLexWrapper == null) {
+                                                datePickerLexWrapper = document.createElement('div');
+                                                datePickerLexWrapper.className = 'slds';
+                                                datePickerLexWrapper.id = 'datePicker_slds_wrapper';
+                                                document.addEventListener("DOMContentLoaded", function(event) { 
+                                                    var dtp = document.getElementById('datePicker');
+                                                    if (dtp != null) {
+                                                        var dtpParent = dtp.parentElement;
+                                                        dtpParent.appendChild(datePickerLexWrapper);
+                                                        datePickerLexWrapper.appendChild(dtp);
+                                                    }
+                                                });
+                                            }
+                                            </script>
+                                        </div>
+                                    </div>
+                                    <div class="slds-form-element" style="display:inline">                            
+                                        <div class="slds-form-element__control">
+                                            <apex:selectlist styleClass="slds-input myheight"  id="hourpicker2" value="{!outTime}" multiselect="false" size="1">  
+                                                <apex:selectOptions value="{!OutTimesAppointment}"/>         
+                                            </apex:selectlist>                                         
+                                        </div>
+                                    </div>                                     
+                                    
+                            </div>
+                            <div id="container_vuoto1" class="slds-container--large slds-form--horizontal slds-col--padded slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">    
+                                <div class="slds-form-element__control"></div>
+                            </div>
+                            <br/>
+                            <div id="container_type" class="slds-container--large slds-col--padded slds-form--horizontal slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                    <label class="slds-form-element__label" style="vertical-align: middle" for="type">Tipo:</label> 
+                                    <div class="slds-form-element" style="display:inline"> 
+                                        <div class="slds-form-element__control">
+                                            <apex:selectlist styleClass="slds-input myheight"  id="type" value="{!Event.Type}" multiselect="false" size="1">  
+                                                <apex:selectOptions value="{!TypeList}"/>         
+                                            </apex:selectlist>                           
+                                        </div>
+                                    </div>
+                                </div>  
+                            <br/> 
+                            <div id="container_vuoto1" class="slds-container--large slds-form--horizontal slds-col--padded slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">    
+                                <div class="slds-form-element__control"></div>
+                            </div>
+                            <br/>       
+                        </div>
+
+                        <div id="container_dettagliEvento" class="slds-m-top--small slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--1-of-1" >
+                            <h3 class="slds-section-title--divider"> Altre informazioni</h3>    
+                        </div>
+                        <br/>
+                        <div class="slds-grid slds-wrap slds-grid--pull-padded ">
+                            <div id="container_location" class="slds-container--large slds-form--horizontal slds-col--padded slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">    
+                                        <label class="slds-form-element__label" style ="vertical-align: middle" for="location">Luogo:</label> 
+                                        <div class="slds-form-element" style="display:inline">  
+                                            <div class="slds-form-element__control">
+                                                <apex:inputtext styleClass="slds-input myheight"  id="location" value="{!Event.Location}"/>              
+                                        </div>
+                                    </div>
+                                </div>
+                            <div id="container_phone" class="slds-container--large slds-form--horizontal slds-col--padded slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">    
+                                        <label class="slds-form-element__label" style ="vertical-align: middle" for="phone">Telefono:</label> 
+                                        <div class="slds-form-element" style="display:inline">  
+                                            <div class="slds-form-element__control">
+                                                <apex:inputtext styleClass="slds-input myheight"  id="phone" value="{!relatedPhone}" disabled="true"/>              
+                                        </div>
+                                    </div>
+                                </div>
+                            <div id="container_TimeAs" class="slds-container--large slds-col--padded slds-form--horizontal slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                                        <label class="slds-form-element__label" style="vertical-align: middle" for="timeAs">Mostra ora come:</label> 
+                                        <div class="slds-form-element" style="display:inline"> 
+                                            <div class="slds-form-element__control">
+                                                <apex:selectlist styleClass="slds-input myheight"  id="timeAs" value="{!Event.ShowAs}" multiselect="false" size="1">  
+                                                    <apex:selectOptions value="{!ShowTimeAsList}"/>         
+                                                </apex:selectlist>                           
+                                            </div>
+                                        </div>
+                            </div>  
+                            <div id="container_email" class="slds-container--large slds-form--horizontal slds-col--padded slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">    
+                                        <label class="slds-form-element__label" style ="vertical-align: middle" for="email">Email:</label> 
+                                        <div class="slds-form-element" style="display:inline">  
+                                            <div class="slds-form-element__control">
+                                                <apex:inputtext styleClass="slds-input myheight"  id="email" value="{!relatedEmail}" disabled="true"/>              
+                                        </div>
+                                    </div>
+                                </div>
+                            <br/>
+                        </div>
+
+                        <div id="container_dettagliEvento" class="slds-m-top--small slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--1-of-1" >
+                            <h3 class="slds-section-title--divider"> Informazioni descrizione</h3>    
+                        </div>
+                        <br/>
+                        <div class="slds-grid slds-wrap slds-grid--pull-padded ">
+                            <div id="container_description" class="slds-container--large slds-form--horizontal slds-col--padded slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">    
+                                        <label class="slds-form-element__label" style ="vertical-align: top" for="description">Descrizione:</label> 
+                                        <div class="slds-form-element" style="display:inline">  
+                                            <div class="slds-form-element__control">
+                                                <apex:inputTextarea styleClass="slds-input myheightarea"  id="description" value="{!Event.Description}"/>              
+                                        </div>
+                                    </div>
+                                </div>
+                            <br/>
+                            <div id="container_vuoto1" class="slds-container--large slds-form--horizontal slds-col--padded slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">    
+                                <div class="slds-form-element__control"></div>
+                            </div>
+                            <br/>    
+                        </div>
+
+               <div id="container_reminderTask" class="slds-m-top--small slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--1-of-1" >
+                            <h3 class="slds-section-title--divider"> Promemoria</h3>    
+                        </div>
+                        <br/>
+                        <div class="slds-grid slds-wrap slds-grid--pull-padded ">
+                            <div id="container_reminder" class="slds-container--large slds-form--horizontal slds-col--padded slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">    
+                                    <label class="slds-form-element__label " style="vertical-align: middle" for="isreminder">{!$ObjectType.Task.Fields.isReminderSet.Label}:</label> 
+                                    <div class="slds-form-element" style="display:inline">
+                                        <div class="slds-form-element__control">
+                                            <label class="slds-checkbox">
+                                                <apex:inputcheckbox id="isreminder" styleclass="slds-input myheight" value="{!Event.IsReminderSet}">
+                                                    <apex:actionSupport event="onchange" action="{!changeShowReminder}" reRender="panel_to_rerenderTask"/>
+                                                </apex:inputcheckbox>
+                                                <span class="slds-checkbox--faux"></span>
+                                            </label> 
+                                        </div>  
+                                    </div>
+                            </div>
+                            <br/>
+                            <div id="container_vuoto1" class="slds-container--large slds-form--horizontal slds-col--padded slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">    
+                                <div class="slds-form-element__control"></div>
+                            </div>
+                            <br/>
+                            <div id="container_promemoriasetter" class="slds-container--large slds-form--horizontal slds-col--padded slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                            <apex:outputPanel id="panel_to_rerenderTask">
+                            <apex:outputPanel id="reminder_panelTask" rendered="{!showReminder}" >   
+                           
+                                    <label class="slds-form-element__label" style ="vertical-align: middle" for="data_reminderTask">{!$ObjectType.Task.Fields.ReminderDateTime.Label}:</label>  
+                                    <div class="slds-form-element" style="display:inline">                            
+                                        <div class="slds-form-element__control">
+                                            
+                                            <apex:inputField id="data_reminderTask" value="{!dateContainerReminder.Effective_date__c}" styleclass="slds-input myheight" type="text"/>
+                                            <script type="text/javascript">
+                                            // Wrap the datePicker control within slds div to stylish it 
+                                            var datePickerLexWrapper;
+                                            if (datePickerLexWrapper == null) {
+                                                datePickerLexWrapper = document.createElement('div');
+                                                datePickerLexWrapper.className = 'slds';
+                                                datePickerLexWrapper.id = 'datePicker_slds_wrapper';
+                                                document.addEventListener("DOMContentLoaded", function(event) { 
+                                                    var dtp = document.getElementById('datePicker');
+                                                    if (dtp != null) {
+                                                        var dtpParent = dtp.parentElement;
+                                                        dtpParent.appendChild(datePickerLexWrapper);
+                                                        datePickerLexWrapper.appendChild(dtp);
+                                                    }
+                                                });
+                                            }
+                                            </script>
+                                            
+ 
+                                        </div>
+                                    </div>  
+                                    <div class="slds-form-element" style="display:inline">                            
+                                        <div class="slds-form-element__control">
+                                            <apex:selectlist styleClass="slds-input myheight"  id="hourpickerTask" value="{!taskTime}" multiselect="false" size="1">  
+                                                <apex:selectOptions value="{!timesTask}"/>         
+                                            </apex:selectlist>                                         
+                                        </div>
+                                    </div>         
+                            </apex:outputPanel>
+                            </apex:outputPanel>
+                            </div>
+                            <div id="container_vuoto1" class="slds-container--large slds-form--horizontal slds-col--padded slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">    
+                                <div class="slds-form-element__control"></div>
+                            </div>
+                            <br/>   
+                        </div>
+                        
+                        <!-- BUTTONS -->
+                        <div class="slds-align--absolute-center">
+                            <div class="slds-text-align--center" role="group">
+                                
+                                <br/>  
+                                <apex:commandButton value="Salva" action="{!save}" styleClass="slds-button slds-button--neutral" id="BottoneSalvaSotto" rerender="msgform,msgs,form" status="status_spinner">    
+                                </apex:commandButton> 
+                                <apex:commandButton value="Annulla" action="{!cancel}"  styleClass="slds-button slds-button--neutral" id="BottoneCancellaSotto" rerender="msgform,msgs,form" /> 
+                                
+                            </div> 
+                        </div>
+                        <br/>
+                        <br/>
+                        <script>
+                        function checkvalue()
+                        {
+                            console.log('value: '+$('#lookup').val());
+                            
+                            if($('#lookup').val()=='')
+                                calAF('');
+                            
+                        }
+
+                        function checkvalue2()
+                        {
+                            console.log('value: '+$('#lookup2').val());
+                            
+                            if($('#lookup').val()=='')
+                                calAF2('');
+                            
+                        }            
+
+                        var width = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth);
+                        document.getElementById("myDiv").setAttribute("style","max-width:"+width+"px");                        
+                        $(document).ready(function() 
+                                          {  
+                                              $('#lookup').keyup(function(e) 
+                                                                 {                                  
+                                                                     $('#results').css("display","block");
+                                                                     $('#lookup').attr('aria-expanded','true'); 
+                                                                     $('#keyword').html($('#lookup').val());
+                                                                     Visualforce.remoting.Manager.invokeAction(
+                                                                         '{!$RemoteAction.NewEventLeadCtrl.queryContacts}',
+                                                                         $('#lookup').val(),
+
+                                                                         function(result, event){
+                                                                             if (event.status) {
+                                                                                 $('#ui_results').empty();
+                                                                                 populateLookup(result);
+                                                                             } else if (event.type === 'exception') {
+                                                                                 $('#lookup') = 'ERROR: ' + event.message;   
+                                                                             } else {
+                                                                                 $('#lookup') = 'ERROR: ' + event.message;
+                                                                             }
+                                                                         }, 
+                                                                         {escape: true}
+                                                                     );            
+                                                                 });
+                                              
+                                              function populateLookup(result){
+                                                  if(result){                        
+                                                      $( result ).each(function() {                        
+                                                          console.log(this);
+                                                          $('#ui_results').append('<li class="slds-lookup__item">' + 
+                                                                                  '<a id="' + this.Id + '" href="javascript:void(0)" role="option">' + 
+                                                                                  '<svg aria-hidden="true" class="slds-icon slds-icon-standard-account slds-icon--small">' + 
+                                                                                  '<use xlink:href="{!URLFOR ($Resource.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#user')}"></use>' + 
+                                                                                  '</svg>' + this.Name+'</a>' + 
+                                                                                  '</li>');
+                                                      });
+                                                      
+                                                      $('ul.slds-lookup__list a').click(function(e) 
+                                                                                        {                                  
+                                                                                            $('#lookup').val($(this)[0].innerText);
+                                                                                            $('#lookup').attr('aria-activedescendant',$(this)[0].id);
+                                                                                            $('#lookup').attr('aria-expanded','false');
+                                                                                            $('#results').css("display","none");
+                                                                                            //$('#lookupval').val(e.target.id);
+                                                                                            console.log(e.target.id);
+                                                                                            calAF(e.target.id);
+                                                                                            
+                                                                                        }); 
+                                                      
+                                                      $('#results').mouseleave(function(e) 
+                                                                               {                                  
+                                                                                   $(this).hide();
+                                                                                   console.log('2: '+e.target.id);
+                                                                                   if(e.target.id == 'results')
+                                                                                       $('#lookup').val('');
+                                                                                   //document.getElementById('{!$Component.Theform.myHiddenField}').value = e.target.id ;
+                                                                                   
+                                                                                   //passStringToController(phn);
+
+                                                                               }); 
+                                                  }
+                                              }
+                                          });
+
+ ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                        var width = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth);
+                        document.getElementById("myDiv").setAttribute("style","max-width:"+width+"px");                        
+                        $(document).ready(function() 
+                                          {  
+                                              $('#lookup2').keyup(function(e) 
+                                                                 {                                  
+                                                                     $('#results2').css("display","block");
+                                                                     $('#lookup2').attr('aria-expanded','true'); 
+                                                                     $('#keyword2').html($('#lookup2').val());
+                                                                     Visualforce.remoting.Manager.invokeAction(
+                                                                         '{!$RemoteAction.NewEventLeadCtrl.queryLeads}',
+                                                                         $('#lookup2').val(),
+
+                                                                         function(result, event){
+                                                                             if (event.status) {
+                                                                                 $('#ui_results2').empty();
+                                                                                 populateLookup2(result);
+                                                                             } else if (event.type === 'exception') {
+                                                                                 $('#lookup2') = 'ERROR: ' + event.message;   
+                                                                             } else {
+                                                                                 $('#lookup2') = 'ERROR: ' + event.message;
+                                                                             }
+                                                                         }, 
+                                                                         {escape: true}
+                                                                     );            
+                                                                 });
+                                              
+                                              function populateLookup2(result2){
+                                                  if(result2){                        
+                                                      $( result2 ).each(function() {                        
+                                                          console.log(this);
+                                                          $('#ui_results2').append('<li class="slds-lookup__item">' + 
+                                                                                  '<a id="' + this.Id + '" href="javascript:void(0)" role="option">' + 
+                                                                                  '<svg aria-hidden="true" class="slds-icon slds-icon-standard-account slds-icon--small">' + 
+                                                                                  '<use xlink:href="{!URLFOR ($Asset.SLDS, 'assets/icons/standard-sprite/svg/symbols.svg#lead')}"></use>' + 
+                                                                                  '</svg>' + this.Name+'</a>' + 
+                                                                                  '</li>');
+                                                      });
+                                                      
+                                                      $('ul.slds-lookup__list a').click(function(e) 
+                                                                                        {                                  
+                                                                                            $('#lookup2').val($(this)[0].innerText);
+                                                                                            $('#lookup2').attr('aria-activedescendant',$(this)[0].id);
+                                                                                            $('#lookup2').attr('aria-expanded','false');
+                                                                                            $('#results2').css("display","none");
+                                                                                            //$('#lookupval').val(e.target.id);
+                                                                                            console.log(e.target.id);
+                                                                                            calAF(e.target.id);
+                                                                                            
+                                                                                        }); 
+                                                      
+                                                      $('#results2').mouseleave(function(e) 
+                                                                               {                                  
+                                                                                   $(this).hide();
+                                                                                   console.log('2: '+e.target.id);
+                                                                                   if(e.target.id == 'results2')
+                                                                                       $('#lookup2').val('');
+                                                                                   //document.getElementById('{!$Component.Theform.myHiddenField}').value = e.target.id ;
+                                                                                   
+                                                                                   //passStringToController(phn);
+
+                                                                               }); 
+                                                  }
+                                              }
+                                          });      
+                        </script>
+
+                        <apex:outputPanel id="opan">
+                            <apex:actionfunction action="{!theMethod}" name="calAF" rerender="opan">
+                                <apex:param assignto="{!LookupIds}" name="param1" value="">
+                                </apex:param>
+                            </apex:actionfunction>
+                        </apex:outputPanel>
+
+                        <apex:outputPanel id="opan2">
+                            <apex:actionfunction action="{!theMethod2}" name="calAF2" rerender="opan">
+                                <apex:param assignto="{!LookupIds2}" name="param2" value="">
+                                </apex:param>
+                            </apex:actionfunction>
+                        </apex:outputPanel>
+
+                    </apex:form>
+                </div>
+            </div>
+        </body>
+    </html>
+</apex:page>

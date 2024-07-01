@@ -1,0 +1,12 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,forceCommunity:availableForAllPageTypes,force:lightningQuickAction,force:hasRecordId,lightning:actionOverride" access="global" controller="View_Document_Link_CTRL" >
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+	<aura:attribute name="userInfo" type="user"/>
+	<aura:attribute name="DocumentId" type="String" />
+	<aura:attribute name="RecordType" type="String" />
+	<aura:attribute name="Case" type="Case" default="{sobjectType : 'Case'}" />
+	<lightning:notificationsLibrary aura:id="notifLib"/>
+    <lightning:button label="Visualizza Documento" title="Visualizza Documento" onclick="{!c.navigate}"/>
+    <aura:attribute name="recordId" type="Id"/>
+
+</aura:component>

@@ -1,0 +1,16 @@
+<aura:component implements="lightning:isUrlAddressable">
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="caseData" type="Object"/>
+    <aura:attribute name="caseRecordTypeId" type="String"/>
+    <aura:handler name="init" value="{!this}" action="{!c.Init}"/>
+
+    <lightning:workspaceAPI aura:id="workspace" />
+    
+    <c:selfQAdVWizard
+        caseData="{!v.caseData}"
+        recordId="{!v.recordId}"
+        caseRecordType="{!v.caseRecordTypeId}"
+        oncloseclicked="{!c.closeTab}"
+        >
+        </c:selfQAdVWizard>
+</aura:component>

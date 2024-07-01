@@ -1,0 +1,49 @@
+<aura:component controller="NewLightningCase_CTRL" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction,lightning:actionOverride" access="global" >
+ <aura:attribute name="ShowToast" type="Boolean" default="false"/>
+ <aura:attribute name="typeToast" type="String"/>
+ <aura:attribute name="messageToast" type="String"/>
+ <aura:attribute name="NewCaseId" type="String" default=""/>
+ <aura:handler event="aura:waiting" action="{!c.showSpinner}"/>
+ <aura:handler event="aura:doneWaiting" action="{!c.hideSpinner}"/>
+ <aura:registerEvent name="tabclosing" type="c:tabclosing"/> 
+ <aura:attribute name="Spinner" type="boolean" default="false"/>
+
+    <aura:if isTrue="{!v.Spinner}">
+        <div aura:id="spinnerId" class="slds-spinner_container">
+            <div class="slds-spinner--neutral  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </aura:if>
+    
+    <div class="slds-align_absolute-center" style="height:5rem">
+        <lightning:button  label="Crea Nuovo Case senza Anagrafica" onclick="{!c.createNewCaseNoAnagrafica}"  />
+    </div>
+    
+    
+     <aura:if isTrue="{!v.ShowToast}">
+        <div class="slds-notify_container slds-is-relative" style="position: fixed;margin-top: 19% !important;">
+            <div class="{!'slds-notify slds-notify_toast slds-theme_'+v.typeToast}" role="status">
+                <span class="slds-assistive-text">warning</span>
+                <span class="{!'slds-icon_container slds-m-right_small slds-no-flex slds-align-top slds-icon-utility-'+v.typeToast}" title="{!v.typeToast}">
+                    <lightning:icon iconName="{!'utility:'+v.typeToast}" alternativeText="Approved" class="whiteIcon"/>
+                </span>
+                <div class="slds-notify__content">
+                    <h2 class="slds-text-heading_small ">{!v.messageToast}</h2>
+                </div>
+                <div class="slds-notify__close">
+                    <aura:if isTrue="{!v.typeToast =='error'}">
+                        <button class="slds-button slds-button_icon slds-button_icon-inverse" title="Chiudi" onclick="{!c.chiudiToast}">
+                            <lightning:icon iconName="utility:close" alternativeText="Approved" class="whiteIcon"/>
+                            <span class="slds-assistive-text">Chiudi</span>
+                        </button>
+                    </aura:if>
+                </div>
+            </div>
+        </div>
+
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+</aura:component>

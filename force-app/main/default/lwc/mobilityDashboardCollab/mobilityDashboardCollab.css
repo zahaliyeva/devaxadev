@@ -1,0 +1,17 @@
+.link {
+    height: 1.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.link > span {
+    color: var(--uiaxa-blue, var(--primary, #00008F)) !important;
+    font-family: 'Source Sans Pro', Helvetica;
+    font-size: medium;
+    line-height: 12px;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    padding-top: 0.1em;
+    text-align: center;
+    
+}

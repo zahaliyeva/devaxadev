@@ -1,0 +1,55 @@
+<aura:component  implements="forceCommunity:availableForAllPageTypes" access="global" controller="MobilityNewOpportunityController" >
+    <aura:attribute name="SelectedAccount" type="sObject" />  
+    <aura:attribute name="AccountFilter" type="String" default=" Recordtype.Name in ('B2B Client','B2C Client')"/>
+    <aura:attribute name="Opportunity" type="Opportunity" default="{sobjectType : 'Opportunity'}" />
+    <aura:attribute name="ASA_Description__c" type="String[]"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <div class="slds-page-header" role="banner">
+        <div class="slds-grid">
+            <div class="slds-col">
+                <p class="slds-text-heading--label">INSERISCI TRATTATIVA</p>
+                <h1 class="slds-text-heading--medium">Nuova trattativa</h1>
+            </div>
+        </div>
+    </div>
+    
+    <div class="slds-card__header slds-grid" style="padding: 0.75rem 0rem 0;">
+        <header class="slds-media slds-media--center slds-has-flexi-truncate">
+            <div class="slds-media__body slds-truncate">
+                <div class="slds-section-title_divider">
+                    <h2>
+                        <span class="slds-text-heading--small">Informazioni Principali</span>
+                    </h2>
+                </div>
+            </div>
+        </header>
+    </div>
+    <br/>
+    
+    <lightning:layout horizontalAlign="center" multipleRows="true">
+        <lightning:layoutItem flexibility="auto" padding="around-small" size="12" largeDeviceSize="6" mediumDeviceSize="6" smallDeviceSize="12">
+            <div class="slds-form-element">
+                <label class="slds-form-element__label" for="form-element-05">
+                    <abbr class="slds-required" title="required">* </abbr>Nome Cliente: </label>
+                <c:customLookup aura:id="cmplookup" immediateQuery="true" objectAPIName="account" IconName="standard:account" selectedRecord="{!v.SelectedAccount}" label="" SearchPlaceHolder="Inserire i primi tre caratteri del nome e cognome" QueryWhereCondition="{!v.AccountFilter}" QueryLimit="10" NoResultsFoundMsg="Nessun cliente trovato..."  QueryOutputField=" Name, Ndg__c, AAI_Codice_fiscale__c, AAI_Partita_IVA__c "/> 
+                
+                
+                <label class="slds-m-top_large slds-form-element__label " for="form-element-05">
+                    <abbr class="slds-required" title="required">* </abbr>ASA Description:</label>
+                <lightning:select  name="ASA_Description__c" label="" value="{!v.Opportunity.ASA_Description__c}">
+                    <option value="">--Nessuno--</option>
+                    <aura:iteration var="option" items="{!v.ASA_Description__c}" >
+                        <option value="{! option }" selected="{!option==v.Opportunity.ASA_Description__c}">{! option }</option>
+                    </aura:iteration>
+                </lightning:select>
+                
+            </div>
+        </lightning:layoutItem>
+    </lightning:layout>
+    <center class="slds-m-top_large">
+        <lightning:button variant="brand" name="Salva" iconPosition="right" label="Salva" title="Salva" onclick="{! c.salva }"/>
+        <lightning:button variant="Neutral" name="Annulla" iconPosition="right" label="Annulla" title="Annulla" onclick="{! c.annulla }"/>
+    </center>
+    
+</aura:component>

@@ -1,0 +1,50 @@
+<apex:page controller="agencyQueueManagerCTRL" showHeader="true" standardStylesheets="false" sidebar="false" applyHtmlTag="true" applyBodyTag="false" docType="html-5.0">
+         <head>
+            <meta http-equiv="X-UA-Compatible" content="IE=edge"/>      
+        </head>
+        
+    <apex:includeScript value="/soap/ajax/41.0/connection.js"/>
+    <apex:includeScript value="/soap/ajax/41.0/apex.js"/>
+    <apex:includeLightning />
+    <apex:includeScript value="/lightning/lightning.out.js" />
+    <!--  apex:stylesheet value="/resource/lds/assets/styles/salesforce-lightning-design-system-vf.css"/-->
+    <apex:includeScript value="https://code.jquery.com/jquery-1.8.1.min.js" />
+    <div class="slds" style="margin-top:10px;margin-left:10px;"> 
+        <div id="lightning" />
+    </div>
+    
+   <script>    
+ 
+        var width = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth);
+        var allowedProfile1 = "System Administrator";
+        var allowedProfile2 = "AAI - Vendite Avanzato";
+        var allowedProfile3 = "AAI - Vendite Base";
+        var allowedProfile4 = "Amministratore del sistema";
+        var allowedProfile5 = "AAI - Vendite solo Assistenza";
+        var profiloCorrente = "{!$Profile.Name}";
+      
+        console.log ("profilo corrente = "+profiloCorrente );
+        
+        if((profiloCorrente==allowedProfile1 ||
+           profiloCorrente==allowedProfile2 ||
+           profiloCorrente==allowedProfile3 ||
+           profiloCorrente==allowedProfile4 ||
+           profiloCorrente==allowedProfile5)){
+
+        $Lightning.use("c:agencyQueueManagerApp", function() {
+        $Lightning.createComponent("c:agencyQueueManagerMainCmp",
+                  { 
+                   "jsDebug" :  {!jsDebug},
+                   "screenWidth": width,
+                   "queueType" : "Case"
+                   },
+                    "lightning",
+                     function(cmp) {              
+                   });
+         });
+         } 
+
+      
+    </script>    
+    
+</apex:page>

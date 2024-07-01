@@ -1,0 +1,319 @@
+<template>
+    <c-mobility-spinner show={spinner} show-overlay='true'></c-mobility-spinner>
+    <c-mobility-messages model={messages}></c-mobility-messages>
+
+    <template if:false={hideTitle}>
+        <div class="row">
+            <template if:true={showIcon}>
+                <div class="col-12 py-2">
+                <div style="display:flex">
+                    <div class="px-2 py-1">
+                        <c-mobility-icon name="feedback" width="35px" height="35px"></c-mobility-icon>
+                    </div>
+                    <div class="py-2">
+
+                        <h1>{title}</h1>
+                        
+                    </div>
+                
+                </div>
+                <div class="page-border mb-3"></div>
+            </div>
+            </template>
+            <template if:false={showIcon}>
+                <div class="col-12 py-2">
+                    <h1>{title}</h1>
+                    <div class="page-border mb-3"></div>
+                </div>
+            </template>
+        </div>
+    </template>
+
+    <form action="post" onchange={changeData} onsubmit={onSubmit}>
+        <button type="submit" id="bsubmit" name="bsubmit" value="submit"
+            style="position: absolute; left: -9999px; width: 1px; height: 1px;" tabindex="-1"></button>
+
+        <template for:each={allData} for:item='section'>
+            <div key={section.name}>
+                <template if:true={section.visible}>
+                    <template if:false={section.fieldsEmpty}>
+                        <div class="row">
+                            <div class="col-12">
+                                <h4>{section.name}</h4>
+                                <div class="page-border mb-3"></div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-5">
+                            <template for:each={section.fields.data} for:item='field'>
+                                <template if:true={field.visible}>
+
+                                    <div class={field.class} key={field.labelData}>
+                                        <div class="form-group">
+                                            <label for={field.labelData} class={field.styleReadOnly}>
+                                                {field.labelData}
+                                                <template if:true={debug}> ({field.type})</template>
+                                                <template if:true={field.isRequired}>*</template>
+                                            </label>
+
+                                            <template if:true={field.isFilter}>
+                                                <template if:true={field.isDate}>
+                                                    <c-mobility-date-picker
+                                                        root={rootDom} 
+                                                        keydown-callback={preventEnter}
+                                                        key={field.labelData} 
+                                                        type={field.fieldType}
+                                                        required={field.isRequired} 
+                                                        readonly={field.isReadOnly}
+                                                        value={field.valueData}
+                                                        developer-name={field.developerName}
+                                                        change-callback={changeData}
+                                                    >
+                                                    </c-mobility-date-picker>
+                                                </template>
+                                            </template>
+
+                                            <template if:true={field.isDetail}>
+                                                
+                                                <template if:true={field.isText}>
+                                                    
+                                                    <template if:true={field.canRedirect}>
+                                                        <div class="row" >
+                                                            <div class="col mr-auto">
+
+                                                             <!--   <a href= {field.redirect} target="_blank"
+                                                                    class='w-100 overflow-auto' >
+                                                                    <div class="url-readonly">
+                                                                        {field.redirectLabel}&nbsp;
+                                                                    </div>
+                                                                </a>  -->
+                                                                <div class="url-readonly">
+                                                                    {field.redirectLabel}&nbsp;
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </template>
+                                                    <template if:false={field.canRedirect}>
+                                                        <input
+                                                            title={field.valueData} 
+                                                            onkeydown={preventEnter} 
+                                                            type={field.fieldType} 
+                                                            class="form-control"
+                                                            required={field.isRequired} 
+                                                            readonly={field.isReadOnly}
+                                                            value={field.valueData} 
+                                                            name={field.developerName}
+                                                            autocomplete="off"
+                                                        >
+                                                    </template>
+                                                </template>
+                                                <template if:true={field.isBoolean}>
+                                                    
+                                                        <div class="button r">
+                                                            <input
+                                                                onkeydown={preventEnter} 
+                                                                type="checkbox" 
+                                                                class="form-control checkbox"
+                                                                required={field.isRequired} 
+                                                                value={field.valueData} 
+                                                                name={field.developerName}
+                                                                checked={field.value} 
+                                                                disabled={field.toggleDisable}
+                                                                autocomplete="off"
+                                                            >
+                                                            <div class="knobs"></div>
+                                                            <div class="layer"></div>
+                                                        </div>
+                                                    
+                                                </template>
+                                                <template if:true={field.isUrl}>
+                                                    <div class="row">
+                                                        <div class="col mr-auto">
+                                                            <a href={field.valueData} target="_blank"
+                                                                class='w-100 overflow-auto'>
+                                                                <div class="url-readonly">
+                                                                    {field.valueData}&nbsp;
+                                                                </div>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </template>
+                                                <template if:true={field.isTextarea}>
+                                                    <div class="row">
+                                                        <div class="col-8 mr-auto">
+                                                            <div class="textarea-readonly">
+                                                                {field.valueData}&nbsp;
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </template>
+                                                <template if:true={field.isDateDetail}>                                                                                                    
+                                                    <input
+                                                        onkeydown={preventEnter} 
+                                                        type="text" 
+                                                        class="form-control"
+                                                        required={field.isRequired} 
+                                                        readonly={field.isReadOnly}
+                                                        value={field.valueDateEncode} 
+                                                        name={field.developerName}
+                                                        autocomplete="off">
+                                                </template>
+                                                <template if:true={field.isDatetimeDetail}>                                                    
+                                                        <input
+                                                            onkeydown={preventEnter} 
+                                                            type="text" 
+                                                            class="form-control"
+                                                            required={field.isRequired} 
+                                                            readonly={field.isReadOnly}
+                                                            value={field.valueDateEncode} 
+                                                            name={field.developerName}
+                                                            autocomplete="off"
+                                                        >
+                                               </template>
+                                               <template if:true={field.isSelectDetail}>
+                                                    <input
+                                                        onkeydown={preventEnter} 
+                                                        class="form-control"
+                                                        type="text" 
+                                                        readonly
+                                                        value={field.pickListValueDetail} 
+                                                        name={field.developerName}
+                                                        autocomplete="off"
+                                                    />
+                                               </template>
+                                         
+                                            </template>
+                                            <template if:true={field.isEdit}>
+                                                <template if:true={field.isText}>
+                                                    <input
+                                                        title={field.valueData} 
+                                                        onkeydown={preventEnter} 
+                                                        type={field.fieldType} 
+                                                        class="form-control"
+                                                        required={field.isRequired} 
+                                                        readonly={field.isReadOnly}
+                                                        value={field.valueData} 
+                                                        name={field.developerName}
+                                                        autocomplete="off"
+                                                    >
+                                                </template>
+
+                                                <template if:true={field.isUrl}>
+                                                    <input
+                                                        onkeydown={preventEnter} 
+                                                        type={field.fieldType} 
+                                                        class="form-control"
+                                                        required={field.isRequired} 
+                                                        readonly={field.isReadOnly}
+                                                        value={field.valueData} 
+                                                        name={field.developerName}
+                                                        autocomplete="off"
+                                                    >
+                                                </template>
+
+                                                <template if:true={field.isDate}>
+                                                <template if:true={field.isReadOnly}>
+                                                    <input
+                                                            onkeydown={preventEnter} 
+                                                            type="text" 
+                                                            class="form-control"
+                                                            required={field.isRequired} 
+                                                            readonly={field.isReadOnly}
+                                                            value={field.valueDateEncode} 
+                                                            name={field.developerName}
+                                                            autocomplete="off"
+                                                        />
+                                                </template>
+                                                <template if:false={field.isReadOnly}>
+                                                    <c-mobility-date-picker
+                                                        root-dom={rootDom} 
+                                                        keydown-callback={preventEnter}
+                                                        key={field.labelData} 
+                                                        type={field.fieldType}
+                                                        required={field.isRequired} 
+                                                        readonly={field.isReadOnly}
+                                                        value={field.valueData}
+                                                        developer-name={field.developerName}
+                                                        change-callback={changeData}
+                                                    >
+                                                    </c-mobility-date-picker>
+                                                </template>
+                                                    
+                                                </template>
+
+                                                <template if:true={field.isSelect}>
+                                                    <select 
+                                                        onkeydown={preventEnter} 
+                                                        key={field.labelData} 
+                                                        required={field.isRequired}
+                                                        name={field.developerName} 
+                                                        disabled={field.isReadOnly}
+                                                    >
+                                                        <option value=''>-</option>
+                                                        <template for:each={field.pickListValue} for:item='option'>
+                                                            <option key={option.value} value={option.value}
+                                                                selected={option.selected}>{option.label}</option>
+                                                        </template>
+                                                    </select>
+                                                </template>
+
+                                                <template if:true={field.isBoolean}>
+                                                    <div class="button-cover">
+                                                        <div class="button r">
+                                                            <input
+                                                                onkeydown={preventEnter} 
+                                                                type="checkbox" 
+                                                                class="form-control checkbox"
+                                                                required={field.isRequired} 
+                                                                value={field.valueData} 
+                                                                name={field.developerName}
+                                                                checked={field.value} 
+                                                                disabled={field.toggleDisable}
+                                                                autocomplete="off"
+                                                            >
+                                                            <div class="knobs"></div>
+                                                            <div class="layer"></div>
+                                                        </div>
+                                                    </div>
+                                                </template>
+
+                                                <template if:true={field.isTextarea}>
+                                                    <div class="row">
+                                                        <div class="col-8 mr-auto">
+                                                            <textarea 
+                                                                rows="3" 
+                                                                class="form-control"
+                                                                required={field.isRequired} 
+                                                                readonly={field.isReadOnly}
+                                                                name={field.developerName}
+                                                            >
+                                                                {field.valueData}
+                                                            </textarea>
+                                                        </div>
+                                                    </div>
+                                                </template>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </template>
+                            </template>
+                        </div>
+                    </template>
+                    <!--iframe for using preview for sections-->
+                    <template if:true={section.isUsingURLpreview}>
+                        <div if:true={notEmptyUrl} height="400px" >
+                        <iframe 
+                        id="vfFrame" 
+                        src={UrlFromApex} 
+                        width="100%" 
+                        style="height: 80vh;"
+                            >
+                        </iframe>
+                        <div style="height: 15px;"></div>
+                    </div>
+                    </template>
+                </template>
+            </div>
+        </template>
+    </form>
+</template>

@@ -1,0 +1,108 @@
+<aura:component controller="SchedaClientePaginaPrincipaleController">
+   <aura:attribute name="wrapper" type="Object" />
+    <aura:attribute name="tipoPolizza" type="String" default="Polizze RE"/>
+    <aura:attribute name="portfolio" type="String" />
+    <aura:attribute name="techCompany" type="String" />
+    <aura:attribute name="startDate" type="String" />
+    <aura:attribute name="asa" type="String[]" default="['RE']" />
+    <aura:attribute name="accountId" type="String" />
+    <aura:attribute name="fiscalCode" type="String" />
+    <aura:attribute name="polizze" type="InsurancePolicy__c[]" />
+    <aura:attribute name="polizzeAttive" type="Integer" />
+    <aura:attribute name="loading" type="Boolean" default="true"/>
+    <aura:attribute name="isOpen" type="Boolean" />
+    <lightning:navigation aura:id="navService"/>
+    <aura:handler name="init" value="{! this }" action="{! c.doInit }"/>
+
+    <div style="height:100%">
+    <article class="slds-card slds-card_boundary">
+        <div class="slds-card__header slds-grid">
+          <header class="slds-media slds-media_center slds-has-flexi-truncate">
+            <div class="slds-media__figure">
+                <lightning:icon class="icon-blue-axa" size="medium" src="{!$Resource.IconeSchedaCliente + '/IconeSchedaCliente/house_blue.svg#house_blue'}"/>
+                <span class="slds-assistive-text">{!tipoPolizza}</span>
+            </div>
+            <div class="slds-media__body">
+              <h2 class="slds-card__header-title">
+                <a href="javascript:void(0);" class="slds-card__header-link slds-truncate not-active" title="{!v.tipoPolizza}">
+                  {!v.tipoPolizza} <span id="numPolizza" class="slds-m-left_xx-small">({!v.polizzeAttive} Attive)</span>
+                </a>
+              </h2>
+            </div>
+            <div class="slds-no-flex">
+              <button class="slds-button slds-button_neutral" onclick="{!c.getPolizzeDaPortafoglio}">Lista da Portafoglio</button>
+            </div>
+          </header>
+        </div>
+        <div class="slds-card__body slds-card__body_inner">
+            <aura:if isTrue="{!v.loading}">
+                <div class="spinner-container">
+                    <lightning:spinner alternativeText="Loading..." size="medium"/>
+                </div>
+            </aura:if>
+            <aura:if isTrue="{!and(not(v.loading), v.polizze.length > 0)}">
+                <aura:iteration items="{!v.polizze}" var="polizza">
+                    <div class="slds-grid slds-wrap slds-gutters_x-small p-relative">
+                    <div class="slds-col slds-size_1-of-1 slds-truncate"><strong>{!polizza.Product_Name__c}</strong></div>
+
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12">Numero Polizza</div>
+                    <div id="{!polizza.Id}" class="slds-col slds-size_1-of-1 slds-large-size_8-of-12 link" onclick="{!c.navigateToSObject}">{!polizza.Name}</div>
+
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12">Data Effetto</div>
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_8-of-12"><ui:outputDate value="{!polizza.CCDATE__c}" format="DD/MM/YYYY"/></div>
+
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12">Data Scadenza</div>
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_8-of-12"><ui:outputDate value="{!polizza.EXPIRY_DATE__c}" format="DD/MM/YYYY"/></div>
+
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12">Stato</div>
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_8-of-12">{!polizza.Status__c}</div>  
+
+                    <div id="{!polizza.Id}" class="arrow-right" onclick="{!c.navigateToSObject}"><lightning:icon iconName="utility:chevronright" size="x-small" alternativeText="chevronright"/></div>
+
+                    </div>           
+                    <br/> 
+                </aura:iteration>
+            </aura:if>
+            <aura:if isTrue="{!and(not(v.loading), empty(v.polizze))}">
+                <div class="slds-no-space slds-text-align_center slds-p-around_large">
+                <p class="slds-text-heading_small no-result"
+                title="{!v.errorMessageResult ? 'Errore: non è possibile mostrare i risultati' : 'Non sono presenti polizze sul Sistema'}">
+            {!v.errorMessageResult ? 'Errore: non è possibile mostrare i risultati' : 'Non sono presenti polizze sul Sistema'}
+                </p>
+                </div>
+            </aura:if>
+        </div>
+        <footer class="slds-card__footer slds-border_top slds-align_absolute-center">
+          <button class="slds-button slds-button_neutral" disabled="{! empty(v.polizze) }" onclick="{!c.onVisualizzaTutto}">Visualizza Tutto</button>
+        </footer>
+      </article>
+      </div>
+      
+      <aura:if isTrue="{!v.isOpen}">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-find-associate" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open slds-modal_large">
+        <div class="slds-modal__container">
+          <header class="slds-modal__header">
+            <h2 id="modal-get-all-claims" class="slds-modal__title slds-hyphenate">Elenco Polizze</h2>
+            <lightning:buttonIcon iconName="utility:close"
+              onclick="{!c.onClose}"
+              alternativeText="close"
+              variant="bare-inverse"
+              class="slds-modal__close"/>
+          </header>
+          <div class="slds-modal__content slds-var-p-around_medium" id="modal-content-id-1">
+            <c:GetAllPolicies
+              accountId="{!v.accountId}"
+                        fiscalCode="{!v.fiscalCode}"
+                        UsrProfile=""
+                        startDate="{!v.startDate}"  
+                        mode="CaringProperty" 
+                        isSchedaCliente="true"
+                        tipoPolizza="['2', '10', '13']"
+                        portfolio="{!v.portfolio}"
+            />
+          </div>
+        </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+      </aura:if> 
+</aura:component>

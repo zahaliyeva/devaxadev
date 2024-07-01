@@ -1,0 +1,81 @@
+<apex:page standardController="Case" extensions="NFE_Default_Home_Page_CTRL" cache="false" sidebar="false" showHeader="false"
+    applyBodyTag="false">
+    <apex:includeScript value="/lightning/lightning.out.js" />
+    <apex:includeScript value="/soap/ajax/30.0/connection.js" />
+    <apex:includeScript value="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" />
+    <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js" />
+    <apex:includeScript value="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js" />
+    <apex:includeScript value="/support/console/42.0/integration.js" />
+
+    <apex:slds />
+    <script>
+
+        // 26-01-2022 *-+
+        var CaseId = "{!$CurrentPage.parameters.Id}";
+        var ownerID = "{!ownerID}";
+        var caseStatus = "{!caseStatus}";
+        var OwnerIsQueue = "{!OwnerIsQueue}";
+
+        if (OwnerIsQueue === 'false') {
+            window.top.location.href = '{!NewChiudiCasePath}';
+        }
+        function onlclick() {
+            window.top.location.href = '{!CaseSelf}';
+        }
+        $(document).ready(function () {
+            $(".bPageBlock").css("background-color", "antiquewhite");
+            $(".bPageBlock").css("border-color", "lightcoral");
+        });
+
+    </script>
+<apex:outputPanel id="divError"  layout="block"  rendered="{!OwnerIsQueue}">
+
+    <div style="margin-top: 10px;"></div>
+
+    <apex:pageBlock >
+
+        <body class="slds-scope">
+            <!-- any Visualforce component should be outside SLDS scoping element -->
+            <h3 align="center" class="slds-text-body">Attenzione! Per chiudere il case &egrave; necessario prima prenderlo in carico.</h3>
+        </body>
+    </apex:pageBlock>
+
+    <div align="center">
+        <div class="slds-scope">
+            <button id="bottone" class="slds-button_neutral slds-button" onclick="onlclick()">Indietro</button>
+        </div>
+    </div>
+</apex:outputPanel>
+
+    <style>
+        #bottone {
+            position: center;
+            border-style: solid;
+            border-color: rgb(111, 111, 240);
+            display: inline-flex;
+            align-items: center;
+            border-style: solid;
+            color: rgb(0, 0, 143);
+        }
+
+        #texto {
+            margin-top: 10px;
+            float: right;
+            font-weight: bolder;
+            text-transform: uppercase;
+            font: Bold 14px;
+            cursor: pointer;
+        }
+
+        #textoIni {
+            text-align: left;
+            font-weight: 700;
+            font-size: 16px;
+            font-family: 'Publico Headline Web', Georgia, 'Times New Roman', Times, serif;
+            color: #00008F;
+            padding-left: 10px;
+            font-weight: bolder;
+        }
+    </style>
+
+</apex:page>

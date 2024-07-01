@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>ChiudiCaseCAProperty01</label>
+    <protected>false</protected>
+    <values>
+        <field>Default__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Domain2__c</field>
+        <value xsi:type="xsd:string">Cliente non risponde;Aperto SX P&amp;C;Non Possibile Apertura SX P&amp;C;Non richiesta da cliente apertura SX P&amp;C;Cliente non disponibile a ricontatto;Cliente denuncerà sx P&amp;C per conto proprio;Altro</value>
+    </values>
+    <values>
+        <field>Domain__c</field>
+        <value xsi:type="xsd:string">Chiamata errata da parte del cliente/altro soggetto;Richiesta solo assistenza in copertura;Attivata solo società di salvataggio Cliente non ha coperture P&amp;C in vigore;Casistica RC coinvolgente terzi e non assicurato fuori perimetro CA</value>
+    </values>
+    <values>
+        <field>Field__c</field>
+        <value xsi:type="xsd:string">Motivo_chiusura__c</value>
+    </values>
+    <values>
+        <field>Form__c</field>
+        <value xsi:type="xsd:string">case-close</value>
+    </values>
+    <values>
+        <field>Index__c</field>
+        <value xsi:type="xsd:double">1.0</value>
+    </values>
+    <values>
+        <field>Label__c</field>
+        <value xsi:type="xsd:string">Motivazione della Chiusura</value>
+    </values>
+    <values>
+        <field>Profile__c</field>
+        <value xsi:type="xsd:string">Caring Angel Property - HD1</value>
+    </values>
+    <values>
+        <field>ReadOnly__c</field>
+        <value xsi:type="xsd:boolean">false</value>
+    </values>
+    <values>
+        <field>RecordType__c</field>
+        <value xsi:type="xsd:string">Caring_Angel_Property</value>
+    </values>
+    <values>
+        <field>Required__c</field>
+        <value xsi:type="xsd:boolean">true</value>
+    </values>
+    <values>
+        <field>Section__c</field>
+        <value xsi:type="xsd:string">Chiudi Case</value>
+    </values>
+    <values>
+        <field>Sobject__c</field>
+        <value xsi:type="xsd:string">Case</value>
+    </values>
+    <values>
+        <field>Visible__c</field>
+        <value xsi:type="xsd:boolean">true</value>
+    </values>
+</CustomMetadata>

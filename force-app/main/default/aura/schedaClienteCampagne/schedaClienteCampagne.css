@@ -1,0 +1,15 @@
+.THIS {
+}
+.THIS .link{
+    cursor:pointer;
+    color:rgb(27, 82, 151);
+}
+.THIS .no-result {
+    color: #246fbb;
+    font-weight: bold;
+}
+.THIS .not-active {
+    pointer-events: none;
+    cursor: default;
+    text-decoration: none;
+}

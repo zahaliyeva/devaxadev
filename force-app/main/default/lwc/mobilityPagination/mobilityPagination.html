@@ -1,0 +1,51 @@
+<template>
+    <nav class="row justify-content-center align-item-center py-4 flex-nowrap">
+
+        <!-- Previous - Vai alla pagina precedente -->
+        <div class="text-capitalize mr-auto">
+            <button class={_pagination.disabledStylePrev} aria-disabled={_pagination.hasNotPrevPage}
+                disabled={_pagination.hasNotPrevPage} onclick={onPrevPage}>
+                <span class="arrow">
+                    <c-mobility-icon name={_pagination.arrowleft} width="23px" height="23px"></c-mobility-icon>
+                </span>
+                <span class="align-bottom">{_label.pagination_previous}</span>
+            </button>
+        </div>
+
+        <template if:true={_pagination.viewFirstPage}>
+            <button class='page-item' data-page="0" onclick={onChangePage}>
+                1
+            </button>
+        </template>
+        <!--Pagination -->
+        <template for:each={_pagination.prevPagesData} for:item="item">
+            <button key={item.index} class="page-item" data-page={item.index} onclick={onChangePage}>
+                {item.label}
+            </button>
+        </template>
+        <button key={item} class='page-item active'>
+            {_pagination.pageString}
+        </button>
+        <template for:each={_pagination.nextPagesData} for:item="item">
+            <button key={item.index} class="page-item" data-page={item.index} onclick={onChangePage}>
+                {item.label}
+            </button>
+        </template>
+        <template if:true={_pagination.viewLastPage}>
+            <button class='page-item' data-page={_pagination.maxPage} onclick={onChangePage}>
+                {_pagination.maxPageString}
+            </button>
+        </template>
+
+        <!-- Next - Vai alla pagina successiva -->
+        <div class='text-capitalize ml-auto'>
+            <button class={_pagination.disabledStyleNext} disabled={_pagination.hasNotNextPage} onclick={onNextPage}>
+                <span class="align-bottom">{_label.pagination_next}</span>
+                <span class="arrow">
+                    <c-mobility-icon name={_pagination.arrowright} width="23px" height="23px"></c-mobility-icon>
+                </span>
+            </button>
+        </div>
+
+    </nav>
+</template>

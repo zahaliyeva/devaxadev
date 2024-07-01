@@ -1,0 +1,136 @@
+<template>
+  <article class="card" if:false={technicalError}>
+    <img src={logo} alt="Axa logo" />
+    <br />
+    <br />
+    <h1 class="title">
+      Errore: non è stata salvata correttamente la richiesta
+    </h1>
+    <br />
+    <p>
+      Si è verificato un errore tecnico e la tua richiesta non è stata salvata.
+    </p>
+    <p align="justify">
+      Ti ricordiamo che puoi sempre effettuare l'operazione comunicandocelo
+      tramite la compilazione del form al link
+      <a href="https://www.axa.it/contattaci">
+        &nbsp; https://www.axa.it/contattaci
+      </a>
+      &nbsp; (inserendo come categoria "privacy") o scrivendo a
+      <a href="mailto:privacy@axa.it"> privacy@axa.it </a>
+    </p>
+    <br />
+    <br />
+    <div class="information">
+      <ul>
+        <li>AXA Assicurazioni S.p.a.</li>
+        <li>
+          Sede Legale e Direzione Generale: Corso Como 17, 20154 Milano&nbsp;
+          (MI)
+        </li>
+        <li>
+          C.F.n 00902170018 - PEC: axaassicurazioni@axa.legalmail.it -&nbsp;
+          <a class="link-white" href="https://www.axa.it/note-legali">
+            note legali complete su axa.it
+          </a>
+        </li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="card" if:false={errors.isDateValid}>
+    <img src={logo} alt="Axa logo" />
+    <br />
+    <br />
+    <h1 class="title">Errore link scaduto</h1>
+    <br />
+    <p>Per motivi di sicurezza il link non è più disponibile.</p>
+    <p align="justify">
+      Ti ricordiamo che puoi sempre effettuare l'operazione comunicandocelo
+      tramite la compilazione del form al link &nbsp;
+      <a href="https://www.axa.it/contattaci">https://www.axa.it/contattaci</a>
+      &nbsp;(inserendo come categoria "privacy") o scrivendo a
+      <a href="mailto:privacy@axa.it"> privacy@axa.it </a>
+    </p>
+    <br />
+    <br />
+    <div class="information">
+      <ul>
+        <li>AXA Assicurazioni S.p.a.</li>
+        <li>
+          Sede Legale e Direzione Generale: Corso Como 17, 20154 Milano&nbsp;
+          (MI)
+        </li>
+        <li>
+          C.F.n 00902170018 - PEC: axaassicurazioni@axa.legalmail.it -&nbsp;
+          <a class="link-white" href="https://www.axa.it/note-legali">
+            note legali complete su axa.it
+          </a>
+        </li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="card" if:false={errors.isTokenNew}>
+    <img src={logo} alt="Axa logo" />
+    <br />
+    <br />
+    <h1 class="title">
+      Ops! Hai già modificato le tue preferenze di comunicazione.
+    </h1>
+
+    <br />
+    <br />
+    <div class="information">
+      <ul>
+        <li>AXA Assicurazioni S.p.a.</li>
+        <li>
+          Sede Legale e Direzione Generale: Corso Como 17, 20154 Milano&nbsp;
+          (MI)
+        </li>
+        <li>
+          C.F.n 00902170018 - PEC: axaassicurazioni@axa.legalmail.it -&nbsp;
+          <a class="link-white" href="https://www.axa.it/note-legali">
+            note legali complete su axa.it
+          </a>
+        </li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="card" if:false={errors.wrongRecipient}>
+    <img src={logo} alt="Axa logo" />
+    <br />
+    <br />
+    <h1 class="title">
+      Ops! Hai già richiesto la rimozione del tuo contatto
+      <template if:true={showEmail}> {email} </template>
+      <template if:false={showEmail}> {sms} </template>
+      dai nostri sistemi. La richiesta è già stata presa in carico
+    </h1>
+
+    <br />
+    <br />
+    <div class="information">
+      <ul>
+        <li>AXA Assicurazioni S.p.a.</li>
+        <li>
+          Sede Legale e Direzione Generale: Corso Como 17, 20154 Milano&nbsp;
+          (MI)
+        </li>
+        <li>
+          C.F.n 00902170018 - PEC: axaassicurazioni@axa.legalmail.it -&nbsp;
+          <a class="link-white" href="https://www.axa.it/note-legali">
+            note legali complete su axa.it
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <br />
+    <br />
+    <!--<footer class="slds-text-align_center">
+      <button title="CHIUDI" class="button">CHIUDI</button>
+    </footer> -->
+  </article>
+</template>

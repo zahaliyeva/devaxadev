@@ -1,0 +1,108 @@
+<aura:component controller="SchedaClienteCaseController">
+  <aura:attribute name="accountId" type="String" />
+  <aura:attribute name="cases" type="Case[]" />
+  <lightning:navigation aura:id="navService"/>
+  <aura:attribute name="loading" type="Boolean" default="true"/>
+  <aura:handler name="init" value="{! this }" action="{! c.doInit }"/> 
+  
+    <article class="slds-card slds-card_boundary slds-m-top_medium">
+        <div class="slds-card__header slds-grid">
+          <header class="slds-media slds-media_center slds-has-flexi-truncate">
+            <div class="slds-media__figure">
+              <span class="slds-icon_container slds-icon-standard-account" title="Case">
+                    <lightning:icon iconName="standard:case"/>
+              </span>
+            </div>
+            <div class="slds-media__body">
+              <h2 class="slds-card__header-title">
+                <a href="javascript:void(0);" class="slds-card__header-link slds-truncate not-active" title="Case">
+                  <span>Case</span>
+                </a>
+              </h2>
+            </div>
+            <div class="slds-no-flex">
+              <button class="slds-button slds-button_neutral" onclick="{!c.onNuovo}">Nuovo</button>
+            </div>
+          </header>
+        </div>
+        <div class="slds-card__body slds-card__body_inner">
+          <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_fixed-layout slds-table_resizable-cols">
+            <thead>
+              <tr class="slds-line-height_reset">
+                <th class="" scope="col">
+                  <div class="slds-truncate" title="Numero Case">Numero Case</div>
+                </th>
+                <th class="" scope="col">
+                  <div class="slds-truncate" title="Categoria">Categoria</div>
+                </th>
+                <th class="" scope="col">
+                  <div class="slds-truncate" title="Sotto-Categoria">Sotto-Categoria</div>
+                </th>
+                <th class="" scope="col">
+                  <div class="slds-truncate" title="Oggetto Apertura Case">Oggetto Apertura Case</div>
+                </th>
+                <th class="" scope="col">
+                  <div class="slds-truncate" title="Stato">Stato</div>
+                </th>
+                <th class="" scope="col">
+                  <div class="slds-truncate" title="Data Apertura">Data Apertura</div>
+                </th>
+                <th class="" scope="col">
+                  <div class="slds-truncate" title="Titolare">Titolare</div>
+                </th>
+              </tr>
+            </thead>
+              <tbody>
+                <aura:if isTrue="{!v.loading}">
+                    <div class="spinner-container">
+                        <lightning:spinner alternativeText="Loading..." size="medium"/>
+                    </div>
+                </aura:if>
+                <aura:if isTrue="{!and(not(v.loading), v.cases.length > 0)}">
+                    <aura:iteration items="{!v.cases}" var="case">
+                        <tr class="slds-hint-parent">
+                            <th data-label="Numero Case" scope="row">
+                            <div id="{!case.Id}" class="slds-truncate link" onclick="{!c.navigateToSObject}">
+                                {!case.CaseNumber}
+                            </div>
+                            </th> 
+                            <td data-label="Categoria">
+                            <div class="slds-truncate">{!case.Category__c}</div>
+                            </td>
+                            <td data-label="Sotto-Categoria">
+                            <div class="slds-truncate">{!case.SubCategory__c}</div>
+                            </td>
+                            <td data-label="Oggetto Apertura Case">
+                            <div class="slds-truncate">{!case.Subject}</div>
+                            </td>
+                            <td data-label="Stato">
+                            <div class="slds-truncate">{!case.Status}</div>
+                            </td>
+                            <td data-label="Data Apertura">
+                            <div class="Titolare slds-truncate"><ui:outputDateTime value="{!case.CreatedDate}" format="DD/MM/YYYY hh:mm"/>
+                            </div>
+                            </td>
+                            <td data-label="Titolare">
+                              <div class="slds-truncate">{!case.Owner.Name}</div>
+                            </td>
+                        </tr>
+                    </aura:iteration>
+                </aura:if>
+                <aura:if isTrue="{!and(not(v.loading), empty(v.cases))}">
+                    <tr>
+                      <td align="center" colspan="7">  
+                      <div class="slds-text-heading_small no-result slds-text-align_center slds-m-vertical_large"
+                    title="{!v.errorMessageResult ? 'Errore: non è possibile mostrare i risultati' : 'Non sono presenti case'}">
+                            {!v.errorMessageResult ? 'Errore: non è possibile mostrare i risultati' : 'Non sono presenti case'}
+                        </div>
+                      </td>
+                  </tr>    
+                </aura:if>
+              </tbody>
+            </table>
+        </div>
+        <footer class="slds-card__footer slds-border_top slds-align_absolute-center">
+            <button class="slds-button slds-button_neutral" disabled="{! empty(v.cases) }" onclick="{!c.onVisualizzaTutto}">Visualizza Tutto</button>
+        </footer>
+      </article>
+</aura:component>

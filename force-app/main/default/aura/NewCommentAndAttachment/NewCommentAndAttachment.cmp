@@ -1,0 +1,215 @@
+<aura:component controller="NewCommentAndAttachmentServer" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <lightning:spinner aura:id="mySpinner" class="slds-hide" />
+    <aura:attribute name="comment" type="String" default="" required="true" />
+    <aura:attribute name="jsDebug" type="Boolean" default="true" required="true" /> <!-- SOLO PER DEBUG -->
+    <aura:attribute name="caseId" type="Id" default="" />
+    <aura:attribute name="attachmentList" type="List" /> 
+    <aura:attribute name="attachmentListFileNames" type="List"/>
+    <aura:attribute name="toggleRecordType" type="String" default="Supporto" required="true" />
+    <aura:attribute name="showSupportHD1" type="Boolean" default="false" required="true" />
+    <aura:attribute name="showError" type="Boolean" default="true" required="false" />
+    <aura:attribute name="showWhite" type="Boolean" default="true" required="true" />
+    <aura:attribute name="error" type="String" default="" />
+    <aura:attribute name="MandatoryInputsMissing" type="Boolean" default="false" /> 
+    <aura:attribute name="OrgLink" type="String" default="" required="true" /> 
+    <aura:attribute name="attachmentnamelist" type="List" default="[]"/>
+    <aura:attribute name="showAttachmentBox" type="Boolean" default="false"/>
+    <aura:handler name="uploadaction" event="c:fileuploadevt" action="{!c.updateattachmentlst}"/>
+    <aura:attribute name="Errorchecked" type="String" default=""/>
+    <!--MOSCATELLI_M 25/10/2018: NMA Business - START-->
+    <aura:attribute name="userRole" type="String"/>
+    <aura:attribute name="isMobility" type="Boolean" default="false"/>
+    <aura:attribute name="profileName" type="String"/>
+    <aura:attribute name="SupportType" type="String"/>
+    <aura:attribute name="showSupportHD1Biz" type="Boolean" default="false" required="true" />
+    <aura:attribute name="remainingCharacters" type="String" default="1000" /> <!-- OAVERSANO 30/10/2018 : Nuovo Modello di Assistenza ENHANCEMENT -->
+    <!--MOSCATELLI_M 25/10/2018: NMA Business - END-->
+	<!-- OAVERSANO 17/12/2018 : Enhancement NMA Biz III - START -->
+	<aura:attribute name="showShareFile_Flag" type="Boolean" default="false"/> <!-- Populated to true if the user logged has profile "HD1" or "HD1 BIZ" -->
+	<!-- OAVERSANO 17/12/2018 : Enhancement NMA Biz III - END -->
+    <!--MMOSCATELLI 11/02/2019: Lob Contabilità - START -->
+    <aura:attribute name="showSupportHD1Contabilita" type="Boolean" default="false" required="true" />
+    <aura:attribute name="showSupportHD1Contenzioso" type="Boolean" default="false" required="true" />
+    <!--MMOSCATELLI 11/02/2019: Lob Contabilità - END -->
+    <!-- OAVERSANO 09/05/2019 : NMA LOB Vita - START -->
+    <aura:attribute name="caseLob" type="String"/>
+	<!-- OAVERSANO 09/05/2019 : NMA LOB Vita NMA Biz III - END --> 
+	<!-- Giorgio Bonifazi 23/07/2019 : Caring Angel fase 2 - START -->
+    <aura:attribute name="sObjectName" type="String" default="Storico_conversazioni__c" />
+    <aura:attribute name="selectedValue" type="String" />
+    <aura:attribute name="fieldName" type="String" default="Motivo_Trasferimento__c" />
+    <aura:attribute name="picklistValues" type="String[]" />
+    <aura:attribute name="showAgent" type="Boolean" default = "false" />
+    
+    <aura:attribute name="showCaringAngel" type="Boolean" default="false" />
+    <aura:attribute name="showSmartCenter" type="Boolean" default="false" />
+    <aura:attribute name="notShow" type="Boolean" default="false" />
+    <aura:attribute name="showButtonSend1" type="Boolean" default="false" />   <!-- Invio a Secondo livello -->
+    <aura:attribute name="showButtonSend2" type="Boolean" default="false" />   <!-- Ritorna al Primo livello-->
+    <aura:attribute name="showButtonSend3" type="Boolean" default="false" />   <!-- Invia ad Altra Area-->
+    <aura:attribute name="showButtonSend4" type="Boolean" default="false" />   <!-- Invia a Modulo di calcolo AXA-->
+    <aura:attribute name="showButtonSend5" type="Boolean" default="false" />   <!-- Invia a Modulo di calcolo-->
+    <aura:attribute name="showButtonSend6" type="Boolean" default="false" />   <!-- Invia ad Agenzia-->
+  
+
+    <!-- Giorgio Bonifazi 23/07/2019 : Caring Angel fase 2 - END -->																				  												 																											
+    <lightning:workspaceAPI aura:id="workspace" />
+    
+    <aura:registerEvent name="tabclosing" type="c:tabclosing" />
+
+    <aura:if isTrue="{! not(v.showWhite) }">
+        <aura:if isTrue="{! v.showError }">
+            <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error" role="alert">
+                <h3>{!v.Errorchecked}</h3> <!-- OAVERSANO 24/10/2018 : ICF Close The Loop -->
+                <!--<h3>Attenzione! L'attuale stato della richiesta non consente l'inserimento di un nuovo commento / allegato</h3> -->
+            </div>
+        </aura:if>
+        
+        <aura:if isTrue="{! not(v.showError) }">
+            <div>
+                <aura:if isTrue="{!not(v.isMobility)}">
+                    <div>
+                        <img src="{!$Resource.LogoAxaAssistenza}" style="width:275px;" />
+                    </div>   
+                </aura:if>
+                  <div class="slds-align_absolute-center" style="margin-bottom: 10px;">                      
+                      <aura:if isTrue="{!and(v.showButtonSend1,not(v.showAgent),not(v.showCaringAngel),not(v.showSmartCenter)) }">      
+                          <lightning:button aura:id="buttonSend1"  label="Invio a Secondo livello" onclick="{!c.navigateToCmp}" />
+                      </aura:if>
+                      <aura:if isTrue="{!and(v.showButtonSend2,not(v.showAgent),not(v.showCaringAngel),not(v.showSmartCenter)) }">     
+                          <lightning:button aura:id="buttonSend2"  label="Ritorna al Primo livello" onclick="{!c.navigateToCmp}" />     
+                      </aura:if>
+                      <aura:if isTrue="{!and(v.showButtonSend3,not(v.showAgent),not(v.showCaringAngel),not(v.showSmartCenter)) }">     
+                          <lightning:button aura:id="buttonSend3"  label="Invia ad Altra Area" onclick="{!c.navigateToCmp}" />     
+                      </aura:if>
+                      <aura:if isTrue="{!and(v.showButtonSend4,not(v.showAgent),not(v.showCaringAngel),not(v.showSmartCenter)) }">     
+                          <lightning:button aura:id="buttonSend4"  label="Invia a Modulo di calcolo AXA" onclick="{!c.navigateToCmp}" />     
+                      </aura:if>
+                      <aura:if isTrue="{!and(v.showButtonSend5,not(v.showAgent),not(v.showCaringAngel),not(v.showSmartCenter)) }">     
+                          <lightning:button aura:id="buttonSend5"  label="Invia a Modulo di calcolo" onclick="{!c.navigateToCmp}" />     
+                      </aura:if>                      
+                      <aura:if isTrue="{!and(v.showButtonSend6,not(v.showAgent),not(v.showCaringAngel),not(v.showSmartCenter)) }">     
+                          <lightning:button aura:id="buttonSend6"  label="Invia ad Agenzia" onclick="{!c.navigateToCmp}" />     
+                      </aura:if>
+                </div>
+                
+                <h1 class="slds-text-heading_medium" title="Nuovo commento allegato" style="margin-top: 20px;">Nuovo commento / Allegato</h1>
+                <br></br>
+                <lightning:textarea label="Commento" value="{!v.comment}" maxlength="1000" onchange="{!c.countCharacters}"/>    <!-- OAVERSANO 30/10/2018 : Nuovo Modello di Assistenza ENHANCEMENT -->
+                <div class="slds-text-font_monospace slds-text-align_right">Caratteri rimanenti : {!v.remainingCharacters}</div>  <!-- OAVERSANO 30/10/2018 : Nuovo Modello di Assistenza ENHANCEMENT -->
+              
+                <aura:if isTrue="{!v.notShow}"><!-- before showSupportHD1 -->
+                    <lightning:select name="mySelect" label="Destinatario commento" aura:id="mySelect" onchange="{!c.toggle}" >
+                        <!--MOSCATELLI_M 25/10/2018: NMA Business - START
+                        <option>Supporto HD1 Biz</option>-->
+                        <option>Supporto HD1 Biz</option>
+                        <!--MMOSCATELLI 11/02/2019: Lob Contabilità - START -->
+                        <option>Supporto Contabilità</option>
+                        <option>Supporto Contenzioso</option>
+                        <!--MMOSCATELLI 11/02/2019: Lob Contabilità - END -->
+                        <option>Supporto HD2 IT</option>
+                        <!--MOSCATELLI_M 25/10/2018: NMA Business - END-->
+                        <option>Agente</option>
+                        <!--VIZZINI_D 24/06/2019: Lob Modulo di Calcolo-->
+                        <option>Supporto Modulo di Calcolo</option>
+                    </lightning:select>
+                </aura:if>
+                <!--MOSCATELLI_M 25/10/2018: NMA Business - START-->
+                <aura:if isTrue="{!v.notShow}"> <!-- before showSupportHD1Biz -->
+                    <lightning:select name="mySelect" label="Destinatario commento" aura:id="mySelect" onchange="{!c.toggle}" >
+                        <option>Supporto HD1 IT</option>
+                        <!--MMOSCATELLI 11/02/2019: Lob Contabilità - START -->
+                        <option>Supporto Contabilità</option>
+                        <option>Supporto Contenzioso</option>
+                        <!--MMOSCATELLI 11/02/2019: Lob Contabilità - END -->                        
+                        <option>Supporto HD2 Biz</option>
+                        <option>Agente</option>
+                        <!--VIZZINI_D 24/06/2019: Lob Modulo di Calcolo-->
+                        <option>Supporto Modulo di Calcolo</option>
+                    </lightning:select>
+                </aura:if>                
+                <!--MOSCATELLI_M 25/10/2018: NMA Business - END-->
+                
+                <!--MMOSCATELLI 11/02/2019: Lob Contabilità - START -->
+                <aura:if isTrue="{!v.notShow}"> <!-- before showSupportHD1Contabilita -->
+                    <lightning:select name="mySelect" label="Destinatario commento" aura:id="mySelect" onchange="{!c.toggle}" >
+                        <option>Supporto HD1 IT</option>
+                        <option>Supporto HD1 Biz</option>
+                        <option>Supporto Contenzioso</option>
+                        <option>Agente</option>
+                       	<aura:if isTrue="{!v.caseLob == 'Vita'}">
+                       		<option>Supporto HD2 Biz</option>
+                       	</aura:if>
+                        <!--VIZZINI_D 24/06/2019: Lob Modulo di Calcolo-->
+                        <option>Supporto Modulo di Calcolo</option>
+                    </lightning:select>
+                </aura:if>
+                
+                <aura:if isTrue="{!v.notShow}"> <!-- before showSupportHD1Contenzioso -->
+                    <lightning:select name="mySelect" label="Destinatario commento" aura:id="mySelect" onchange="{!c.toggle}" >
+                        <option>Agente</option>
+                        <option>Supporto HD1 IT</option>
+                        <option>Supporto HD1 Biz</option>                        
+                        <option>Supporto Contabilità</option>
+                        <!--VIZZINI_D 24/06/2019: Lob Modulo di Calcolo-->
+                        <option>Supporto Modulo di Calcolo</option>
+                    </lightning:select>
+                </aura:if>                        
+                <!--MMOSCATELLI 11/02/2019: Lob Contabilità - END -->
+                
+                <!-- Giorgio Bonifazi 23/07/2019 : Caring Angel fase 2 - START -->
+                <aura:if isTrue="{!v.showCaringAngel}">
+                    <lightning:select name="Motivo Trasferimento" label="Motivo Trasferimento" value="{!v.selectedValue}" onchange="{!c.undoError}">
+                        <option value=""></option>
+                        <aura:iteration var="option" items="{!v.picklistValues}">
+                            <option value="{! option }">{! option }</option>
+                        </aura:iteration>
+                    </lightning:select>
+                </aura:if>  
+                <!-- Giorgio Bonifazi 23/07/2019 : Caring Angel fase 2 - END -->																  
+                
+                <br></br>
+                <div class="slds-clearfix" style="margin-top: 20px;">
+                    <div class="slds-align_absolute-center" style="margin-bottom: 10px;">                        
+                        <lightning:button label="Annulla" onclick="{!c.cancelBtn}" />
+                        <lightning:button class="slds-align-left" label="Aggiungi allegato" onclick="{!c.openAddAttachment}" />
+                    <aura:if isTrue="{!or(v.showAgent,v.showCaringAngel)}">
+                        <lightning:button class="slds-button_brand" label="Conferma" onclick="{!c.clickCreate}" /> 
+                    </aura:if>
+                    <aura:if isTrue="{!v.showSmartCenter}">
+                        <lightning:button class="slds-button_brand" label="Conferma" onclick="{!c.clickCreate}" /> 
+                    </aura:if>       
+                    </div>
+                    <aura:if isTrue="{!v.MandatoryInputsMissing}" >      
+                        <br />
+                        <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error" role="alert">
+                            <h3>{! v.error }</h3>
+                        </div>
+                    </aura:if>
+                </div>
+            </div>   
+        </aura:if>
+    </aura:if>
+    <aura:if isTrue="{!v.showAttachmentBox}">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_shade">
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate slds-text-color_default">Allega file</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium">
+                    <!-- OAVERSANO 17/12/2018 : Enhancement NMA Biz III - START -->  
+                    <!-- c:fileUpload parentId="{!v.caseId}" attachmentList="{!v.attachmentList}" attachmentListFileNames="{!v.attachmentListFileNames}"/-->
+                    <c:fileUpload showShareFile_Flag="{!v.showShareFile_Flag}" stoConvRT="{!v.toggleRecordType}" parentId="{!v.caseId}" attachmentList="{!v.attachmentList}" attachmentListFileNames="{!v.attachmentListFileNames}"/>
+                	<!-- OAVERSANO 17/12/2018 : Enhancement NMA Biz III - END --> 
+                </div>
+                <div class="slds-modal__footer slds-theme_default">
+                    <lightning:button variant="brand" class="slds-align_absolute-center" label="Chiudi" onclick="{!c.closeAddAttachment}" />
+                </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+
+    <div aura:id="showChildModal" ></div>     <!-- d.pirelli  - START -->  
+</aura:component>

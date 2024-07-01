@@ -1,0 +1,322 @@
+<aura:component controller="accountEditLightningCTRL">
+
+   <aura:attribute name="Consensi" type="Account"/>
+   <aura:handler event="c:AccountEvent" action="{!c.handleAccountReceived}"/>
+   <aura:attribute name="currentAccount" type="Account" default="{ 'sobjectType': 'Account' }"/> 
+   <aura:attribute name="EmailcontactsMap" type="Map"/>
+   <aura:handler event="c:ChangeEmailEvent" action="{!c.handlechangedEmails}"/>
+   <aura:attribute name="oldAccountInfo" type="Array"/>
+   <aura:attribute name="opts" type="Array"/>
+   <aura:attribute name="FlagHelpText" type="Boolean" default="false"/>
+   <aura:attribute name="OpenTask" type="Boolean" default="false"/>
+   <aura:attribute name="isSuccess" type="Boolean" default="true"/>
+   <aura:attribute name="Consensimodificabili" type="Boolean" default="true"/>
+   <aura:attribute name="isPrivacy1populated" type="Boolean"/>
+   <aura:attribute name="Differentcontact" type="String" default=''/>
+   <aura:attribute name="InitialEmailMap" type="Map"/>
+
+   <!-- FM_02/05/2018 : GDPR - START -->
+   <aura:attribute name="MPSEnrichment" type="Boolean" access="public"/>
+
+   <aura:attribute name="IsGDPRCase" type="Boolean" default="false"/>
+   <aura:attribute name="PhoneCallId" type="String"/>
+   <aura:attribute name="ContactDPO" type="Boolean" default="false"/>
+   <!-- FM_02/05/2018 : GDPR - END -->
+
+   <aura:handler event="c:ChangeMobilePhoneEvent" action="{!c.handlechangedMobilePhone}"/>
+   <aura:attribute name="oldAccountInfoMobilePhone" type="Array"/>
+   <aura:attribute name="Differentphonecontact" type="String" default=''/>
+   <aura:attribute name="InitialMobilePhoneMap" type="Map"/>
+
+   <!-- FM 05/06/2018 OTP START-->
+   <aura:attribute name="isDAOLAgency" type="Boolean" default="true"/>
+   <aura:attribute name="UserIsAdvisor" type="Boolean" default="false"/>
+   <!-- FM 05/06/2018 OTP END-->
+
+
+   <aura:registerEvent name="sendchangedPrivacy2" type="c:ChangePrivacy2Event"/>
+
+ 
+
+   <div id="container_consensi" class="slds-col_padded slds-p-bottom_x-small slds-m-top_small slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1">
+       
+
+      <h3 class="slds-section-title_divider">Consensi
+         <lightning:icon class="slds_icon_approval" iconName="action:approval" size="xx-small" alternativeText="Non ci sono Task aperti associati al cliente" title="Nessun task da completare. È possibile procedere con la modifica ai Consensi"/>
+      </h3>  
+      
+   </div>
+
+
+   <div id="container_CIF_Privacy_1" class="slds-form_horizontal slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+      <label class="slds-form-element_label" for="Trattamento dei dati personali:">Trattamento dei dati personali:</label> 
+      <div class="slds-form-element__control">
+         <ui:outputText aura:id="CIF_Privacy_1"  value="{!v.Consensi.CIF_Privacy_1__c}"/>
+         <br/>
+      </div>
+   </div>
+
+   <div id="spazio_vuoto" class="slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+      <div class="slds-form-element">
+      </div>
+   </div>
+
+   <div id="spazio_vuoto" class="slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-1">
+      <div class="slds-form-element">
+      </div>
+   </div>
+
+   <div id="spazio_vuoto" class="slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-1">
+      <div class="slds-form-element">
+         &nbsp;
+      </div>
+   </div>
+
+   <div id="container_CIF_Privacy_2" class="slds-form_horizontal slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+      <label class="inputStyle slds-form-element_label" for="Attività promozionali e di vendita:">Attività promozionali e di vendita:</label> 
+      <div class="slds-form-element__control">
+         <ui:inputSelect aura:id="Privacy2" class="slds-input" value="{!v.Consensi.CIF_Privacy_2__c}" change="{!c.ChangePrivacy2}" required="true">
+            <ui:inputSelectOption text="" label="" disabled="true"/>
+            <ui:inputSelectOption text="Sì" label="Sì"/>
+            <ui:inputSelectOption text="No" label="No"/>
+         </ui:inputSelect>
+      </div>
+   </div>
+
+   <div id="spazio_vuoto" class="slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+      <div class="slds-form-element">
+      </div>
+   </div>
+
+   <div id="spazio_vuoto" class="slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-1">
+      <div class="slds-form-element">
+      </div>
+   </div>
+
+   <div id="container_CIF_Privacy_3" class="slds-form_horizontal slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+      <label class="inputStyle slds-form-element_label" for="Ricerche di mercato :">Ricerche di mercato:</label> 
+      <div class="slds-form-element__control">
+         <ui:inputSelect aura:id="Privacy3" class="slds-input" value="{!v.Consensi.CIF_Privacy_3__c}" required="true" >
+            <ui:inputSelectOption text="" label="" disabled="true"/>
+            <ui:inputSelectOption text="Sì" label="Sì"/>
+            <ui:inputSelectOption text="No" label="No"/>
+         </ui:inputSelect>
+      </div>
+   </div>
+
+   <div id="spazio_vuoto" class="slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-2">
+      <div class="slds-form-element">
+      </div>
+   </div>
+
+   <div id="spazio_vuoto" class="slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1">
+      <div class="slds-form-element">
+      </div>
+   </div>
+
+   <div id="container_CIF_Privacy_4" class="slds-form_horizontal slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+      <label class="inputStyle slds-form-element_label" for="Att.promoz./vendita/ric.merc.di partner:">Att.prom./vendita/ric.merc.partner:</label> 
+      <div class="slds-form-element__control">
+         <ui:inputSelect aura:id="Privacy4" class="slds-input" value="{!v.Consensi.CIF_Privacy_4__c}" required="true">
+            <ui:inputSelectOption text="" label="" disabled="true"/>
+            <ui:inputSelectOption text="Sì" label="Sì"/>
+            <ui:inputSelectOption text="No" label="No"/>
+         </ui:inputSelect>
+      </div>
+   </div>
+
+   <div id="spazio_vuoto" class="slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+      <div class="slds-form-element">
+      </div>
+   </div>
+
+   <div id="spazio_vuoto" class="slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1">
+      <div class="slds-form-element"  >
+      </div>
+   </div>
+
+   <div id="container_CIF_Privacy_5" class="slds-form_horizontal slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+      <label class="inputStyle slds-form-element_label" for="Invio documentazione in formato digitale:">Invio documentazione digitale:</label> 
+      <div class="slds-form-element__control">
+         <ui:inputSelect aura:id="Privacy5" class="slds-input" value="{!v.Consensi.CIF_Privacy_5__c}" change="{!c.onSelectChangePrivacy5}">
+            <ui:inputSelectOption text="" label="" disabled="true"/>
+            <ui:inputSelectOption text="Sì" label="Sì"/>
+            <ui:inputSelectOption text="No" label="No"/>
+         </ui:inputSelect>
+      </div>
+   </div>
+
+
+	<!--
+   <div id="container_consent_collected_by_mail" class="slds-col_padded slds-form_horizontal slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+     
+       <label id="collected_by_mail" class="inputStyle slds-form-element_label" for="Consenso raccolto tramite mail">Consenso raccolto tramite mail:</label>
+      <div class="slds-form-element__control">
+         <ui:inputCheckbox aura:id="Consent_collected_by_mail"  value="{!v.Consensi.CIF_Consent_collected_by_Email__c}" change="{!c.onChangeFlagmail}"/>
+         <br/>
+         <aura:if isTrue="{!v.FlagHelpText == true}"> 
+            <ui:message severity="Information" >
+               Il flag deve essere utilizzato solo nel caso in cui il cliente abbia inviato una mail per esprimere/modificare il consenso
+            </ui:message>
+         </aura:if> 
+      </div>
+		
+   </div>
+   -->
+	<div id="container_email_contact" class="slds-form_horizontal slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+      <label id="contatto_mail" class="inputStyle slds-form-element_label" for="Contatto mail:">Contatto mail:</label> 
+      <div class="slds-form-element__control" style="height:60px width:50px">
+         <ui:inputSelect aura:id="inputEmail"  class="slds-input" value="{!v.Consensi.CIF_Mail_contact__c}" disabled="{!v.Consensi.CIF_Privacy_5__c!='Sì'}" change="{!c.onSelectChangeContattoMail}"/>
+      </div>
+   </div>
+
+   <div id="spazio_vuoto" class="slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1">
+      <div class="slds-form-element"  >
+         
+      </div>
+   </div>
+
+
+   <div id="container_CIF_Privacy_6" class="slds-form_horizontal slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+      <label class="inputStyle slds-form-element_label" for="Utilizzo della firma grafometrica:">Utilizzo della firma grafometrica:</label> 
+      <div class="slds-form-element__control">
+         <ui:inputSelect aura:id="Privacy7" class="slds-input" value="{!v.Consensi.CIF_Privacy_7__c}" change="{!c.onSelectChangePrivacy7}">
+            <ui:inputSelectOption text="" label="" disabled="true"/>
+            <ui:inputSelectOption text="Sì" label="Sì"/>
+            <ui:inputSelectOption text="No" label="No"/>
+         </ui:inputSelect>
+      </div>
+   </div>
+   <div id="container_CIF_Privacy_8" class="slds-form_horizontal slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+      <!--aura:if isTrue="{!and(v.UserIsAdvisor==false,v.isDAOLAgency == true)}"-->
+      <label class="inputStyle slds-form-element_label" for="Adesione al servizio OTP:">Adesione al servizio OTP:</label> 
+      <div class="slds-form-element__control">
+         <ui:inputSelect aura:id="Privacy8" class="slds-input" value="{!v.Consensi.CIF_Privacy_8__c}" change="{!c.onSelectChangePrivacy8}">
+            <ui:inputSelectOption text="" label="" disabled="true"/>
+            <ui:inputSelectOption text="Sì" label="Sì"/>
+            <ui:inputSelectOption text="No" label="No"/>
+         </ui:inputSelect>
+      </div>
+      <!--aura:set attribute="else">
+      <label class="outputText slds-form-element_label" for="Adesione al servizio OTP:">Adesione al servizio OTP:</label> 
+      <div class="slds-form-element__control">
+         <ui:inputSelect aura:id="Privacy8" class="slds-input" value="{!v.Consensi.CIF_Privacy_8__c}" change="{!c.onSelectChangePrivacy8}" disabled="{!true}">
+            <ui:inputSelectOption text="" label="" disabled="true"/>
+            <ui:inputSelectOption text="Sì" label="Sì"/>
+            <ui:inputSelectOption text="No" label="No"/>
+         </ui:inputSelect>
+      </div> 
+   </aura:set>
+</aura:if-->
+   </div>
+
+   <!--div id="spazio_vuoto" class="slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+      <div class="slds-form-element">
+      </div>
+   </div-->
+
+   <div id="container_Number" class="slds-col_padded slds-form_horizontal slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+      <label id="Number_label" class="inputStyle slds-form-element_label" for="Numero:">Numero:</label> 
+      <div class="slds-form-element__control">
+         <ui:outputText class="inputStyle slds-form-element_label" aura:id="Number" value="{!v.Consensi.CIF_Number__c}"/>
+      </div>
+   </div>
+
+   <div id="container_OTP_contact" class="slds-form_horizontal slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+      <aura:if isTrue="{!and(v.UserIsAdvisor==false,v.isDAOLAgency == true)}">
+      <label id="OTP_contact" class="inputStyle slds-form-element_label" for="Contatto telefonico OTP:">Contatto telefonico OTP:</label> 
+      <div class="slds-form-element__control" style="height:60px width:50px">
+         <ui:inputSelect aura:id="contactOTP"  class="slds-input" value="{!v.Consensi.CIF_OTP_Phone_contact__c}" disabled="{!v.Consensi.CIF_Privacy_8__c!='Sì'}" change="{!c.onSelectChangeContattoOTP}"/>
+      </div>
+       <aura:set attribute="else">
+          <label id="OTP_contact" class="outputText slds-form-element_label" for="Contatto telefonico OTP:">Contatto telefonico OTP:</label> 
+      <div class="slds-form-element__control" style="height:60px width:50px">
+         <ui:outputText aura:id="contactOTP"  class="outputText" value="{!v.Consensi.CIF_OTP_Phone_contact__c}" />
+      </div>
+     </aura:set>
+</aura:if>  
+   </div>
+
+   <!--div id="spazio_vuoto" class="slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+      <div class="slds-form-element">
+      </div>
+   </div-->
+
+   <div id="container_Expiry_date" class="slds-col_padded slds-form_horizontal slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+      <label id="Expiry_date_label" class="inputStyle slds-form-element_label" for="Data di scadenza:">Data di scadenza:</label>
+      <div class="slds-form-element__control">
+         <ui:outputDate aura:id="Expiry_date" value="{!v.Consensi.CIF_Expiry_date__c}"/>
+      </div>
+   </div>
+
+   <div id="spazio_vuoto" class="slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1">
+      <div class="slds-form-element"  >
+         &nbsp;
+      </div>
+   </div>
+
+    <div id="container_Preferenze" class="slds-col_padded slds-p-bottom_x-small slds-m-top_small slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1">
+       
+
+      <h3 class="slds-section-title_divider">Preferenze di Contatto
+         <lightning:icon class="slds_icon_approval" iconName="action:approval" size="xx-small" />
+      </h3>  
+      
+   </div>
+    
+    <div id="container_Comunicazioni_Informative" class="slds-form_horizontal slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+      <label class="inputStyle slds-form-element_label" for="Comunicazioni informative:">Comunicazioni informative:</label> 
+      <div class="slds-form-element__control">
+         <ui:inputSelect aura:id="Comunicazioni_informative" class="slds-input" value="{!v.Consensi.Comunicazioni_informative__c}">
+            <ui:inputSelectOption text="Sì" label="Sì"/>
+            <ui:inputSelectOption text="No" label="No"/>
+         </ui:inputSelect>
+      </div>
+   </div>
+    <div id="spazio_vuoto" class="slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+      <div class="slds-form-element">
+      </div>
+   </div>
+    
+    
+   <!--div id="container_CIF_Privacy_8" class="slds-form_horizontal slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+      <aura:if isTrue="{!and(v.UserIsAdvisor==false,v.isDAOLAgency == true)}">
+      <label class="inputStyle slds-form-element_label" for="Adesione al servizio OTP:">Adesione al servizio OTP:</label> 
+      <div class="slds-form-element__control">
+         <ui:inputSelect aura:id="Privacy8" class="slds-input" value="{!v.Consensi.CIF_Privacy_8__c}" change="{!c.onSelectChangePrivacy8}">
+            <ui:inputSelectOption text="" label="" disabled="true"/>
+            <ui:inputSelectOption text="Sì" label="Sì"/>
+            <ui:inputSelectOption text="No" label="No"/>
+         </ui:inputSelect>
+      </div>
+      <aura:set attribute="else">
+      <label class="outputText slds-form-element_label" for="Adesione al servizio OTP:">Adesione al servizio OTP:</label> 
+      <div class="slds-form-element__control">
+         <ui:inputSelect aura:id="Privacy8" class="slds-input" value="{!v.Consensi.CIF_Privacy_8__c}" change="{!c.onSelectChangePrivacy8}" disabled="{!true}">
+            <ui:inputSelectOption text="" label="" disabled="true"/>
+            <ui:inputSelectOption text="Sì" label="Sì"/>
+            <ui:inputSelectOption text="No" label="No"/>
+         </ui:inputSelect>
+      </div> 
+   </aura:set>
+</aura:if>
+   </div-->
+
+   <!--div id="container_OTP_contact" class="slds-form_horizontal slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+      <aura:if isTrue="{!and(v.UserIsAdvisor==false,v.isDAOLAgency == true)}">
+      <label id="OTP_contact" class="inputStyle slds-form-element_label" for="Contatto telefonico OTP:">Contatto telefonico OTP:</label> 
+      <div class="slds-form-element__control" style="height:60px width:50px">
+         <ui:inputSelect aura:id="contactOTP"  class="slds-input" value="{!v.Consensi.CIF_OTP_Phone_contact__c}" disabled="{!v.Consensi.CIF_Privacy_8__c!='Sì'}" change="{!c.onSelectChangeContattoOTP}"/>
+      </div>
+       <aura:set attribute="else">
+          <label id="OTP_contact" class="outputText slds-form-element_label" for="Contatto telefonico OTP:">Contatto telefonico OTP:</label> 
+      <div class="slds-form-element__control" style="height:60px width:50px">
+         <ui:outputText aura:id="contactOTP"  class="outputText" value="{!v.Consensi.CIF_OTP_Phone_contact__c}" />
+      </div>
+     </aura:set>
+</aura:if>  
+   </div-->
+
+
+
+</aura:component>

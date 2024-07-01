@@ -1,0 +1,347 @@
+<template>
+    <c-mobility-modal-style>
+        <div class="modal-style__column">
+            <h1>Orari di Agenzia</h1>
+
+            <p style="margin: 0;">Indica di seguito i nuovi orari di apertura della sede della tua Agenzia. In particolare:</p>
+            <ul>
+                <li style="margin-left: 28px; list-style: disc;" >puoi usare i campi “Valido dal” - “al” per indicare il periodo di validità dei nuovi orari.</li>
+                <li style="margin-left: 28px; list-style: disc;" >per i giorni con orario continuato, ti basterà inserire solo l’orario di inizio nel mattino e di fine nel pomeriggio</li>
+                <li style="margin-left: 28px; list-style: disc;" >per i giorni di chiusura, seleziona "chiuso"</li>
+            </ul>
+            <p style="margin: 0;">
+                Ti ricordiamo che gli orari inseriti in questa pagina verranno mostrati esclusivamente nella comunicazione che stai mandando ai tuoi clienti.
+                <span style="text-decoration: underline;">Non saranno pertanto salvati o aggiornati su altri sistemi.</span>
+            </p>
+
+    <template if:true={showError}>
+        <div class="alert alert-warning" role="alert">
+                    E’ necessario compilare gli orari, indicando orario di apertura e chiusura o indicare con il flag “Chiuso” l’eventuale giorno di chiusura
+        </div>
+    </template>
+
+            <div class="row">
+                <div class="align-items-baseline col-12 col-md-6 d-flex justify-content-center">
+                    <label class="m-0 mr-2 font-weight-bold">
+                        Valido dal
+                    </label>
+            <c-mobility-date-picker
+                        class="flex-grow-1"
+                type="date"
+                value={validoDal}
+                change-callback={changeData}
+                readonly="false"
+                required="false"
+                developer-name="validoDal"
+                keydown-callback={keydown}
+            >
+            </c-mobility-date-picker>
+                    <div if:true={errori.validoDal} class="date-error"></div>
+        </div>
+                <div class="align-items-baseline col-12 col-md-6 d-flex justify-content-center datePicker">
+                    <label class="m-0 mr-2 font-weight-bold">
+                        al
+                    </label>
+            <c-mobility-date-picker
+                        class="flex-grow-1"
+                type="date"
+                value={validoAl}
+                change-callback={changeData2}
+                readonly="false"
+                required="false"
+                developer-name="validoAl"
+                keydown-callback={keydown}
+            >
+            </c-mobility-date-picker>
+                    <div if:true={errori.validoAl} class="date-error"></div>
+        </div>
+    </div>
+
+            <table class="table slds-scope">
+        <thead>
+            <tr>
+                        <th colspan="1"></th>
+                        <th colspan="2">Mattina</th>
+                        <th colspan="2">Pomeriggio</th>
+                        <th colspan="2"></th>
+                </tr>
+            <tr>
+            <th scope="col"></th>
+            <th scope="col">Da</th>
+            <th scope="col">A</th>
+            <th scope="col">Da</th>
+            <th scope="col">A</th>
+            <th scope="col"></th>
+            <th scope="col">Chiuso</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                    <th scope="row">Lunedì<span if:true={errori.lunedi.required} style="color: red">*</span></th>
+                    <td style="width: 125px;" class="position-relative">
+                        <lightning-combobox class="combo-box"
+                    value={orari.lunedi.dal1}
+                    placeholder=""
+                            options={picklistMattinaValues}
+                    onchange={lunedidal1} 
+                    disabled={orari.lunedi.isClosed}>
+                </lightning-combobox>
+                        <div if:true={errori.lunedi.dal1} class="td-error"></div>
+            </td>
+                    <td style="width: 125px;" class="position-relative">
+                        <lightning-combobox class="combo-box"
+                    value={orari.lunedi.al1}
+                    placeholder=""
+                            options={picklistMattinaValues}
+                    onchange={lunedial1} 
+                    disabled={orari.lunedi.isClosed}>
+                </lightning-combobox>
+                        <div if:true={errori.lunedi.al1} class="td-error"></div>
+            </td>
+                    <td style="width: 125px;" class="position-relative">
+                        <lightning-combobox class="combo-box"
+                    value={orari.lunedi.dal2}
+                    placeholder=""
+                            options={picklistPomeriggioValues}
+                    onchange={lunedidal2} 
+                    disabled={orari.lunedi.isClosed}>
+                </lightning-combobox>
+                        <div if:true={errori.lunedi.dal2} class="td-error"></div>
+            </td>
+                    <td style="width: 125px;" class="position-relative">
+                        <lightning-combobox class="combo-box"
+                    value={orari.lunedi.al2}
+                    placeholder=""
+                            options={picklistPomeriggioValues}
+                    onchange={lunedial2} 
+                    disabled={orari.lunedi.isClosed}>
+                </lightning-combobox>
+                        <div if:true={errori.lunedi.al2} class="td-error"></div>
+            </td>
+            <td></td>
+                    <td style="width: 125px; text-align: center;" class="position-relative"><lightning-input type="checkbox" onchange={changelunediclosed} ></lightning-input></td>
+            </tr>
+            <tr>
+                    <th scope="row">Martedì<span if:true={errori.martedi.required} style="color: red">*</span></th>
+                    <td class="position-relative">
+                        <lightning-combobox class="combo-box"
+                    value={orari.martedi.dal1}
+                    placeholder=""
+                            options={picklistMattinaValues}
+                    onchange={martedidal1} 
+                    disabled={orari.martedi.isClosed}>
+                </lightning-combobox>
+                        <div if:true={errori.martedi.dal1} class="td-error"></div>
+            </td>
+                    <td class="position-relative">
+                        <lightning-combobox class="combo-box"
+                    value={orari.martedi.al1}
+                    placeholder=""
+                            options={picklistMattinaValues}
+                    onchange={martedial1} 
+                    disabled={orari.martedi.isClosed}>
+                </lightning-combobox>
+                        <div if:true={errori.martedi.al1} class="td-error"></div>
+            </td>
+                    <td class="position-relative">
+                        <lightning-combobox class="combo-box"
+                            value={orari.martedi.dal2}
+                    placeholder=""
+                            options={picklistPomeriggioValues}
+                    onchange={martedidal2} 
+                    disabled={orari.martedi.isClosed}>
+                </lightning-combobox>
+                        <div if:true={errori.martedi.dal2} class="td-error"></div>
+            </td>
+                    <td class="position-relative">
+                        <lightning-combobox class="combo-box"
+                    value={orari.martedi.al2}
+                    placeholder=""
+                            options={picklistPomeriggioValues}
+                    onchange={martedial2} 
+                    disabled={orari.martedi.isClosed}>
+                </lightning-combobox>
+                        <div if:true={errori.martedi.al2} class="td-error"></div>
+            </td>
+            <td></td>
+                    <td style="width: 125px; text-align: center;" class="position-relative"><lightning-input type="checkbox" onchange={changemartediclosed} ></lightning-input></td>
+            </tr>
+            <tr>
+                    <th scope="row">Mercoledì<span if:true={errori.mercoledi.required} style="color: red">*</span></th>
+                    <td class="position-relative">
+                        <lightning-combobox class="combo-box"
+                    value={orari.mercoledi.dal1}
+                    placeholder=""
+                            options={picklistMattinaValues}
+                    onchange={mercoledidal1} 
+                    disabled={orari.mercoledi.isClosed}>
+                </lightning-combobox>
+                        <div if:true={errori.mercoledi.dal1} class="td-error"></div>
+            </td>
+                    <td class="position-relative">
+                        <lightning-combobox class="combo-box"
+                    value={orari.mercoledi.al1}
+                    placeholder=""
+                            options={picklistMattinaValues}
+                    onchange={mercoledial1} 
+                    disabled={orari.mercoledi.isClosed}>
+                </lightning-combobox>
+                        <div if:true={errori.mercoledi.al1} class="td-error"></div>
+            </td>
+                    <td class="position-relative">
+                        <lightning-combobox class="combo-box"
+                    value={orari.mercoledi.dal2}
+                    placeholder=""
+                            options={picklistPomeriggioValues}
+                    onchange={mercoledidal2} 
+                    disabled={orari.mercoledi.isClosed}>
+                </lightning-combobox>
+                        <div if:true={errori.mercoledi.dal2} class="td-error"></div>
+            </td>
+                    <td class="position-relative">
+                        <lightning-combobox class="combo-box"
+                    value={orari.mercoledi.al2}
+                    placeholder=""
+                            options={picklistPomeriggioValues}
+                    onchange={mercoledial2} 
+                    disabled={orari.mercoledi.isClosed}>
+                </lightning-combobox>
+                        <div if:true={errori.mercoledi.al2} class="td-error"></div>
+            </td>
+            <td></td>
+                    <td style="width: 125px; text-align: center;" class="position-relative"><lightning-input type="checkbox" onchange={changemercolediclosed} ></lightning-input></td>
+            </tr>
+            <tr>
+                    <th scope="row">Giovedì<span if:true={errori.giovedi.required} style="color: red">*</span></th>
+                    <td class="position-relative"><lightning-combobox class="combo-box"
+                    value={orari.giovedi.dal1}
+                    placeholder=""
+                            options={picklistMattinaValues}
+                    onchange={giovedidal1} 
+                    disabled={orari.giovedi.isClosed}>
+                </lightning-combobox>
+                        <div if:true={errori.giovedi.dal1} class="td-error"></div>
+            </td>
+                    <td class="position-relative"><lightning-combobox class="combo-box"
+                value={orari.giovedi.al1}
+                placeholder=""
+                        options={picklistMattinaValues}
+                onchange={giovedial1} 
+                disabled={orari.giovedi.isClosed}>
+                        </lightning-combobox>
+                        <div if:true={errori.giovedi.al1} class="td-error"></div>
+                    </td>
+                    <td class="position-relative"><lightning-combobox class="combo-box"
+                value={orari.giovedi.dal2}
+                placeholder=""
+                        options={picklistPomeriggioValues}
+                onchange={giovedidal2} 
+                disabled={orari.giovedi.isClosed}>
+                        </lightning-combobox>
+                        <div if:true={errori.giovedi.dal2} class="td-error"></div>
+                    </td>
+                    <td class="position-relative"><lightning-combobox class="combo-box"
+                value={orari.giovedi.al2}
+                placeholder=""
+                        options={picklistPomeriggioValues}
+                onchange={giovedial2} 
+                disabled={orari.giovedi.isClosed}>
+                        </lightning-combobox>
+                        <div if:true={errori.giovedi.al2} class="td-error"></div>
+                    </td>
+            <td></td>
+                    <td style="width: 125px; text-align: center;" class="position-relative"><lightning-input type="checkbox" onchange={changegiovediclosed} ></lightning-input></td>
+            </tr>
+            <tr>
+                    <th scope="row">Venerdì<span if:true={errori.venerdi.required} style="color: red">*</span></th>
+                    <td class="position-relative"><lightning-combobox class="combo-box"
+                value={orari.venerdi.dal1}
+                placeholder=""
+                        options={picklistMattinaValues}
+                onchange={venerdidal1} 
+                disabled={orari.venerdi.isClosed}>
+                        </lightning-combobox>
+                        <div if:true={errori.venerdi.dal1} class="td-error"></div>
+                    </td>
+                    <td class="position-relative"><lightning-combobox class="combo-box"
+                value={orari.venerdi.al1}
+                placeholder=""
+                        options={picklistMattinaValues}
+                onchange={venerdial1} 
+                disabled={orari.venerdi.isClosed}>
+                        </lightning-combobox>
+                        <div if:true={errori.venerdi.al1} class="td-error"></div>
+                    </td>
+                    <td class="position-relative"><lightning-combobox class="combo-box"
+                value={orari.venerdi.dal2}
+                placeholder=""
+                        options={picklistPomeriggioValues}
+                onchange={venerdidal2} 
+                disabled={orari.venerdi.isClosed}>
+                        </lightning-combobox>
+                        <div if:true={errori.venerdi.dal2} class="td-error"></div>
+                    </td>
+                    <td class="position-relative"><lightning-combobox class="combo-box"
+                value={orari.venerdi.al2}
+                placeholder=""
+                        options={picklistPomeriggioValues}
+                onchange={venerdial2} 
+                disabled={orari.venerdi.isClosed}>
+                        </lightning-combobox>
+                        <div if:true={errori.venerdi.al2} class="td-error"></div>
+                    </td>
+            <td></td>
+                    <td style="width: 125px; text-align: center;" class="position-relative"><lightning-input type="checkbox" onchange={changevenerdiclosed} ></lightning-input></td>
+            </tr>
+            <tr>
+                    <th scope="row">Sabato<span if:true={errori.sabato.required} style="color: red">*</span></th>
+                    <td class="position-relative"><lightning-combobox class="combo-box"
+                value={orari.sabato.dal1}
+                placeholder=""
+                        options={picklistMattinaValues}
+                onchange={sabatodal1} 
+                disabled={orari.sabato.isClosed}>
+                        </lightning-combobox>
+                        <div if:true={errori.sabato.dal1} class="td-error"></div>
+                    </td>
+                    <td class="position-relative"><lightning-combobox class="combo-box"
+                value={orari.sabato.al1}
+                placeholder=""
+                        options={picklistMattinaValues}
+                onchange={sabatoal1} 
+                disabled={orari.sabato.isClosed}>
+                        </lightning-combobox>
+                        <div if:true={errori.sabato.al1} class="td-error"></div>
+                    </td>
+                    <td class="position-relative"><lightning-combobox class="combo-box"
+                value={orari.sabato.dal2}
+                placeholder=""
+                        options={picklistPomeriggioValues}
+                onchange={sabatodal2} 
+                disabled={orari.sabato.isClosed}>
+                        </lightning-combobox>
+                        <div if:true={errori.sabato.dal2} class="td-error"></div>
+                    </td>
+                    <td class="position-relative"><lightning-combobox class="combo-box"
+                value={orari.sabato.al2}
+                placeholder=""
+                        options={picklistPomeriggioValues}
+                onchange={sabatoal2} 
+                disabled={orari.sabato.isClosed}>
+                        </lightning-combobox>
+                        <div if:true={errori.sabato.al2} class="td-error"></div>
+                    </td>
+            <td></td>
+                    <td style="width: 125px; text-align: center;" class="position-relative"><lightning-input type="checkbox" onchange={changesabatoclosed} ></lightning-input></td>
+            </tr>
+            
+        </tbody>
+        </table>
+    
+            <div class="mobility-modal__actions">
+                <button type="button" class="btn btn-outline-primary btn-action" onclick={back}>Torna indietro</button>
+                <button type="button" class="btn btn-primary" onclick={primary}>Procedi</button>
+            </div>
+    </div>
+    </c-mobility-modal-style>
+</template>

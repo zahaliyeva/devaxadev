@@ -1,0 +1,190 @@
+<aura:component>
+    <aura:attribute name="wrapper" type="Object" />    
+    <aura:attribute name="processList" type="Array" />    
+
+    <div class="slds-p-around_small">
+
+        <div class="slds-grid slds-gutters slds-wrap slds-m-top_medium">
+            <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12">
+                <div class="title">
+                    <strong>Tipologia di prodotti esclusi</strong>
+                </div> 
+                <div class="slds-wrap slds-var-m-bottom_x-small slds-m-top_medium">
+                    <label class="slds-checkbox_toggle slds-grid">
+                        <lightning:input type="toggle"
+                            aura:id="BlackListAbitazione"
+                            label=""
+                            name="BlackListAbitazione"
+                            checked="{!v.wrapper.account.BlackList_Abitazione__c}"
+                            messageToggleActive=""
+                            messageToggleInactive=""
+                            disabled="true"/>
+                        <span class="slds-form-element__label slds-m-bottom_none slds-var-m-left_x-small">BlackList Abitazione</span>
+                    </label>
+                </div>                
+                <div class="slds-wrap slds-var-m-bottom_x-small">
+                    <label class="slds-checkbox_toggle slds-grid">
+                        <lightning:input type="toggle"
+                            aura:id="BlackListAuto"
+                            label=""
+                            name="BlackListAuto"
+                            checked="{!v.wrapper.account.BlackList_Auto__c}"
+                            messageToggleActive=""
+                            messageToggleInactive=""
+                            disabled="true"/>
+                        <span class="slds-form-element__label slds-m-bottom_none slds-var-m-left_x-small">BlackList Auto</span>
+                    </label>
+                </div>                
+                <div class="slds-wrap slds-var-m-bottom_x-small">
+                    <label class="slds-checkbox_toggle slds-grid">
+                        <lightning:input type="toggle"
+                            aura:id="BlackListAziende"
+                            label=""
+                            name="BlackListAziende"
+                            checked="{!v.wrapper.account.BlackList_Aziende__c}"
+                            messageToggleActive=""
+                            messageToggleInactive=""
+                            disabled="true"/>
+                        <span class="slds-form-element__label slds-m-bottom_none slds-var-m-left_x-small">BlackList Aziende</span>
+                    </label>
+                </div>                
+                <div class="slds-wrap slds-var-m-bottom_x-small">
+                    <label class="slds-checkbox_toggle slds-grid">
+                        <lightning:input type="toggle"
+                            aura:id="BlackListInfortuni"
+                            label=""
+                            name="BlackListInfortuni"
+                            checked="{!v.wrapper.account.BlackList_Infortuni__c}"
+                            messageToggleActive=""
+                            messageToggleInactive=""
+                            disabled="true"/>
+                        <span class="slds-form-element__label slds-m-bottom_none slds-var-m-left_x-small">BlackList Infortuni</span>
+                    </label>
+                </div>
+                <div class="slds-wrap slds-var-m-bottom_x-small">
+                    <label class="slds-checkbox_toggle slds-grid">
+                        <lightning:input type="toggle"
+                            aura:id="BlackListMalattia"
+                            label=""
+                            name="BlackListMalattia"
+                            checked="{!v.wrapper.account.BlackList_Malattia__c}"
+                            messageToggleActive=""
+                            messageToggleInactive=""
+                            disabled="true"/>
+                        <span class="slds-form-element__label slds-m-bottom_none slds-var-m-left_x-small">BlackList Malattia</span>
+                    </label>
+                </div>
+                <div class="slds-wrap slds-var-m-bottom_x-small">
+                    <label class="slds-checkbox_toggle slds-grid">
+                        <lightning:input type="toggle"
+                            aura:id="BlackListProtection"
+                            label=""
+                            name="BlackListProtection"
+                            checked="{!v.wrapper.account.BlackList_Protection__c}"
+                            messageToggleActive=""
+                            messageToggleInactive=""
+                            disabled="true"/>
+                        <span class="slds-form-element__label slds-m-bottom_none slds-var-m-left_x-small">BlackList Protection</span>
+                    </label>
+                </div>
+                <div class="slds-wrap slds-var-m-bottom_x-small">
+                    <label class="slds-checkbox_toggle slds-grid">
+                        <lightning:input type="toggle"
+                            aura:id="BlackListSaving"
+                            label=""
+                            name="BlackListSaving"
+                            checked="{!v.wrapper.account.BlackList_Saving__c}"
+                            messageToggleActive=""
+                            messageToggleInactive=""
+                            disabled="true"/>
+                        <span class="slds-form-element__label slds-m-bottom_none slds-var-m-left_x-small">BlackList Saving</span>
+                    </label>
+                </div>   
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12">
+                <div class="title">
+                    <strong>Tipologia di campagne Escluse</strong>
+                </div>
+                <div class="slds-wrap slds-var-m-bottom_x-small slds-m-top_medium">
+                    <label class="slds-checkbox_toggle slds-grid">
+                        <lightning:input type="toggle"
+                            aura:id="BlackListBroker"
+                            label=""
+                            name="BlackListBroker"
+                            checked="{!v.wrapper.account.BlackList_Broker__c}"
+                            messageToggleActive=""
+                            messageToggleInactive=""
+                            disabled="true"/>
+                        <span class="slds-form-element__label slds-m-bottom_none slds-var-m-left_x-small">BlackList Broker</span>
+                    </label>
+                </div> 
+                <div class="slds-wrap slds-var-m-bottom_x-small">
+                    <label class="slds-checkbox_toggle slds-grid">
+                        <lightning:input type="toggle"
+                            aura:id="BlackListCommerciale"
+                            label=""
+                            name="BlackListCommerciale"
+                            checked="{!v.wrapper.account.BlackList_Commerciale__c}"
+                            messageToggleActive=""
+                            messageToggleInactive=""
+                            disabled="true"/>
+                        <span class="slds-form-element__label slds-m-bottom_none slds-var-m-left_x-small">BlackList Commerciale</span>
+                    </label>
+                </div> 
+                <div class="slds-wrap slds-var-m-bottom_x-small">
+                    <label class="slds-checkbox_toggle slds-grid">
+                        <lightning:input type="toggle"
+                            aura:id="BlackListRinnovo"
+                            label=""
+                            name="BlackListRinnovo"
+                            checked="{!v.wrapper.account.BlackList_Rinnovo__c}"
+                            messageToggleActive=""
+                            messageToggleInactive=""
+                            disabled="true"/>
+                        <span class="slds-form-element__label slds-m-bottom_none slds-var-m-left_x-small">BlackList Rinnovo</span>
+                    </label>
+                </div> 
+                <div class="slds-wrap slds-var-m-bottom_x-small">
+                    <label class="slds-checkbox_toggle slds-grid">
+                        <lightning:input type="toggle"
+                            aura:id="BlackListServizio"
+                            label=""
+                            name="BlackListServizio"
+                            checked="{!v.wrapper.account.BlackList_Servizio__c}"
+                            messageToggleActive=""
+                            messageToggleInactive=""
+                            disabled="true"/>
+                        <span class="slds-form-element__label slds-m-bottom_none slds-var-m-left_x-small">BlackList Servizio</span>
+                    </label>
+                </div>   
+            </div>
+			<div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12">
+                <div class="title">
+                    <strong>Tipologia di Processi esclusi</strong>
+                </div>
+                <div class="slds-wrap slds-var-m-bottom_x-small slds-m-top_medium">
+                    <label class="slds-checkbox_toggle slds-grid">
+						<ul class="slds-list_dotted">
+							<aura:iteration items="{!v.wrapper.processList}" var="process">
+								<li>{!process}</li>
+							</aura:iteration>
+						</ul>
+                    </label>
+                </div>
+			</div>
+        </div>        
+
+        
+        <div class="slds-grid slds-gutters slds-wrap slds-m-top_medium">
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_3-of-12">
+                <div class="slds-form-element slds-form-element_readonly">
+                    <span class="slds-form-element__label">Ultima modifica blacklist</span>
+                    <div class="slds-form-element__control">
+                        <div class="slds-form-element__static"><ui:outputDate value="{!v.wrapper.account.Ultima_modifica_blacklist__c}" format="DD/MM/YYYY, HH:mm"/></div>
+                    </div>
+                </div>
+            </div>                       
+        </div>
+    </div>
+
+</aura:component>

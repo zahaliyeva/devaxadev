@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>NFE_LayoutModal_ModalConfermaCreazioneCa</label>
+    <protected>false</protected>
+    <values>
+        <field>Icon__c</field>
+        <value xsi:type="xsd:string">warning_push</value>
+    </values>
+    <values>
+        <field>Index__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Link__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>NameLayout__c</field>
+        <value xsi:type="xsd:string">ModalConfermaCreazioneCampagna</value>
+    </values>
+    <values>
+        <field>ObjectName__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>RecordTypeDeveloperName__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>SectionName__c</field>
+        <value xsi:type="xsd:string">Sei sicuro di creare la campagna?</value>
+    </values>
+    <values>
+        <field>SectionSubName__c</field>
+        <value xsi:type="xsd:string">Ti ricordiamo che se abbandoni ora la creazione della campagna le tue scelte non verranno salvate.</value>
+    </values>
+    <values>
+        <field>SectionUnderSubName__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>invisible__c</field>
+        <value xsi:type="xsd:boolean">false</value>
+    </values>
+    <values>
+        <field>isUsingIcon__c</field>
+        <value xsi:type="xsd:boolean">true</value>
+    </values>
+    <values>
+        <field>isUsingLink__c</field>
+        <value xsi:type="xsd:boolean">false</value>
+    </values>
+    <values>
+        <field>isUsingURLpreview__c</field>
+        <value xsi:type="xsd:boolean">false</value>
+    </values>
+    <values>
+        <field>page__c</field>
+        <value xsi:nil="true"/>
+    </values>
+</CustomMetadata>

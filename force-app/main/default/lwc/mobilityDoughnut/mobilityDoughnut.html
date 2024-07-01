@@ -1,0 +1,40 @@
+<template> 
+	<div class="content">
+		<div class="doughnut">
+			<template if:false = {isForLead}>
+			
+			<div class="info">
+				<h1 style="position: relative;z-index: -1">
+					<span class='number'>{setData.total}</span>
+				</h1>
+				<h3 style="position: relative;z-index: -1">{setData.label}</h3>
+			</div>
+			<canvas style="position: relative;z-index: 1" width="250px" height="250px"></canvas>
+			</template>
+			
+			<template if:true = {isForLead}>
+			
+				<div style=" positione: relative;  width:180; height:180%;display: flex;
+				align-items: center;
+				justify-content: center;">
+				
+					
+					
+					<div class="total">
+						
+							<b><span class='number' style = "font-size:180%">{setData.total}</span> </b><br>
+							<b><span class='title' style = "font-size:100%">Lead</span></b>
+					</div>	
+					
+					
+				
+				<canvas style="position: relative;z-index: 1" width="180%" height="180%">
+					
+				</canvas>
+				
+			</div>
+			</template>
+			
+		</div>
+	</div>
+</template>

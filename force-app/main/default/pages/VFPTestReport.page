@@ -1,0 +1,51 @@
+<apex:page cache="false" applyHtmlTag="true" controller="CustomerListToCertificateCTRL" standardStylesheets="true" lightningStylesheets="true">
+    <style>
+        .custombutton {
+        	border: solid 1px; 
+        	border-color: rgb(216, 216, 216) rgb(209, 209, 209) rgb(186, 186, 186);
+        	text-decoration: none; 
+        	padding: 30px; 
+        	background-color: rgba(0,0,0,0.0);
+        	margin-left: 5%;
+        	height: 75px;
+        	min-width: 25%;
+        	margin-top: 2%;
+        	margin-bottom: 2%;
+        	color: #00008B;
+        }
+    </style>
+    <div style="width:100%; margin-top:2%; text-align:center;">
+        <div style = "text-align:center; font-size:40px; color:#00008B">
+            Liste Clienti da Certificare
+        </div>
+        <br/>
+        <br/>
+        
+        <br/>
+        <br/>
+       
+            
+        
+        <apex:outputPanel style="width : 100%">
+            <apex:form style="width : 100%">
+                <apex:outputLink value="{!$Setup.CampaignCS__c.Link3__c}" type="button"
+                                 styleclass="slds-button slds-button_neutral custombutton"
+                                 id="button03">
+                    {!$Setup.CampaignCS__c.Name3__c}
+                </apex:outputLink>
+                
+                <br/>
+                <br/>
+                
+                <br/>
+                <br/>
+            </apex:form>
+        </apex:outputPanel>
+        
+    	<br/>
+        <br/>
+        
+        <br/>
+        <br/>
+    </div>
+</apex:page>

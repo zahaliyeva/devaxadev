@@ -1,0 +1,34 @@
+<template>
+	<c-mobility-spinner show={spinner} show-overlay="true"></c-mobility-spinner>
+	<c-mobility-messages 
+		model={messages}
+		confirm-warning-callback={onCreateProposal}
+	></c-mobility-messages>
+
+	<template if:true={authorized}>
+		<div class="overload-contain overload-on-top" style="z-index: 10000;">
+			<div class="overload-contain-child">
+				<div class="overload-element">
+					<div class="row">
+						<div class="col-12">
+							<h2>Vuoi associare la proposta ad una delle Trattative in corso?</h2>
+						</div>
+						<div class="col-12 text-right">
+							<div class="btn btn-primary" onclick={showWarning}>Crea nuova Proposta</div>
+						</div>
+						<div class="col-12">
+							<c-s-object-data-grid tabledata={opportunityData} backgound-color="#ffffff"></c-s-object-data-grid>
+						</div>
+						<div class="col-12 text-right">
+							<div class="btn" onclick={onClose}>Annulla</div>
+							<button class="btn btn-primary" onclick={onSetProposal} disabled={isNotSelected}>Seleziona</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</template>
+	<template if:false={authorized}>
+		<c-mobility-unauthorized></c-mobility-unauthorized>
+	</template>
+</template>

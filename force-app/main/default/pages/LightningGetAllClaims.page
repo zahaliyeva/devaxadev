@@ -1,0 +1,264 @@
+<apex:page id="LightningGetAllClaims" controller="LightningGetAllClaimsCTRL" showHeader="false" sidebar="false" standardStylesheets="false" applyHtmlTag="true" applyBodyTag="false" docType="html-5.0">
+    
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>      
+    </head>
+    
+    <apex:includeScript value="/support/console/41.0/integration.js"/>   
+    <apex:includeScript value="/soap/ajax/41.0/connection.js"/>
+    <apex:includeScript value="/soap/ajax/41.0/apex.js"/>
+    <apex:slds />
+    <apex:includeLightning />
+    <apex:includeScript value="/lightning/lightning.out.js" />
+    <apex:includeLightning />
+    <apex:includeScript value="https://code.jquery.com/jquery-1.8.1.min.js" />
+    <div class="slds" style=""> 
+        <div id="lightning" />
+    </div>
+    
+    <!-- OAVERSANO 14/03/2019 : AXA Assistance - START -->
+    <apex:outputPanel id="thePanel" rendered="{!not(showTraceMonitoringCase)}">
+	<style>
+        html{
+            overflow-y: hidden;
+        }
+        .slds-scope .borderNone .slds-card__header {
+            padding: 0rem 1rem 0;
+        }
+        .slds-scope .slds-text-title_caps, .slds-scope .slds-text-title--caps {
+            font-size: .5rem;
+        }
+        .cGetAllClaims .tableHeader thead th:not(.dayOfWeek):nth-last-of-type(5) {
+            width: 65px !important; 
+        }
+        .cGetAllClaims .tableHeader thead th:not(.dayOfWeek):nth-last-of-type(3) {
+            width: 74px !important; 
+        }
+        .cGetAllClaims .tableHeader thead th:not(.dayOfWeek):nth-last-of-type(2) {
+            width: 80px !important; 
+        }
+        .cGetAllClaims .tableHeader thead th:not(.dayOfWeek):nth-last-of-type(1) {
+            width: 88px !important;
+        }
+    </style>
+	</apex:outputPanel>
+	
+	<apex:outputPanel id="thePanelMon" rendered="{!showTraceMonitoringCase}">
+	<style>
+        html{
+            overflow-y: hidden;
+        }
+        .slds-scope .borderNone .slds-card__header {
+            padding: 0rem 1rem 0;
+        }
+        .slds-scope .slds-text-title_caps, .slds-scope .slds-text-title--caps {
+            font-size: .5rem;
+        }
+        .cGetAllClaims .tableHeader thead th:not(.dayOfWeek):nth-last-of-type(6) {
+            width: 65px !important; 
+        }
+        .cGetAllClaims .tableHeader thead th:not(.dayOfWeek):nth-last-of-type(4) {
+            width: 74px !important; 
+        }
+        .cGetAllClaims .tableHeader thead th:not(.dayOfWeek):nth-last-of-type(3) {
+            width: 80px !important; 
+        }
+        .cGetAllClaims .tableHeader thead th:not(.dayOfWeek):nth-last-of-type(2) {
+            width: 88px !important; 
+        }
+        .cGetAllClaims .tableHeader thead th:not(.dayOfWeek):nth-last-of-type(1) {
+            width: 128px !important;
+        }
+    </style>
+	</apex:outputPanel>
+	<!-- OAVERSANO 14/03/2019 : AXA Assistance - END -->  
+  
+    
+    <script type="text/javascript">    
+    var fiscalCode ="{!$CurrentPage.parameters.fiscalCode}";
+    var policyNumber ="{!$CurrentPage.parameters.policyNumber}";
+    var showPreDenunciations ="{!$CurrentPage.parameters.showPreDenunciations}";
+    var accountId = "{!$CurrentPage.parameters.accountId}";
+    //OAVERSANO 14/03/2019 : AXA Assistance -- START
+    var isCaseView = "{!$CurrentPage.parameters.isCaseView}"; 
+    var showTraceMonitoringCase = "{!showTraceMonitoringCase}";
+    var source = "{!$CurrentPage.parameters.source}";
+    var originalCase = "{!caseId}";
+    var rtCaseId = "{!$CurrentPage.parameters.CaseType}";
+    var CallerType = "{!$CurrentPage.parameters.CallerType}";
+    var CallDateTime = "{!$CurrentPage.parameters.CallDateTime}";
+    var phoneCallIDB = "{!$CurrentPage.parameters.phoneCallIDB}";
+    var phoneCallId = "{!$CurrentPage.parameters.phoneCallId}";
+    //OAVERSANO 14/03/2019 : AXA Assistance -- END
+    //MDANTONIO 20/05/2019 : AXA Assistance enh. US-1018-- START
+    var caseRT = "{!caseRT}";
+    var urlSFDC = "{!urlSFDC}";
+    console.log('caseRT:' + caseRT);
+    console.log('urlSFDC:' + urlSFDC);
+    //MDANTONIO 20/05/2019 : AXA Assistance enh. US-1018-- END
+    
+    var width = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth);
+    var profiloCorrente = "{!$Profile.Name}";
+    
+        
+    $Lightning.use("c:GetAllClaimsApp", function() {
+        $Lightning.createComponent("c:GetAllClaims",
+                                   { 
+                                    "screenWidth" : width,
+                                    "fiscalCode" : fiscalCode,
+                                    "policyNumber" : policyNumber,
+                                    "showPreDenunciations" : showPreDenunciations,
+                                    "accountId" : accountId,
+                                    //OAVERSANO 14/03/2019 : AXA Assistance -- START
+                                    "isCaseView" : isCaseView,
+                                    "showTraceMonitoringCase" : showTraceMonitoringCase,
+                                    "source" : source,
+                                    "originalCase" : originalCase,
+                                    "rtCaseId" : rtCaseId,
+                                    "CallerType" : CallerType,
+                                    "phoneCallId" : phoneCallId,
+                                    "phoneCallIDB" : phoneCallIDB,
+                                    "CallDateTime" : CallDateTime                             
+                                    //OAVERSANO 14/03/2019 : AXA Assistance -- END
+                                    //MDANTONIO 20/05/2019 : AXA Assistance enh. US-1018-- START
+                                    ,"caseRT": caseRT,
+                                    "urlSFDC": urlSFDC
+                                    //MDANTONIO 20/05/2019 : AXA Assistance enh. US-1018-- END
+                                   },"lightning",
+                                   function(cmp) { 
+                                       console.log('eventService');
+                                       $A.eventService.addHandler({ "event": "c:tabclosing", "handler" : visualForceFunction});
+                                   }); 
+    });
+         
+    
+    //OAVERSANO 15/03/2019 : AXA Assistance -- START
+    jQuery.noConflict();
+    
+    var label = "{!$Label.VFP31_ShowClaims}";
+    var visualForceFunction = function(event){
+        console.log('event');
+        var myEventData = event.getParam("data");
+        var caseId = event.getParam("recordid");
+        var url = event.getParam("Url");
+        
+        if(myEventData == 'cancel')
+            closeSubTab();
+        else if(myEventData == 'openNewCasePage')
+        	openNewCasePage(url);
+        else
+            openCasePage(myEventData, caseId);
+        	
+        
+    };
+    
+    function openCasePage(CaseNumber,recordid)
+    {
+    	console.log('openCasePage');
+    	if(sforce.console.isInConsole())
+      	{
+        	sforce.console.getEnclosingPrimaryTabId(function(primarytab)
+        	{
+            	console.log('primary: '+primarytab.id );
+            	sforce.console.openSubtab(primarytab.id ,'/' + recordid, true,CaseNumber,null);
+        	});
+      	}
+      	else
+      	{
+        	console.log('openCasePage not console');
+        	let winLocation = window.parent.location.href;
+        	if(winLocation.includes('VFP06'))
+        		window.parent.location.replace('/'+recordid+'?isdtp=nv');
+        	else
+        		window.location.replace('/'+recordid);
+      	}
+   	}
+   	
+   	var closure = function CloseTabt()
+   	{
+      	if(sforce.console.isInConsole())
+      	{
+        	console.log('CloseTabt');
+        	sforce.console.getEnclosingTabId(closeSubtab);
+      	}
+      	else
+      	{
+        	window.close();
+      	}
+   	}
+   	
+   	var focuson = function FocusPrimaryTabByName(result) 
+    {
+      	var primaryTabName = 'Nuovo case';
+      	sforce.console.focusPrimaryTabByName(primaryTabName, closure);
+    }
+   	
+   	function openNewCasePage(url) 
+    {
+    	if(sforce.console.isInConsole())
+      	{
+        	console.log('openNewCasePage '+url);
+        	sforce.console.openPrimaryTab(null, '/apex/LightningCaseEdit?'+url, false, 
+                'Nuovo Case', focuson, 'Nuovo case');
+      	}
+      	else
+      	{
+            console.log('not in console');
+            let winLocation = window.parent.location.href;
+            console.log('window.parent.location: '+winLocation.includes('VFP06'));
+            if(winLocation.includes('VFP06'))
+            {
+            	console.log('still console');
+        		window.parent.location.replace('/500/e'+url+'&isdtp=nv');//
+       		}
+        	else
+        	{
+        		console.log('!not in console');
+        		window.location.replace('/500/e'+url);//+'&isdtp=nv'
+       		}
+      	}
+    }
+    
+    
+    function CloseTab() {
+        sforce.console.getEnclosingTabId(closeSubtab);
+        sforce.console.getEnclosingPrimaryTabId(function(primarytab)
+        {
+            console.log('primary: '+primarytab.id );
+            sforce.console.refreshPrimaryTabById(primarytab.id , true);
+        }); 
+        
+    }
+    var closeSubtab = function closeSubtab(result) {
+        var tabId = result.id;
+        console.log('tabId: ',tabId);
+        sforce.console.closeTab(tabId);
+    };
+    function closeSubTab()
+    {
+        try
+        {
+            console.log("cancel");
+            if(sforce.console.isInConsole())
+            {
+                console.log('console');
+                CloseTab();
+            }
+            else
+            {
+                console.log('no console');
+                window.close();
+                opener.refreshTopPage(originalCase);
+            }
+            
+        }
+        catch (e)
+        {}
+        finally 
+        {}
+    } 
+    
+    //OAVERSANO 15/03/2019 : AXA Assistance -- END
+    </script>
+    
+</apex:page>

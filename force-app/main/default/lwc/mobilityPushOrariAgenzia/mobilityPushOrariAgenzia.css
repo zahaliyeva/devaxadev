@@ -1,0 +1,50 @@
+.modal-style__column {
+    width: auto;
+    padding: 0 30px;
+}
+
+.date-error {
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    border: 1px solid red;
+    bottom: 10px;
+    top: -6px;
+    pointer-events: none;
+    border-radius: 5px;
+}
+
+.td-error {
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    border: 1px solid red;
+    bottom: 5px;
+    top: 5px;
+    pointer-events: none;
+    border-radius: 5px;
+}
+
+.mobility-modal__actions {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+}
+
+.mobility-modal__actions .btn {
+    padding: 17px 20px;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 13px;
+    letter-spacing: 1.3px;
+    text-transform: uppercase;
+}
+
+.mobility-modal__actions .btn.btn-outline-primary {
+    border: 2px solid var(--uiaxa-blue, var(--primary, #00008F));
+}
+
+.mobility-modal__actions .btn.btn-primary {
+    background-color: var(--uiaxa-blue, var(--primary, #00008F));
+    border: 2px solid var(--uiaxa-blue, var(--primary, #00008F));
+}

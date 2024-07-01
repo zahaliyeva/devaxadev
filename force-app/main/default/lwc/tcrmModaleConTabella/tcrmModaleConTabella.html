@@ -1,0 +1,184 @@
+<template>
+
+    <c-mobility-spinner show={spinner} show-overlay={spinnerOverlay}></c-mobility-spinner>
+	<c-mobility-messages model={messages}></c-mobility-messages>
+
+    <div class="row m-0">
+        <template if:true={showButton}><!-- nasconde solo per Ecollab perche si aggiunge a mano il parametro isEcollaboration-->
+        <div class="col-12 text-right">
+            <div class="btn btn-primary modalButton" onclick={openModal} >{buttonLabel}</div>
+        </div>
+        </template>
+        <div class="col-12">
+            <h2>{titleLabel}</h2>
+        </div>
+        <div class="col-12" if:false={shouldUpdate}>
+            <c-s-object-data-grid tabledata={tabledataNoSelect} select-all-override={selectAll} hide-tooltip="true"></c-s-object-data-grid>
+        </div>
+    </div>
+
+    
+    <template if:true={showDynamicModal}>
+        <c-mobility-modal close-callback={close}>
+                    <template if:true={showResultModal}>
+                        <c-mobility-modal-dinamic-message 
+                            name-layout={modalType} 
+                            close-callback={close} 
+                            primary-callback={primary} 
+                            back-callback={back}
+                            replace-variables={replaceVariables}
+                            campaign-name={campaignName}
+                            report-download-link = {createCSV}
+                            >
+                        </c-mobility-modal-dinamic-message>
+                    </template>
+
+                    <template if:true ={showOrariModal}>
+                            <c-mobility-push-orari-agenzia close-callback={closeOrariModal} primary-callback={primary} back-callback={backOrariModal}></c-mobility-push-orari-agenzia>
+                    </template>
+                    <template if:true ={showChiusuraModal}>
+                            <c-mobility-push-chiusura-agenzia close-callback={closeChiusuraModal} primary-callback={primary} back-callback={backChiusuraModal}></c-mobility-push-chiusura-agenzia>
+                    </template>
+                    <template if:true={showIniziativaDetail}>
+                        <c-mobility-push-show-campaign-template 
+                        title={title} 
+                        description={description} 
+                        url={iframeUrl} 
+                        url-title={previewEmail} 
+                        preview-title={previewShortMessage} 
+                        preview-message={previewMessage} 
+                        >
+                        </c-mobility-push-show-campaign-template>
+                    </template>
+        </c-mobility-modal>
+
+
+    </template>
+	
+    <template if:true={showModal}>
+        <c-mobility-modal onclose={closeModal}>
+            <div class="mobility-modal">
+                <h1>Concludi la creazione della campagna</h1>
+                <h2>Descrizione Campagna</h2>
+                <p>Descrivi la campagna che stai creando per poterla ritrovare facilmente nell’elenco delle Campagne di Agenzia</p>
+                <div>
+                <div class="position-relative col-md-4 p-0">
+                    <input type="text" class="form-control" required placeholder="Nome Campagna" value={campaignName} onchange={changeCampaign}/>
+                    <span style="cursor: help;top: 0;right: -12px;bottom: 0;" class="text-danger position-absolute" title="obbligatorio">*</span>
+                </div>
+                </div>
+                <div>
+                    <div class="position-relative col-md-8 my-3 p-0">
+                        <textarea class="form-control form-control-lg m-0" required placeholder="Inserisci una breve descrizione" maxlength="300" value={campaignDescription} disabled={disableDescription} onchange={changeCampaignDescription}>
+                        {campaignDescription}
+                    </textarea>
+                    <span style="cursor: help;top: 0;right: -12px;bottom: 0;" class="text-danger position-absolute" title="obbligatorio">*</span>
+                    </div>                
+                </div>                
+
+                <!--MODIFICARE il CSS perche cosi non va bene verificare Nino/Spatola -->
+                <template if:true={showCounters}>
+                    <a onclick = {openModalPreview} style="color:#00008F;"> VEDI ANTEPRIMA COMUNICAZIONE </a>
+                </template>
+                
+                <br>
+                <h2>Validità della campagna</h2>
+                <p>
+                    Seleziona il periodo entro il quale la campagna sarà attiva.
+                </p>
+                <div class="row">
+                    <div class="align-items-baseline col-md-4 col-xl-3 d-flex justify-content-center">
+                        <label class="m-0 mr-2 font-weight-bold">
+                            dal
+                        </label>
+                        <c-mobility-date-picker
+                            class="flex-grow-1"
+                            type="date"
+                            value={validoDal}
+                            change-callback={changeData}
+                            readonly="true"
+                            required="false"
+                            developer-name="validoDal"
+                            keydown-callback={keydown}
+                            disabled="true"
+                        >   
+                        </c-mobility-date-picker>
+                    </div>
+                    <div class="align-items-baseline col-md-4 col-xl-3 d-flex justify-content-center datePicker">
+                        <label class="m-0 mr-2 font-weight-bold">
+                            al
+                        </label>
+                        <c-mobility-date-picker
+                            class="flex-grow-1"
+                            type="date"
+                            value={validoAl}
+                            change-callback={changeData2}
+                            readonly="false"
+                            required="false"
+                            developer-name="validoAl"
+                            keydown-callback={keydown}
+                            min-date={dataLimite}
+                        >
+                        </c-mobility-date-picker>
+                    </div>
+                </div>
+                <br>
+                <h2>Target finale</h2>
+                <p>
+                    Prima di proseguire ricontrolla le caratteristiche del target affinché sia coerente con gli obiettivi.
+                </p>
+                <p>
+                    Vuoi escludere alcuni clienti dal target? Cercali utilizzando i filtri e rimuovili dalla tabella selezionando l'icona del cestino.
+                    Attenzione: una volta rimossi, per poterli inserire nuovamente all'interno del target dovrai tornare alla pagina precedente.
+                </p>
+
+                <p if:true={showCounters} class="d-flex flex-column">
+                    <span>La comunicazione verrà inviata a: <b>{selectedNum} clienti</b></span>
+                    <span>Messaggi spesi per l'invio: <b>{messagesToBeSentLocal}</b></span>
+                    <span>Messaggi che hai ancora a disposizione: <b>{messaggiRimanenti}</b></span>
+                </p>
+
+                <div class='row select nowrap justify-content-between mb-1'>
+                    <div class='col-4 mr-left'>
+                        <c-mobility-collapsible-filter-widget
+                            label="Nome e Cognome"
+                            options={optionsName}
+                            onselected={handleFilterName}
+                            
+                            >
+                        </c-mobility-collapsible-filter-widget>
+                    </div>
+                    <div class='col-4 mr-auto'>
+                        <c-mobility-collapsible-filter-widget
+                            label="Sottonodo visibilità"
+                            options={optionsNode}
+                            onselected={handleFilterNode}
+                            >
+                        </c-mobility-collapsible-filter-widget>
+                    </div>
+                </div>
+
+                <c-s-object-data-grid tabledata={tabledata} select-all-override={selectAll} hide-tooltip="true" hide-select-all></c-s-object-data-grid>
+            </div>
+            <div class="mobility-modal__actions">
+                <button type="button" class="btn btn-outline-primary" onclick={closeModal}>Torna indietro</button>
+                <button type="button" class="btn btn-primary" disabled={isDisabledProcedi} onclick={onProcedi}>Procedi</button>
+            </div>
+            <template if:true={showDeleteModal}>
+                <c-mobility-modal close-callback={close}>
+                                <c-mobility-modal-dinamic-message 
+                                    name-layout={modalType}
+                                    close-callback={close} 
+                                    primary-callback={primary} 
+                                    back-callback={back}
+                                    replace-variables={replaceVariables}
+                                    >
+                                </c-mobility-modal-dinamic-message>
+        
+                            
+                </c-mobility-modal>
+            </template>
+        
+        </c-mobility-modal>
+    </template>
+</template>

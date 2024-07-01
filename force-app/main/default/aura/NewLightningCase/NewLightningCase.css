@@ -1,0 +1,36 @@
+.THIS .custom_button{
+    /*width:108px !important;*/
+    width:85px !important;
+    margin:1 !important;
+    padding:0 !important;
+    /*font-size: 0.75rem !important;*/
+    font-size: 10px !important;
+}
+
+.THIS .custom_input{
+	width:97% !important;
+}
+
+.THIS .custom_dialog_container{
+	width:86% !important;
+	max-width: 80rem !important;
+}
+
+.THIS .custom_modal_header{
+	text-align: right;
+}
+
+.THIS.slds-spinner_container {  
+  z-index: 10000;
+  position: fixed;   
+}
+
+.THIS .whiteIcon svg {
+    fill : white;
+}
+
+/*MOSCATELLI_M 13/03/2019: Axa Assistance -- START*/
+.THIS .marginTOPAssociaCliente{
+	margin-top:1%;
+}
+/*MOSCATELLI_M 13/03/2019: Axa Assistance -- END*/

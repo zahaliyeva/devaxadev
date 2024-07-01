@@ -1,0 +1,55 @@
+<template>
+	<c-mobility-spinner show={spinner} show-overlay="true"></c-mobility-spinner>
+	<c-mobility-messages model={messages} confirm-success-callback={onConfirmSuccess}></c-mobility-messages>
+
+	<template if:true={authorized}>
+
+		<div class="slds-backdrop slds-backdrop--open"></div>
+		<div class="overload-contain overload-on-top" style="z-index: 10000;">
+			<div class="overload-contain-child">
+				<div class="overload-element">
+					<div class="row">
+						<div class="col-2">
+							<h3>{_label.leadQueue_manageQueueAgency}</h3>
+						</div>
+
+						<template if:true={authUser}>
+							<!--lightning-input type="tel" value={agencyPhone} onchange={changePhone} placeholder="Numero telefono agente"></lightning-input-->
+
+							<div class="slds-scope col-10 ">
+								<div class='col-4' style="display: flex; float:right">
+									<span class="slds-text-title slds-p-bottom_x-small">
+										<lightning-textarea name="email-ufficiale-agenzia" value={agencyPhone}
+											onchange={changePhone} placeholder="Numero telefono agente"
+											label="Destinatario notifiche lead via SMS"></lightning-textarea>
+									</span>
+									<div class="btn btn-primary ml-5 my-auto" onclick={showWarning}>
+										<center>Salva numero</center>
+									</div>
+								</div>
+
+								<!--lightning-button variant="brand" label="Salva Email!" onclick={showWarning}></lightning-button-->
+
+							</div>
+
+						</template>
+
+
+
+						<div class="col-12">
+							<c-s-object-data-grid tabledata={leadData} backgound-color="#ffffff"></c-s-object-data-grid>
+						</div>
+						<div class="col-12 text-right">
+							<div class="btn" onclick={onClose}>{_label.leadQueue_cancel}</div>
+							<div class="btn btn-primary" onclick={onSave}>{_label.leadQueue_saveEdit}</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+	</template>
+	<template if:false={authorized}>
+		<c-mobility-unauthorized></c-mobility-unauthorized>
+	</template>
+</template>

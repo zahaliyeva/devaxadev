@@ -1,0 +1,6 @@
+<aura:event type="APPLICATION" description="Event template">
+	<aura:attribute type="string" name="action" />
+	<aura:attribute type="string" name="recordId" />
+	<aura:attribute type="string" name="recordTypeId" />
+	<aura:attribute type="Object" name="params" />
+</aura:event>

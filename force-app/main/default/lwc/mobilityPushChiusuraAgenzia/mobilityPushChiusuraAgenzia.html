@@ -1,0 +1,57 @@
+<template>
+    <c-mobility-modal-style>
+        <div class="modal-style__column" style="padding: 0 30px;">
+            <h1>CHIUSURA AGENZIA</h1>
+    
+            <p>Utilizzando le tendine di seguito riportate, inserisci il periodo di chiusura della tua Agenzia</p>
+    
+            <template if:true={showError}>
+                <p class="alert alert-warning" role="alert">
+                    Impossibile procedere. Ti invitiamo a controllare i dati inseriti
+                </p>
+            </template>
+    
+            <div class="row" style="margin-bottom: 250px;">
+                <div class="align-items-baseline col-md-6 col-xl-6 d-flex justify-content-center">
+                    <label class="m-0 mr-2 font-weight-bold">
+                        Valido dal
+                    </label>
+        
+                    <c-mobility-date-picker
+                        class="flex-grow-1"
+                        type="date"
+                        value={chiusoDal}
+                        change-callback={changeData}
+                        readonly="false"
+                        required="false"
+                        developer-name="chiusoDal"
+                        keydown-callback={keydown}
+                    >   
+                    </c-mobility-date-picker>
+                </div>
+                <div class="align-items-baseline col-md-6 col-xl-6 d-flex justify-content-center datePicker">
+                    <label class="m-0 mr-2 font-weight-bold">
+                        al
+                    </label>
+        
+                    <c-mobility-date-picker
+                        class="flex-grow-1"
+                        type="date"
+                        value={chiusoAl}
+                        change-callback={changeData2}
+                        readonly="false"
+                        required="false"
+                        developer-name="chiusoAl"
+                        keydown-callback={keydown}
+                    >
+                    </c-mobility-date-picker>
+                </div>
+            </div>
+    
+            <div class="mobility-modal__actions">
+                <button type="button" class="btn btn-outline-primary" onclick={backCallback}>Torna indietro</button>
+                <button type="button" class="btn btn-primary" onclick={primary}>Procedi</button>
+            </div>
+        </div>
+    </c-mobility-modal-style>
+</template>

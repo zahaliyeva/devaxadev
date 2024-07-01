@@ -1,0 +1,45 @@
+<template>
+	<c-mobility-spinner show={spinner} show-overlay="true"></c-mobility-spinner>
+	<c-mobility-messages model={messages} confirm-success-callback={closeCallbackReload}></c-mobility-messages>
+
+	<template if:true={authorized}>
+		<div class="overload-contain overload-on-top" style="z-index: 10000;">
+			<div class="overload-contain-child">
+				<div class="overload-element">
+					<div class="row">
+						<div class="col-12 mb-5">
+							<h1>Cliente da ricontattare</h1>
+						</div>
+						<div class="col-12 mb-5">
+							<form onchange={onChangeSelect}>
+								<div class="form-group form-row align-items-center justify-content-start mb-4">
+									<label class='mr-2'>Crea Promemoria</label>
+									<div class="button r">
+										<input type="checkbox" name="createTask" class="form-control checkbox"
+											checked={createTask}>
+										<div class="knobs"></div>
+										<div class="layer"></div>
+									</div>
+								</div>
+								<template if:true={createTask}>
+									<c-mobility-date-picker 
+										type='datetime' 
+										value={dateTime}
+										change-callback={changeData}>
+									</c-mobility-date-picker>
+								</template>
+							</form>
+						</div>
+						<div class="col-12 text-right">
+							<div class="btn" onclick={onClose}>Annulla</div>
+							<button class="btn btn-primary" onclick={onSave}>Salva</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</template>
+	<template if:false={authorized}>
+		<c-mobility-unauthorized></c-mobility-unauthorized>
+	</template>
+</template>

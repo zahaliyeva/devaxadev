@@ -1,0 +1,193 @@
+<!--
+ - Created by Augens on 15/10/2018.
+ -->
+<aura:component description="ContactHistoryMainCmp" controller="ContactHistoryCTRL"
+                implements="flexipage:availableForAllPageTypes,force:hasRecordId">
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <aura:dependency resource="markup://force:navigateToSObject" type="EVENT"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="render" value="{!this}" action="{!c.myRender}"/>
+
+    <aura:attribute name="listOfSObjects" type="SObject[]"/>
+    <aura:attribute name="recordId" type="String"/>
+    <aura:attribute name="recordFieldName" type="String"/>
+    <aura:attribute name="jsDebug" type="Boolean" default="false"/>
+    <aura:attribute name="accountId" type="Id"/>
+    <aura:attribute name="numberOfRows" type="Integer" default="5"/>
+    <aura:attribute name="sizeFullListOfSObjects" type="Integer"/>
+    <aura:attribute name="loading" type="Boolean" default="true"/>
+    <aura:attribute name="fullListView" type="Boolean" default="false"/>
+    <aura:attribute name="platformSource" type="String"/>
+    <aura:attribute name="lockMobileIteration" type="Boolean" default="true"/>
+    <aura:attribute name="limitMobileIteration" type="Integer" default="5"/>
+    <aura:attribute name="flagRender" type="Boolean" default="false"/>
+    <aura:attribute name="componentHeight" type="Integer" default="280"/>
+    <aura:attribute name="errorMessageResult" type="String"/>
+
+    <div class="{!(v.fullListView) ? 'slds-page-header slds-p-around_xx-small slds-m-around_none' : 'slds-hide'}">
+        <div class="slds-page-header__row">
+            <div class="slds-page-header__col-title">
+                <div class="slds-media">
+                    <div class="slds-media__figure">
+                        <lightning:icon iconName="standard:people" size="large"/>
+                    </div>
+                    <div class="slds-media__body">
+                        <div class="slds-page-header__name">
+                            <div class="slds-page-header__name-title">
+                                        <span class="slds-page-header__title slds-truncate slds-text-title_caps slds-text-title_bold slds-text-heading_x-large"
+                                              title="Contact History">
+                                            Storico Contatti Cliente
+                                        </span>
+                            </div>
+                        </div>
+                        <p class="slds-page-header__name-meta">{!v.recordFieldName}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <aura:if isTrue="{!v.loading}">
+        <div class="spinner-container">
+            <lightning:spinner alternativeText="Loading..." size="medium"/>
+        </div>
+    </aura:if>
+    <aura:if isTrue="{!and(not(v.loading), v.listOfSObjects.length > 0)}">
+        <div class="{!(v.platformSource == 'Theme4t') ? 'mobile' : 'desktop'}">
+            <ul id="ul-list"
+                class="{!v.platformSource == 'Theme4t' ? 'slds-timeline ul-list-mobile' : 'slds-timeline'}">
+                <aura:iteration items="{!v.listOfSObjects}" var="obj" indexVar="i"
+                                end="{!and(v.lockMobileIteration, v.platformSource=='Theme4t') ? v.limitMobileIteration : v.listOfSObjects.length}">
+                    <li class="li-element slds-border_bottom">
+                        <div class="slds-timeline">
+                            <div class="slds-media">
+                                <div class="slds-media__figure slds-m-top_x-small slds-m-left_small slds-m-right_x-small">
+                                    <div class="icons-container">
+                                        <div class="slds-media__figure slds-timeline__icon">
+                                            <lightning:icon iconName="{!obj.icon}" class="main-icon"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slds-media__body slds-m-right_small slds-timeline__trigger">
+                                    <div class="{!(v.platformSource == 'Theme4t') ? 'slds-grid slds-grid_vertical-align-center slds-no-space' : 'slds-grid slds-grid_vertical-align-center slds-truncate_container_66 slds-no-space'}">
+                                        <h3 id="{!obj.titleLink}"
+                                            class="{!not(empty(obj.titleLink)) ? 'slds-truncate title cursor' : 'slds-truncate title'}"
+                                            title="{!obj.title}"
+                                            onclick="{!c.navigateToSObject}">
+                                            {!not(empty(obj.title)) ? obj.title : (not(empty(obj.titleLink))) ? obj.titleLink : '' }
+                                        </h3>
+                                        <div class="right-tooltip">
+                                            <aura:if
+                                                    isTrue="{!and(not(or(obj.flagHardBounce, obj.flagSoftBounce)),and(not(obj.flagOpen),obj.flagSent))}">
+                                                <lightning:icon
+                                                        iconName="utility:check"
+                                                        class="slds-m-left_x-small flag-utility-icon sent"
+                                                />
+                                                <span class="{!(not(empty(obj.flagMouseoverSent))) ? 'tooltiptext' : 'slds-hidden'}">{!obj.flagMouseoverSent}</span>
+                                            </aura:if>
+                                            <aura:if
+                                                    isTrue="{!and(not(or(obj.flagHardBounce, obj.flagSoftBounce)),and(not(obj.flagClick),obj.flagOpen))}">
+                                                <lightning:icon
+                                                        iconName="utility:check"
+                                                        class="slds-m-left_x-small flag-utility-icon open"
+                                                />
+                                                <span class="{!(not(empty(obj.flagMouseoverOpen))) ? 'tooltiptext' : 'slds-hidden'}">{!obj.flagMouseoverOpen}</span>
+                                            </aura:if>
+                                            <aura:if
+                                                    isTrue="{!and(obj.flagClick,not(or(obj.flagHardBounce, obj.flagSoftBounce)))}">
+                                                <lightning:icon
+                                                        iconName="utility:touch_action"
+                                                        class="slds-m-left_x-small flag-utility-icon clicked"
+                                                />
+                                                <span class="{!(not(empty(obj.flagMouseoverClick))) ? 'tooltiptext' : 'slds-hidden'}">{!obj.flagMouseoverClick}</span>
+                                            </aura:if>
+                                            <aura:if isTrue="{!or(obj.flagHardBounce, obj.flagSoftBounce)}">
+                                                <lightning:icon
+                                                        iconName="utility:close"
+                                                        class="slds-m-left_x-small flag-utility-icon bounce"
+                                                />
+                                                <span class="{!(not(empty(obj.flagMouseoverBounce))) ? 'tooltiptext' : 'slds-hidden'}">{!obj.flagMouseoverBounce}</span>
+                                            </aura:if>
+                                        </div>
+                                    </div>
+                                    <div class="slds-grid slds-grid_align-spread details-date">
+                                        <div class="slds-truncate slds-grid slds-wrap slds-truncate_container_75 detail-list ">
+                                            <aura:if isTrue="{!not(empty(obj.detail1))}">
+                                                <p class="{!not(empty(obj.detail1Link)) ? 'slds-truncate detail-list-element cursor' : 'slds-truncate detail-list-element'}"
+                                                   id="{!obj.detail1Link}" onclick="{!c.navigateToSObject}"
+                                                   title="{!obj.detail1}">
+                                                    {!obj.detail1}
+                                                </p>
+                                            </aura:if>
+                                            <aura:if isTrue="{!not(empty(obj.detail2))}">
+                                                <p class="{!empty(obj.detail1) ? 'slds-hide' : ''}">
+                                                    &nbsp;-&nbsp;</p>
+                                                <p class="{!not(empty(obj.detail2Link)) ? 'slds-truncate detail-list-element cursor' : 'slds-truncate detail-list-element'}"
+                                                   id="{!obj.detail2Link}" onclick="{!c.navigateToSObject}"
+                                                   title="{!obj.detail2}">
+                                                    {!obj.detail2}
+                                                </p>
+                                            </aura:if>
+                                            <aura:if isTrue="{!not(empty(obj.detail3))}">
+                                                <p class="{!and(empty(obj.detail1),empty(obj.detail2)) ? 'slds-hide' : ''}">
+                                                    &nbsp;-&nbsp;</p>
+                                                <p class="{!not(empty(obj.detail3Link)) ? 'slds-truncate detail-list-element cursor' : 'slds-truncate detail-list-element'}"
+                                                   id="{!obj.detail3Link}" onclick="{!c.navigateToSObject}"
+                                                   title="{!obj.detail3}">
+                                                    {!obj.detail3}
+                                                </p>
+                                            </aura:if>
+                                            <aura:if isTrue="{!not(empty(obj.detail4))}">
+                                                <p class="{!and(empty(obj.detail1),empty(obj.detail2),empty(obj.detail3)) ? 'slds-hide' : ''}">
+                                                    &nbsp;-&nbsp;</p>
+                                                <p class="{!not(empty(obj.detail4Link)) ? 'slds-truncate detail-list-element cursor' : 'slds-truncate detail-list-element'}"
+                                                   id="{!obj.detail4Link}" onclick="{!c.navigateToSObject}"
+                                                   title="{!obj.detail4}">
+                                                    {!obj.detail4}
+                                                </p>
+                                            </aura:if>
+                                        </div>
+                                        <aura:if isTrue="{!not(v.platformSource == 'Theme4t')}">
+                                            <div class="slds-timeline__actions slds-timeline__actions_inline time-checkmark slds-truncate_container_33">
+                                                <ui:outputDateTime format="DD-MM-YYYY"
+                                                                   value="{!obj.dateAndTime}"/>
+                                            </div>
+                                        </aura:if>
+                                    </div>
+                                    <aura:if isTrue="{!(v.platformSource == 'Theme4t')}">
+                                        <div class="slds-grid slds-grid_align-spread details-date slds-text-align_right">
+                                            <ui:outputDateTime format="DD-MM-YYYY"
+                                                               value="{!obj.dateAndTime}"
+                                                               class="mobile-dateTime"/>
+                                        </div>
+                                    </aura:if>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </aura:iteration>
+            </ul>
+            <div id="bottom-link" class="bottom-link slds-p-left_medium slds-p-top_x-small slds-p-bottom_x-small">
+                <aura:if
+                        isTrue="{!and(not(v.platformSource=='Theme4t'),and(not(v.fullListView),v.sizeFullListOfSObjects > v.listOfSObjects.length))}">
+                    <a id="{!v.recordId}" onclick="{!c.navigateToFullList}">Vai alla lista completa »</a>
+                </aura:if>
+                <aura:if
+                        isTrue="{!and(v.platformSource=='Theme4t',and(v.lockMobileIteration,v.listOfSObjects.length > 2))}">
+                    <a onclick="{!c.lockMobileIteration}">Mostra lista completa »</a>
+                </aura:if>
+                <aura:if isTrue="{!v.listOfSObjects.length == 0}">
+                    <a></a>
+                </aura:if>
+            </div>
+        </div>
+    </aura:if>
+    <aura:if isTrue="{!and(not(v.loading), v.listOfSObjects.length == 0)}">
+        <div class="slds-no-space slds-text-align_center slds-p-around_large">
+            <p class="slds-text-heading_small no-result"
+               title="{!v.errorMessageResult ? 'Errore: non è possibile mostrare i risultati' : 'Non sono presenti interazioni'}">
+                {!v.errorMessageResult ? 'Errore: non è possibile mostrare i risultati' : 'Non sono presenti interazioni'}
+            </p>
+        </div>
+    </aura:if>
+</aura:component>

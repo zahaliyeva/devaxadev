@@ -1,0 +1,47 @@
+<template>
+    <div class="slds-form-element">
+		<label if:true={hasLabel} class="slds-form-element__label">{label}</label>
+		<div class="slds-form-element__control">
+			<div class="slds-combobox_container">
+				<div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click slds-is-open" aria-expanded="true" aria-haspopup="listbox" role="combobox">
+					<div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
+						<input  
+							type="text" 
+							name={name}
+							class="slds-input slds-combobox__input slds-has-focus" 
+							value={_value} 
+							aria-controls="sobjects-list" 
+							autocomplete="off" 
+							role="textbox" 
+							placeholder={placeholder} 
+							readonly={readonly}
+							oninput={onInput}
+							onfocus={onFocus}
+							onblur={onBlur}
+							onkeyup={onKeyUp}
+						/>
+						<span class="slds-icon_container slds-icon-utility-down slds-input__icon slds-input__icon_right">
+							<lightning-icon icon-name="utility:search" size="x-small" alternative-text="Search" title="Search" onclick={onClickIcon}></lightning-icon>
+						</span>
+					</div>
+					<template if:true={showResults}>
+						<div class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid" role="listbox">
+							<ul class="slds-listbox slds-listbox_vertical" role="presentation">
+								<template for:each={_optionsView} for:item="option">
+									<li key={option.value} role="presentation" class="slds-listbox__item" onclick={onSelction} data-value={option.value} data-label={option.labelClean}>
+										<div class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small" role="option">
+											<span class="slds-media__figure slds-listbox__option-icon"></span>
+											<span class="slds-media__body">
+												<span class="slds-truncate" title="Groups">{option.label}</span>
+											</span>
+										</div>
+									</li>
+								</template>
+							</ul>
+						</div>
+					</template>
+				</div>
+			</div>
+		</div>
+	</div>
+</template>

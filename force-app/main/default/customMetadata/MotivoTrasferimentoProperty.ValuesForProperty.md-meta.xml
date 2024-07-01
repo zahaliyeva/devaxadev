@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>ValuesForProperty</label>
+    <protected>false</protected>
+    <values>
+        <field>Complete_Domain__c</field>
+        <value xsi:type="xsd:string">Altro;Cliente richiede ricontattato;Indisponibilità dei sistemi;In attesa info da cliente/rete;Intervento HD2 Transformation;Polizza fuori copertura;Polizza non trovata</value>
+    </values>
+    <values>
+        <field>Domain__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Record_Type__c</field>
+        <value xsi:type="xsd:string">Caring_Angel_Property</value>
+    </values>
+</CustomMetadata>

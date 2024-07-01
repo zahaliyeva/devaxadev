@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>ProfileManagement</label>
+    <protected>false</protected>
+    <values>
+        <field>CaseTriggerRecordType__c</field>
+        <value xsi:type="xsd:string">AXA_Caring_Salute;</value>
+    </values>
+    <values>
+        <field>HD1Profile__c</field>
+        <value xsi:type="xsd:string">AXA Caring Salute HD1;AXA Caring Salute Supervisor;</value>
+    </values>
+    <values>
+        <field>HD1Queue__c</field>
+        <value xsi:type="xsd:string">Caring Salute HD1 Corporate;Caring Salute HD1 Retail;Caring Salute HD1 Dipendente;Caring Salute HD1 Strutture;Caring Salute HD1 Generica;</value>
+    </values>
+    <values>
+        <field>HD2Profile__c</field>
+        <value xsi:type="xsd:string">AXA Caring Salute HD2;AAI - Supporto HD2;</value>
+    </values>
+    <values>
+        <field>HD2Queue__c</field>
+        <value xsi:type="xsd:string">Caring Salute HD2;</value>
+    </values>
+    <values>
+        <field>Key__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Value__c</field>
+        <value xsi:nil="true"/>
+    </values>
+</CustomMetadata>

@@ -1,0 +1,74 @@
+<template>
+	<div class="mobility-messages">
+
+		<template if:true={model.show}>
+			<div class='modal-container'>
+
+				<template if:true={model.isNotClose}>
+					<a onclick={onHide} class="close-button align-middle">
+						<h4>
+							<span class="pr-1 text-white">{_label.messages_close}</span>
+							<span>
+								<c-mobility-icon name="close" width="10.5px" height="10.5px"></c-mobility-icon>
+							</span>
+						</h4>
+					</a>
+				</template>
+
+				<div class='modal-dialog modal-dialog-centered'>
+					<div
+						class='modal-content justify-content-center align-items-center p-5 my-auto'>
+
+						<div class='mb-4'>
+							<c-mobility-icon name={model.iconName}></c-mobility-icon>
+						</div>
+
+						<template if:true={model.isCritical}>
+							<h2 class="text-center">{model.title}</h2>
+							<h4 class='text-center'>{model.message}</h4>
+						</template>
+
+						<template if:true={model.isNotCritical}>
+
+							<h2 class="text-center">{model.title}</h2>
+							
+							<h4 class='text-center'><lightning-formatted-rich-text class = 'message' value={model.message}>
+							</lightning-formatted-rich-text></h4>
+
+							<template if:true={model.isSuccess}>
+								<div class="mt-5 ml-auto">
+									<button class="btn btn-primary" onclick={onConfirmSuccess}>
+										<span>{labelOk}</span>
+									</button>
+								</div>
+							</template>
+
+							<template if:true={model.isWarning}>
+								<div class="mt-5 justify-content-between">
+									<button class="btn btn-outline-primary mr-5" onclick={onCancelWarning}>
+										<span class='buttonText text-uppercase'>{labelBack}</span>
+									</button>
+									<button class="btn btn-primary" onclick={onConfirmWarning}>
+										<span class='buttonText text-uppercase'>{labelConfirmation}</span>
+									</button>
+								</div>
+							</template>
+
+							<template if:true={model.isAlert}>
+								<div class="mt-5 ml-auto">
+									<button class="btn btn-outline-primary ml-auto" onclick={onCancelAlert}>
+										<span class='buttonText text-uppercase'>{labelBackAlert}</span>
+									</button>
+								</div>
+							</template>
+
+						</template>
+
+					</div>
+				</div>
+
+			</div>
+		</template>
+
+	</div>
+</template>

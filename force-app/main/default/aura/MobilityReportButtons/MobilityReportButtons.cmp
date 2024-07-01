@@ -1,0 +1,6 @@
+<aura:component  implements="forceCommunity:availableForAllPageTypes" access="global">
+ 
+<!--     <div style="text-align:left;">
+        <a class="slds-button slds-button_neutral" href="/crm/s/crea-report" target="_self" style="text-decoration:none;">Crea Report</a> 
+    </div> -->
+</aura:component>

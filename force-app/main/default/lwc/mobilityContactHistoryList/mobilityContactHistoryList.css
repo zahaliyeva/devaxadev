@@ -1,0 +1,76 @@
+.customerContactHistoryRow {
+    border-bottom: 1px solid #E5E5E5;
+    padding: 1px 1px;
+}
+
+.customerContactHistoryTitle {
+    color: #00008F;
+    font-weight: 600;
+    font-size: 12px;
+}
+
+.customerContactHistorySubtitle {
+    color: #333333;
+    font-weight: 600;
+    font-size: 12px;
+}
+
+.customerContactHistoryText {
+    color: #5F5F5F;
+    font-weight: 400;
+    font-size: 14px;
+}
+
+.customerContactHistoryIcon {
+    text-align: center;
+}
+
+.customerContactHistoryDate {
+    color: #5F5F5F;
+    font-weight: 400;
+    font-size: 12px;
+}
+
+.top35{
+    top:35px;
+}
+
+.top0{
+    top:0px;
+}
+
+.badge {
+    display: inline-block;
+
+    text-transform: uppercase;
+    color: #FFFFFF;
+    font-weight: 700;
+    font-size: 10px;
+    text-align: center;
+
+    border-radius: 8px;
+    white-space: nowrap;
+    padding: 3px 5px;
+}
+
+.badge-green {
+    background-color: #9FD9B4;
+}
+
+.badge-purple {
+    background-color: #9190AC;
+}
+
+.badge-red {
+    background-color: #F07662;
+}
+.flying {
+    position: -webkit-sticky;
+    position: sticky;
+    
+    z-index:10;
+}
+.bgw_zind {
+    font-size: 14px;
+    background-color: #ffffff;
+}

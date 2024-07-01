@@ -1,0 +1,72 @@
+* {
+    font-family: 'Source Sans Pro', Arial, Helvetica, sans-serif;
+}
+
+header {
+    padding-bottom: 10px;
+    box-shadow: 0 4px 3px -2px #cccccc;
+    position: fixed;
+    width: 100%;
+    left: 0;
+    top: 0;
+    background: #FFFFFF;
+    z-index: 10000;
+}
+
+.slds-nav-vertical__section{
+    padding-left: 20px;
+    padding-top: 20px;    
+}
+
+.slds-nav-vertical{
+    position: fixed;
+    z-index: 1000;
+    background-color: #fff;
+    width: 100%;
+    height: 100%;
+    left: 0;
+}
+
+.title {
+    text-align: left;
+    font-weight: 700;
+    font-size: 16px;
+    font-family: 'Publico Headline Web', Georgia, 'Times New Roman', Times, serif;
+    letter-spacing: 0.56px;
+    color: #00008F;
+    padding-left: 10px;
+}
+
+.btn-menu{
+    margin-top: 25px;
+    right: 0;
+    position: absolute;
+}
+
+.logo {
+    margin-top: 10px;
+    margin-left: 10px;
+    width: 50px;
+    height: 50px;
+    display: inline-block;
+}
+
+.slds-list__item > a {
+    padding: 1rem 1.5rem 1.2rem 1.5rem;
+    color: #00008f;
+    border-bottom: 3px solid #fff;
+}
+
+.slds-list__item > a:hover {
+    text-decoration: none;
+    color: #00005b;
+    border-bottom: 3px solid #f07662;
+}
+
+.margin-bottom{
+    margin-bottom: 66px;
+}
+
+.slds-nav-vertical__action{
+    color: #00008f;
+}

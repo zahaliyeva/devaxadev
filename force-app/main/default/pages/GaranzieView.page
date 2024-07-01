@@ -1,0 +1,310 @@
+<apex:page standardController="InsurancePolicy__c" extensions="GaranzieTable_Controller" showheader="true" standardStylesheets="false" applyBodyTag="false" docType="html-5.0" sidebar="false" >
+  
+   <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="x-ua-compatible" content="ie=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <apex:includeScript value="{!URLFOR($Resource.JQuery_DD)}"/>  
+        <apex:stylesheet value="{!URLFOR($Resource.SLDS + '/assets/styles/salesforce-lightning-design-system.css')}" />   
+        
+  <style type="text/css">
+         /*
+    Max width before this PARTICULAR table gets nasty
+    This query will take effect for any screen smaller than 760px
+    and also iPads specifically.
+    */
+    
+        @media
+    only screen and (max-width: 760px),
+    (min-device-width: 768px) and (max-device-width: 1024px)  {
+
+        /* Force table to not be like tables anymore */
+        .my_table table, .my_table thead, .my_table tbody, .my_table th, .my_table td, .my_table tr {
+            display: block;
+             
+              
+        }
+
+        /* Hide table headers (but not display: none;, for accessibility) */
+        .my_table thead tr {
+            color: #54698d;
+            border-collapse: collapse;
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+            
+        }
+
+        .my_table tr { 
+         border-collapse: collapse;
+        }
+
+        .my_table td {
+            /* Behave  like a "row" */
+            border: none;
+            border-collapse: collapse;
+            border-bottom: 1px solid #eee;
+            position: relative;
+            
+        
+        }
+      
+       .my_table .my_table_border{
+            /* Behave  like a "row" */
+            border: none;
+            border-collapse: collapse;
+            position: relative;
+            border-bottom: 4px solid #eee;
+        
+        }
+      
+      .my_table .my_subtable_border{
+            /* Behave  like a "row" */
+            border: none;
+            border-collapse: collapse;
+            position: relative;
+            border-bottom: 4px solid #eee;
+        
+        }
+
+        .my_table td:before {
+            /* Now like a table header */
+            position: absolute;
+            /* Top/left values mimic padding */
+            top: 0.5px;
+            left: 0px;
+            width: 60%; 
+    
+        }
+
+        /*
+        Label the data
+        */
+        .my_table .my_sub_td:nth-of-type(1):before  { content: "Nome Beneficiario";
+                                           color: #54698d;
+                                                }
+     
+      /*  .my_table .my_sub_td_2:nth-of-type(1):before  { content: "Caso di applicazione";
+                                           color: #54698d;
+                                                } */
+         .my_table .my_subtable_border:nth-of-type(1):before  { content: "Massimali";
+                                           color: #54698d;
+                                                }
+       
+        .my_table .my_td:nth-of-type(1):before  { content: "Nome Garanzia";
+                                           color: #54698d;
+                                                }
+        .my_table .my_td:nth-of-type(2):before { content: "Bene Assicurato"; 
+                                             color: #54698d;}
+        .my_table .my_td:nth-of-type(3):before { content: "Massimali";
+                                             color: #54698d;} */
+      /*  .my_table .my_td:nth-of-type(4):before { content: "Clausole addizionali"; 
+                                             color: #54698d;} */
+     /*  .my_table td:nth-of-type(5):before { content: "Nome Beneficiari"; 
+                                             color: #54698d;} */
+          
+    /*     .my_table td:nth-of-type(6):before {  content: "Restrizione";
+        color: #54698d;} */
+      
+    /*    .my_table .my_td:nth-of-type(7):before { content: "Clausole";
+                                             color: #54698d;} */
+     /*   .my_table .my_td:nth-of-type(8):before { content: "Data effetto"; 
+                                             color: #54698d;} */
+    /*    .my_table .my_table_border:nth-of-type(9):before { content: "Data scadenza"; 
+     color: #54698d; */
+ 
+       }
+
+    /* Smartphones (portrait and landscape) ----------- */
+    @media only screen
+    and (min-device-width : 320px)
+    and (max-device-width : 480px) {
+        .my_table body {
+            padding: 7;
+            margin: 0;
+            width: 320px; }
+        }
+
+    /* iPads (portrait and landscape) ----------- */
+    @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+        .my_table body {
+            width: 495px;
+        }
+    }
+
+
+    </style>
+    <!--<![endif]-->
+     
+    <style type="text/css" style="display: none !important;">
+ 
+   .my_table table {
+    border-collapse: collapse;
+    border: 1px solid #E6E6E6; 
+        //border: 1px solid #eee; 
+        //border-color:pink pink pink;
+        // border-color:#E6E6E6 #E6E6E6 #E6E6E6;
+    
+    }
+        
+    .my_table th {
+    padding: 5px;
+    color: #54698d;
+    border: 1px solid #E6E6E6; 
+    border-bottom:4px solid #E6E6E6 ; 
+ 
+    font-weight:normal;
+    background: rgb(244, 246, 249);  
+    
+     
+   }
+    
+         .my_table td {
+        padding: 15px;
+        border: 1px solid #E6E6E6; 
+        }
+</style>
+
+<script>
+
+$( document ).ready(function() {
+    
+    console.log( "ci sono" );
+    var errormessage = new String("{!errormessage}");
+
+    if({!errorcontroller} == true && errormessage == 'T300' ){
+        var msg = '<p style="color:black;"> Non è disponibile l&#8217elenco delle garanzie per la polizza selezionata. </p>'
+        $('#msgError').html(msg);
+        
+        console.log( "if true" );
+    }
+});
+
+
+</script>
+
+</head>
+
+   <apex:outputPanel rendered="{!errorcontroller == true }" style="width:100%">       
+       <div class=" slds-box slds-box--x-small" >
+        <div class ="slds-theme--error slds-theme--alert-texture" style="text-align:center">
+          <h2 class="slds-text-heading--medium" style="text-align:center" id="prompt-heading-id">Errore</h2>
+        </div>
+        <div id="msgError" class="slds-modal__content slds-p-around--medium" style="text-align:center" strength="1">
+          <p style="color:black;">Si è verificato un errore, si prega di riprovare piu' tardi.</p>
+            <br/>
+            <h2>    
+            <apex:outputtext style="color:black;" value="{!errormessage}" escape="false"/>
+          </h2>
+        </div>
+       </div>
+   </apex:outputPanel>
+   
+
+    
+   
+  <apex:outputPanel rendered="{!errorcontroller == false}" style="width:100%">  
+    <body>    
+            <!-- REQUIRED SLDS WRAPPER -->
+        <div class="my_table">
+            
+             <!-- PAGE HEADER -->
+             <div class="slds-page-header slds-m-bottom--x-small" role="banner" >
+            <p class="slds-text-heading--label">Elenco Garanzie</p>   
+            </div>
+
+             <!--END  PAGE HEADER -->
+            
+        <table class="my_T" border="1" Id="theTableId">
+        <thead>
+        <tr>
+            <th>Nome Garanzia</th>
+            <th>Bene Assicurato</th>
+            <th>Massimali</th>
+            <th>Nome Beneficiari</th>
+            
+        </tr>
+        </thead>
+            
+       <tbody id="tableBodyId"></tbody>   
+        </table>
+        </div>
+      </body>   
+    </apex:outputPanel>
+    <!--CANCEL BUTTON-->
+     <apex:form >
+       <div align="center" draggable="false" >
+       <apex:commandButton action="{!cancel}" value="Indietro" />
+      </div>
+    </apex:form>
+    
+     <script type="text/javascript">
+
+            var tableBodyHTML = "";
+            var coverages = {!coverages_string};
+            
+           
+           
+            /*** TABLE BODY ***/
+          for (var i = 0; i < coverages.length ; i++){
+                tableBodyHTML += '<tr>'
+                if (coverages[i].name === null)
+                tableBodyHTML += '<td class="my_td">'+ "-" +'</td>';
+                else 
+                tableBodyHTML += '<td class="my_td">'+ coverages[i].name +'</td>'; 
+                 
+              if (coverages[i].categoryName === null)
+                tableBodyHTML += '<td class="my_td">'+ "-" +'</td>';
+                else 
+                tableBodyHTML += '<td class="my_td">'+ coverages[i].categoryName +'</td>';
+                
+                  if (coverages[i].restrictions === null){
+                tableBodyHTML += '<td class="my_sub_td_2">'+ "-" +'</td>';
+                } else{ 
+                tableBodyHTML += '<td class="my_sub_td_2"><table style="border: none;"><tbody>';
+                for(var j=0; j< coverages[i].restrictions.length; j++){
+                    
+                    if(coverages[i].restrictions[j].description === null){
+                    var description = "-";
+                    }else{
+                    var description = coverages[i].restrictions[j].description;
+                    }
+
+                    tableBodyHTML += '<tr style="border: none;"><td class="my_subtable_border" style="border: none;" >'+ description +'</td></tr>';
+                }    
+                
+               tableBodyHTML += '</tbody></table></td>'; 
+                  
+                }
+              
+
+                if (coverages[i].beneficiaries === null){
+                tableBodyHTML += '<td class="my_sub_td" >'+ "-" +'</td>';
+                } else{ 
+         
+                tableBodyHTML += '<td class="my_sub_td" ><table style="border: none;"><tbody>'; 
+                for(var j=0; j< coverages[i].beneficiaries.length; j++){
+                tableBodyHTML += '<tr><td class="my_sub_td" style="border: none;" >'+coverages[i].beneficiaries[j].beneficiaryName +'</td></tr>';
+                }
+                  tableBodyHTML += '</tbody></table></td>'; 
+                
+                }
+              
+                   
+               
+                
+              
+              tableBodyHTML += '<tr>'  
+              } 
+            
+
+           $('#tableBodyId').html(tableBodyHTML);
+
+               
+            console.log(tableBodyHTML);
+            console.log(coverages[0].beneficiaries);
+            console.log('beneficiari'+coverages[0].beneficiaries.length);
+        </script>
+    
+    
+</apex:page>

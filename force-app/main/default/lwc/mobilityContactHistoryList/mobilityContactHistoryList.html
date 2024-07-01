@@ -1,0 +1,92 @@
+<template>
+    <c-mobility-spinner show={spinner} show-overlay={spinnerOverlay}></c-mobility-spinner>
+    <c-mobility-messages model={messages}></c-mobility-messages>
+    <template if:false={authorized}>
+        <c-mobility-unauthorized></c-mobility-unauthorized>
+    </template>
+    <template if:true={authorized}>
+            <!-- Intestazione -->        
+            <div class={flying} >
+                <div class="col-1"></div>
+                <div class="col-11">
+
+                </div>
+                
+                <div class="col-1" ></div>
+                <div class="col-5">
+                    <label >Tipologia Comunicazione</label>
+                    <select class = "non-empty" value = {chosenFilter} onchange= {filterChange}>
+                        <template for:each={filters} for:item='Filter'>
+                            <option key={Filter.value} value={Filter.value}>{Filter.label}</option>
+                        </template>
+                    </select>
+                </div>
+            </div> 
+
+           
+            
+            <!-- Item-Cycle -->
+        <c-mobility-no-data show={noData}></c-mobility-no-data>
+            
+        <template if:false={noData}>
+            <div class="row customerContactHistoryRow my-auto">
+                <div class="col-1 customerContactHistoryTitle"></div>
+                <div class="col-9 customerContactHistoryTitle">
+                    {_label.contactHistory_heading_typeOfInteraction}
+                </div>
+                <div class="col-2 customerContactHistoryTitle">
+                    {_label.contactHistory_heading_date}
+                </div>
+            </div>
+            <template for:each={allData} for:item="record">
+                <div key={record.id} class="row customerContactHistoryRow my-auto d-flex justify-content-between">
+                    <div class="col-1 customerContactHistoryIcon my-auto">
+                        <c-mobility-icon name={record.iconType} width="30px" height="30px"></c-mobility-icon>
+                    </div>
+                    <div class="col-9 align-middle">
+                        <div class="row">
+                            <div class="col-9 customerContactHistorySubtitle">
+                                {record.title}
+                            </div>
+                            <div class="col-3 text-uppercase">
+                                <div class={record.flagStyle}>{record.flagAlert}</div>
+                            </div>
+                            <div class="col-12 customerContactHistoryText">
+                                <lightning-formatted-rich-text value={record.detailList}>
+                                </lightning-formatted-rich-text>
+                                
+                            </div>
+                            <div class="col-12 customerContactHistoryText">
+                                {record.flagStatus}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-1 customerContactHistoryDate align-middle">
+                        {record.dateString}
+                    </div>
+                    <template if:true={record.canRedirect}>
+                    <div class="col-1 align-right">
+                        <span>
+                            <a  style='cursor:pointer' onclick={record.redirect}>
+                                
+                                <span class="icon-span">
+                                    <c-mobility-icon name="icon-arrow-right-blue" width="16px"
+                                        height="16px">
+                                    </c-mobility-icon>
+                                </span>
+                            </a>
+                        </span>
+                    </div>
+                    </template>
+                    <template if:false={record.canRedirect}>
+                        <div class="col-1 my-auto align-right mr-auto">
+                            <span class = "empty">
+                               
+                            </span>
+                        </div>
+                    </template>
+                </div>
+            </template>
+        </template>
+    </template>
+</template>

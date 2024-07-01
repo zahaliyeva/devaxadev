@@ -1,0 +1,82 @@
+.THIS .select {
+min-height: 10px;
+height:20px;
+margin-bottom: 1px;
+margin-top: 1px;
+}
+
+.THIS .slds-form-element_label{
+ 
+    vertical-align: top;
+    opacity: 0.4;
+}
+
+
+.THIS .uiOutputText{
+    
+     opacity:0.4;
+     min-height: 10px;
+     height:20px;
+    
+}
+
+
+.THIS .uiOutputDate{
+     opacity:0.8;
+    
+}
+
+.THIS .uiOutputNumber{
+     
+       opacity:1;
+    
+}
+
+.THIS .inputStyle {
+      
+       opacity:1;
+       margin-bottom: 1px;
+margin-top: 1px;
+}
+
+
+.THIS .dynamicStyle slds-form-element_label{
+      
+       font-size:  90%; 
+       opacity:0.4;
+       
+}
+
+.THIS .viewStyle{
+
+       vertical-align: top;
+       font-size:  90%; 
+       opacity:1;
+       
+}
+
+.THIS .uiInputCheckbox {
+	
+    background: transparent;
+    height: 17px;
+    width: 17px;
+}
+
+.THIS :disabled {
+
+    opacity:0.4;
+}
+
+.THIS .slds_icon_approval{
+    
+    align-top: middle;
+    padding: 2px 2px 2px 2px;
+    background-color: green;
+}
+
+.THIS .slds-form-element__control{
+ 
+   padding-left: 3% !important; 
+   clear: none;
+   text-align: left;
+}

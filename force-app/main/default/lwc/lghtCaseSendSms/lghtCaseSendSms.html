@@ -1,0 +1,26 @@
+<template>
+   <template if:true={spinner}>
+      <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+   </template>
+   <div class="slds-grid slds-wrap">
+      <div class="slds-card__body slds-card__body_inner">
+         <label class="slds-form-element__label" for="select-01">{label.VFP17_Mobile_Selection}</label>
+         <select class="slds-select" data-id="select-phone-send-sms">
+            <template for:each={listViewsMobilePhone} for:item="listViewItem">
+               <option value={listViewItem.key} key={listViewItem.key}>{listViewItem.value}</option>
+            </template>
+         </select>
+         <label class="slds-form-element__label" for="select-01">{label.VFP17_Template_Selection}</label>
+         <select class="slds-select" data-id="select-template-send-sms">
+            <template for:each={listViewsTemplate} for:item="listViewItem">
+               <option value={listViewItem.key} key={listViewItem.key}>{listViewItem.value}</option>
+            </template>
+         </select>
+         <lightning-textarea data-id="body-message-send-sms" name="bodyMessage" label={label.VFP17_Message_Content}>
+         </lightning-textarea>
+         <button id="button-confirm-send-sms"
+            class="slds-m-top_large slds-align_absolute-center slds-button slds-button_neutral"
+            onclick={onConfirm}>{label.VFP17_Send_SMS}</button>
+      </div>
+   </div>
+</template>

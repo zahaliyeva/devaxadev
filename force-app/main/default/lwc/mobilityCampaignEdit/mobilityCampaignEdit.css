@@ -1,0 +1,47 @@
+* {
+    font-family: 'Source Sans Pro', Arial, Helvetica, sans-serif;
+}
+
+.edit {
+    background: #FAFAFA;
+    width: 98.3%;
+}
+
+.edit .edit-header {
+    background: #FAFAFA;
+    margin-bottom: 35px;
+}
+
+.edit .edit-top {
+    border-top: 1px solid #E5E5E5;
+}
+
+.edit .edit-row {
+    margin: 0 15px !important;
+}
+
+.edit .btn-edit {
+    text-align: left;
+    font-weight: 700;
+    font-size: 14px;
+    text-transform: uppercase;
+    text-align: center;
+    vertical-align: middle;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.edit .btn-edit.btn-border {
+    border: 0;
+}
+
+.edit-menu-bottom {
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}
+
+a,
+.btn,
+button {
+    cursor: pointer;
+}

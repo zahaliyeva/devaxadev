@@ -1,0 +1,19 @@
+<apex:page controller="APIT00_EnviromentController" sidebar="false" showHeader="false" standardStylesheets="false">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="shortcut icon" href="https://www.axa.it/o/axa-public-sites-theme/images/favicon.ico" type="image/x-icon" />
+<apex:includeLightning />
+
+<div class="slds-scope">
+<div id="lght"/>
+</div>
+
+<script>
+const urlParameter = {!UrlParameterJSON};
+
+$Lightning.use("c:UnsubDedicatedApp", function() {
+$Lightning.createComponent("c:" + urlParameter.component, {...urlParameter}, "lght", function(cmp) {
+
+})
+});
+</script>
+</apex:page>

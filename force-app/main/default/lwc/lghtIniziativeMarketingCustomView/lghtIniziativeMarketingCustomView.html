@@ -1,0 +1,205 @@
+<template >
+    <template if:true={spinner}>
+        <lightning-spinner
+          alternative-text="Loading"
+          size="medium"
+        ></lightning-spinner>
+        Caricamento in corso
+      </template>
+      
+    <div class="slds-grid slds-gutters">
+        <div class="slds-col slds-p-vertical_medium">
+            <span>
+                <lightning-input data-id= "Attiva__c" type="checkbox" label="Attiva/Non Attiva" checked onchange={handleChange}> </lightning-input>
+            </span>
+        </div>
+        <div class="slds-col">
+            <span>
+                <label class="slds-form-element__label">
+                    <span class="">Tipologia di Campagna</span>
+                </label>
+                <select data-id= "Tipologia_di_campagna__c" class="slds-select"  onchange={handleChange}>
+                    <option value="None">-</option>
+                    <template for:each={optionsTipologia} for:item="option">
+                        <option key={option.label} value={option.value}>{option.value}</option>
+                    </template>
+                </select>
+            </span>
+        </div>
+        <div class="slds-col">
+            <span>
+                <label class="slds-form-element__label">
+                    <span class="">Eleggibile per Canale</span>
+                </label>
+                <select data-id="Eligibile_per_Canale__c" class="slds-select" onchange={handleChange} >
+                    <option value="None">-</option>
+                    <template for:each={optionsCanale} for:item="option">
+                        <option key={option.label} value={option.value}>{option.value}</option>
+                    </template>
+                </select>
+            </span>
+        </div>
+        <div onkeyup={handleKeyUp}>
+            <lightning-input
+                label="Ricerca per Code"
+                type="search"
+                title="Premere Intro per aggiornare"
+            ></lightning-input>
+        </div>
+        <div class="slds-col">
+            <span>
+                <lightning-button-icon icon-name="utility:loop" variant="container" alternative-text="Reset"  class="slds-m-left_xx-small" title="Reset Filtri" onclick={refreshComponent} ></lightning-button-icon>
+            </span>
+        </div>
+        <div class="slds-col">
+            <span>
+                <lightning-button label="Attiva/Disattiva" onclick={attiva_disattiva} ></lightning-button>
+            </span>
+            <span>
+                <lightning-button label="Crea" onclick={openmodal} ></lightning-button>
+            </span>
+        </div>
+        <div if:true={showModalCreate} class="Modal" >
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open slds-modal_medium">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModal}>
+                            <lightning-icon icon-name="utility:close" size="medium">
+                            </lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                        <h2 id="modal-heading-01" class="slds-text-heading_small slds-hyphenate">Creazione Iniziativa Marketing</h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_small" id="modal-content-id-1">
+                            <lightning-record-edit-form object-api-name="Iniziative_Marketing__c" onsubmit={handleSuccess} >
+                                <lightning-tile class="slds-text-heading_small">Dettagli Iniziativa</lightning-tile>
+                                <div class="slds-grid slds-gutters slds-border_bottom">
+                                    <div class="slds-col">
+                                        <lightning-input-field field-name='Name' required="true"></lightning-input-field> 
+                                        <lightning-input-field field-name='Descrizione_dell_iniziativa__c' required="true"></lightning-input-field> 
+                                        <lightning-input-field field-name='Eligibile_per_Compagnia__c' required="true"></lightning-input-field>  
+                                        <lightning-input-field field-name='Canale__c' value="Email"></lightning-input-field>
+                                        <lightning-input-field field-name='Tipologia_di_iniziative__c' required="true"></lightning-input-field>
+                                        <lightning-input-field field-name='is_scheduled_type__c' ></lightning-input-field>
+                                        <lightning-input-field field-name='is_closure_type__c' ></lightning-input-field>
+                                        <lightning-input-field field-name='EscludiComunicaCliente__c' ></lightning-input-field>
+                                    </div>
+                                    <div class="slds-col">
+                                        <lightning-input-field field-name='Attiva__c'></lightning-input-field>
+                                        <lightning-input-field field-name='Versione__c' value="1" disabled="true"></lightning-input-field>
+                                        <lightning-input-field field-name='Visibilita_nel_centro_notifiche__c' onchange={handleVisibilitaTitoliSottoT} ></lightning-input-field>
+                                        <lightning-input-field field-name='Invio_push__c' onchange={handlePushMessageValidation} ></lightning-input-field>
+                                        <lightning-input-field field-name='Communication_code__c' required="true"></lightning-input-field>
+                                        <lightning-input-field field-name='Entita_SFDC_di_riferimento__c' required="true"></lightning-input-field>
+                                    </div>
+                                </div>
+                                <lightning-tile class="slds-text-heading_small">Dettagli Campagna</lightning-tile>
+                                <div class="slds-grid slds-gutters slds-border_bottom ">
+                                    <div class="slds-col">
+                                        <lightning-input-field field-name='Tipologia_Campagna__c' ></lightning-input-field>                            
+                                    </div>
+                                    <div class="slds-col">
+                                        <lightning-input-field field-name='Sottotipologia_Campagna__c' ></lightning-input-field>  
+                                    </div>
+                                </div>
+                                <lightning-tile class="slds-text-heading_small">Verifiche per Invio Singolo</lightning-tile>
+                                <div class="slds-grid slds-gutters slds-border_bottom ">
+                                    <div class="slds-col">
+                                        <lightning-input-field field-name='Necessaria_Registrazione__c' ></lightning-input-field>
+                                        <lightning-input-field field-name='Necessario_Consenso_Privacy_Promoziona__c' ></lightning-input-field>       
+                                        <lightning-input-field field-name='Mail_Validata__c' ></lightning-input-field>
+                                        <lightning-input-field field-name='Stato_Documento__c' ></lightning-input-field>
+                                    </div>
+                                    <div class="slds-col">
+                                        <lightning-input-field field-name='eCollaboration__c' ></lightning-input-field>
+                                        <lightning-input-field field-name='Adesione_Invio_Delle_Comunicazioni_Info__c' ></lightning-input-field>
+                                        <lightning-input-field field-name='RichiestoConsensoStopCarta__c' ></lightning-input-field>    
+                                    </div>
+                                </div>
+                                <lightning-tile class="slds-text-heading_small">Dettagli Messaggio</lightning-tile>
+                                <div class="slds-grid slds-gutters slds-border_bottom ">
+                                    <div class="slds-col">
+                                    <lightning-input-field field-name='Nome_Messaggio__c' ></lightning-input-field>
+                                    <lightning-input-field field-name='Base_Giuridica__c' ></lightning-input-field>
+                                    <lightning-input-field field-name='Categoria_Prodotto__c' ></lightning-input-field>
+                                    <lightning-input-field field-name='TAG__c' ></lightning-input-field>
+                                    <lightning-input-field field-name='TECH_URL_template_MC__c' ></lightning-input-field>
+                                    </div>
+                                    <div class="slds-col">
+                                    <lightning-input-field field-name='Descrizione_Messaggio__c' ></lightning-input-field>
+                                    <lightning-input-field field-name='Mostra_Box_Agenzia_Subagenzia__c' ></lightning-input-field>
+                                    <lightning-input-field field-name='Mostra_Nome_Cognome__c' ></lightning-input-field>
+                                    </div>
+                                </div>
+                                <lightning-tile class="slds-text-heading_small">Testi Push Notification</lightning-tile>
+                                <div class="slds-grid slds-gutters slds-border_bottom  ">
+                                    <div class="slds-col">
+                                        <lightning-input-field field-name='Short_Message__c' required={requiredInvioPush} ></lightning-input-field>    
+                                    </div>
+                                    <div class="slds-col">   
+                                        <lightning-input-field field-name='Message__c' required={requiredInvioPush} onchange={handleMessageInput}></lightning-input-field>
+                                    </div>
+                                </div>
+                                <lightning-tile class="slds-text-heading_small ">Testi Centro Notifiche</lightning-tile>
+                                <div class="slds-grid slds-gutters slds-border_bottom ">
+                                    <div class="slds-col">
+                                        <lightning-input-field field-name='Titolo__c'  required={requiredVisibilitaCentroN}></lightning-input-field> 
+                                        <lightning-input-field field-name='Sottotitolo__c'  required={requiredVisibilitaCentroN}></lightning-input-field> 
+                                        <lightning-input-field field-name='Contenuto__c' ></lightning-input-field>
+                                        <lightning-input-field field-name='Tipo_notifica_su_Centro_Notifiche__c' ></lightning-input-field>
+                                    </div>
+                                    <div class="slds-col">
+                                        <div data-id="error-message" style="display:none;" >Numero massimo caratteri: 255</div>  
+                                        <lightning-input-field data-id="url-immagine-value" field-name='URL_Immagine__c' onchange={handleUrlInput} ></lightning-input-field>
+                                        <div data-id="url-immagine" style="display:none;" >L'indirizzo web deve iniziare con https:// o http://</div> 
+                                        <lightning-input-field data-id="url-cta-value" field-name='URL_CTA__c' onchange={handleUrlInput} ></lightning-input-field>
+                                        <div data-id="url-cta" style="display:none;" >L'indirizzo web deve iniziare con https:// o http://</div> 
+                                        <lightning-input-field field-name='Testo_CTA__c' ></lightning-input-field>
+                                    </div>
+                                </div>
+
+                                <footer class="slds-modal__footer">
+                                    <lightning-button data-id="save-bottone" label="Save" variant="brand" type="submit" ></lightning-button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <lightning-button label="Cancel" variant="neutral" onclick={closeModal}></lightning-button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                </footer>          
+                            </lightning-record-edit-form>
+                    </div>
+                </div>
+            </section>
+        </div>
+        
+        <div if:true={ShowError} class="Modal" >
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">    
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeError}>
+                            <lightning-icon icon-name="utility:close" size="medium">
+                            </lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                        <h2  class="slds-text-heading_small slds-hyphenate">{HeadingError}</h2>
+                    </header>
+                    <span class="slds-text-heading_small slds-box " style="background-color: white;text-align: center;">
+                        {Error}
+                    </span>
+                    <footer class="slds-modal__footer">
+                        <lightning-button label="OK" variant="neutral" onclick={closeError}></lightning-button>&nbsp;&nbsp;&nbsp;&nbsp;
+                    </footer>
+                </div>
+            </section>
+        </div>
+
+    </div>
+    <div style="height: 10px;"></div>
+    <!-- End of filters-->
+        <lightning-datatable data-id="table-iniziative"
+            columns={columns}
+            data={iniziative.data}
+            key-field="id"
+            sorted-by={sortBy}
+            sorted-direction={sortDirection}
+            onsort={doSorting}
+        >
+        </lightning-datatable>
+
+</template>

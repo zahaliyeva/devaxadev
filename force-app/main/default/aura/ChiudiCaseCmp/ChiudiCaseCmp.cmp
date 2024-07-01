@@ -1,0 +1,164 @@
+<aura:component controller="ChiudiCaseCmpController" access="global" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:hasRecordId">
+    <aura:attribute name="record" type="Object" />
+    <aura:attribute name="simpleRecord" type="Object" />
+    <aura:attribute name="recordError" type="String" />
+    <aura:attribute name="Errorchecked" type="String" default=""/>
+    <aura:attribute name="showError" type="Boolean" default="false"/>
+    <aura:attribute name="showModal" type="Boolean" default="false" />
+    <aura:attribute name="showModalError" type="Boolean" default="false" />
+    <aura:attribute name="statoChiuso" type="String" default="Chiuso" />
+    <aura:attribute name="soluzione" type="String" />
+    <!-- Bonifazi Giorgio 19/07/2019 Handover START-->
+    <aura:attribute name="motivoChiusura" type="String" />
+    <aura:attribute name="checkDetails" type="Boolean" default="false" />
+    <!-- Bonifazi Giorgio 19/07/2019 Handover END-->
+    <aura:attribute name="isLoading" type="Boolean" default="false" />
+    <aura:attribute name="isOpenModalLightning" type="boolean" default="false"/>
+    <aura:attribute name="visibilities" type="Object"/>
+    <aura:attribute name="rtDevName" type="String"/>
+    
+    <force:recordData aura:id="recordEditor"
+                      layoutType="FULL"
+                      recordId="{!v.recordId}"
+                      targetError="{!v.recordError}"
+                      targetRecord="{!v.record}"
+                      targetFields ="{!v.simpleRecord}"
+                      mode="EDIT"
+                      />
+    
+ 
+    <aura:if isTrue="{!!v.isOpenModalLightning}">
+    <lightning:button  label="Chiudi Case" variant="Neutral" onclick="{!c.chiudiCase}" />
+    </aura:if>    
+    
+    
+    
+    <!-- Display Lightning Data Service errors, if any -->
+    <aura:if isTrue="{!not(empty(v.recordError))}">
+        <div class="recordError">
+            {!v.recordError}</div>
+    </aura:if>
+    
+    <aura:if isTrue="{! v.showModal }">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <aura:if isTrue="{! v.isLoading }">
+                <lightning:spinner alternativeText="Loading" class="spinnerFixed"/>
+            </aura:if>
+            <aura:if isTrue="{!!v.isOpenModalLightning}">
+            <div class="slds-modal__container">
+                <!-- ###### MODAL BOX HEADER Start ######-->
+                <header class="slds-modal__header">
+                    <lightning:buttonIcon iconName="utility:close"
+                                          onclick="{! c.closeModal }"
+                                          alternativeText="close"
+                                          variant="bare-inverse"
+                                          class="slds-modal__close"/>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Chiudi Case</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <label class="slds-form-element__label" for="Status">Status</label>
+                    <div class="slds-form-element__control">	
+                        <ui:inputText aura:id="Status" class="slds-input" value="{!v.statoChiuso}" disabled="true"/>
+                    </div>
+                    <div class="slds-form-element__control">
+                        <lightning:textarea aura:id="descrizioneSoluzione" label="Soluzione" name="Soluzione" value="{!v.soluzione}" placeholder="" />
+                    </div>
+                    <!-- Bonifazi Giorgio 19/07/2019 Handover START-->
+                    <div class="slds-form-element__control">
+                        <lightning:select name="motivoChiusura" label="Motivo Chiusura" aura:id = "myselect" onchange="{!c.toggle}" >
+                        
+                        <option >Solo Carroattrezzi Guasto</option>
+                        <option >Solo Carroattrezzi no copertura kasko</option>
+                        <option >Cliente non risponde</option>
+                        <option >Cliente non vuole aprire il sinistro</option>
+                        <option >Numero telefono errato</option>
+                        <option>Numero telefono non abilitato a ricezione chiamate in entrata</option>
+                        <option>Sinistro già esistente su SOL</option>
+                        <option>Cliente non presente sul veicolo al momento del crash</option>
+                        <option>Altro</option>
+                        </lightning:select>
+                    </div>
+                    <!-- Bonifazi Giorgio 19/07/2019 Handover END-->                      
+                    <aura:if isTrue="{! v.showError }">
+                        <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error" role="alert">
+                            <h3>{!v.Errorchecked}</h3>
+                        </div>
+                    </aura:if>
+                </div>
+                <footer class="slds-modal__footer">
+                    <center>
+                        <lightning:button  label="Chiudi Case" variant="Neutral" onclick="{!c.saveToSFDC}" />
+                    </center>
+                </footer>
+            </div>
+             <aura:set attribute="else">
+                 <aura:if isTrue="{! v.rtDevName =='AXA_Caring_Salute' }">
+                    <div class="slds-modal__container">
+                <!-- ###### MODAL BOX HEADER Start ######-->
+                <header class="slds-modal__header">
+                    <lightning:buttonIcon iconName="utility:close"
+                                          onclick="{! c.closeModal }"
+                                          alternativeText="close"
+                                          variant="bare-inverse"
+                                          class="slds-modal__close"/>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Chiudi Case</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                              
+                 
+                    <div class="slds-form-element__control">
+                        <lightning:select name="Status" label="Stato" aura:id = "myselect" onchange="{!c.toggle}" >
+                        <option value="Closed">Chiuso</option>
+                        <option value="Cancelled">Cancellato</option>
+                        <option value="Out of time">Chiuso d’ufficio</option>
+                        </lightning:select>
+                    </div>
+                    <!-- Bonifazi Giorgio 19/07/2019 Handover END-->                      
+                    <aura:if isTrue="{! v.showError }">
+                        <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error" role="alert">
+                            <h3>{!v.Errorchecked}</h3>
+                        </div>
+                    </aura:if>
+                </div>
+                <footer class="slds-modal__footer">
+                    <center>
+                        <lightning:button  label="Conferma" variant="Neutral" onclick="{!c.confimClose}" />
+                    </center>
+                </footer>
+            </div>
+                     
+                 </aura:if>
+           </aura:set>
+          </aura:if>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+    
+    <aura:if isTrue="{! v.showModalError }">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <aura:if isTrue="{! v.isLoading }">
+                <lightning:spinner alternativeText="Loading" class="spinnerFixed"/>
+            </aura:if>
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <lightning:buttonIcon iconName="utility:close"
+                                          onclick="{! c.closeModalErorr }"
+                                          alternativeText="close"
+                                          variant="bare-inverse"
+                                          class="slds-modal__close"/>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Chiudi Case</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    
+                    <aura:if isTrue="{! v.showError }">
+                        <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error" role="alert">
+                            <h3>{!v.Errorchecked}</h3>
+                        </div>
+                    </aura:if>
+                </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+    
+</aura:component>

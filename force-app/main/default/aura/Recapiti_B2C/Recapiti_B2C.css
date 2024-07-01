@@ -1,0 +1,47 @@
+.THIS .input {
+min-height: 10px;
+height:20px;
+line-height: 0.875rem;
+
+
+}
+
+
+.THIS .select {
+min-height: 10px;
+height:20px;
+line-height: 0.875rem;
+
+}
+
+
+.THIS .uiInputCheckbox {
+	
+    background: transparent;
+    height: 17px;
+    width: 17px;
+}
+
+.THIS .slds-form-element_label{
+ 
+    vertical-align: top;
+    opacity: 1;
+}
+
+
+.THIS .inputStyle {
+      
+       opacity:1;
+}
+
+.THIS .right {
+     padding-right: 0;
+     padding-left: .35rem;
+}
+
+.THIS .slds-form-element__control{
+ 
+   padding-left: 3% !important; 
+   clear: none;
+   text-align: left;
+}

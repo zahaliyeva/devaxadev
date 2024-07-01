@@ -1,0 +1,41 @@
+<aura:component controller="LightningAccountEditApexController" implements="force:appHostable,lightning:isUrlAddressable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction,lightning:actionOverride" access="global">
+    
+    <lightning:navigationItemAPI aura:id="navigationItem" />
+    <lightning:workspaceAPI aura:id="workspace" />
+    <lightning:utilityBarAPI aura:id="utilityBar" />
+
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="CaseId" type="String" />
+    <aura:attribute name="retUrl" type="String" />
+    <aura:attribute name="CampMemberId" type="String" />
+    <aura:attribute name="CampaignId" type="String" />
+    <aura:attribute name="PhoneCallId" type="String" />
+    <aura:attribute name="UserIsAdvisor" type="String" />
+    <aura:attribute name="MPSEnrichment" type="String" />
+    <aura:attribute name="jsDebug" type="Boolean" />
+    <aura:attribute name="screenWidth" type="String" />
+
+    <aura:attribute name="showAAIEdit" type="Boolean" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+
+
+    <aura:if isTrue="{!v.showAAIEdit == true}">
+        <c:accountForEdit 
+            accountId="{!v.recordId}" 
+            CampMemberId="{!v.CampMemberId}" 
+            CampaignId="{!v.CampaignId}" 
+            PhoneCallId="{!v.PhoneCallId}" 
+            UserIsAdvisor="{!v.UserIsAdvisor}" 
+            MPSEnrichment="{!v.MPSEnrichment}" 
+            CaseId="{!v.CaseId}" 
+            jsDebug="{!v.jsDebug}" 
+            screenWidth = "{!v.screenWidth}"
+            />
+    </aura:if>
+    <aura:if isTrue="{!v.showAAIEdit == false}">
+        <c:accountForEditMPS recordId="{!v.recordId}" />
+    </aura:if>
+
+</aura:component>

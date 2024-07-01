@@ -1,0 +1,28 @@
+.THIS .badge-axa{
+    color:#fff;
+    padding: 5px 20px;
+    margin-top:10px; 
+}
+.THIS .badge-axa-red{
+    background:#910029;
+}
+.THIS .badge-axa-blue{
+    background:#00008f;
+}
+.THIS .badge-axa-orange{
+    background:#ff5811;
+}
+.THIS .badge-axa-orange-rci{
+    background:#f47117;
+}
+.THIS .icon-blue-axa svg{
+    fill:#00008f;
+}
+
+.THIS .slds-checkbox_toggle [type=checkbox]:checked+.slds-checkbox_faux_container .slds-checkbox_faux{
+    background: #1b5297;
+}
+
+.THIS .slds-checkbox_toggle [type=checkbox]:checked+.slds-checkbox_faux_container .slds-checkbox_faux:before{
+    background-color: #fff !important;
+}

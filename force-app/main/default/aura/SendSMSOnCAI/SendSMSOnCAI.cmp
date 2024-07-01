@@ -1,0 +1,48 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,forceCommunity:availableForAllPageTypes,force:lightningQuickAction,force:hasRecordId,lightning:actionOverride" access="global" controller="SendSMSCmpController">
+    <aura:attribute name="showToast" type="Boolean" default="false" />
+    <aura:attribute name="typeToast" type="String"  />
+    <aura:attribute name="messageToast" type="String"  />
+    <aura:attribute name="DetailsMessageToast" type="String" />
+    <aura:attribute name = 'PhoneNumber' type="String"/>
+    <aura:attribute name = 'ConducenteEqualscontraente' type='boolean'/>
+    <aura:attribute name = 'Valid' type = 'boolean'/>
+    <aura:attribute name = 'Motive' type = 'String' default = 'Invio CAI'/>
+    <aura:attribute name = 'wrapper' type="Object"/>
+    <aura:attribute name = 'AccountId' type = 'String'/>
+    <aura:attribute name = 'FirstName' type = 'String'/>
+    <aura:attribute name = 'LastName' type = 'String'/>
+    <aura:attribute name="successSaveSurvey" type="String"  />
+    <aura:attribute name="isLoading" type="Boolean" default="false"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:registerEvent name="saveSurvey" type="c:saveSurveyEvent" />
+    
+    <aura:if isTrue="{! v.isLoading }">
+        <lightning:spinner alternativeText="Loading" class="spinnerFixed"/>
+    </aura:if>
+    
+    <lightning:button label="Invia CAI" variant="Neutral" onclick = '{!c.prepareSMS}'/>
+    
+    
+    
+      <aura:if isTrue="{! v.showToast }">
+        <div class="slds-notify_container slds-is-relative" style="position: fixed;margin-top: 10%;">
+            <div class="{!'slds-notify slds-notify_toast slds-theme_'+v.typeToast}" role="status" style="height: 4rem;">
+                <span class="slds-assistive-text">warning</span>
+                <span class="{!'slds-icon_container slds-m-right_small slds-no-flex slds-align-top slds-icon-utility-'+v.typeToast}" title="{!v.typeToast}">
+                    <lightning:icon iconName="{!'utility:'+v.typeToast}" alternativeText="Approved" class="whiteIcon"/>
+                </span>
+                <div class="slds-notify__content">
+                    <h2 class="slds-text-heading_small ">{!v.messageToast}</h2>
+                    <p>{!v.DetailsMessageToast}</p>
+                </div>
+                <div class="slds-notify__close">
+                    <button class="slds-button slds-button_icon slds-button_icon-inverse" title="Chiudi" onclick="{!c.chiudiToast}">
+                        <lightning:icon iconName="utility:close" alternativeText="Approved"  class="whiteIcon"/>
+                        <span class="slds-assistive-text">Chiudi</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+</aura:component>

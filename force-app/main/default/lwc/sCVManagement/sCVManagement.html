@@ -1,0 +1,31 @@
+<template>
+  <template if:true={initDone}>
+    <template if:true={resultInit.needError}>
+      <article class="slds-card slds-has-bottom-magnet">
+  
+        <div class="slds-section slds-is-open">
+          <h3 class="slds-section__title slds-theme_shade">
+            <span class="slds-truncate slds-p-horizontal_small" title="Section Title">Crea Case</span>
+          </h3>
+          <center>
+            <p>Il componente non � disponibile per questa chiamata!</p>
+          </center>
+        </div>
+
+      </article>
+    </template>
+    <template if:false={resultInit.needError}>
+  <template if:true={isAssistenzaAgenti}>
+    <c-lght-create-case-with-attr record-id = {recordId}></c-lght-create-case-with-attr>
+  </template>
+
+  <template if:true={isGestore}>
+    <c-s-c-v-management-gestori record-id = {recordId}></c-s-c-v-management-gestori>
+  </template>
+
+  <template if:true={isClienti}>
+    <c-s-c-v-management-clienti record-id = {recordId}></c-s-c-v-management-clienti>
+  </template>
+    </template>
+  </template>
+</template>

@@ -1,0 +1,127 @@
+<apex:page extensions="CommentToSolutionServer" standardController="Case" showHeader="{!$CurrentPage.parameters.showHeader}" standardStylesheets="false" sidebar="false" applyHtmlTag="true" applyBodyTag="false" docType="html-5.0">
+    <style>
+        html {
+            background-color: white;
+        }
+    </style>
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>      
+    </head>
+    
+    <apex:includeScript value="/lightning/lightning.out.js" />
+    <!-- OAVERSANO 24/01/2019 : NMA Fix Mobile - START -->
+    <apex:includeScript value="/soap/ajax/41.0/connection.js"/>
+    <apex:includeScript value="/soap/ajax/41.0/apex.js"/>
+    <apex:includeScript value="/canvas/sdk/js/36.0/publisher.js"/>
+    <!--apex:includeScript value="https://mobile1.t.salesforce.com/soap/ajax/30.0/connection.js" /-->
+    <!-- OAVERSANO 24/01/2019 : NMA Fix Mobile - END -->
+ 
+    <script>
+        $Lightning.use("c:CommentToSolutionApp", function() {
+            $Lightning.createComponent(
+                "c:CommentToSolution",
+                {
+                    "caseId" : "{!apexCaseId}"
+                },
+                "theComment",
+                function(cmp) {
+                    console.log("Component created!");
+                    //OAVERSANO 24/01/2019 : NMA Fix Mobile -- START
+                    console.log('eventService');
+                    $A.eventService.addHandler({ "event": "c:tabclosing", "handler" : visualForceFunction});
+                    //OAVERSANO 24/01/2019 : NMA Fix Mobile -- END  
+                    console.log(cmp);
+                });
+            });
+            
+        //OAVERSANO 24/01/2019 : NMA Fix Mobile -- START
+        var theme = "{!$User.UITheme}";
+        console.log('theme: ',theme);
+        var visualForceFunction = function(event){
+            console.log('event');
+            var myEventData = event.getParam("data");
+            var caseid= event.getParam("recordid");
+            var url= event.getParam("Url");
+            if(myEventData == 'refresh')
+                refreshCase();
+            else if(myEventData == 'cancel')
+            {
+                closeSubTab(caseid,url);
+            }
+        
+        };
+    
+        function refreshCase()
+        {
+            try
+            {
+                console.log("refresh");
+                //window.close();
+                /*if( (typeof sforce != 'undefined') && (sforce != null) ) {
+                    //sforce.one.navigateToURL(url + caseid , true);
+                    Sfdc.canvas.publisher.publish({name: "publisher.close", payload:{ refresh:"true"}});
+                    sforce.one.back(true);  
+                }
+                else {
+                    opener.refreshTopPage(CaseId);
+                }*/
+                if(theme == 'Theme4t')
+                {
+                    Sfdc.canvas.publisher.publish({name: "publisher.close", payload:{ refresh:"true"}});
+                    //sforce.one.back(true);
+                }
+                else {
+                    opener.refreshTopPage(CaseId);
+                }
+            }
+            catch (e)
+            {}
+            finally 
+            {}
+        } 
+        function CloseTab() {
+            sforce.console.getEnclosingTabId(closeSubtab);
+        }
+        var closeSubtab = function closeSubtab(result) {
+            var tabId = result.id;
+            console.log('tabId: ',tabId);
+            sforce.console.closeTab(tabId);
+        };
+        function closeSubTab(caseid,url)
+        {
+            try
+            {
+                console.log("cancel");
+                //window.open(url + caseid, "_self");
+                /*if( (typeof sforce != 'undefined') && (sforce != null) ) {
+                    //sforce.one.navigateToURL(url + caseid , true);
+                    
+                    Sfdc.canvas.publisher.publish({name: "publisher.close", payload:{ refresh:"true"}});
+                    sforce.one.back(true);
+                }
+                else {
+                    window.location.replace(url+caseid); 
+                }*/
+                
+                if(theme == 'Theme4t')
+                {
+                    //sforce.one.navigateToSObject(caseid, 'detail');
+                    Sfdc.canvas.publisher.publish({name: "publisher.close", payload:{ refresh:"true"}});
+                    //sforce.one.back(true);
+                }
+                else {
+                    window.open(url+caseid, "_self"); 
+                }
+            }
+            catch (e)
+            {
+                alert(e);
+            }
+            finally 
+            {}
+        } 
+        //OAVERSANO 24/01/2019 : NMA Fix Mobile -- END
+    </script>
+    
+    <div id="theComment"></div>       
+</apex:page>

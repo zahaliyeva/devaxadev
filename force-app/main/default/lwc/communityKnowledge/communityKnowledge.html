@@ -1,0 +1,134 @@
+<template>
+  <template if:true={spinner}>
+    <lightning-spinner
+      alternative-text="Loading"
+      size="medium"
+    ></lightning-spinner>
+    Caricamento in corso
+  </template>
+  <div class="container axa-theme">
+    <!--Wizard CL UX - step 1-->
+    <div
+      class="slds-grid slds-wrap slds-align_absolute-center"
+      if:true={homePage}
+    >
+      <!--SEARCHBAR-->
+      <div class="slds-col slds-small-size_1-of-1 slds-medium-size_6-of-12">
+        <div class="slds-m-around_xx-large">
+          <h1 class="slds-text-heading_large slds-text-align_center">
+            Come possiamo aiutarti?
+          </h1>
+          <!-- TITOLO PAGINA -->
+          <p
+            class="
+              slds-text-heading_small
+              slds-text-align_center
+              slds-p-around_large
+            "
+          >
+            Cerca l'argomento di tuo interesse o consulta direttamente le
+            domande frequenti
+          </p>
+          <c-vendor-select
+            name="search"
+            onenter={handleEnter}
+            callback-input={handleInput}
+            callback-selection={handleChange}
+            callback-icon={handleChangeIcon}
+            onchange={handleChange}
+            options={options}
+            placeholder="Ho bisogno di..."
+          >
+          </c-vendor-select>
+        </div>
+      </div>
+
+      <!--MAIN ACCORDION-->
+      <div class="slds-col slds-small-size_1-of-1 slds-medium-size_10-of-12">
+        <h2 class="slds-text-heading_medium slds-text-align_center">
+          {titleAccordion}
+        </h2>
+        <!-- INTRODUZIONE -->
+        <div class="slds-card slds-m-around_xx-large">
+          <lightning-accordion
+            if:true={allowMultipleSectionsOpen}
+            active-section-name={activeSection}
+            allow-multiple-sections-open="true"
+          >
+            <!--SECTION-->
+            <template for:each={decrypt.listKnowledge} for:item="data">
+              <lightning-accordion-section
+                key={data.Id}
+                label={data.Title}
+                name={data.Title}
+              >
+                <lightning-formatted-rich-text
+                  value={data.FAQ_Risposta__c}
+                ></lightning-formatted-rich-text>
+                <!--BOX FEEDBACK-->
+                <p class="slds-m-top_medium slds-text-align_right">
+                  In questo articolo hai trovato quello di cui avevi
+                  bisogno?&nbsp;
+                </p>
+                <div class="slds-grid slds-grid_reverse">
+                  <c-like-dislike
+                    article-id={data.Id}
+                    like-number={data.Count_Feedback_Positivi__c}
+                    dislike-number={data.Count_Feedback_Negativi__c}
+                    disabled={data.disabled}
+                  ></c-like-dislike>
+                </div>
+              </lightning-accordion-section>
+            </template>
+          </lightning-accordion>
+        </div>
+      </div>
+    </div>
+
+    <!--WIZARD CL UX - STEP 3a / 3b  BUTTONS-->
+    <div class="slds-grid slds-wrap slds-text-align_center">
+      <div class="slds-col slds-size_12-of-12" if:true={buttons.back}>
+        <button class="slds-button slds-button_neutral" onclick={buttonBack}>
+          TORNA INDIETRO
+        </button>
+      </div>
+
+      <div
+        class="slds-size_12-of-12 slds-grid slds-grid_align-center"
+        if:true={buttons.support}
+      >
+        <div
+          class="
+            slds-col
+            slds-small-size_8-of-12
+            slds-medium-size_3-of-12
+            slds-large-size_3-of-12
+            slds-border_top
+            slds-var-m-around_x-large
+          "
+        ></div>
+      </div>
+
+      <div class="slds-col slds-size_12-of-12" if:true={buttons.support}>
+        <div class="slds-m-around_xx-large slds-m-top_none">
+          <h1 class="slds-text-heading_medium slds-text-align_center">
+            Non hai trovato quello che cercavi?
+          </h1>
+          <button
+            class="slds-button slds-button_brand slds-m-top_medium"
+            onclick={buttonSupport}
+          >
+            CHIEDI SUPPORTO
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!--SUPPORT PAGE -->
+    <div if:true={supportPage}>
+      <h1 class="slds-text-heading_large slds-text-align_center">
+        WORK IN PROGRESS :)
+      </h1>
+    </div>
+  </div>
+</template>

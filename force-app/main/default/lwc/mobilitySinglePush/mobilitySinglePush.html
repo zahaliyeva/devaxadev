@@ -1,0 +1,202 @@
+<template>
+	<c-mobility-spinner show={spinner} show-overlay={spinnerOverlay}></c-mobility-spinner>
+	<template if:true={ready}>
+
+		<template if:true={showDetailsMain}> 
+			<div class="main-column">
+				<div>
+					<h2>Seleziona il messaggio che vuoi dare ai tuoi clienti</h2>
+					<h3>Filtra per</h3>
+					<div class='row slds-scope'>			
+						<div class="col-md-4 col-xl-3 main-column__filter">					
+							<c-mobility-collapsible-filter-widget
+							data-id="filterObj"
+                            label="Obiettivi"
+                            options={optionsObiettivi}
+                            onselected={handleFilter}
+                            value={filterValues.filterObj}
+                            >
+                        </c-mobility-collapsible-filter-widget>
+						</div>
+						<div class="col-md-4 col-xl-3 main-column__filter"> <!--ZA CR PUSH 179-->
+							<c-mobility-collapsible-filter-widget
+							data-id="filterTip"
+                            label="Tipologia Campagna"
+                            options={optionsTipologiaCamp}
+                            onselected={handleFilter}
+                            value={filterValues.filterTip}
+                            >
+                        </c-mobility-collapsible-filter-widget>
+						</div>
+						<div class="col-md-4 col-xl-3 main-column__filter">
+							<c-mobility-collapsible-filter-widget
+							data-id="filterCategory"
+                            label="Categoria Prodotto"
+                            options={optionsCategoriaProd}
+                            onselected={handleFilter}
+                            value={filterValues.filterCategory}
+                            >
+                        </c-mobility-collapsible-filter-widget>
+						</div>
+						<div class="col-md-4 col-xl-3 main-column__filter">
+							<c-mobility-collapsible-filter-widget
+							data-id="filterCanale"
+                            label="Canale"
+                            options={optionsCanale}
+                            onselected={handleFilter}
+                            value={filterValues.filterCanale}
+                            >
+                        </c-mobility-collapsible-filter-widget>
+						</div>
+					</div>
+				</div>
+
+				<c-mobility-cards-pagination
+					page-name="Crea Messaggio"
+					step-name="MessaggioSingle"
+					results={resultList}
+					back-navigate-single={navigateSingleSumit}
+					back-open-modal-single={OpenModalVisualTemplate}
+				></c-mobility-cards-pagination>
+
+				<!--bottone centrale-->
+				<div class="mobility-modal__actions">
+					<button class="btn btn-primary" onclick={closePostMessage} >TORNA INDIETRO</button>
+				</div>
+			</div>
+		</template>
+		
+		<template if:true={showDetailsTemplate}>		
+			<br>
+			<br>
+			<c-mobility-push-show-campaign-template 
+			title={title} 
+			description={description} 
+			url={iframeUrl} 
+			url-title={previewEmail} 
+			preview-title={previewShortMessage} 
+			preview-message={previewMessage} 
+			>
+			</c-mobility-push-show-campaign-template>
+			<br/><br/>
+			<div class="mobility-modal__actions">
+			
+				<button class="btn btn-outline-primary" onclick={setShowDetailsMain} >TORNA INDIETRO</button>&nbsp;
+				<button class="btn btn-primary" onclick={navigateSingleSumit} >CONFERMA</button>
+			</div>
+			<br/><br/>
+		</template>
+
+		<template if:true ={showOrariModal}>
+			<br>
+			<br>
+			<c-mobility-push-orari-agenzia close-callback={closeOrariModal} primary-callback={primaryOrari} back-callback={backOrariModal}></c-mobility-push-orari-agenzia>
+		</template>
+		
+		<template if:true ={showChiusuraModal}>
+			<br>
+			<br>
+			<c-mobility-push-chiusura-agenzia close-callback={closeChiusuraModal} primary-callback={primaryChiusura} back-callback={backChiusuraModal}></c-mobility-push-chiusura-agenzia>
+		</template>
+
+		<template if:true={showConfirmation}>
+			<br>
+			<br>
+			<c-mobility-modal-dinamic-message
+			name-layout="ModalConfermaInvioSingolo"
+			primary-callback={submit}
+			back-callback={setShowDetailsMain}
+			>
+			</c-mobility-modal-dinamic-message>
+		</template>
+
+		<template if:true={showMessaggeSended}>
+				<br>
+			<br>
+				<c-mobility-modal-dinamic-message
+				name-layout="ModalConcludiInvioSingolo"
+				>
+				</c-mobility-modal-dinamic-message>
+		</template>
+
+		<template if:true={erroreTecnico}>
+				<br>
+					<br>
+			<c-mobility-modal-dinamic-message
+			name-layout="ModalErroreTecnicoSingle"
+			>
+			</c-mobility-modal-dinamic-message>
+			<br/><br/>
+			<div class="mobility-modal__actions">
+			
+			
+				<button class="btn btn-outline-primary" onclick={closePostMessage} >TORNA INDIETRO</button>&nbsp;
+			</div>
+			<br/><br/>
+		</template>
+
+		<template if:true={clienteNonAbilitato}>
+				<br>
+					<br>
+			<c-mobility-modal-dinamic-message
+			name-layout="ModalClienteNonAbilitato"
+			>
+			</c-mobility-modal-dinamic-message>
+			<br/><br/>
+			<div class="mobility-modal__actions">
+			
+			
+				<button class="btn btn-outline-primary" onclick={closePostMessage} >TORNA INDIETRO</button>&nbsp;
+			</div>
+			<br/><br/>
+		</template>
+
+
+		<template if:true={showProfileAgenteNonAbilitato}>
+				<br>
+					<br>
+			<c-mobility-modal-dinamic-message
+			name-layout="ModalAbilitazioneProfiloSingle"
+			>
+			</c-mobility-modal-dinamic-message>
+			<br/><br/>
+			<div class="mobility-modal__actions">
+			
+			
+				<button class="btn btn-outline-primary" onclick={closePostMessage} >TORNA INDIETRO</button>&nbsp;
+			</div>
+		</template>
+
+		<!--ECLEMENTE - 26/02/2024 - Start: Add logic for modal toast error only if showCommunicated is true.-->
+		<template if:true={showCommunicated}>
+			<div class="overload-contain overload-on-top" >
+          
+				<div class="overload-contain-child" style="vertical-align: top;">
+					<div style="text-align: center">
+						<h2 class="modal-title" style="color: white">MESSAGGIO DI SISTEMA</h2>
+					</div>
+					<div class="overload-element">
+						<div class="modal-body ">
+							<div class="row justify-content-between align-items-center">
+						<h1 class="modal-body-accept-newline"  style="font-family: SourceSansPro-Semibold, sans-serif;font-size: 16px; text-align: center;color:#333">{erroreCommunicated}</h1>
+					</div>
+					</div>
+					<div class="mobility-modal__actions">
+						<button class="btn btn-outline-primary" onclick={closePostMessage} >TORNA INDIETRO</button>&nbsp;
+					</div>
+					</div>
+					
+				</div>
+			</div>
+		
+	</template>
+	<!--ECLEMENTE - 26/02/2024 - End-->
+
+	</template>
+	<template if:false={ready}>
+		<div class="demo-only slds-scope" style="height:6rem;position:relative">
+			<c-mobility-spinner show show-overlay></c-mobility-spinner>
+			Caricando filtri Fatique ... {caricaFiltri}%
+		</div>
+	</template>
+</template>

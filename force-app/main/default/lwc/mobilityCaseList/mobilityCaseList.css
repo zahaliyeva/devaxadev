@@ -1,0 +1,48 @@
+.case-item {
+    padding: 15px 10px;
+    border-bottom: 1px solid #E5E5E5;
+    flex-wrap: nowrap;
+}
+
+.badge {
+    display: inline-block;
+
+    text-transform: uppercase;
+    color: #FFFFFF;
+    font-weight: 700;
+    font-size: 10px;
+    text-align: center;
+
+    border-radius: 8px;
+    white-space: nowrap;
+    padding: 3px 10px;
+}
+
+.badge-green {
+    background-color: #9FD9B4;
+}
+
+.badge-purple {
+    background-color: #9190AC;
+}
+
+.badge-red {
+    background-color: #F07662;
+}
+
+.arrow {
+    min-width: 10px;
+    width: 15px;
+    max-width: 20px;
+
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.arrowContainer {
+    padding-right: 0;
+}
+
+.statusPadding {
+    padding-right: 45px;
+}

@@ -1,0 +1,66 @@
+.THIS .starClass {
+	float: right;
+    margin: 1.8% 13% 0% 0%;
+	width: 45%;
+}
+.THIS .viewStatBack{
+    width: 56px;
+    height: 20px;
+    background: url(/img/knowledge/kb2/ratings_sprites.png?) 0px -35.9px;
+}
+.THIS .viewStat{
+	height: 20px;
+    background: url(/img/knowledge/kb2/ratings_sprites.png?) 0px -55.5px;
+    position: absolute;
+}
+.THIS .divImages{
+    display: inline-flex;
+    width: 90%;
+}
+.THIS .innerDivImages{
+    position: absolute;
+    right: 0;
+    margin-top: 1.9%;
+}
+.THIS .firstLayoutItem{
+	width: 61%;
+}
+.THIS .secondLayoutItem{
+    width: 80px;
+}
+.THIS .thirdLayoutItem{
+    width: 82px;
+}
+.THIS .font_x_small{
+	font-size: x-small;
+}
+.THIS .borderNone{
+	border: none;
+}
+.THIS .icnSandyBrown{
+	background-color: #f2cf5b !important;
+}
+
+.THIS .question {
+    width: 80%;
+    white-space: unset;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+    background: white;
+    resize: none;
+    display: inline-block;
+    font-family: 'Salesforce Sans', Arial,sans-serif;
+}
+
+.THIS .answer {
+    width: 80%;
+    white-space: unset;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+    background: white;
+    resize: none;
+    display: inline-block;
+    font-family: 'Salesforce Sans', Arial,sans-serif;
+}

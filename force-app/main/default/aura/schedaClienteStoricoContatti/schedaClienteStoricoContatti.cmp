@@ -1,0 +1,27 @@
+<aura:component implements="lightning:isUrlAddressable">
+  <aura:attribute name="accountId" type="String" /> 
+  <aura:attribute name="disableVisualizzaTutto" type="Boolean" />
+  <lightning:navigation aura:id="navService"/>
+  <aura:handler name="StoricoContattiError" event="c:storicoContattiError"
+    action="{!c.handleStoricoContattiError}"/>
+  
+    <article class="slds-card slds-card_boundary">
+        <div class="slds-card__header slds-grid">
+          <header class="slds-media slds-media_center slds-has-flexi-truncate">
+            <div class="slds-media__body">
+              <h2 class="slds-card__header-title">
+                <a href="javascript:void(0);" class="slds-card__header-link slds-truncate not-active">
+                  <span>Storico Contatti Cliente</span>
+                </a>
+              </h2>
+            </div>
+          </header>
+        </div> 
+        <div class="slds-card__body slds-card__body_inner">
+          <c:storicoContatti recordId="{!v.accountId}" hasIconSVG="true"/>
+        </div> 
+        <footer class="slds-card__footer slds-border_top slds-align_absolute-center">
+          <button class="slds-button slds-button_neutral" disabled="{! v.disableVisualizzaTutto }" onclick="{!c.onVisualizzaTutto}">Visualizza Tutto</button>
+        </footer>
+      </article>
+</aura:component>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>FirstOptionValue</label>
+    <protected>false</protected>
+    <values>
+        <field>ErrorMessage__c</field>
+        <value xsi:type="xsd:string">Attenzione, commento troppo lungo, inserire meno di 1000 caratteri!</value>
+    </values>
+    <values>
+        <field>NumberChar__c</field>
+        <value xsi:type="xsd:double">1000.0</value>
+    </values>
+</CustomMetadata>

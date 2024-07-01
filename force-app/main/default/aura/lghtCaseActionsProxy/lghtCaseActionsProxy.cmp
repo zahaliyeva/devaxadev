@@ -1,0 +1,95 @@
+<aura:component implements="force:appHostable,lightning:isUrlAddressable,flexipage:availableForAllPageTypes,force:hasRecordId,force:hasSObjectName" access="global">
+	
+	<lightning:workspaceAPI aura:id="workspace"/>
+	<lightning:quickActionAPI aura:id="quickActionAPI" />
+
+	<aura:attribute name="debugMode" type="Boolean" access="global" />
+	<aura:attribute name="recordId" type="Id" />
+	<aura:attribute name="case" type="Object"/>
+	<aura:attribute name="ownerIsQueue" type="Boolean"/>
+	<aura:attribute name="visibilities" type="Object"/>
+	<aura:attribute name="visibilitiesCallback" type="Object"/>
+
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+	
+	<aura:if isTrue="{!v.debugMode}">
+		<article class="slds-card" style="margin-bottom: 10px;">
+			<div class="slds-card__header">
+				<h5>Debug Data</h5>
+				<strong>SObject: {!v.sObjectName}</strong><br/>
+				<strong>Case Id: {!v.recordId}</strong><br/>
+				<strong>RecordType: {!v.case.RecordType.DeveloperName}</strong><br/>
+				<strong>Case Status: {!v.case.Status}</strong><br/>
+			</div>
+		</article>
+	</aura:if>
+	
+	<c:lghtCaseActions 
+		recordId="{!v.recordId}"
+		sObjectName="{!v.sObjectName}"
+		oninit="{!c.handlerInit}" 
+		onclosetab="{!c.handleCloseTab}" 
+		onrefreshview="{!c.handlerRefresh}"
+		onvisibilities="{!c.handlerVisibilies}"
+		oninvokeaction="{!c.handlerQuickAction}"
+		onsetactionValue="{!c.handlerSetActionFieldValues}"
+		debugMode="{!v.debugMode}"
+	/>
+
+    <aura:if isTrue="{!v.visibilities.ChiudiCaseCmp}">
+		<c:ChiudiCaseCmp
+            recordId="{!v.recordId}"
+            rtDevName="{!v.case.RecordType.DeveloperName}"
+		    showModal="true"
+		    isOpenModalLightning = "false"
+			visibilities="{!v.visibilitiesCallback}"
+		/>
+	</aura:if>
+	
+	<aura:if isTrue="{!v.visibilities.NewCommentAndAttachmentLightning}">
+		<c:NewCommentAndAttachmentLightning
+			CaseId="{!v.recordId}"
+			isOpen="true"
+			visibilities="{!v.visibilitiesCallback}"
+		/>
+	</aura:if>
+	
+	<aura:if isTrue="{!v.visibilities.GetAllClaims}">
+		<c:lghtGetAllClaimsModal
+			caseId="{!v.case.Id}"
+			accountId="{!v.case.Account.Id}"
+			recordTypeId="{!v.case.RecordType.Id}"
+			caseRT="{!v.case.RecordType.DeveloperName}"
+			fiscalCode="{!v.case.Codice_Fiscale__c}"
+			visibilities="{!v.visibilitiesCallback}"
+		/>
+	</aura:if>
+	
+	<aura:if isTrue="{!v.visibilities.CloseCaseComponent}">
+		<c:lghtCloseCaseModal
+			case="{!v.case}"
+			ownerIsQueue="{!v.ownerIsQueue}"
+			visibilities="{!v.visibilitiesCallback}"
+		/>
+	</aura:if>
+
+	<aura:if isTrue="{!v.visibilities.lghtCaseFindAssociateAgent}">
+		<c:lghtCaseFindAssociateAgentProxy
+			recordId="{!v.recordId}"
+			visibilities="{!v.visibilitiesCallback}"
+		/>
+	</aura:if>
+
+	<aura:if isTrue="{!v.visibilities.lghtCaseProponiSoluzione}">
+		<c:lghtCaseProponiSoluzioneModal
+			recordId="{!v.recordId}"
+			visibilities="{!v.visibilitiesCallback}"
+		/>
+	</aura:if>
+	<aura:if isTrue="{!v.visibilities.SendDocumentValidationComponent}">
+		<c:SendDocumentValidationModal
+		    caseId="{!v.recordId}"
+			visibilities="{!v.visibilitiesCallback}"
+		/>
+	</aura:if>
+</aura:component>

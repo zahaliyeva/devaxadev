@@ -1,0 +1,713 @@
+<template>
+  <template if:true={spinner}>
+    <lightning-spinner
+      alternative-text="Loading"
+      size="medium"
+    ></lightning-spinner>
+  </template>
+  <div
+    class="slds-grid slds-wrap"
+    style="
+      min-width: 500px;
+      overflow-x: unset;
+      min-height: 500px;
+      align-content: flex-start;
+    "
+  >
+    <div
+      class="
+        slds-col
+        slds-size_1-of-1
+        slds-medium-size_12-of-12
+        slds-large-size_12-of-12
+        slds-m-bottom_large
+        slds-text-align_center
+      "
+    >
+      <div class="slds-page-header">
+        <div class="slds-media">
+          <!-- <div class="slds-media__figure">
+            <lightning-icon icon-name="action:new_case"></lightning-icon>
+          </div> -->
+          <div class="slds-media__body">
+            <h1 class="slds-text-heading_large">
+              Assistenza - Crea una nuova Richiesta
+            </h1>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="
+        slds-col
+        slds-size_1-of-1
+        slds-medium-size_8-of-12
+        slds-large-size_8-of-12
+        padding-column
+      "
+    >
+      <div class="slds-button-group slds-align_absolute-center">
+        <c-live-agent-chat-button-l-w-c
+          organization-id={categorizationId}
+          deployment-url={catDeploymentUrl}
+          endpoint={chatEndpoint}
+          deployment-id={chatDeploymentId}
+          chat-button-id={chatButtonId}
+          text-online="Entra in chat"
+          text-offline="Chat offline"
+          new-case={newCase}
+          agent-name={agentName}
+          onlivechatbuttonpressevent={setPageToReadOnly}
+          >
+          </c-live-agent-chat-button-l-w-c>
+        <button
+          class="slds-button slds-button_neutral"
+          onclick={SendToSupport}
+          disabled={disableCreateCase}
+        >
+          Invia a Supporto
+        </button>
+        <button
+          class="slds-button slds-button_neutral"
+          onclick={onModalAttachmentOpen}
+          disabled={disableCreateCase}
+        >
+          Aggiungi allegato
+        </button>
+        <button class="slds-button slds-button_neutral" onclick={newRequest}>
+          Annulla
+        </button>
+      </div>
+      <div class="slds-form-element__control">
+        <lightning-combobox
+          name="area"
+          label="Area:"
+          value={newCase.LOB__c}
+          placeholder="--Selezionare Area--"
+          options={areaOptions}
+          onchange={handleAreaChange}
+          disabled={tripletDisabled}
+          required
+        ></lightning-combobox>
+        <!-- <template if:true={isSelectedArea}> -->
+        <lightning-combobox
+          name="category"
+          label="Categoria:"
+          value={newCase.Category__c}
+          placeholder="--Selezionare Categoria--"
+          options={categoryOptions}
+          onchange={handleCategoryChange}
+          disabled={tripletDisabled}
+          required
+        ></lightning-combobox>
+        <lightning-combobox
+          data-id="inputSubcategory"
+          name="subCategory"
+          label="Sotto-Categoria:"
+          value={newCase.SubCategory__c}
+          placeholder="--Selezionare Sotto Categoria-"
+          options={subCategoryOptions}
+          onchange={handleSubCategoryChange}
+          disabled={tripletDisabled}
+          required={hasSubCategory}
+        ></lightning-combobox>
+        <lightning-input
+        type="text"
+        label="Oggetto:"
+        required
+		placeholder="Inserire l'oggetto della richiesta.."
+        onchange={handleOggettoChange}
+        disabled={disableCreateCase}
+      ></lightning-input>
+        <lightning-textarea
+        name="descrizione"
+        label="Descrizione:"
+        onchange={handleDescriptionChange}
+		placeholder="Inserire la descrizione della richiesta.."
+        required
+        disabled={disableCreateCase}
+      ></lightning-textarea>
+        <lightning-record-edit-form
+          object-api-name="Case"
+          id="createContactForm"
+        >
+          <div class="slds-form-element">
+            <label class="slds-form-element__label" for="combobox-id-4"
+              >Cliente</label
+            >
+            <div class="slds-form-element__control">
+              <div class="slds-combobox_container">
+                <div
+                  class="
+                    slds-combobox
+                    slds-dropdown-trigger
+                    slds-dropdown-trigger_click
+                    slds-is-open
+                  "
+                  aria-expanded={showClientList}
+                  aria-haspopup="listbox"
+                  role="combobox"
+                >
+                  <div
+                    class="
+                      slds-combobox__form-element
+                      slds-input-has-icon slds-input-has-icon_right
+                    "
+                    role="none"
+                  >
+                    <input
+                      disabled={disableCreateCase}
+                      onkeyup={onChangeClient}
+                      onfocus={onFocusClient}
+                      onblur={onBlurClient}
+                      type="text"
+                      class="
+                        slds-input
+                        slds-combobox__input slds-combobox__input-value
+                      "
+                      id="combobox-id-4"
+                      data-id="inputAccountName"
+                      aria-activedescendant="option1"
+                      aria-autocomplete="list"
+                      aria-controls="listbox-id-4"
+                      autocomplete="off"
+                      role="textbox"
+					  placeholder="Inserire i primi tre caratteri del nome e cognome/ragione sociale.."                    
+                    />
+                    <span
+                      class="
+                        slds-icon_container
+                        slds-icon-utility-search
+                        slds-input__icon slds-input__icon_right
+                      "
+                    >
+                      <svg
+                        class="
+                          slds-icon slds-icon slds-icon_x-small
+                          slds-icon-text-default
+                        "
+                        aria-hidden="true"
+                      >
+                        <use
+                          xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg?cache=9.37.1#search"
+                        ></use>
+                      </svg>
+                    </span>
+                  </div>
+                  <div
+                    if:true={showClientList}
+                    id="listbox-id-4"
+                    class="
+                      slds-dropdown
+                      slds-dropdown_length-with-icon-7
+                      slds-dropdown_fluid
+                    "
+                    role="listbox"
+                  >
+                    <ul
+                      class="slds-listbox slds-listbox_vertical"
+                      role="presentation"
+                    >
+                      <template
+                        for:each={clientsOcurrences}
+                        for:item="clientItem"
+                      >
+                        <li
+                          role="presentation"
+                          class="slds-listbox__item"
+                          key={clientItem.Id}
+                          onclick={handleAccountSelection}
+                          data-name={clientItem.Name}
+                          data-value={clientItem.Id}
+                        >
+                          <div
+                            id={clientItem.Id}
+                            class="
+                              slds-media
+                              slds-listbox__option
+                              slds-listbox__option_entity
+                              slds-listbox__option_has-meta
+                            "
+                            role="option"
+                          >
+                            <span
+                              class="
+                                slds-media__figure
+                                slds-listbox__option-icon
+                              "
+                            >
+                              <span
+                                class="
+                                  slds-icon_container
+                                  slds-icon-standard-account
+                                "
+                              >
+                                <svg
+                                  class="slds-icon slds-icon_small"
+                                  aria-hidden="true"
+                                >
+                                  <use
+                                    xlink:href="/assets/icons/standard-sprite/svg/symbols.svg#account"
+                                  ></use>
+                                </svg>
+                              </span>
+                            </span>
+                            <span class="slds-media__body">
+                              <span
+                                class="
+                                  slds-listbox__option-text
+                                  slds-listbox__option-text_entity
+                                "
+                              >
+                                <span> {clientItem.Name}</span>
+                              </span>
+                              <span
+                                class="
+                                  slds-listbox__option-meta
+                                  slds-listbox__option-meta_entity
+                                "
+                              ></span>
+                            </span>
+                          </div>
+                        </li>
+                      </template>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            if:true={showMessageErrorClientLookups}
+            aria-live="assertive"
+            class="slds-text-color_error slds-form-element__help"
+          >
+            Select an option from the picklist or remove the search term.
+          </div>
+
+		  <div class="slds-form-element">
+            <label class="slds-form-element__label" for="combobox-id-4"
+              >Polizza:</label
+            >
+            <div class="slds-form-element__control">
+              <div class="slds-combobox_container">
+                <div
+                  class="
+                    slds-combobox
+                    slds-dropdown-trigger
+                    slds-dropdown-trigger_click
+                    slds-is-open
+                  "
+                  aria-expanded={showInsurancePolicy}
+                  aria-haspopup="listbox"
+                  role="combobox"				  
+                >
+                  <div
+                    class="
+                      slds-combobox__form-element
+                      slds-input-has-icon slds-input-has-icon_right
+                    "
+                    role="none"
+                  >
+                    <input
+                      data-id="inputPolicyName"
+                      onkeyup={onChangeInsurance}
+                      onfocus={onFocusInsurance}
+                      onblur={onBlurInsurance}
+                      type="text"
+                      class="
+                        slds-input
+                        slds-combobox__input slds-combobox__input-value
+                      "
+                      id="combobox-id-5"
+                      aria-activedescendant="option1"
+                      aria-autocomplete="list"
+                      aria-controls="listbox-id-5"
+                      autocomplete="off"
+                      role="textbox"
+                      placeholder="Inserire le prime tre cifre del numero polizza.."
+                      disabled={disableCreateCase}
+                    />
+                    <span
+                      class="
+                        slds-icon_container
+                        slds-icon-utility-search
+                        slds-input__icon slds-input__icon_right
+                      "
+                    >
+                      <svg
+                        class="
+                          slds-icon slds-icon slds-icon_x-small
+                          slds-icon-text-default
+                        "
+                        aria-hidden="true"
+                      >
+                        <use
+                          xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg?cache=9.37.1#search"
+                        ></use>
+                      </svg>
+                    </span>
+                  </div>
+                  <div
+                    if:true={showInsurancePolicy}
+                    id="listbox-id-5"
+                    class="
+                      slds-dropdown
+                      slds-dropdown_length-with-icon-7
+                      slds-dropdown_fluid
+                    "
+                    role="listbox"
+                  >
+                    <ul
+                      class="slds-listbox slds-listbox_vertical"
+                      role="presentation"
+                    >
+                      <template
+                        for:each={insurenceOcurrences}
+                        for:item="insuranceItem"
+                      >
+                        <li
+                          role="presentation"
+                          class="slds-listbox__item"
+                          key={insuranceItem.Id}
+                          onclick={handleInsurancePolicySelection}
+                          data-name={insuranceItem.Name}
+                          data-value={insuranceItem.Id}
+                        >
+                          <div
+                            id={insuranceItem.Id}
+                            class="
+                              slds-media
+                              slds-listbox__option
+                              slds-listbox__option_entity
+                              slds-listbox__option_has-meta
+                            "
+                            role="option"
+                          >
+                            <span
+                              class="
+                                slds-media__figure
+                                slds-listbox__option-icon
+                              "
+                            >
+                              <span
+                                class="
+                                  slds-icon_container
+                                  slds-icon-standard-account
+                                "
+                              >
+                                <svg
+                                  class="slds-icon slds-icon_small"
+                                  aria-hidden="true"
+                                >
+                                  <use
+                                    xlink:href="/assets/icons/standard-sprite/svg/symbols.svg#account"
+                                  ></use>
+                                </svg>
+                              </span>
+                            </span>
+                            <span class="slds-media__body">
+                              <span
+                                class="
+                                  slds-listbox__option-text
+                                  slds-listbox__option-text_entity
+                                "
+                              >
+                                <span> {insuranceItem.Name}</span>
+                              </span>
+                              <span
+                                class="
+                                  slds-listbox__option-meta
+                                  slds-listbox__option-meta_entity
+                                "
+                              ></span>
+                            </span>
+                          </div>
+                        </li>
+                      </template>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>      
+        </lightning-record-edit-form>
+        <!-- <lightning-input
+          name="policeSearch"
+          label="Polizza:"
+          type="search"
+        ></lightning-input> -->
+        <lightning-input
+          type="text"
+          label="Numero di Targa (opzionale):"
+		      placeholder="Inserire il numero di targa del cliente.."
+          disabled={disableCreateCase}
+          onchange={handleTargaChange}
+        ></lightning-input>
+        <!-- </template> -->
+		  <template if:true={showTrattativeLM}>
+        <lightning-input
+          type="text"
+          label="Donominazione Società:"
+          required
+          placeholder="Inserire la denominazione della società.."
+          onchange={handleNomeSocietaChange}
+        ></lightning-input>
+      
+        <lightning-input
+          type="text"
+          label="Partita Iva Società:"
+          required
+          placeholder="Inserire la partita iva della società.."
+          onchange={handlePIvaChange}
+        ></lightning-input>
+        <lightning-input
+          type="text"
+          label="Broker Coinvolto:"
+          required
+          placeholder="Inserire broker.."
+          onchange={handleBrokerChange}
+        ></lightning-input>
+       </template>
+      </div>
+    </div>
+
+    <div
+      class="
+        slds-p-horizontal_x-small
+        slds-col
+        slds-size_1-of-1
+        slds-medium-size_4-of-12
+        slds-large-size_4-of-12
+        padding-column
+      "
+    >
+      <div class="domande-frequenti padding-column">
+        <div class="slds-grid slds-wrap">
+          <div
+            class="
+              slds-media slds-media_center
+              slds-col
+              slds-size_1-of-1
+              slds-medium-size_12-of-12
+              slds-large-size_12-of-12
+              slds-m-bottom_medium
+            "
+          >
+            <!-- <div class="slds-media__figure">
+            <lightning-icon icon-name="standard:knowledge"></lightning-icon>
+          </div> -->
+            <div class="slds-media__body">
+              <h1 class="slds-text-heading_large">Domande Frequenti</h1>
+            </div>
+          </div>
+          <div
+            class="
+              slds-col
+              slds-size_1-of-1
+              slds-medium-size_12-of-12
+              slds-large-size_12-of-12
+            "
+          >
+            <lightning-input
+              name="ricercaArticoliSearch"
+              placeholder="Ricerca articoli"
+              type="search"
+              variant="label-hidden"
+              label="Ricerca articoli:"
+			  onchange={searchByText}
+            ></lightning-input>
+          </div>
+
+          <template for:each={listKnowledge} for:item="listItem">
+            <div
+              class="
+                slds-col
+                slds-size_1-of-1
+                slds-medium-size_12-of-12
+                slds-large-size_12-of-12
+              "
+              key={listItem.Id}
+            >
+              <c-list-item
+                article-id={listItem.Id}
+                title={listItem.Title}
+                question=""
+                answer={listItem.FAQ_Risposta__c}
+                like-number={listItem.Count_Feedback_Positivi__c}
+                dislike-number={listItem.Count_Feedback_Negativi__c}
+              ></c-list-item>
+            </div>
+          </template>
+        </div>
+      </div>
+      <!-- </div> -->
+    </div>
+  </div>
+
+  <template if:true={showModal}>
+    <div class="demo-only" style="height: 640px">
+      <section
+        role="dialog"
+        tabindex="-1"
+        aria-labelledby="modal-heading-01"
+        aria-modal="true"
+        aria-describedby="modal-content-id-1"
+        class="slds-modal slds-fade-in-open"
+      >
+        <div class="slds-modal__container">
+          <header
+            class="
+              slds-modal__header
+              slds-notify slds-notify_alert
+              slds-theme_alert-texture slds-theme_error
+            "
+          >
+            <h2
+              id="modal-heading-01"
+              class="slds-text-heading_medium slds-hyphenate"
+            >
+              Attenzione !
+            </h2>
+          </header>
+          <div
+            class="slds-modal__content slds-p-around_medium"
+            id="modal-content-id-1"
+          >
+            <p>
+              Per inoltrare una nuova richiesta della LOB selezionata è
+              necessario utilizzare il ticketing tool su Axa Planet
+            </p>
+          </div>
+          <footer class="slds-modal__footer">
+            <div class="slds-align_absolute-center">
+              <button
+                class="slds-button slds-button_neutral"
+                onclick={newRequest}
+              >
+                Modifica richiesta
+              </button>
+            </div>
+          </footer>
+        </div>
+      </section>
+      <div class="slds-backdrop slds-backdrop_open"></div>
+    </div>
+  </template>
+  <template if:true={showModalAttachment}>
+    <div
+      class="demo-only"
+      style="height: 640px; -webkit-overflow-scrolling: touch"
+    >
+      <section
+        role="dialog"
+        tabindex="-1"
+        aria-labelledby="modal-heading-01"
+        aria-modal="true"
+        aria-describedby="modal-content-id-1"
+        class="slds-modal slds-fade-in-open"
+      >
+        <div class="slds-modal__container">
+          <header
+            class="
+              slds-modal__header
+              slds-notify slds-notify_alert
+              slds-theme_alert-texture slds-theme_shade
+            "
+          >
+            <h2
+              id="modal-heading-02"
+              class="
+                slds-text-heading_medium
+                slds-hyphenate
+                slds-text-color_default
+              "
+            >
+              Allega file
+            </h2>
+          </header>
+          <div
+            class="
+              slds-modal__content
+              slds-p-around_medium
+              slds-text-align_center
+            "
+            id="modal-content-id-2"
+          >
+            <lightning-input
+              type="file"
+              label="Aggiungi allegato"
+              onchange={handleFilesChange}
+              disabled={disableCreateCase}
+            >
+            </lightning-input>
+            <div class="slds-text-body_small slds-text-color_error">
+              {warningMsg}
+            </div>
+
+            <br />
+            <br />
+
+            <template if:true={fileNames.length}>
+              <table
+                class="slds-table slds-table_bordered slds-table_cell-buffer"
+              >
+                <thead>
+                  <tr class="slds-text-title">
+                    <th scope="col">
+                      <div class="slds-truncate" title="Cancel label"></div>
+                    </th>
+                    <th scope="col">
+                      <div class="slds-truncate" title="Attachment name label">
+                        File
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <template for:each={fileNames} for:item="file">
+                    <tr key={file}>
+                      <td>
+                        <button
+                          data-name={file}
+                          disabled={disableCreateCase}
+                          onclick={doCancel}
+                          class="
+                            slds-button slds-button_neutral
+                            slds-align_absolute-center
+                          "
+                        >
+                          Cancella
+                        </button>
+                      </td>
+                      <td>
+                        <div class="slds-truncate" title="Attachment name">
+                          <lightning-formatted-text
+                            value={file}
+                            linkify
+                          ></lightning-formatted-text>
+                        </div>
+                      </td>
+                    </tr>
+                  </template>
+                </tbody>
+              </table>
+            </template>
+          </div>
+          <footer class="slds-modal__footer">
+            <div class="slds-align_absolute-center">
+              <button
+                class="slds-button slds-button_neutral"
+                onclick={onModalAttachmentClose}
+              >
+                Chiudi
+              </button>
+            </div>
+          </footer>
+        </div>
+      </section>
+      <div class="slds-backdrop slds-backdrop_open"></div>
+    </div>
+  </template>
+</template>

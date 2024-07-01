@@ -1,0 +1,12 @@
+<apex:component controller="AMLEmailTemplateController" access="global"><apex:attribute type="id" name="mycaseId" description="" assignTo="{!caseId}"/><p style = "margin-left:30px; font-family: 'ITCFranklinGothicCondensedBook', sans-serif; font-size:14px;">
+Gentile {!thisCase.Contact.Name},<br></br>
+In ottemperanza alla normativa in materia di antiriciclaggio e contrasto al terrorismo (in particolare il D. Lgs. 231/07 e s.m.i. e il Reg. IVASS 44/2019), sollecitiamo il riscontro alla precedente nostra richiesta di compilazione e restituzione del Modulo operazione QADV.<br></br>
+Ribadiamo che qualora il documento citato non fosse restituito entro i prossimi 15 gg, correttamente compilato ed accompagnato dalla copia di un documento di riconoscimento e di altro documento d'identità (es.: passaporto, patente di guida, libretto di pensione o altre tessere di riconoscimento, purché munite di fotografia e timbro, rilasciate da un’amministrazione dello stato), non ci sarà possibile procedere con l’evasione della sua richiesta.<br></br><br></br>
+Grazie<br></br>
+Cordiali saluti
+</p><p style = "margin-left:30px; font-family: 'ITCFranklinGothicCondensedBook', sans-serif; color:#0e2e86; font-size:14px;"><b>
+Servizio Clienti<br></br>
+AXA MPS Assicurazioni Vita S.p.A. - AXA MPS Assicurazioni Danni S.p.A.
+</b></p><p style = "margin-left:30px; font-family: 'ITCFranklinGothicCondensedBook', sans-serif; color:#0e2e86; font-size:14px;">
+Via Aldo Fabrizi, 9 – 00128 Roma –Italy
+</p></apex:component>

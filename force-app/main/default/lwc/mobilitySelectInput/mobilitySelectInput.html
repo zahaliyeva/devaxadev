@@ -1,0 +1,27 @@
+<template>
+	<c-mobility-spinner show={spinner} show-overlay="true"></c-mobility-spinner>
+	<c-mobility-messages model={messages}></c-mobility-messages>
+
+	<div class="form-group has-search">
+		<label>{label}</label>
+		<div class="row">
+			<div class={className}>
+				<input type="search" class="form-control" placeholder="Cerca" oninput={onSearch} value={keyword}>
+				<template if:true={hasResults}>
+					<div>
+						<div class="input-field-contain">
+							<template for:each={searchResults} for:item="result">
+								<div key={result.Id} class="input-field" onclick={onSelect} data-record-id={result.Id}>
+									{result.Name}
+								</div>
+							</template>
+						</div>
+					</div>
+				</template>
+				<span class="form-control-feedback">
+					<c-mobility-icon name='search' width='12px' height='12px'></c-mobility-icon>
+				</span>
+			</div>
+		</div>
+	</div>
+</template>

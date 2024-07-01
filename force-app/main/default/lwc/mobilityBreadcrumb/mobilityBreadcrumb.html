@@ -1,0 +1,19 @@
+<template>
+	<nav aria-label="breadcrumb">
+		<ol class="breadcrumb bg-transparent">
+			<template for:each={breadcrumb.data} for:item="element">
+				<li key={element.name} class={element.class} data-name={element.name} onclick={onClick}>
+					<template if:true={element.active}>
+						<span class="text-capitalize text-gray-700 ">{element.label}</span>
+					</template>
+					<template if:false={element.active}>
+						<a href="javascript:void(0)" class="text-capitalize img-center">{element.label}</a>
+					</template>
+					<span class='showDivider p-2'>
+						<c-mobility-icon name="chevron-breadcrumb" width='10px' height='10px'></c-mobility-icon>
+					</span>
+				</li>
+			</template>
+		</ol>
+	</nav>
+</template>

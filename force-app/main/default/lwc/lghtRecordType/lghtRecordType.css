@@ -1,0 +1,17 @@
+.list > .item{
+	padding: 5px;
+	cursor: pointer;
+}
+
+.list > .item:hover{
+	background-color: #f3f2f2;
+}
+
+.list > .item.selected{
+	background-color: #f3f2f2;
+	font-weight: bold;
+}
+
+.list-container{
+	max-height: 300px;
+}

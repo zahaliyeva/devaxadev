@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>DEV</label>
+    <protected>false</protected>
+    <values>
+        <field>Accetta_Soluzione_Path__c</field>
+        <value xsi:type="xsd:string">/crm/s/accetta-soluzione?recordId=</value>
+    </values>
+    <values>
+        <field>Account_Path__c</field>
+        <value xsi:type="xsd:string">/account</value>
+    </values>
+    <values>
+        <field>Annulla_Richiesta_Path__c</field>
+        <value xsi:type="xsd:string">/crm/s/annulla-richiesta?recordId=</value>
+    </values>
+    <values>
+        <field>Associa_Proposta_Path__c</field>
+        <value xsi:type="xsd:string">/crm/s/associa-proposta?recordId=</value>
+    </values>
+    <values>
+        <field>Black_List_Path__c</field>
+        <value xsi:type="xsd:string">/crm/BlackList?isdtp=mn</value>
+    </values>
+    <values>
+        <field>Campaign_Path__c</field>
+        <value xsi:type="xsd:string">/opportunity</value>
+    </values>
+    <values>
+        <field>Chiudi_Case_Path__c</field>
+        <value xsi:type="xsd:string">/crm/s/chiudi-case-agente?recordId=</value>
+    </values>
+    <values>
+        <field>Contact_Path__c</field>
+        <value xsi:type="xsd:string">/contact</value>
+    </values>
+    <values>
+        <field>Crea_Proposta_Daol_Url__c</field>
+        <value xsi:type="xsd:string">https://daol-pp.axa-italia.it/axad/</value>
+    </values>
+    <values>
+        <field>Crea_Proposta_Path__c</field>
+        <value xsi:type="xsd:string">/crm/s/crea-proposta?recordId=</value>
+    </values>
+    <values>
+        <field>Elimina_Trattativa_Path__c</field>
+        <value xsi:type="xsd:string">/crm/s/elimina-trattativa?recordId=</value>
+    </values>
+    <values>
+        <field>Environment__c</field>
+        <value xsi:type="xsd:string">DEV</value>
+    </values>
+    <values>
+        <field>Home_Url__c</field>
+        <value xsi:type="xsd:string">https://mobilitydev.herokuapp.com</value>
+    </values>
+    <values>
+        <field>Inserisci_Commento_Path__c</field>
+        <value xsi:type="xsd:string">/crm/s/inserisci-commento-allegato?recordId=</value>
+    </values>
+    <values>
+        <field>Knowledge_Path__c</field>
+        <value xsi:type="xsd:string">/tabs/_ui/knowledge/ui/KnowledgeHome?isdtp=mn</value>
+    </values>
+    <values>
+        <field>Lead_Path__c</field>
+        <value xsi:type="xsd:string">/lead</value>
+    </values>
+    <values>
+        <field>Monitoraggio_Path__c</field>
+        <value xsi:type="xsd:string">/crm/MonitoraggioCommerciale?isdtp=mn</value>
+    </values>
+    <values>
+        <field>New_Chiudi_Case_Path__c</field>
+        <value xsi:type="xsd:string">/crm/s/chiudicasectl?recordId=</value>
+    </values>
+    <values>
+        <field>Prendi_In_Carico_Path__c</field>
+        <value xsi:type="xsd:string">/crm/s/prendi-in-carico?recordId=</value>
+    </values>
+    <values>
+        <field>Reportistica_Path__c</field>
+        <value xsi:type="xsd:string">/tabs/00O/o?isdtp=mn</value>
+    </values>
+    <values>
+        <field>Rifiuta_Soluzione_Path__c</field>
+        <value xsi:type="xsd:string">/crm/s/rifiuta-soluzione?recordId=</value>
+    </values>
+    <values>
+        <field>Svalidazione_Campagne__c</field>
+        <value xsi:type="xsd:string">/crm/s/svalidazione-campagne</value>
+    </values>
+</CustomMetadata>

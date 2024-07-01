@@ -1,0 +1,31 @@
+<template>
+    <!--<aura-dependency resource="markup://force:navigateToSObject" type="EVENT"></aura-dependency>
+    <aura-dependency resource="force:navigateToURL" type="EVENT"></aura-dependency>
+    <template if:true={isInvalidInput}>
+      <p>
+        Live Agent Chat Button configuration data is empty.
+      </p>
+    </template>-->
+    <!-- parameters are ok -->
+    <!--<c-script-wrapper param-url={deploymentUrl}></c-script-wrapper>-->
+    <div id="btnContainer" class="selfServiceContactSupport forceCommunityCreateRecordButton">
+      <div class="sButton">
+        <template if:true={isPressed}>
+          <button data-id="btpressed" class="contactSupport slds-button  slds-button--neutral  uiButton--default uiButton" disabled style="width:139px !important; margin-left:0 !important;">
+                   {textOnline}
+                </button>
+        </template>
+        <template if:false={isPressed}>
+          <button data-id="btonline"  class=" toggle contactSupport slds-button slds-button--neutral  uiButton--default uiButton" style="width:139px !important;" onclick={startchat}>
+                   {textOnline}
+                </button>
+          <button data-id="btoffline" class=" toggle  contactSupport slds-button  slds-button--neutral  uiButton--default uiButton" disabled style="width:139px !important; margin-left:0 !important;">
+                   {textOffline}
+                </button>
+          <button data-id="btinitial" class=" contactSupport slds-button  slds-button--neutral  uiButton--default uiButton" disabled style="width:139px !important; margin-left:0 !important;">
+                   {textOffline}
+                </button>
+        </template>
+      </div>
+    </div>
+  </template>

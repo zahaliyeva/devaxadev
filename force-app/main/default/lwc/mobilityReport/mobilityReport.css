@@ -1,0 +1,15 @@
+.mobility-report{
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+.info-table{
+	display: inline-block;
+}
+
+.info-color{
+	width: 12px;
+	height: 12px;
+	display: block;
+	margin-right: 5px;
+}

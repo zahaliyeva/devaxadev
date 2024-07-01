@@ -1,0 +1,34 @@
+<template>
+    <span style="display: none" class="slds-p-horizontal_x-small">{area} {category} {subCategory}</span>
+    <lightning-card title="Articoli Correlati" icon-name="custom:custom55">
+
+        <lightning-input
+          name="ricercaArticoliSearch"
+          placeholder="Ricerca articoli"
+          type="search"
+          variant="label-hidden"
+          label="Ricerca articoli:"
+          onchange={searchByText}
+        ></lightning-input>
+
+    <template if:true={articles}>
+        <div class = "slds-col slds-size_1-of-1">
+    <template for:each={articles} for:item="article">
+
+    <c-article-item key={article.Id}
+                                    article-id={article.Id}
+                                    title={article.Title}
+                                    question={article.FAQ_Domanda__c}
+                                    answer={article.FAQ_Risposta__c}
+                                    like-number={article.Count_Feedback_Positivi__c}
+                                    dislike-number={article.Count_Feedback_Negativi__c}>
+    </c-article-item>
+
+    </template>
+</div>
+    </template>
+    <template if:false={articles}>
+    <p class="slds-m-around_medium">Nessun articolo trovato.</p>
+    </template>
+    </lightning-card>
+    </template>

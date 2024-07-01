@@ -1,0 +1,174 @@
+<apex:page standardStylesheets="true" applyBodyTag="False" docType="html-5.0" sidebar="false" id="page" standardController="Lead" extensions="LeadInsertCtrl">
+    
+    <style type="text/css"> 
+        .myheight{
+        min-height: 10px!important;
+        height:20px!important;
+        line-height: 0.875rem!important;
+        }
+    </style>
+    
+    <head>
+        <apex:stylesheet value="{!URLFOR($Resource.SLDS, '/assets/styles/salesforce-lightning-design-system-vf.css')}" />      
+    </head>
+    
+    
+    <div class="slds">
+        
+        <!-- SPINNER -->
+        <apex:actionStatus id="status_spinner">
+            <apex:facet name="start">
+                <div style="position:fixed; top:0; left:0; right:0; bottom:0; opacity:0.75; z-index:999; background-color:white;">
+                    <div class="slds-spinner--medium" style="position:absolute; top:0; bottom:0; left:0; right:0; margin:auto;" >
+                        <img src="{!URLFOR($Resource.SLDS, '/assets/images/spinners/slds_spinner_brand.gif')}" />
+                    </div>
+                </div>
+            </apex:facet>
+        </apex:actionStatus>
+        
+        
+        <div class="slds-page-header" role="banner">
+            <div class="slds-grid">
+                <div class="slds-col">
+                    <p class="slds-text-heading--label">INSERISCI LEAD</p>
+                    <h1 class="slds-text-heading--medium">Nuovo lead</h1>
+                </div>
+            </div>
+        </div>
+        
+        <br/>
+        
+        <apex:form id="MainForm">
+           
+        <!-- Buttons top page -->   
+        <!--    
+            <div class="slds-align--absolute-center">
+                <div class="slds-text-align--center" role="group">
+                    <apex:commandButton action="{!SaveLead}" value="Salva" id="btnsalva1" styleClass="slds-button slds-button--neutral" reRender="ErrMsg,MainForm" oncomplete="gotoLead('{!LeadId}')" status="status_spinner"/>
+                    <apex:commandButton action="{!AddFields}" value="Aggiungi altre informazioni" id="btnmodifica1" styleClass="slds-button slds-button--neutral" status="status_spinner"/>
+                    <apex:commandButton action="{!Cancel}" value="Annulla" id="btnannulla1" styleClass="slds-button slds-button--neutral"/>
+                </div> 
+            </div> -->
+            
+            <br/>
+
+            <!-- ERROR MESSAGE -->
+            <apex:outputPanel styleClass="myCustomMessage" rendered="{!showMessage}" id="ErrMsg">
+                <div class="slds-notify_container">
+                    <div class="slds-notify slds-notify--alert slds-theme--error slds-theme--alert-texture" role="alert">
+                        <span class="slds-assistive-text">Error</span>
+                        <h2><apex:outputtext value="{!pageMessage}" escape="false"/></h2>
+                    </div>
+                </div>
+                <br/>
+            </apex:outputPanel>
+            
+            <!-- INPUT FORM -->
+            <div class="slds-grid slds-wrap slds-grid--pull-padded slds-p-right--small slds-p-left--small slds-p-top--small">
+                
+                
+                <div class="slds-col--padded slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--1-of-1 slds-m-left--xx-small slds-p-right--large">
+                    <h3 class="slds-section-title--divider slds-size--1-of-1">Dettagli Lead</h3>
+                </div>
+                
+                
+                <div id="Nome" class="slds-form--horizontal slds-form-element slds-container--large slds-col--padded slds-size--1-of-1">
+                    <label class="slds-form-element__label" for="text-input-nome">
+                        <abbr class="slds-required" title="required"></abbr> Nome:
+                    </label>
+                    <div class="slds-form-element__control">
+                        <apex:inputtext id="text-input-nome" styleClass="slds-input myheight" value="{!LeadToInsert.FirstName}"/>
+                    </div>
+                </div>
+                    
+                <div id="Cognome" class="slds-form--horizontal slds-form-element slds-container--large slds-col--padded slds-size--1-of-1">    
+                    <label class="slds-form-element__label" for="text-input-cognome">
+                        <abbr class="slds-required" title="required"></abbr> Cognome:
+                    </label>
+                    <div class="slds-form-element__control">
+                        <apex:inputtext id="text-input-cognome" styleClass="slds-input myheight" value="{!LeadToInsert.LastName}"/>
+                    </div>
+                </div>
+                    
+                <div id="RagioneSociale" class="slds-form--horizontal slds-form-element slds-container--large slds-col--padded slds-size--1-of-1">    
+                    <label class="slds-form-element__label" for="text-input-rs">
+                        <abbr class="slds-required" title="required"></abbr> Ragione Sociale:
+                    </label>
+                    <div class="slds-form-element__control">
+                        <apex:inputtext id="text-input-rs" styleClass="slds-input myheight" value="{!LeadToInsert.Company}"/>
+                    </div>
+                </div>
+                    
+                <div id="Telefono" class="slds-form--horizontal slds-form-element slds-container--large slds-col--padded slds-size--1-of-1">    
+                    <label class="slds-form-element__label" for="text-input-tel">
+                        <abbr class="slds-required" title="required"></abbr> Telefono:
+                    </label>
+                    <div class="slds-form-element__control">
+                        <apex:inputtext id="text-input-tel" styleClass="slds-input myheight" value="{!LeadToInsert.Phone}"/>
+                    </div>
+                </div>
+                    
+                <div id="Email" class="slds-form--horizontal slds-form-element slds-container--large slds-col--padded slds-size--1-of-1">    
+                    <label class="slds-form-element__label" for="text-input-email">
+                        <abbr class="slds-required" title="required"></abbr> Email:
+                    </label>
+                    <div class="slds-form-element__control">
+                        <apex:inputtext id="text-input-email" styleClass="slds-input myheight" value="{!LeadToInsert.Email}"/>
+                    </div>
+                </div>
+
+                <div id="ASA" class="slds-form--horizontal slds-form-element slds-container--large slds-col--padded slds-size--1-of-1">
+                    <label class="slds-form-element__label" style="vertical-align: middle" for="asa">
+                        <abbr class="slds-required" title="required"></abbr> ASA:
+                    </label> 
+                    <div class="slds-form-element" style="display:inline"> 
+                        <div class="slds-form-element__control">
+                            <apex:selectlist styleClass="slds-input myheight"  id="asa" value="{! LeadToInsert.ASA_Description__c}" multiselect="false" size="1">  
+                                <apex:selectOptions value="{! ASAList}"/>
+                            </apex:selectlist>
+                        </div>
+                    </div>
+                </div>
+                    
+            </div>
+            
+            <br/>
+            
+            <!-- Buttons -->
+            <div class="slds-align--absolute-center">
+                <div class="slds-text-align--center" role="group">
+                    <apex:commandButton action="{!SaveLead}" value="Salva" id="btnsalva2" styleClass="slds-button slds-button--neutral" reRender="ErrMsg,MainForm" oncomplete="gotoLead('{!LeadId}')"/>
+                    <apex:commandButton action="{!AddFields}" value="Aggiungi altre informazioni" id="btnmodifica2" styleClass="slds-button slds-button--neutral"/>
+                    <apex:commandButton action="{!Cancel}" value="Annulla" id="btnannulla2" styleClass="slds-button slds-button--neutral"/>
+                </div> 
+            </div>
+            
+        </apex:form>
+        
+    </div>
+    
+    
+    <script type="text/javascript">
+    
+    function gotoLead(Id) {
+        
+        var pathName = window.location.pathname;
+        var agencyIndex = pathName.indexOf("agenzie");
+        var myURL = "https://" + window.location.hostname + '/';
+        
+        if (agencyIndex!= -1)
+            myURL = myURL + "agenzie/";
+        
+        myURL += Id;
+        if (Id != '') {
+            if ( typeof sforce != "undefined" && (sforce.one != null))
+                sforce.one.navigateToURL(myURL);                               
+            else
+                window.location.href = myURL;
+        }
+        
+    }
+    
+    </script>
+    
+</apex:page>

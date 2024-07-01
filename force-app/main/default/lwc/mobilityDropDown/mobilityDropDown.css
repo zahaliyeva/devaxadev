@@ -1,0 +1,38 @@
+.dropdown-menu {
+  top: -25px;
+  left: -200px;
+}
+
+.dropdown-menu-arrow {
+  position: absolute;
+  width: 0;
+  height: 0;
+
+  top: 15px;
+  right: -15px;
+
+  border-top: 15px solid transparent;
+  border-bottom: 15px solid transparent;
+
+  border-left: 15px solid #e5e5e5;
+}
+
+.dropdown-menu-arrow::after {
+  content: "";
+
+  position: absolute;
+  width: 0;
+  height: 0;
+
+  top: -15px;
+  right: 2px;
+
+  border-top: 15px solid transparent;
+  border-bottom: 15px solid transparent;
+
+  border-left: 15px solid #fff;
+}
+
+.dropdown-item:last-child.page-border {
+  border: none;
+}

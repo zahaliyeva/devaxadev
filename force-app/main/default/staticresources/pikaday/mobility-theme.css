@@ -1,0 +1,84 @@
+* {
+    font-family: 'Source Sans Pro', Arial, Helvetica, sans-serif;
+}
+
+.pika-single.mobility-theme {
+    width: 320px;
+    height: 277px;
+    background: #FFFFFF;
+    box-shadow: 0px 3px 27px #0000000A;
+}
+
+.mobility-theme .pika-lendar {
+    width: 100%;
+    margin: 0;
+}
+
+.mobility-theme .pika-title {
+    width: 320px;
+    height: 30px;
+    background: #00008F;
+}
+
+.mobility-theme .pika-label {
+    color: #FFFFFF;
+    background: #00008F;
+    text-transform: uppercase;
+}
+
+.mobility-theme .pika-prev {
+    background: url('img/pika-arrow-left.svg') no-repeat center center;
+}
+
+.mobility-theme .pika-next {
+    background: url('img/pika-arrow-right.svg') no-repeat center center;
+}
+
+.mobility-theme .pika-table {
+    padding: 10px;
+}
+
+.mobility-theme .pika-row {
+    height: 30px;
+}
+
+.mobility-theme .pika-table th,
+.mobility-theme .pika-table td,
+.mobility-theme .pika-button .is-selected {
+    width: 42.86px;
+    height: 30px;
+    text-align: center;
+}
+
+.mobility-theme .pika-button {
+    color: #00008F;
+    background: transparent;
+    text-align: center;
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    font-weight: 400;
+    font-size: 14px;
+    padding: 3px;
+}
+
+.mobility-theme .is-selected .pika-button {
+    color: #FFFFFF;
+    background: #4976BA;
+    border-radius: 12px;
+    font-weight: 700;
+}
+
+.mobility-theme .is-today .pika-button {
+    color: #00008F;
+    background: transparent;
+    border: 1px solid #00008F;
+    border-radius: 12px;
+    font-weight: 700;
+}
+
+.mobility-theme .pika-button:hover {
+    color: #FFFFFF;
+    background: #E5E5E5;
+    border-radius: 12px;
+}

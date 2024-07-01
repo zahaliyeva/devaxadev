@@ -1,0 +1,40 @@
+<aura:component>
+	<aura:attribute name="accountId" type="String"/>
+	<aura:attribute name="source" type="String"/>
+	<aura:attribute name="caseId" type="String"/>
+	<aura:attribute name="recordTypeId" type="String"/>
+	<aura:attribute name="fiscalCode" type="String"/>
+	<aura:attribute name="CallerType" type="String"/>
+	<aura:attribute name="caseRT" type="String"/> 
+	<aura:attribute name="showIncompleteReports" type="Boolean" default="true"/> 
+	
+	<aura:attribute name="visibilities" type="Object"/>
+
+	<section role="dialog" tabindex="-1" aria-labelledby="modal-find-associate" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open slds-modal_large">
+		<div class="slds-modal__container">
+			<header class="slds-modal__header">
+				<h2 id="modal-get-all-claims" class="slds-modal__title slds-hyphenate">Elenco Sinistri</h2>
+				<lightning:buttonIcon iconName="utility:close"
+					onclick="{!c.onClose}"
+				 	alternativeText="close"
+				 	variant="bare-inverse"
+				 	class="slds-modal__close"/>
+			</header>
+			<div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+				<c:GetAllClaims
+				    source="{!v.source}"
+					originalCase="{!v.caseId}"
+					rtCaseId="{!v.recordTypeId}"
+					accountId="{!v.accountId}"
+					fiscalCode="{!v.fiscalCode}"
+					lghtMode="true"
+					visibilities="{!v.visibilities}"
+					CallerType="{!v.CallerType}"
+					caseRT="{!v.caseRT}"
+					showIncompleteReports="{!v.showIncompleteReports}"
+				/>
+			</div>
+		</div>
+	</section>
+	<div class="slds-backdrop slds-backdrop_open"></div>
+</aura:component>

@@ -1,0 +1,95 @@
+.THIS.slds-spinner_container {  
+  z-index: 10000;
+  position: fixed;   
+}
+
+.THIS .icon_size{
+     left:6px !important;
+     top:36% !important;
+     width:1.5rem !important;
+     height:1.5rem !important;
+}
+
+.THIS .custom_button{
+    width:139px !important;
+    margin:0 !important;
+    padding:0 !important;
+}
+
+.THIS .custom_button_allegato{
+    width:139px !important;
+    margin:0 !important;
+    padding:0 !important;
+    position: absolute;
+}
+
+@media (min-width: 1281px) {
+    
+    .THIS .custom_button_conferma{
+        width:128px !important;
+        
+    }     
+}
+
+/* 
+##Device = Laptops, Desktops
+##Screen = B/w 1025px to 1280px
+*/
+
+@media (min-width: 1025px) and (max-width: 1280px) {
+    .THIS .custom_button_conferma{
+        width:128px !important;
+        
+    }             
+}
+
+/* 
+##Device = Tablets, Ipads (portrait)
+##Screen = B/w 768px to 1024px
+*/
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    .THIS .custom_button_conferma{
+        width:6.25rem !important;
+        height: 4rem !important;    
+    }       
+}
+
+/* 
+##Device = Tablets, Ipads (landscape)
+##Screen = B/w 768px to 1024px
+*/
+
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+    
+    .THIS .custom_button_conferma{
+        width:6.25rem !important;
+        height: 4rem !important;    
+    }       
+}
+
+/* 
+##Device = Low Resolution Tablets, Mobiles (Landscape)
+##Screen = B/w 481px to 767px
+*/
+
+@media (min-width: 481px) and (max-width: 767px) {
+    
+    .THIS .custom_button_conferma{
+        width:6.25rem !important;
+        height: 4rem !important;    
+    }       
+}
+
+/* 
+##Device = Most of the Smartphones Mobiles (Portrait)
+##Screen = B/w 320px to 479px
+*/
+
+@media (min-width: 320px) and (max-width: 480px) {
+    
+    .THIS .custom_button_conferma{
+        width:6.25rem !important;
+        height: 4rem !important;    
+    }       
+}

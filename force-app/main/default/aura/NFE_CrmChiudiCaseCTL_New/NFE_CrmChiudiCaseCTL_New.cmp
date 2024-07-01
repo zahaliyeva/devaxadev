@@ -1,0 +1,147 @@
+<aura:component controller="VFC29_ChiudiCaseCTL" description="NFE_CrmChiudiCaseCTL_New" implements="force:lightningQuickAction,force:hasRecordId,forceCommunity:availableForAllPageTypes" access="global">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="recordId" type="String" default="" />
+    <aura:attribute name="caseId" type="String" default="{!v.recordId}" />
+    <aura:attribute name="caseStatus" type="String" default="" />
+    <aura:attribute name="commentoCTL" type="String" default="" required="true" />
+    <aura:attribute name="emptySolution" type="Boolean" default="false"/>
+    <aura:attribute name="WrongSolution" type="String" />
+    <aura:attribute name="errorFromServer" type="String" />
+    <aura:attribute name="errorDetails" type="String" />
+    <aura:attribute name="isRightCTL" type="boolean" default="true"/>
+    <aura:attribute name="isLoading" type="boolean" default="false"/>
+    <aura:attribute name="isFromAdvisor" type="boolean"/>
+    <aura:attribute name="isUfficio" type = "boolean"/>
+    <aura:attribute name="tooltip" type = "boolean" default="false"/>
+    <aura:attribute name="tooltipChiudi" type = "boolean" default="false"/>
+    <aura:attribute name="tooltipChiudiCheckIn" type = "boolean" default="false"/>
+    
+    <div >
+        <aura:if isTrue="{! v.isLoading }">
+            <lightning:spinner alternativeText="Loading" class="spinnerClass"/>
+        </aura:if>
+    </div>
+    
+    <aura:if isTrue="{!v.caseStatus}">
+        <aura:if isTrue="{!v.OwnerIsQueue}">
+                        <div style="text-align: center;">
+                            <ui:message severity="error" >
+                                Attenzione! Per chiudere il case è necessario prima prenderlo in carico.
+                            </ui:message>
+                            <div class=" slds-p-left_small">
+                                <lightning:button variant="Neutral" label="Indietro" title="Indietro" onclick="{! c.Cancel }"/>
+                            </div>
+                        </div>    
+        <aura:set attribute="else">
+            <aura:if isTrue="{!!v.isRightCTL}">
+                    <div style="text-align: center;">
+                        <ui:message severity="error" >
+                            Attenzione! I Case relativi alle Survey Sinistri – ad eccezione della Check IN - vengono chiusi solo da COPs
+                        </ui:message>
+                    </div>   
+                    <center>
+                    <div class=" slds-p-left_small">
+                        <lightning:button variant="Neutral" label="Indietro" title="Indietro" onclick="{! c.Cancel }"/>
+                    </div>  
+                    </center> 
+                    <aura:set attribute="else">
+                        <aura:if isTrue="{!or( v.caseStatus == 'In gestione all’Agenzia', v.caseStatus == 'Information Received' )}">
+                    
+                            <div id="spazio_vuoto" class="slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1">
+                                <div class="slds-modal__header">
+                                    <h2 class="slds-text-heading_medium" id="prompt-heading-id">Inserisci il dettaglio della soluzione</h2>
+                                </div>
+
+                                <div class="slds-modal__content slds-p-around_medium" style="box-shadow: none;">
+
+                                    <div id="spazio_vuoto" class="slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1">
+                                        <div class="slds-form-element">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+                                    
+                                    <div id="spazio_vuoto" class="slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1">
+                                        <div class="slds-form-element">
+                                            &nbsp;
+                                        </div>
+                                        <div class="slds-form-element slds-p-bottom_large">
+                                            <lightning:textarea name="textAreaSolution" label="Attività di close the loop svolta" value="{!v.commentoCTL}"/>
+                                        </div>
+                                    </div>
+                                    <div class="slds-align_absolute-center">
+                                        <aura:if isTrue="{!v.emptySolution == true}"> 
+                                            <ui:message severity="error" >
+                                                Attenzione! È necessario compilare il campo “Attività di Close the Loop svolta” per poter procedere.
+                                                {!v.WrongSolution}
+                                            </ui:message>
+                                        </aura:if>
+                                    </div>
+                                    <div class="slds-align_absolute-center" style="white-space:pre-wrap; text-align: center;">
+                                        <aura:if isTrue="{!v.errorFromServer}"> 
+                                            <ui:message severity="error" >
+                                                {!v.errorDetails}
+                                            </ui:message>
+                                        </aura:if>
+                                    </div>
+
+                                    <div class="slds-align_absolute-center">
+                                     <aura:if isTrue="{!v.tooltipChiudiCheckIn}" >
+                                        <!-->New feedback Sinistri check in evolution 09-05-2022 *-+<!-->
+                                        <div class="slds-float_right slds-p-left_small" style="position:relative">
+                                            <div>
+                                                <lightning:button  variant="brand" label="Chiudi Case" onclick="{!c.ChiudiUfficioCheckIn}"/>
+                                            </div> 
+                                        </div>  
+                                     <!-->All case CTL with survey origin <> CheckIn <!-->
+                                     <aura:set attribute="else">
+                                        <div class="slds-float_right slds-p-left_small" style="position:relative">
+                                            <div aura:id="hover" onmouseover="{!c.mostraChiudi}" onmouseout="{!c.chiudiChiudi}">
+                                                <lightning:button  variant="brand" label="Chiudi Case" onclick="{! c.Close }"/>
+                                            </div>
+                                            <aura:if isTrue="{!v.tooltipChiudi}" >
+                                                    <div class="slds-popover  slds-nubbin_bottom-left " id="help1" style="position:absolute;top:-4.5rem;left:1rem">
+                                                        <div class = "slds-popover__body">Attenzione! Alla chiusura del Case <b>il Cliente riceverà una nuova Survey</b> di soddisfazione</div>
+                                                    </div>
+                                            </aura:if>
+                                        </div>
+                                        
+                                        <div class="slds-float_right slds-p-left_small" style="position:relative">
+                                            <div aura:id="hover" onmouseover="{!c.mostraChiudiUfficio}" onmouseout="{!c.chiudiChiudiUfficio}">
+                                                <lightning:button  variant="brand" label="Chiudi d'ufficio" onclick="{!c.ChiudiUfficio}"/>
+                                            </div>
+                                            <aura:if isTrue="{!v.tooltip}" >
+                                                    <div class="slds-popover  slds-nubbin_bottom-left" id="help" style="position:absolute;top:-4.5rem;left:1rem">
+                                                        <div class = "slds-popover__body">Attenzione! Alla chiusura del Case <b>il Cliente non riceverà una nuova Survey</b> di soddisfazione</div>
+                                                    </div>
+                                            </aura:if>
+                                        </div> 
+                                     
+                                     </aura:set>
+                                    </aura:if>
+                                        <div class="slds-float_right slds-p-left_small">
+                                            <lightning:button variant="Neutral" label="Annulla" title="Annulla" onclick="{! c.Cancel }"/>
+                                        </div>
+                                    </div> <!-->End of layout <!-->
+                                </div>
+                                
+                            </div>
+                            <!-->End IF caseStatus == 'In gestione all’Agenzia', v.caseStatus == 'Information Received' <!-->   
+                            <aura:set attribute="else">
+                                <div style="text-align: center;">
+                                    <ui:message severity="error" >
+                                        Attenzione! Per chiudere il case è necessario prima prenderlo in carico.
+                                    </ui:message>
+                                </div>    
+                                <center>
+                                    <div class=" slds-p-left_small">
+                                        <lightning:button variant="Neutral" label="Indietro" title="Indietro" onclick="{! c.Cancel }"/>
+                                    </div>  
+                                </center>          
+                            </aura:set>
+                        </aura:if>    
+                    </aura:set>
+            </aura:if>
+        </aura:set>
+        </aura:if>
+    </aura:if>
+</aura:component>

@@ -1,0 +1,55 @@
+:host {
+	display: flex;
+	flex-direction: column;
+}
+
+.box-container{
+	margin-bottom: -2px;
+}
+
+.box{
+    position: absolute;
+    margin-top: -10px;
+}
+
+.box-right{
+	right: 15px;
+}
+
+.box-years{
+	position: absolute;
+	margin-top: -10px;
+}
+
+.box-months{
+	position: absolute;
+	margin-top: -10px;
+}
+
+.pika-row{
+	margin-left: 0px;
+	margin-right: 0px;
+}
+
+.pika-month, .pika-year{
+	padding-top: 30px;
+	color: #00008F;
+    background: transparent;
+    text-align: center;
+    display: inline-block;
+    font-weight: 400;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.pika-year .pika-label{
+	cursor: pointer;
+}
+
+.pika-month .pika-label{
+	cursor: pointer;
+}
+
+.box-hidden {
+    display: none;
+}

@@ -1,0 +1,62 @@
+<!-- d.pirelli CAI DIGITALE start 02/12/2019 -->
+<!-- Child Lightning Component for Create New Row Instance-->
+<aura:component controller="VFC30_NewQuestionarioCAICTRL"  access="global" >    
+    <!-- Aura Attribute for store single Testimone_Ferito__c Instance And Store Index of Particular Instance -->
+    <aura:attribute name="TestimoniFeritiInstance" type="Testimone_Ferito__c"/>
+    <aura:attribute name="rowIndex" type="String"/>
+    <aura:attribute name="msgMissMatch" type="String" default="{!$Label.c.InvalidFormat}"/>
+    <aura:attribute name="patternPhone" type="String"/> 
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    
+    <!-- Register 2 Lightning Event for handle add or Delete rows on Parent Component  -->
+    <aura:registerEvent name="DeleteRowEvt" type="c:deleteRowEvt"/>
+    <aura:registerEvent name="AddRowEvt" type="c:AddNewRowEvt"/>
+
+    <!-- Table Row -->  
+    <tr class="slds-text-title_caps">
+        <td>
+        Testimone    {!v.rowIndex + 1}
+        </td>
+        <td>
+                <lightning:layout horizontalAlign="center" multipleRows="true">
+                        <lightning:layoutItem flexibility="auto" padding="around-small" size="12" largeDeviceSize="6" mediumDeviceSize="6" smallDeviceSize="12">
+                            <div class="slds-form-element">
+                          
+                                <label class="slds-form-element__label" for="nomeFormTestimoni">Nome</label>
+                                <div class="slds-form-element__control">
+                                    <ui:inputText aura:id="nomeFormTestimoni" class="slds-input" value="{!v.TestimoniFeritiInstance.Nome__c}" />
+                                </div>
+                                <label class="slds-form-element__label" for="cognomeFormTestimoni">Cognome</label>
+                                <div class="slds-form-element__control">
+                                    <ui:inputText aura:id="cognomeFormTestimoni" class="slds-input" value="{!v.TestimoniFeritiInstance.Cognome__c}" />
+                                </div>
+                                <lightning:input  pattern ="{!v.patternPhone}" messageWhenPatternMismatch="{!v.msgMissMatch}" aura:id="telFormTestimoni" type="tel" label="Telefono" name="Telefono" value="{!v.TestimoniFeritiInstance.Telefono__c}" />
+                            </div>
+                            
+                        </lightning:layoutItem>
+                     
+                    </lightning:layout>
+         </td>
+        <td>
+            <!-- conditionally Display Add or Delete Icons
+                 if rowIndex is 0 then show Add New Row Icon else show delete Icon
+             -->
+            <aura:if isTrue="{!v.rowIndex == 0}">
+                <a onclick="{!c.AddNewRow}">
+                  <lightning:icon iconName="utility:add" class="slds-icon slds-icon_small" size="small" alternativeText="add"/>
+                  <span class="slds-assistive-text">Add Icon</span>
+                </a>    
+              <aura:set attribute="else">
+                  <a onclick="{!c.removeRow}">
+                   <lightning:icon variant="error" iconName="utility:delete" class="slds-icon slds-icon_small" size="small" alternativeText="icon"/>
+                   <span class="slds-assistive-text">Delete Icon</span>
+                  </a>
+              </aura:set>
+            </aura:if>
+        </td>
+    </tr>
+    
+    
+</aura:component>
+   <!-- d.pirelli CAI DIGITALE end -->

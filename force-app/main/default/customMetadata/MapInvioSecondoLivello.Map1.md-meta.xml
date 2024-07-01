@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>Map1</label>
+    <protected>false</protected>
+    <values>
+        <field>Conditions__c</field>
+        <value xsi:type="xsd:string">Buon_Lavoro</value>
+    </values>
+    <values>
+        <field>Negative_Conditions__c</field>
+        <value xsi:type="xsd:string">HD1_Biz_Vita</value>
+    </values>
+    <values>
+        <field>Type__c</field>
+        <value xsi:type="xsd:string">Secondo_Livello</value>
+    </values>
+    <values>
+        <field>keys__c</field>
+        <value xsi:type="xsd:string">HD2_Biz_Auto;HD2_Biz_Famiglia;HD2_Biz_Salute</value>
+    </values>
+    <values>
+        <field>values__c</field>
+        <value xsi:type="xsd:string">Auto;Famiglia;Salute</value>
+    </values>
+</CustomMetadata>

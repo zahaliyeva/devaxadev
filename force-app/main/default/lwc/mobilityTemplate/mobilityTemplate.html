@@ -1,0 +1,17 @@
+<template>
+	<c-mobility-spinner show={spinner} show-overlay={spinnerOverlay}></c-mobility-spinner>
+	<c-mobility-messages model={messages}></c-mobility-messages>
+
+	<template if:true={authorized}>
+		<div class="row">
+		    <div class="col-12">
+		        <c-mobility-breadcrumb params={params} current={componentView}></c-mobility-breadcrumb>
+		    </div>
+		</div>
+		
+		CONTENT
+	</template>
+	<template if:false={authorized}>
+		<c-mobility-unauthorized></c-mobility-unauthorized>
+	</template>
+</template>

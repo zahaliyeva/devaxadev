@@ -1,0 +1,15 @@
+<apex:component controller="LM_Email_CTRL" access="global" >
+  <apex:attribute name="LeadId" type="Id" description="Id of the lead" assignTo="{!relatedToLeadId}"/>
+   
+   <apex:dataTable value="{!InfoString}" var="d" rendered="{!Infostring!=''}" rows="1" style="max-width:1000px;" >
+       <br/>
+      <apex:column style="font-family: 'ITCFranklinGothicCondensedBook', sans-serif; color:#ffffff; font-size:16px;  background-color:#062D87; padding-left:10px; padding-right:10px;">
+         <apex:outputText value="{!InfoString}" escape="false"></apex:outputText>
+      </apex:column>
+      <apex:column style="background-color:#062D87;">
+         <a href="#"><img alt="" src="{!ImageDocURL}" width="350px" height="190px" style="float: right;text-align: right;"></img></a>
+      </apex:column>
+    
+   </apex:dataTable>
+   <br/>
+</apex:component>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>Feedback / Close The Loop</label>
+    <protected>false</protected>
+    <values>
+        <field>Category__c</field>
+        <value xsi:type="xsd:string">Apertura Sinistro Danni;Malattia:Sodd. Presa in Carico;NPS Rolling P&amp;C;Rinnovi Danni;Survey Rinnovo/Acquisto</value>
+    </values>
+    <values>
+        <field>Conditions__c</field>
+        <value xsi:type="xsd:string">RecordType.DeveloperName = &apos;Close_the_Loop&apos;</value>
+    </values>
+    <values>
+        <field>Default__c</field>
+        <value xsi:type="xsd:boolean">false</value>
+    </values>
+    <values>
+        <field>Index__c</field>
+        <value xsi:type="xsd:double">1.0</value>
+    </values>
+    <values>
+        <field>Ingresso_Default__c</field>
+        <value xsi:type="xsd:string">ICF_Clienti</value>
+    </values>
+    <values>
+        <field>Lob__c</field>
+        <value xsi:type="xsd:string">Altro</value>
+    </values>
+    <values>
+        <field>Status__c</field>
+        <value xsi:type="xsd:string">Attività completate;Chiuso;Chiuso d\&apos;ufficio;In Attesa info da Cliente/Rete;In gestione all\’Agenzia;Info Agenzia ricevuta;Mancata gestione Agenzia;Preso in Carico</value>
+    </values>
+    <values>
+        <field>is_Ingresso__c</field>
+        <value xsi:type="xsd:boolean">false</value>
+    </values>
+</CustomMetadata>

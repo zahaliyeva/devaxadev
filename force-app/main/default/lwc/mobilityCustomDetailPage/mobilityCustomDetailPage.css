@@ -1,0 +1,112 @@
+.counter-circle-card{
+    background-color: #fafafa;
+    cursor: pointer;
+}
+
+.counter-circle{
+    background-color: #e5ecf4;
+    padding: 24px;
+    border-radius: 50%;
+    border: none;
+    outline: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 95px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 21px;
+}
+
+.counter-circle-title{
+    font-family: SourceSansPro-Regular,sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: #5f5f5f;
+    padding-right: 10px;
+    text-align: center;
+}
+
+.counter-circle .counter-circle-icon{
+    height: 45px!important;
+    width: 45px!important;
+}
+
+.counter-circle-card .counter-number{
+    position: absolute;
+    background-color: #ff0000;
+    border-radius: 20px;
+    width: 20px;
+    text-align: center;
+    color: #fff;
+    height: 20px;
+    left: 50%;
+    margin-left: 17px;
+}
+
+.counter{
+    cursor: pointer;
+}
+
+.counter H1{
+    font-family: PublicoHeadline-Bold,sans-serif;
+    font-size: 22px;
+    color: #5f5f5f;
+    margin-top: 40px;
+}
+
+.counter IMG{
+    width: 75px;
+    margin-top: 35px;
+}
+
+.counter .counter-number{
+    font-family: SourceSansPro-Bold,sans-serif;
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+.counter .counter-label{
+    font-size: 12px;
+    text-align: left;
+    font-family: PublicoHeadline-Bold,sans-serif;
+    color: #5f5f5f;
+    font-weight: 400;
+}
+
+.counter .counter-item{
+    line-height: 16px;
+}
+
+.large-desktop .counter .title-mobile, .desktop .counter .title-mobile{
+    display: none;
+}
+
+.phone .counter .title-mobile, .tablet .counter .title-mobile{
+    text-align: left;
+}
+
+.phone .counter .title, .tablet .counter .title{
+    display: none;
+}
+
+.phone .counter .section, .tablet .counter .section{
+    width: 50%;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.phone .counter .section-1, .tablet .counter .section-1{
+    text-align: right;
+    padding-right: 30px;
+}
+
+.phone .counter .section-2, .tablet .counter .section-2{
+    text-align: left;
+    padding-top: 15px;
+}
+
+.phone .counter IMG, .tablet .counter IMG{
+    padding-top: 15px;
+    margin-top: 0px;
+}

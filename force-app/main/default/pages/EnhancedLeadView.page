@@ -1,0 +1,860 @@
+<apex:page standardController="Lead" extensions="EnhancedLeadViewCTRL" tabStyle="Lead">
+
+    <apex:outputPanel id="all">
+
+        <apex:pageMessages />
+
+
+
+        <apex:detail id="StandardLeadPage" relatedListHover="true" relatedList="true" inlineEdit="true" rendered="{!showStandardLeadPage}" />
+        <apex:form >
+            <apex:outputPanel id="LeadMenu" rendered="{!SectionShown}">
+            <!-- POPUP Pick iniziale -->
+            <apex:outputPanel id="popuppickiniziale">
+                <!--[11/07/2017]JV - Start: Lead Management Sprint 46 -->
+                <apex:outputPanel styleClass="popupBackground" layout="block" rendered="{!AND(leadConversionShown,NOT(displayPopUpLead),NOT(lead.Deduplication_Required__c && isLeadDuplicatedWithLead),NOT(displayPopUpLeadDuplicato))}" />
+                <apex:outputPanel styleClass="custPopup" layout="block" rendered="{!AND(leadConversionShown,NOT(displayPopUpLead),NOT(lead.Deduplication_Required__c && isLeadDuplicatedWithLead),NOT(displayPopUpLeadDuplicato))}">
+                <!--[11/07/2017]JV - End: Lead Management Sprint 46 -->
+                    <apex:image value="/img/icon/ideabubble24.png" />
+                    <h1 style="font-size:16px">
+                    Si vuole procedere con:
+                </h1>
+                    <p/> <!-- title="Si conosce il Lead {!lead.FirstName} {!lead.LastName}?"-->
+                    <!--[11/07/2017]JV - Start: Lead Management Sprint 46 -->
+                   <apex:pageBlock id="LeadConosciuto" rendered="{!AND(leadConversionShown,NOT(displayPopUpLead),NOT(lead.Deduplication_Required__c && isLeadDuplicatedWithLead),NOT(displayPopUpLeadDuplicato))}">
+                   <!--[11/07/2017]JV - End: Lead Management Sprint 46 -->
+                    <apex:selectRadio id="leadConosciutoChoice" value="{!leadConosciutoChoice}" layout="pageDirection">
+                        <!--apex:selectOption itemValue="1" itemLabel="Sì, {!lead.FirstName} {!lead.LastName} è già censito a sistema come Cliente. Aggiungi una trattativa commerciale" itemDisabled="{!NOT(lead.Deduplication_Required__c && isLeadDuplicatedWithAccount)}" /-->
+                        <!--apex:selectOption itemValue="2" itemLabel="Sì, {!lead.FirstName} {!lead.LastName} è già censito a sistema come Lead" itemDisabled="{!NOT(lead.Deduplication_Required__c && isLeadDuplicatedWithLead)}" /-->
+                        <apex:selectOption itemValue="3" itemLabel="Creazione di una nuova anagrafica di tipo Persona Fisica su CIF" />
+                        <apex:selectOption itemValue="4" itemLabel="Creazione di una nuova anagrafica di tipo Persona Giuridica su CIF" />
+                    </apex:selectRadio>
+
+                    <apex:commandButton value="Conferma" action="{!choiceHandler}" status="choicheHandlerStatus"  oncomplete="storeAccIDNew()" rerender="all" />
+                    <apex:commandButton value="Annulla" action="{!cancel}" />
+
+                    <apex:actionStatus id="choicheHandlerStatus" onstart="loading(true)" onstop="loading(false)">
+                        <apex:facet name="start">
+                            <apex:outputPanel >
+                                <div id="contentLoading" style="display:none;">
+                                    <div style="text-align: center;">
+                                        Stiamo eleborando la tua richiesta
+                                        <br/>
+                                        <img src="/img/loading.gif" alt="Caricamento..." />
+                                    </div>
+                                </div>
+                            </apex:outputPanel>
+                        </apex:facet>
+                    </apex:actionStatus>
+
+                </apex:pageBlock>
+
+                <apex:outputPanel id="VisibilityMessage" rendered="{!NOT(leadConversionShown)}">
+                    <apex:pageBlock >
+                        <apex:image value="/img/msg_icons/warning24.png" />
+                        <h1 style="font-size:16px">
+                            Privilegi insufficienti
+                        </h1>
+                        <br/>
+                        <p>
+                            Non si dispone del livello di accesso necessario per eseguire l'operazione richiesta. Se è necessario, contattare il titolare del record o l'amministratore
+                        </p>
+                        <br/>
+                        <apex:commandButton value="Chiudi" action="{!cancel}" />
+                    </apex:pageBlock>
+                </apex:outputPanel>
+
+            </apex:outputPanel>
+
+            </apex:outputPanel>
+
+            </apex:outputPanel>
+            <!-- END POPUP Iniziale -->
+            <!-- POPUP DUPLICATED LEAD -->
+            <apex:outputPanel id="popupLead" >
+               <apex:outputPanel styleClass="popupBackground" layout="block" rendered="{!AND(displayPopUpLead)}" />
+                <apex:outputPanel styleClass="custPopup" layout="block" rendered="{!AND(displayPopUpLead)}">
+                    <apex:image value="/img/msg_icons/warning24.png" />
+                    <h1 style="font-size:16px">
+                     Attenzione!
+                </h1>
+                    <p/>
+
+                    <apex:pageBlock >
+
+                        <p>
+                           Il lead {!lead.FirstName} {!lead.LastName} risulta già inserito a sistema come lead.
+                           
+                        </p>
+                        <p>
+                            Se si tratta della stessa persona puoi modificare lo stato dell’altro lead in “Lead duplicato” e premere ‘Continua’ per convertire questo lead in cliente
+                            
+                        </p>
+                        <br/>
+
+                        <div align="center">
+                            <apex:commandButton value="Continua con Persona Fisica" action="{!fromDuplicatedLeadtoCIFresultsPhysical}" status="doubleLeadStatus"  rerender="all" />
+                            <apex:commandButton value="Continua con Persona Giuridica" action="{!fromDuplicatedLeadtoCIFresultsCompany}" status="doubleLeadStatus"  rerender="all" />
+                            <apex:commandButton value="Annulla" action="{!cancel}" rerender="popupLead" />
+                            <br/>
+                    <apex:actionStatus id="doubleLeadStatus" onstart="loading(true)" onstop="loading(false)">
+                        <apex:facet name="start">
+                            <apex:outputPanel >
+                                <div id="contentLoading" style="display:none;">
+                                    <div style="text-align: center;">
+                                        Stiamo eleborando la tua richiesta
+                                        <br/>
+                                        <img src="/img/loading.gif" alt="Caricamento..." />
+                                    </div>
+                                </div>
+                            </apex:outputPanel>
+                        </apex:facet>
+                    </apex:actionStatus>
+                        </div>
+                    </apex:pageBlock>                                        
+                </apex:outputPanel>
+                
+                
+
+            </apex:outputPanel>
+            <!-- END POPUP DUPLICATED LEAD -->
+
+            <!--[11/07/2017]JV - Start Lead Management Sprint 46: It is not possible to convert a Lead with Status "Duplicated Lead" -->
+            <apex:outputPanel id="popupLeadDuplicato" >
+               <!-- <apex:outputPanel styleClass="popupBackground" layout="block" rendered="{!AND(displayPopUpLeadDuplicato)}" /> -->
+                <apex:outputPanel styleClass="custPopup" layout="block" rendered="{!AND(displayPopUpLeadDuplicato)}">
+                    <apex:image value="/img/msg_icons/warning24.png" />
+                        <h1 style="font-size:16px">Attenzione!</h1>
+                        <p/>
+                        <apex:pageBlock >
+                            <p>
+                            Il Lead in stato Duplicato non può essere convertito
+                            </p>
+                            <br/>
+                            <div align="center">
+                                <apex:commandButton value="Annulla" action="{!cancel}" />
+                                <br/>
+                            </div>
+                        </apex:pageBlock>
+                </apex:outputPanel>
+            </apex:outputPanel>            
+            <!--[11/07/2017]JV - End Start Lead Management Sprint 46 -->
+            
+             <!-- POPUP MISLEADING INFO LEAD -->
+            <apex:outputPanel id="popupLeadMisleading" >
+               <apex:outputPanel styleClass="popupBackground" layout="block" rendered="{!displayPopUpMisalignment}" />
+                <apex:outputPanel styleClass="custPopup" layout="block" rendered="{!displayPopUpMisalignment}">
+                    <apex:image value="/img/msg_icons/warning24.png" />
+                    <h1 style="font-size:16px">
+                    Informazioni Lead ambigue per {!ErrorMsgConversionType}
+                </h1>
+                    <p/>
+
+                    <apex:pageBlock >
+
+                        <p>
+                            Attenzione! Il lead {!lead.FirstName} {!lead.LastName} risulta avere i seguenti campi compilati:{!ErrorMsg} 
+                            
+                        </p>
+                        <p>
+                            Premere ‘Continua’ se si desidera procedere con la creazione dell’anagrafica su CIF di tipo {!ErrorMsgConversionType} , o
+                            ‘Annulla’ se si desidera tornare alla scheda del lead per effettuare una scelta diversa
+                        </p>
+                        <br/>
+
+                        <div align="center">
+                            <apex:commandButton value="Continua con {!ErrorMsgConversionType}" action="{!forceConversion}" status="missleadingInfo"  rerender="all" />
+                            <apex:commandButton value="Annulla" action="{!cancel}" rerender="popupLeadMisleading" />
+                            <br/>
+                    <apex:actionStatus id="missleadingInfo" onstart="loading(true)" onstop="loading(false)">
+                        <apex:facet name="start">
+                            <apex:outputPanel >
+                                <div id="contentLoading" style="display:none;">
+                                    <div style="text-align: center;">
+                                        Stiamo eleborando la tua richiesta
+                                        <br/>
+                                        <img src="/img/loading.gif" alt="Caricamento..." />
+                                    </div>
+                                </div>
+                            </apex:outputPanel>
+                        </apex:facet>
+                    </apex:actionStatus>
+                        </div>
+                    </apex:pageBlock>
+                    
+                    
+
+
+                </apex:outputPanel>
+                
+                
+
+            </apex:outputPanel>
+            <!-- END POPUP MISLEADING INFO LEAD -->           
+                
+
+            <!-- CUSTOM LEAD CONVERSION PAGE -->
+            <apex:outputPanel id="ConversioneLead" rendered="{!showCustomLeadConvertPage}">
+
+                <apex:pageBlock id="test" title="Conversione Lead">
+                    <apex:pageBlockButtons >
+                    <!--    <apex:commandButton action="{!customLeadConversion}" value="Converti" /> -->
+                        <apex:commandButton action="{!cancel}" value="Annulla" />
+                    </apex:pageBlockButtons>
+
+                    <apex:pageBlockSection title="Lista dei clienti già censiti a CRM" columns="1" collapsible="false">
+
+                    <!--    <apex:selectList value="{!DuplicatedAccountIDValue}" label="Cliente a cui aggiungere la trattativa" size="1">
+                            <apex:selectOptions value="{!DuplicatedAccountPicklistValues}" />
+                            <apex:actionSupport event="onchange" action="{!changeSelectedAccount}" reRender="PreviewLink" status="status" />
+                        </apex:selectList>-->
+
+                        <apex:outputPanel >
+                            <apex:actionstatus id="status" startText="Aggiornamento anteprima...">
+                                <apex:facet name="stop">
+                                    <apex:outputPanel id="PreviewLink">
+                                    <!--    <apex:pageBlockTable value="{!selectedAccount}" var="acc">
+
+                                            <apex:column headerValue="Scheda Cliente">
+                                                <div align="center" draggable="false">
+                                                    <apex:commandButton image="/img/icon/people24.png" style=" background-image: none;background: white;width:25px;height:25px;margin: 2px;border: none !important" onclick="window.open('{!accountLink}')" />
+                                                </div>
+                                            </apex:column>
+
+                                            <apex:column value="{!acc.NDG__c}" />
+                                            <apex:column value="{!acc.PersonBirthdate}" />
+                                            <apex:column value="{!acc.Phone}" />
+                                            <apex:column value="{!acc.PersonMobilePhone}" />
+                                            <apex:column value="{!acc.PersonMailingCity}" />
+                                            <apex:column value="{!acc.PersonMailingStreet}" />
+                                        </apex:pageBlockTable>-->
+                                        
+                                        <apex:pageBlockTable id="recTable"  value="{!listAccounts}" var="rec" >
+                                        
+                                            <apex:column headerValue="Scheda Cliente">
+                                                <div align="center" draggable="false">
+                                                    <apex:commandButton image="/img/icon/people24.png" style=" background-image: none;background: white;width:25px;height:25px;margin: 2px;border: none !important" onclick="window.open('{!URLBASE}/{!rec.id}')" />
+                                                </div>
+                                            </apex:column>  
+                                            
+                                            <apex:column >
+                                                <apex:facet name="header">NDG</apex:facet>
+                                                <apex:outputField value="{!rec.NDG__c}" />
+                                            </apex:column>
+                                            
+                                            <apex:column >
+                                                <apex:facet name="header">Data di nascita</apex:facet>
+                                                <apex:outputField value="{!rec.PersonBirthdate}" />
+                                            </apex:column>
+                                            
+                                            <apex:column >
+                                                <apex:facet name="header">Telefono</apex:facet>
+                                                <apex:outputField value="{!rec.Phone}" />
+                                            </apex:column>
+
+                                            <apex:column >
+                                                <apex:facet name="header">Cellulare</apex:facet>
+                                                <apex:outputtext value="{!IF(rec.PersonMobilePhone!='',rec.PersonMobilePhone ,rec.MobilePhone__c)}" />
+                                            </apex:column>
+                                            
+                                            <apex:column >
+                                                <apex:facet name="header">Città</apex:facet>
+                                                <apex:outputtext value="{!IF(rec.PersonMailingCity!='',rec.PersonMailingCity ,rec.BillingCity)}" />
+                                            </apex:column>
+                                            
+                                            <apex:column >
+                                                <apex:facet name="header">Via</apex:facet>
+                                                <apex:outputtext value="{!IF(rec.PersonMailingStreet!='',rec.PersonMailingStreet ,rec.BillingStreet)}" />
+                                            </apex:column>
+                                            
+
+                                            <apex:column style="text-align:center;"> 
+                                            <apex:facet name="header">Azione</apex:facet>
+                                                <div align="center">
+                                                    <apex:commandButton style="width:150px" value="Converti" action="{!customLeadConversion}" rerender="recTable">
+                                                        <apex:param name="selAcc" value="{!rec.id}" assignTo="{!selectedAccountID}" /> <!--A.D. 06.12.2016-->
+                                                    </apex:commandButton>
+                                                </div>
+                                            </apex:column>
+                                            
+                                        </apex:pageBlockTable>
+                                    </apex:outputPanel>
+                                </apex:facet>
+                            </apex:actionstatus>
+                        </apex:outputPanel>
+                    </apex:pageBlockSection>
+                    <!--   
+            <apex:pageBlockSection title="Seleziona dal menù a tendina lo stato che il Lead assumerà al termine della conversione " columns="2" collapsible="false">   
+                <apex:selectList value="{!ConvertedStatusValue}" label="Stato convertito" size="1">
+                    <apex:selectOptions value="{!ConvertedLeadStatus}"/>
+                </apex:selectList>
+                
+            </apex:pageBlockSection>           
+        -->
+                </apex:pageBlock>
+            </apex:outputPanel>
+            <!-- END CUSTOM LEAD CONVERSION PAGE -->
+
+            <!-- COMPLETAMENTO SET INFORMATIVO LEAD in case a page for filling missing info is required-->
+            <!--apex:pageBlock title="Completamento set informativo Lead" rendered="{!showMissingFields}">
+        <apex:pageBlockButtons >
+            <apex:commandButton action="{!saveLeadOnly}" value="Salva e procedi in seguito"/>
+            <apex:commandButton action="{!SaveAndSubmit}" value="Salva e crea anagrafica in CIF"/>
+            <apex:commandButton action="{!cancel}" value="Annulla"/>
+        </apex:pageBlockButtons> 
+        <apex:pageBlockSection title="Informazioni richieste" columns="1" collapsible="false">
+         <apex:inputField id="myid" value="{!lead.Fiscal_ID__c}"/>
+        </apex:pageBlockSection>
+        </apex:pageBlock-->
+            <!-- END COMPLETAMENTO SET INFORMATIVO LEAD -->
+        </apex:form>
+
+        <apex:form id="theform">
+
+            
+
+            <!-- POPUP NDG LIST -->
+            <apex:pageBlock id="popupResults" rendered="{!displayPopUpResults}">
+                <apex:image value="/img/icon/people24.png" />
+                <h1 style="font-size:15px">
+                    Lista degli NDG restituiti da CIF corrispondenti all'anagrafica del lead {!lead.FirstName} {!lead.LastName}
+                </h1>
+                <p/>
+                    <apex:actionStatus id="conversionExistingStatus" onstart="loading(true)" onstop="loading(false)" />
+
+                    <div id="contentLoading" style="display:none;">
+                        <div style="text-align: center;">
+                            Stiamo eleborando la tua richiesta
+                            <br/>
+                            <img src="/img/loading.gif" alt="Caricamento..." />
+                        </div>
+                    </div>
+                <!-- EXISTING -->
+                <apex:pageBlockSection title="Lista dei clienti censiti sia su CIF che sul CRM" collapsible="false" rendered="{!WS_Results_EXISTING.size>0}" columns="1">
+
+                    <!-- RECORD TABLE: EXISTING -->
+                    <apex:pageBlockTable id="recTable" style="width:100%" value="{!WS_Results_EXISTING}" var="rec">
+                        <apex:column style="width:150px">
+                            <apex:facet name="header">NDG</apex:facet>
+                            <apex:outputText value="{!rec.NDG}" />
+                        </apex:column>
+
+                        <apex:column style="width:150px">
+                            <apex:facet name="header">Cliente</apex:facet>
+                            <apex:outputLink target="_top" value="/{!rec.CorrespondingAccount.id}" rendered="{!AND(rec.Accesslevel!='NOACCESS',rec.CorrespondingAccount.Id!=null)}">
+                                {!rec.CorrespondingAccount.Name}
+                            </apex:outputLink>
+                            <apex:outputTexT value="{!rec.Name}" rendered="{!AND(rec.Accesslevel!='NOACCESS',rec.CorrespondingAccount.Id=null, rec.Name!=null)}" />
+                        </apex:column>
+
+
+                        <apex:column style="width:350px">
+                            <apex:facet name="header">Indirizzo - CIF</apex:facet>
+                            <apex:outputText value="{!rec.Address}" rendered="{!rec.Accesslevel!='NOACCESS'}" />
+                        </apex:column>
+
+                        <apex:column >
+                            <apex:facet name="header">Data di nascita - CIF</apex:facet>
+                            <apex:outputText value="{0,date,dd/MM/yyyy }" rendered="{!rec.Accesslevel!='NOACCESS'}">
+                                <apex:param value="{!rec.BirthDate}" />
+                            </apex:outputText>
+                        </apex:column>
+
+                        <apex:column style="width:150px">
+                            <apex:facet name="header">Ultima modifica - CIF</apex:facet>
+                            <apex:outputText value="{!rec.LastEdit}" rendered="{!rec.Accesslevel!='NOACCESS'}" />
+                        </apex:column>
+
+                        <apex:column style="width:150px">
+                            <apex:facet name="header">Tipo Soggetto - CIF</apex:facet>
+                            <apex:outputText value="{!rec.tipoSoggetto}" rendered="{!rec.Accesslevel!='NOACCESS'}" />
+                        </apex:column>
+
+                        <apex:column style="width:150px">
+                            <apex:facet name="header">Azione </apex:facet>
+                            <div align="center">
+                                <apex:commandButton style="width:150px" value="Converti" action="{!convertToExisting}" oncomplete="storeAccID()" rerender="theform" status="conversionExistingStatus">
+                                    <apex:param name="selNDG" value="{!rec.NDG}" assignTo="{!selectedNDG}" />
+                                </apex:commandButton>
+                            </div>
+                        </apex:column>
+                    </apex:pageBlockTable>
+
+
+
+                    <!-- RECORD TABLE: EXISTING -->
+
+                    <apex:pageBlockSectionItem labelTitle="Informazioni">
+                        <img src="/img/msg_icons/info16.png" /> Premere il pulsante "Converti" in corrispondenza del Cliente esistente a cui si desidera associare una trattativa
+                    </apex:pageBlockSectionItem>
+
+                </apex:pageBlockSection>
+
+                <!-- END EXISTING -->
+
+                <!-- CIFONLY -->
+                <apex:pageBlockSection title="Lista dei clienti censiti su CIF che non sono stati migrati sul CRM" collapsible="false" rendered="{!WS_Results_CIFONLY.size>0}" columns="1">
+
+                    <!-- RECORD TABLE: CIFONLY -->
+
+                    <apex:pageBlockTable id="recTable" style="width:100%" value="{!WS_Results_CIFONLY}" var="rec">
+                        <apex:column style="width:150px">
+                            <apex:facet name="header">NDG</apex:facet>
+                            <apex:outputText value="{!rec.NDG}" />
+                        </apex:column>
+
+                        <apex:column style="width:150px">
+                            <apex:facet name="header">Cliente</apex:facet>
+                            <apex:outputLink target="_top" value="/{!rec.CorrespondingAccount.id}" rendered="{!AND(rec.Accesslevel!='NOACCESS',rec.CorrespondingAccount.Id!=null)}">
+                                {!rec.CorrespondingAccount.Name}
+                            </apex:outputLink>
+                            <apex:outputTexT value="{!rec.Name}" rendered="{!AND(rec.Accesslevel!='NOACCESS',rec.CorrespondingAccount.Id=null)}" />
+                        </apex:column>
+
+                        <apex:column style="width:350px">
+                            <apex:facet name="header">Indirizzo - CIF</apex:facet>
+                            <apex:outputText value="{!rec.Address}" rendered="{!rec.Accesslevel!='NOACCESS'}" />
+                        </apex:column>
+
+                        <apex:column >
+                            <apex:facet name="header">Data di nascita - CIF</apex:facet>
+                            <apex:outputText value="{0,date,dd/MM/yyyy }" rendered="{!rec.Accesslevel!='NOACCESS'}">
+                                <apex:param value="{!rec.BirthDate}" />
+                            </apex:outputText>
+                        </apex:column>
+
+                        <apex:column style="width:150px">
+                            <apex:facet name="header">Ultima modifica - CIF</apex:facet>
+                            <apex:outputText value="{!rec.LastEdit}" rendered="{!rec.Accesslevel!='NOACCESS'}" />
+                        </apex:column>
+
+                        <apex:column style="width:150px">
+                            <apex:facet name="header">Tipo Soggetto - CIF</apex:facet>
+                            <apex:outputText value="{!rec.tipoSoggetto}" rendered="{!rec.Accesslevel!='NOACCESS'}" />
+                        </apex:column>
+
+                        <apex:column style="width:150px">
+                            <apex:facet name="header">Azione</apex:facet>
+                            <div align="center">
+                                
+                                <apex:commandButton style="width:150px" value="Importa da CIF e Converti" action="{!ConvertToNew}" oncomplete="storeAccIDNew()" rerender="theform" status="conversionExistingStatus">
+                                    <apex:param name="selNDG" value="{!rec.NDG}" assignTo="{!selectedNDG}" />
+                                </apex:commandButton>
+                            </div>
+
+                        </apex:column>
+
+                    </apex:pageBlockTable>
+                    <!-- RECORD TABLE: CIFONLY -->
+                    <apex:pageBlockSectionItem labelTitle="Informazioni">
+                        <img src="/img/msg_icons/info16.png" /> Premere il pulsante "Converti" in corrispondenza del Cliente che si desidera importare sul CRM, e a cui si desidera associare una trattativa
+                    </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+                <!-- END CIFONLY -->
+
+                <!-- PG -->
+
+                        <!--apex:column DOES NOT WORK WITH BUSINESS ACCOUNT, must use contactID>
+                    <apex:facet name="header">Cliente</apex:facet>
+                    <apex:outputfield value="{!rec.CorrespondingAccount.PersonContactId}" rendered="{!AND(rec.Accesslevel!='NOACCESS',rec.CorrespondingAccount.PersonContactId!=null)}"/>
+                    <apex:outputTexT value="{!rec.Name}" rendered="{!AND(rec.Accesslevel!='NOACCESS',rec.CorrespondingAccount.PersonContactId=null)}"/>
+                </apex:column-->
+           <!--     <apex:pageBlockSection title="Lista dei clienti censiti su CIF come Persone Giuridiche" collapsible="false" rendered="{!WS_Results_PG.size>0}" columns="1">
+
+                   
+
+                    <apex:pageBlockTable id="recTable" style="width:100%" value="{!WS_Results_PG}" var="rec">
+                        <apex:column style="width:150px">
+                            <apex:facet name="header">NDG</apex:facet>
+                            <apex:outputText value="{!rec.NDG}" />
+                        </apex:column>
+
+                        <apex:column style="width:150px">
+                            <apex:facet name="header">Cliente</apex:facet>
+                            <apex:outputLink target="_top" value="/{!rec.CorrespondingAccount.id}" rendered="{!AND(rec.Accesslevel!='NOACCESS',rec.CorrespondingAccount.Id!=null)}">
+                                {!rec.CorrespondingAccount.Name}
+                            </apex:outputLink>
+                            <apex:outputTexT value="{!rec.Name}" rendered="{!AND(rec.Accesslevel!='NOACCESS',rec.CorrespondingAccount.Id=null)}" />
+                        </apex:column>
+
+
+                        <apex:column style="width:350px">
+                            <apex:facet name="header">Indirizzo - CIF</apex:facet>
+                            <apex:outputText value="{!rec.Address}" rendered="{!rec.Accesslevel!='NOACCESS'}" />
+                        </apex:column>
+
+                        <apex:column >
+                            <apex:facet name="header">Data di nascita - CIF</apex:facet>
+                            <apex:outputText value="{0,date,dd/MM/yyyy }" rendered="{!rec.Accesslevel!='NOACCESS'}">
+                                <apex:param value="{!rec.BirthDate}" />
+                            </apex:outputText>
+                        </apex:column>
+
+                        <apex:column style="width:150px">
+                            <apex:facet name="header">Ultima modifica - CIF</apex:facet>
+
+                            <apex:outputText value="{!rec.LastEdit}" rendered="{!rec.Accesslevel!='NOACCESS'}" />
+                        </apex:column>
+
+                        <apex:column style="width:150px">
+                            <apex:facet name="header">Tipo Soggetto - CIF</apex:facet>
+                            <apex:outputText value="{!rec.tipoSoggetto}" rendered="{!rec.Accesslevel!='NOACCESS'}" />
+                        </apex:column>
+
+                        <apex:column style="width:150px">
+                            <apex:facet name="header">Descrizione</apex:facet>
+                            Conversione su soggetto Giuridico non disponibile
+                        </apex:column>
+
+                    </apex:pageBlockTable>
+                    
+                    <apex:pageBlockSectionItem labelTitle="Informazioni">
+                        <img src="/img/msg_icons/warning16.png" /> Attenzione! al momento non è possibile effettuare la conversione di un Lead associato a una anagrafica CIF di tipo Persona Giuridica
+                    </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>-->
+                <!-- END PG -->
+
+                <!-- NOACCESS -->
+                <apex:pageBlockSection title="Lista dei clienti censiti sia su CIF che sul CRM, ma non condivisi con uno dei propri nodi" collapsible="false" rendered="{!WS_Results_NOACCESS.size>0}" columns="1">
+
+                    <!-- RECORD TABLE: NOACCESS -->
+
+                    <apex:pageBlockTable style="width:100%" id="recTable" value="{!WS_Results_NOACCESS}" var="rec">
+                        <apex:column style="width:100px">
+                            <apex:facet name="header">NDG</apex:facet>
+                            <apex:outputText value="{!rec.NDG}" />
+                        </apex:column>
+                        <apex:column style="width:150px">
+                            <apex:facet name="header">Descrizione</apex:facet>
+                            Su CIF è stata trovata un’anagrafica non condivisa sui nodi su cui si ha visibilità
+                        </apex:column>
+                    </apex:pageBlockTable>
+                    <!-- RECORD TABLE: NOACCESS -->
+                    <apex:pageBlockSectionItem labelTitle="Informazioni">
+                        <img src="/img/msg_icons/warning16.png" /> Si prega di prendere nota dell'NDG e contattare il proprio agente di riferimento per ottenere maggiori informazioni e/o chiedere l'estensione della visibilità su CIF
+                    </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+                <!-- END NOACCESS -->
+
+
+                <div align="center">
+                    <apex:commandButton action="{!cancel}" value="Annulla" />
+                </div>
+            </apex:pageBlock>
+            <!-- END POPUP NDG LIST -->
+
+
+            <!-- POPUP CONVERTED LEAD -->
+            <apex:outputPanel id="popupConvertedLead">
+                <apex:outputPanel styleClass="popupBackground" layout="block" rendered="{!displayPopUpConvertedLead}" />
+                <apex:outputPanel styleClass="custPopup" layout="block" rendered="{!displayPopUpConvertedLead}">
+                    <apex:image value="/img/icon/hands24.png" />
+                    <h1 style="font-size:16px">
+                    Creazione trattativa associata a {!lead.FirstName} {!lead.LastName}
+                </h1>
+                    <p/>
+
+                    <apex:pageBlock >
+                        <table>
+                            <tr>
+                            <td style="vertical-align:middle"><apex:image value="/img/msg_icons/confirm32.png" /></td>
+                            <td style="vertical-align:middle"> 
+                                <p>
+                                    Il Lead {!lead.FirstName} {!lead.LastName} è stato convertito con successo.
+                                    <br/> Una trattativa è stata associata al cliente {!selectedSoggettoCIF.correspondingAccount.Name}.<br/>
+                                    <apex:outputPanel id="relationshipMessageConverted" rendered="{!displayNewRelationButton}">
+                                         Il lead ha una referenza tracciata: è possibile ora creare una nuova relazione.
+                                     </apex:outputPanel>
+                                </p>
+                            </td> 
+                            </tr>
+                        </table>
+                        <br/>
+
+                        <div align="center">
+                            <!--apex:commandButton value="Vai alla scheda cliente"  action="{!gotToExistingAccount}"/><br/-->
+                            <apex:commandButton value="Traccia una nuova relazione" rendered="{!displayNewRelationButton}" onclick="redirectToRelationship();return false;" />
+                            <apex:commandButton value="Vai alla scheda cliente" onclick="redirectToAccount();return false;" />
+                            <br/>
+                        </div>
+                    </apex:pageBlock>
+
+                </apex:outputPanel>
+
+            </apex:outputPanel>
+            <!-- POPUP CONVERTED LEAD INTO NEW-->
+            <apex:outputPanel id="popupConvertedLeadNew">
+                <apex:outputPanel styleClass="popupBackground" layout="block" rendered="{!displayPopUpConvertedLeadNew}" />
+                <apex:outputPanel styleClass="custPopup" layout="block" rendered="{!displayPopUpConvertedLeadNew}">
+                    <apex:image value="/img/icon/hands24.png" />
+                    <h1 style="font-size:16px">
+                    Creazione trattativa associata a {!selectedSoggettoCIF.UpdatedLead.FirstName} {!selectedSoggettoCIF.UpdatedLead.LastName}
+                </h1>
+                    <p/>
+
+                    <apex:pageBlock >
+                        <table>
+                            <tr>
+                            <td style="vertical-align:middle"><apex:image value="/img/msg_icons/confirm32.png" /></td>
+                            <td style="vertical-align:middle"> 
+                                <p>
+                                    Il Lead {!selectedSoggettoCIF.UpdatedLead.FirstName} {!selectedSoggettoCIF.UpdatedLead.LastName} è stato convertito con successo.
+                                    <br/> Una trattativa è stata associata al nuovo cliente.<br/>
+                                     <apex:outputPanel id="relationshipMessageNew" rendered="{!displayNewRelationButton}">
+                                            Il lead ha una referenza tracciata: è possibile ora creare una nuova relazione.
+                                    </apex:outputPanel>
+                                    
+                                </p>
+                            </td> 
+                            </tr>
+                        </table>
+                        <br/>
+
+                        <div align="center">
+                            <!--apex:commandButton value="Vai alla scheda cliente"  action="{!gotToExistingAccount}"/><br/-->
+                            <apex:commandButton value="Traccia una nuova relazione" rendered="{!displayNewRelationButton}" onclick="redirectToRelationship();return false;" />
+                            <apex:commandButton value="Vai alla scheda cliente" onclick="redirectToAccount();return false;" />
+                            <br/>
+                        </div>
+                    </apex:pageBlock>
+
+                </apex:outputPanel>
+            </apex:outputPanel>
+
+            <!-- POPUP Generic Error-->
+            <apex:outputPanel id="popupError">
+                <apex:outputPanel styleClass="popupBackground" layout="block" rendered="{!displayPoPupGeneralError}" />
+                <apex:outputPanel styleClass="custPopup" layout="block" rendered="{!displayPoPupGeneralError}">
+                    <apex:image value="/img/msg_icons/error16.png" />
+                    <h1 style="font-size:16px">
+                    Errore
+                    </h1>
+                    <p/>
+
+                    <apex:pageBlock >
+                        <table>
+                            <tr>
+                            <td style="vertical-align:middle"><apex:image value="/img/msg_icons/error32.png" /></td>
+                            <td style="vertical-align:middle"> 
+                                <p>
+                                Si è verificato un errore. 
+                                    <br/>  {!ErrorMsg}
+                                </p>
+                            </td> 
+                            </tr>
+                        </table>
+                        <br/>
+
+                        <div align="center">
+                            <!--apex:commandButton value="Vai alla scheda cliente"  action="{!gotToExistingAccount}"/><br/-->
+                            <apex:commandButton value="Chiudi" action="{!cancel}" />
+                            <br/>
+                        </div>
+                    </apex:pageBlock>
+
+                </apex:outputPanel>
+            </apex:outputPanel>
+            
+            <script type="text/javascript">
+                var AccID = '';
+                var refId = '';
+                console.log("Before function acc is-->")
+                console.log(AccID);
+
+                function loading(val) {
+                    if (val) {
+                        document.getElementById('contentLoading').style.display = 'block';
+                        //document.getElementById('contentLoaded').style.display = 'none';
+                    } else {
+                        document.getElementById('contentLoading').style.display = 'none';
+                        //document.getElementById('contentLoaded').style.display = 'block';
+                    }
+                }
+
+                function storeAccID() {
+                    AccID = "{!selectedSoggettoCIF.correspondingAccount.ID}";
+                    BaseUrl="{!URLBASE}";
+                    refId = "{!lead.Account_referente__c}";
+                    console.log("inside the store function");
+                    console.log(AccID);
+                    console.log(BaseUrl);
+                    console.log(refId);
+                }
+                
+                function storeAccIDNew() {
+                    AccID = "{!newAccountId}";
+                    BaseUrl="{!URLBASE}";
+                    refId = "{!lead.Account_referente__c}";
+                    console.log("inside the store new function");
+                    console.log(AccID);
+                    console.log(BaseUrl);
+                    console.log(refId);
+                }
+
+                function redirectToAccount() {
+                    console.log("inside the redirectlog");
+                    console.log(AccID);
+                    if ((AccID==null) ||(AccID==''))
+                    {
+                        AccID = "{!newAccountId}";
+                        BaseUrl="{!URLBASE}";
+                    }
+                    var themessage = "Hello" + AccID;
+                    // window.open(BaseUrl+'/'+AccID,'_self')";
+                  //  window.alert ('URL BASE '+BaseUrl+' ID ACC '+AccID);
+                 //  window.location.href = '/agenzie/' + AccID;
+                   URL = BaseUrl +'/' + AccID
+                  window.location.href = URL  ;
+                  
+                    //alert(themessage);
+                }
+                function redirectToRelationship() {
+                    console.log("inside the redirectlog");
+                    console.log(AccID);
+                    if ((AccID==null) ||(AccID==''))
+                    {
+                        AccID = "{!newAccountId}";
+                        BaseUrl="{!URLBASE}";
+                    }
+                    var themessage = "Hello" + AccID;
+                    // window.open(BaseUrl+'/'+AccID,'_self')";
+                  //  window.alert ('URL BASE '+BaseUrl+' ID ACC '+AccID);
+                 //  window.location.href = '/agenzie/' + AccID;
+                   URL = BaseUrl +'/apex/gestionenucleo?id1=' + AccID + '&id2=' + refId;
+                  window.location.href = URL  ;
+                  
+                    //alert(themessage);
+                }
+            </script>
+
+            <!-- END POPUP CONVERTED LEAD -->
+
+
+            <!-- POPUP GIURIDICO -->
+            <apex:outputPanel id="popupGiuridico">
+                <apex:outputPanel styleClass="popupBackground" layout="block" rendered="{!displayPopUpGiuridico}" />
+                <apex:outputPanel styleClass="custPopup" layout="block" rendered="{!displayPopUpGiuridico}">
+                    <apex:image value="/img/msg_icons/warning24.png" />
+                    <h1 style="font-size:16px">
+                    Conversione di un lead di tipo Persona Giuridica
+                </h1>
+                    <p/>
+
+                    <apex:pageBlock >
+
+                        <p>
+                            Attenzione! al momento non è possibile effettuare la conversione di un Lead associato a una anagrafica CIF di tipo Persona Giuridica
+                        </p>
+                        <br/>
+
+                        <div align="center">
+                            <apex:commandButton value="Chiudi" action="{!cancel}" rerender="popupGiuridico" />
+                            <br/>
+                        </div>
+                    </apex:pageBlock>
+
+                </apex:outputPanel>
+
+            </apex:outputPanel>
+            <!-- END POPUP GIURIDICO -->
+
+            <!-- POPUP NOACCESS -->
+            <apex:outputPanel id="popupNoAccess">
+                <apex:outputPanel styleClass="popupBackground" layout="block" rendered="{!displayPopUpNoAccess}" />
+                <apex:outputPanel styleClass="custPopup" layout="block" rendered="{!displayPopUpNoAccess}">
+                    <apex:image value="/img/msg_icons/warning24.png" />
+                    <h1 style="font-size:16px">
+                    Contatta l'agente di riferimento
+                </h1>
+                    <p/>
+
+                    <apex:pageBlock >
+
+                        <p>
+                            Su CIF è stata trovata un’anagrafica che corrisponde al Lead {!lead.FirstName} {!lead.LastName} (NDG: {!SelectedNDG}), che però non è condiviso sui nodi su cui si ha visibilità.
+                        </p>
+                        <p>
+                            Si prega di contattare il proprio agente di riferimento per ottenere maggiori informazioni
+                        </p>
+                        <br/>
+
+                        <div align="center">
+                            <apex:commandButton value="Chiudi" action="{!cancel}" rerender="popupNoAccess" />
+                            <br/>
+                        </div>
+                    </apex:pageBlock>
+
+                </apex:outputPanel>
+
+            </apex:outputPanel>
+            <!-- END POPUP NOACCESS -->
+
+            <!-- POPUP CIF Only -->
+            <apex:outputPanel id="popupCIFOnly">
+                <apex:outputPanel styleClass="popupBackground" layout="block" rendered="{!displayPopUpCIFOnly}" />
+                <apex:outputPanel styleClass="custPopup" layout="block" rendered="{!displayPopUpCIFOnly}">
+                    <apex:image value="/img/icon/hands24.png" />
+                    <h1 style="font-size:16px">
+                    Importazione sul CRM dell anagrafica {!lead.FirstName} {!lead.LastName} di CIF
+                </h1>
+                    <p/>
+
+                    <apex:pageBlock >
+
+                        <p>
+                            L’anagrafica del cliente {!lead.FirstName} {!lead.LastName} selezionato è stata correttamente importata sul CRM.
+                        </p>
+                        <p>
+                            Una trattativa è stata associata al cliente {!lead.FirstName} {!lead.LastName}
+                        </p>
+                        <br/>
+
+                        <div align="center">
+                            <apex:commandButton value="TestCliente" action="{!getAccountLink}" />
+                            <apex:commandButton value="Vai alla scheda cliente" action="{!closePopUpCIFOnly}" rerender="popupCIFOnly" />
+                            <br/>
+                        </div>
+                    </apex:pageBlock>
+
+                </apex:outputPanel>
+
+            </apex:outputPanel>
+            <!-- END POPUP CIF Only -->
+
+
+        </apex:form>
+
+    </apex:outputPanel>
+
+    <!-- STYLE -->
+    <style type="text/css">
+        .custPopup {
+            background-color: white;
+            border-width: 2px;
+            border-style: solid;
+            z-index: 9999;
+            left: 50%;
+            padding: 10px;
+            position: absolute;
+            /* These are the 3 css properties you will need to change so the popup 
+            displays in the center of the screen. First set the width. Then set 
+            margin-left to negative half of what the width is. You can add 
+            the height property for a fixed size pop up if you want.*/
+            
+            width: 800px;
+            margin-left: -400px;
+            top: 150px;
+        }
+        .popupBackground {
+            background-color: black;
+            opacity: 0.20;
+            filter: alpha(opacity 20);
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 9998;
+        }
+    </style>
+</apex:page>

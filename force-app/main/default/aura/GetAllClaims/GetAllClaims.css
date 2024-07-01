@@ -1,0 +1,27 @@
+.THIS .borderNone{
+	border: none;
+}
+.THIS.fontSize{
+	font-size: 100% !important;
+}
+.THIS  thead th {
+	background-color: #fafaf9  !important;
+}
+.THIS  thead th:hover {
+	background-color: #fafaf9  !important;
+}
+.THIS .slds-card__body{
+	margin: 0px 5px;
+}
+.THIS .normalWhiteSpace{
+	white-space: normal;
+}
+.THIS table {
+    table-layout: auto !important;
+    border-collapse: collapse !important;
+    width: 100% !important;
+}
+
+.THIS table .absorbing-column {
+    width: 100% !important;
+}

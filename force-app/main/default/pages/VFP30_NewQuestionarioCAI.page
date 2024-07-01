@@ -1,0 +1,213 @@
+<apex:page id="VFP30_NewQuestionarioCAI" standardController="Questionario_CA__c" extensions="VFC30_NewQuestionarioCAICTRL" showHeader="false" sidebar="false" standardStylesheets="false" applyHtmlTag="true" applyBodyTag="false" docType="html-5.0">
+    
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>      
+    </head>
+    
+    <apex:includeScript value="/support/console/44.0/integration.js"/>   
+    <apex:includeScript value="/soap/ajax/41.0/connection.js"/>
+    <apex:includeScript value="/soap/ajax/41.0/apex.js"/>
+    <apex:slds />
+    <apex:includeLightning />
+    <apex:includeScript value="/lightning/lightning.out.js" />
+    <apex:includeLightning />
+    <apex:includeScript value="https://code.jquery.com/jquery-1.8.1.min.js" />
+    <div class="slds" style="margin-top:10px;"> 
+        <div id="lightning" />
+    </div>
+  
+    
+    <script>    
+    //var CaseID = "{!Questionario_CA__c.Case__c}";
+    var CaseID ="{!Questionario_CA__c.Case__c}";
+    var source ="{!$CurrentPage.parameters.source}";//MMOSCATELLI 23/11/2018 : Caring Angel Enhancement
+
+    if(!CaseID)
+        CaseID ="{!$CurrentPage.parameters.caseId}";
+
+    var questionarioCaID = "{!Questionario_CA__c.Id}";
+    var fiscalCode ="{!$CurrentPage.parameters.fiscalCode}";
+    var accountId = "{!$CurrentPage.parameters.accountId}";
+    var phone = "{!$CurrentPage.parameters.phone}";
+    var caller= "{!$CurrentPage.parameters.caller}";
+    var lob = "{!$CurrentPage.parameters.lob}";
+    var category = "{!$CurrentPage.parameters.category}";
+    var subcategory = "{!$CurrentPage.parameters.subcategory}";
+	var questId = "{!$CurrentPage.parameters.questId}";
+    console.log('questId: '+questId);
+    if(questionarioCaID== "" && questId!="")
+        questionarioCaID = questId;
+    console.log('questionarioCaID: -- '+questionarioCaID);
+    var width = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth);
+    var profiloCorrente = "{!$Profile.Name}";
+    var TabName = "";
+
+    if(profiloCorrente=="AXA Assistance" || profiloCorrente.includes("Smart"))
+        TabName ="Questionario";
+    else
+        TabName = "Questionario CA";
+    
+    console.log ("profilo corrente = "+profiloCorrente );  
+        
+    $Lightning.use("c:NewQuestionarioCAIApp", function() {
+        $Lightning.createComponent(
+                                    //MOSCATELLI_M 13/03/2019: Axa Assistance -- START
+                                    //"c:NewQuestionarioCAI",
+                                   "{!TypeOfQuestionnary}",
+                                   //MOSCATELLI_M 13/03/2019: Axa Assistance -- END
+                                   { 
+                                    "screenWidth" : width,
+                                    "questionarioCaID" : questionarioCaID,
+                                    "caseId" : CaseID,
+                                    "fiscalCode" : fiscalCode,
+                                    "accountId" : accountId,
+                                    "phone" : phone,
+                                    "caller" : caller,
+                                    "lob" : lob,
+                                    "category" : category,
+                                    "subcategory" : subcategory,
+                                    "UsrProfile": profiloCorrente,//MOSCATELLI_M 13/03/2019: Axa Assistance
+                                    "source" : source//MMOSCATELLI 23/11/2018 : Caring Angel Enhancement
+                                   },"lightning",
+                                   function(cmp) { 
+                                       console.log('eventService');
+                                       $A.eventService.addHandler({ "event": "c:tabclosing", "handler" : visualForceFunction});
+                                   }); 
+    });  
+    </script> 
+    
+    <script type="text/javascript">
+    jQuery.noConflict();
+    
+    
+    var visualForceFunction = function(event){
+        console.log('event');
+        var myEventData = event.getParam("data");
+        var url= event.getParam("Url");
+        var recordid = event.getParam("recordid");
+
+        if(myEventData == 'refresh')
+            refreshPage();
+        else if(myEventData == 'cancel')
+            closeSubTab();
+        else if(myEventData == 'openInSOL')
+            openInSOL(url);
+        else if(myEventData == 'close_questionario')
+            close_questionario(recordid);
+        
+    };
+    
+    function refreshPage()
+    {
+        try
+        {
+            console.log("refresh");
+            if(sforce.console.isInConsole())
+            {
+                console.log('console');
+                sforce.console.getEnclosingPrimaryTabId(function(primarytab)
+                                                        {
+                                                            console.log('primary: '+primarytab.id );
+                                                            sforce.console.refreshPrimaryTabById(primarytab.id , true);
+                                                        }); 
+            }
+            else
+            {
+                console.log('no console');
+                window.close();
+                opener.refreshTopPage(CaseId);
+            }
+        }
+        catch (e)
+        {}
+        finally 
+        {}
+    } 
+    function CloseTab() {
+        console.log('CloseTab');
+        sforce.console.getFocusedSubtabId(closeSubtab);
+     /*   sforce.console.getEnclosingPrimaryTabId(function(primarytab)
+        {
+            console.log('primary: '+primarytab.id );
+            sforce.console.refreshPrimaryTabById(primarytab.id , true);
+        });*/
+        
+    }
+    var closeSubtab = function closeSubtab(result) {
+        var tabId = result.id;
+        console.log('tabId: ',tabId);
+        sforce.console.closeTab(tabId);
+    };
+    function closeSubTab()
+    {
+        try
+        {
+            console.log("cancel");
+            if(sforce.console.isInConsole())
+            {
+                console.log('console');
+                CloseTab();
+            }
+            else
+            {
+                console.log('no console');
+                window.close();
+                opener.refreshTopPage(CaseId);
+            }
+            
+        }
+        catch (e)
+        {}
+        finally 
+        {}
+    } 
+
+    function openInSOL(url)
+    {
+        console.log('##openInSOL: '+url);
+		window.open(url, '_blank');
+        
+        /*sforce.console.getEnclosingPrimaryTabId(function(primarytab)
+        {
+            console.log('primary: '+primarytab.id );
+            sforce.console.openSubtab(primarytab.id ,url, true,'SOL: Apertura Sinistro',null);
+        }); */
+    }
+
+      function testSetTabTitle() 
+      {
+            //Set the current tab's title
+            sforce.console.setTabTitle(TabName);
+        }
+        var pageLoad = window.onload;
+          window.onload = function() 
+          {
+            if (pageLoad) 
+            {
+                    pageLoad();
+            }
+            testSetTabTitle();
+          }
+
+    function close_questionario(recordid)
+    {
+        console.log('##close_questionario: '+recordid);
+
+        sforce.console.getFocusedSubtabId(closeCAITab);
+        sforce.console.getEnclosingPrimaryTabId(function(primarytab)
+        {
+            console.log('primary: '+primarytab.id );
+            sforce.console.openSubtab(primarytab.id ,'/'+recordid, true,TabName,null);
+        }); 
+    }
+
+    var closeCAITab = function refreshCAITab(result) {
+        console.log('closeCAITab');
+        var tabId = result.id;
+        console.log('tabId: ',tabId);
+        sforce.console.closeTab(tabId);
+    };    
+
+    </script>
+    
+</apex:page>

@@ -1,0 +1,47 @@
+<apex:page id="VFP31_ShowClaims" standardController="Case" >
+    <apex:includeScript value="/soap/ajax/30.0/connection.js"/>
+    <apex:includeScript value="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"/>
+    <apex:includeScript value="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"/>
+    <apex:includeScript value="/support/console/42.0/integration.js"/>
+    <script>
+ 	var showTabId = function showTabId(result) 
+    {
+        var tabId = result.id;
+        console.log('Primary Tab IDs: primaryTabId ' + tabId );
+        sforce.console.refreshPrimaryTabById(tabId , true);
+    };
+
+ 	function showClaims()
+    {
+        var CaseId ="{!$CurrentPage.parameters.Id}";
+        var AccountId = "{!Case.AccountId}"
+		var url = "/apex/LightningGetAllClaims?scontrolCaching=1&id="+CaseId+"&policyNumber=&accountId="+AccountId+"&showPreDenunciations=true&isCaseView=true";
+        var name = '';
+		var label = "{!$Label.VFP31_ShowClaims}";
+
+        if(sforce.console.isInConsole())
+        {
+            sforce.console.getFocusedPrimaryTabId(function(primarytab){
+                 console.log('primary: '+primarytab.id );
+                sforce.console.openSubtab(primarytab.id , url, true, label, null, function(result){
+                }, name);
+            }); 
+        } 
+		else 
+		{
+            window.open(url);
+        }    
+    }
+    
+    function refreshTopPage(idCase){
+        console.log('refreshTopPage');
+        console.log('window.top.location.href: ',window.location.href);
+        window.top.location.href = window.location.href.substring(0,window.location.href.indexOf('.com/')+5)+idCase;
+    }
+
+    </script>
+    
+    <apex:form style="margin-left:50%;">
+        <apex:commandButton id="buttonClaims" oncomplete="showClaims();" value="{!$Label.VFP31_ShowClaims}" />
+    </apex:form>
+</apex:page>

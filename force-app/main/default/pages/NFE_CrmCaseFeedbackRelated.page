@@ -1,0 +1,13 @@
+<apex:page standardController="Case" extensions="NFE_Default_Home_Page_CTRL" cache="false" sidebar="false" showHeader="false">
+    <script>
+    if('{!CaseFeebaclkRelated}'!==''){
+            window.top.location.href ='{!CaseSelf}' ;
+            window.open ('{!CaseFeebaclkRelated}','_blank');
+    }else{    
+        alert('Feedback non trovato');
+        window.top.location.href ='{!CaseSelf}' ;
+    }
+        
+
+    </script> 
+</apex:page>

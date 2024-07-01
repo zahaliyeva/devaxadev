@@ -1,0 +1,14 @@
+.THIS {
+}
+.THIS .title{
+    font-size:18px;
+    margin-bottom: 10px;
+}
+
+.THIS .slds-checkbox_toggle [type=checkbox]:checked+.slds-checkbox_faux_container .slds-checkbox_faux{
+    background: #1b5297;
+}
+
+.THIS .slds-checkbox_toggle [type=checkbox]:checked+.slds-checkbox_faux_container .slds-checkbox_faux:before{
+    background-color: #fff !important;
+}

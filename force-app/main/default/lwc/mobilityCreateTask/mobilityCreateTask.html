@@ -1,0 +1,37 @@
+<template>
+
+                <div class="slds-scope" >
+                    <center><h1><b>Nuovo Task</b></h1></center>
+                    <lightning-combobox
+                        name="progress"
+                        value={value}
+                        placeholder="Selezionare un tipo di record"
+                        options={options}
+                        onchange={handleChange}
+                        disabled={Show} >
+                    </lightning-combobox>
+                </div>
+                <br/>
+                <br/>
+                <div if:true={Show}>
+                    <c-mobility-task record-type={value}
+                                     object-name={objectName}
+                                     type-layout='edit'
+                                     record-default={taskData}
+                                     close-callback={toggleTask} 
+                                     save-callback={OnSave2}
+                                     hide-modal=false
+                    ></c-mobility-task>
+            </div>
+            <div class= "btn-box-action col-12 " >
+                <center>
+                <br/>
+                <button class="btn btn-primary btn-action slds-button slds-button_brand" onclick = {handleClose} style = 'margin-right: 1%'>
+                 Chiudi
+                </button>
+            </center>
+            </div>
+
+
+    
+</template>

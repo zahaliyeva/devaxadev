@@ -1,0 +1,42 @@
+<template>  
+  <div class="slds-grid slds-gutters_xxx-small slds-text-align_right " style="position:relative" > 
+     <div class="slds-col slds-size_2-of-12 marginTopDivLike">     
+      <lightning-button-icon
+        class ={likeClass}
+        alternative-text="Like"
+        icon-name="utility:like"
+        title="Like"
+        selected={likeSelected}
+        onclick={handleLikeClick}
+        variant="bare"
+        disabled={disabled}
+      ></lightning-button-icon>
+    </div>
+    <div class="slds-col slds-size_4-of-12 slds-align-bottom">
+      <small>{likeNumber}</small>
+    </div>
+    
+      <template if:true={spinner}>     
+             <lightning-spinner          
+                alternative-text="Loading"
+                size="small"
+              ></lightning-spinner>               
+      </template>   
+  
+    <div class="slds-col slds-size_2-of-12 marginTopDivDisLike ">     
+      <lightning-button-icon        
+        class={dislikeClass}
+        alternative-text="Dislike"
+        icon-name="utility:dislike"
+        title="Dislike"
+        selected={dislikeSelected}
+        onclick={handleDislikeClick}
+        variant="bare"
+        disabled={disabled}
+      ></lightning-button-icon>
+    </div>
+    <div class="slds-col slds-size_4-of-12 slds-align-bottom">
+      <small>{dislikeNumber}</small>
+    </div>
+  </div>
+</template>

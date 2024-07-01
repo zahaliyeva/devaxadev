@@ -1,0 +1,212 @@
+<template>
+  <div class = "spinner">
+  <template if:true={showSpinner}>
+    <lightning-spinner alternative-text="Loading" size="medium" style = "position:fixed"></lightning-spinner>
+  </template>
+</div>
+  <article class="slds-card slds-has-bottom-magnet">
+    
+    <div class="slds-section slds-is-open">
+      <h3 class="slds-section__title slds-theme_shade">
+        <span class="slds-truncate slds-p-horizontal_small" title="Section Title">Informazioni Cliente</span>
+      </h3>
+      <template if:false={showError}>
+      <div style="margin:10px">
+          <template if:false={InitWrapper.needSearch}>
+
+
+            <div aria-hidden="false" class="slds-section__content">
+              <div class="slds-form__row">
+                <div class="slds-form__item" role="listitem">
+                  <div class="slds-form-element slds-form-element_readonly slds-form-element_stacked">
+                    <span class="slds-form-element__label">Nome</span>
+                    <div class="slds-form-element__control">
+                      <div class="slds-form-element__static">{InitWrapper.Name}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="slds-form__row">
+                <div class="slds-form__item" role="listitem">
+                  <div class="slds-form-element slds-form-element_readonly slds-form-element_stacked">
+                    <span class="slds-form-element__label">Codice Fiscale</span>
+                    <div class="slds-form-element__control">
+                      <div class="slds-form-element__static">{InitWrapper.FiscalIdListView}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="slds-text-align_center" style="margin-top: 20px;">
+              <button class="slds-button slds-button_neutral" onclick={handleShowCases}>Lista Case</button>
+              <button class="slds-button slds-button_neutral" onclick={handleCreate}>Crea Case</button>
+              <button class="slds-button slds-button_neutral" onclick={handleShowSearch}>Nuova Ricerca</button>
+              <!-- <button class="slds-button slds-button_neutral" onclick="{!c.onRedirectNewCase}">Crea Case Rapido</button> -->
+              <!-- New Case - START -->
+              <!-- New Case - END -->
+            </div>
+
+          </template>
+
+          <template if:true={InitWrapper.needSearch}>
+
+            <div aria-hidden="false" class="slds-section__content">
+              <div class="slds-form__row">
+                <div class="slds-form__item" role="listitem">
+                  <div class="slds-form-element slds-form-element_edit slds-form-element_stacked">
+                    <div class="slds-form-element__control">
+                      <lightning-input name='FirstName' id="form-element-01" value={InitWrapper.FirstName}
+                        onchange={handleChange} label="Nome"></lightning-input>
+                    </div>
+                  </div>
+                </div>
+                <div class="slds-form__item" role="listitem">
+                  <div class="slds-form-element slds-form-element_edit slds-form-element_stacked">
+                    <div class="slds-form-element__control">
+                      <lightning-input name='LastName' id="form-element-02" value={InitWrapper.LastName}
+                        onchange={handleChange} label="Cognome/Ragione Sociale"></lightning-input>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="slds-form__row">
+                <div class="slds-form__item" role="listitem">
+                  <div class="slds-form-element slds-form-element_edit slds-form-element_stacked">
+                    <div class="slds-form-element__control">
+                      <lightning-input name='FiscalId' id="form-element-03" value={InitWrapper.FiscalId}
+                        onchange={handleChange} label="Codice Fiscale"></lightning-input>
+                    </div>
+                  </div>
+                </div>
+                <div class="slds-form__item" role="listitem">
+                  <div class="slds-form-element slds-form-element_edit slds-form-element_stacked">
+                    <div class="slds-form-element__control">
+                      <lightning-input name='InsurancePolicy' id="form-element-04" value={InitWrapper.InsurancePolicy}
+                        onchange={handleChange} label="Numero Polizza"></lightning-input>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="slds-form__row">
+                <div class="slds-form__item" role="listitem">
+                  <div class="slds-form-element slds-form-element_edit slds-form-element_stacked">
+                    <div class="slds-form-element__control">
+                      <lightning-input name='PIva' id="form-element-05" value={InitWrapper.PIva}
+                        onchange={handleChange} label="Partita Iva"></lightning-input>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="slds-text-align_center" style="margin-top: 20px;">
+                <button class="slds-button slds-button_neutral" onclick={handleSearch}>Cerca</button>
+                <!-- <button class="slds-button slds-button_neutral" onclick="{!c.onRedirectNewCase}">Crea Case Rapido</button> -->
+                <!-- New Case - START -->
+                <!-- New Case - END -->
+              </div>
+            </div>
+
+
+          </template>
+
+      </div>
+    </template>
+    <template if:true={showError}>
+      <center>
+        <p>Si è verificato un errore. Riprovare più tardi!</p>
+      </center>
+    </template>
+    </div>
+  </article>
+  <template if:true={showAgents}>
+    <article class="slds-card slds-has-bottom-magnet">
+      <!-- Header - START -->
+      <div class="slds-section slds-is-open">
+        <h3 class="slds-section__title slds-theme_shade">
+          <span class="slds-truncate slds-p-horizontal_small" title="Section Title">Lista Clienti</span>
+        </h3>
+        <div aria-hidden="false" class="slds-section__content">
+          <!-- Header - END -->
+          <!-- Body - START -->
+          <div class="slds-card__body slds-card__body_inner scroll">
+            <!-- Account Result - START -->
+            <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+              <thead>
+                <tr class="slds-line-height_reset">
+                  <th scope="col">Nome Cliente</th>
+                  <th scope="col">Codice Fiscale</th>
+                  <th scope="col">Agenzia</th>
+                </tr>
+              </thead>
+              <tbody>
+                <template for:each={AgentsList} for:item="agentData">
+                  <tr key={agentData.account.Id}>
+                    <td>{agentData.account.Name}</td>
+                    <td>{agentData.account.Codice_fiscale_ListView__c}</td>
+                    <td>{agentData.account.AAI_Agency__r.Name}</td>
+                    <td>
+                      <button class="slds-button slds-button_neutral" onclick={handleShowCases}
+                        data-userid={agentData.account.Id}>Lista Case</button>
+                      <button class="slds-button slds-button_neutral" onclick={handleCreate}
+                        data-userid={agentData.account.Id}>Crea Case</button>
+                      <!--<button class="slds-button slds-button_neutral" onclick="{!c.onViewClaims}" data-account-id="{!agentData.Id}">Visualizza Sinistri</button>-->
+                    </td>
+                  </tr>
+                </template>
+              </tbody>
+            </table>
+            <!-- Account Result - END -->
+          </div>
+        </div>
+      </div>
+      <!-- Body - END -->
+    </article>
+  </template>
+  <template if:true={showCases}>
+    <article class="slds-card slds-has-bottom-magnet">
+      <div class="slds-section slds-is-open">
+        <h3 class="slds-section__title slds-theme_shade">
+          <span class="slds-truncate slds-p-horizontal_small" title="Section Title">Lista Case</span>
+        </h3>
+        <div aria-hidden="false" class="slds-section__content">
+          <div class="slds-col slds-size_12-of-12">
+            <!-- Header - START -->
+            <!-- Header - END -->
+            <!-- Body - START -->
+            <div class="slds-card__body slds-card__body_inner scroll">
+              <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                <thead>
+                  <tr class="slds-line-height_reset">
+                    <th scope="col">Numero Case</th>
+                    <th scope="col">Data Creazione</th>
+                    <th scope="col">Stato</th>
+                    <th scope="col">Oggetto</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <template for:each={CaseList} for:item="caseRecord">
+                    <tr key={caseRecord.Id}>
+                      <td>{caseRecord.CaseNumber}</td>
+                      <td>{caseRecord.CreatedDateString}</td>
+                      <td>{caseRecord.Status}</td>
+                      <td>{caseRecord.Subject}</td>
+                      <td>
+                        <button class="slds-button slds-button_neutral" onclick={handleAssociate}
+                          data-caseid={caseRecord.Id}>Associa</button>
+                        <button class="slds-button slds-button_neutral" onclick={handleRedirect}
+                          data-caseid={caseRecord.Id}>Visualizza</button>
+                        <!--button class="slds-button slds-button_neutral" onclick="{!c.onGoToCase}" data-case-id="{case.Id}" data-case-number="{case.CaseNumber}">Seleziona</button-->
+                      </td>
+                    </tr>
+                  </template>
+                </tbody>
+              </table>
+            </div>
+            <!-- Body - END -->
+
+          </div>
+        </div>
+      </div>
+    </article>
+  </template>
+
+</template>

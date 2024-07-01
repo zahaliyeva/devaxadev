@@ -1,0 +1,228 @@
+<apex:page standardController="Campaign" extensions="CampaignMembersViewCTRL" tabStyle="Campaign" sidebar="false" showHeader="true">
+    <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" />
+    <apex:includeScript value="/soap/ajax/33.0/connection.js"/>
+    <apex:includeScript value="/soap/ajax/33.0/apex.js"/>
+    
+  <style type="text/css">
+        .custPopup{
+            background-color: white;
+            border-width: 2px;
+            border-style: solid;
+            z-index: 9999;
+            left: 50%;
+            padding:10px;
+            position: absolute;
+            /* These are the 3 css properties you will need to change so the popup 
+            displays in the center of the screen. First set the width. Then set 
+            margin-left to negative half of what the width is. You can add 
+            the height property for a fixed size pop up if you want.*/
+            width: 500px;
+            margin-left: -250px;
+            top:350px;
+        }
+        .popupBackground{
+            background-color:black;
+            opacity: 0.20;
+            filter: alpha(opacity = 20);
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 9998;
+        }
+        .bPageBlock {
+            background-color: white !important;
+            border: none !important;
+        }
+
+        .pbSubheader {
+            background-color: transparent !important;
+            border-width: 2px 0 0 !important;
+            border-style: solid !important;
+            border-color: #e3b14f !important;
+            color: #27282e !important;
+            padding: 4px 3px !important;
+        }
+        html .brandTertiaryBgr {
+            background-color: transparent !important;
+        }
+        .pbSubheader .hideListButton {
+            background: transparent url('/img/alohaSkin/twisty_sprite.png') 0 -11px no-repeat !important;
+        }
+        .pbSubheader .showListButton {
+            background: transparent url('/img/alohaSkin/twisty_sprite.png') 0 0 no-repeat !important;
+        }
+
+    </style>
+    
+    <apex:PageMessages id="messages"/>
+  
+    <script type="text/javascript">
+    var TotSelected=0;
+
+        function setFocusOnLoad() {} //function to avoid calendar popping up on pageload
+        
+        function refreshContactPopoUp(){
+            refreshExecuteQuery();
+        }
+        
+        function doCheckboxChange(cb){
+            console.log('Testing onclick');
+            console.log('TotSelected before update');
+            console.log(TotSelected);
+            console.log('cb.checked');
+            console.log(cb.checked);
+            
+            if(cb.checked==true){
+                if (TotSelected>0) {
+                    TotSelected=TotSelected+1;
+                } else {
+                    TotSelected=1;
+                }
+                console.log('TotSelected after update');
+                console.log(TotSelected);
+            } else {
+                if (TotSelected>0) {
+                    TotSelected=TotSelected-1;
+                } else {
+                    TotSelected=0;
+                }
+                console.log('TotSelected after update');
+                console.log(TotSelected);
+            }
+             document.getElementById('counting').innerHTML='['+TotSelected+' record selezionati]';
+
+        }
+        
+        
+        function cvCheckAllOrNone(allOrNoneCheckbox) {
+
+    // Find parent table
+    var container = allOrNoneCheckbox;
+    while (container.tagName != "TABLE") {
+        container = container.parentNode;
+    }
+
+    // Switch all checkboxes
+    var inputs = container.getElementsByTagName("input");
+    var checked = allOrNoneCheckbox.checked;
+    TotSelected=0;
+    for (var i = 0; i < inputs.length; i++) { 
+        var input = inputs.item(i);
+        if (input.type == "checkbox") {
+            if (input != allOrNoneCheckbox) {
+                input.checked = checked;
+                if (checked) {
+                    TotSelected=TotSelected+1;
+                }
+            }
+        }
+    }
+                 document.getElementById('counting').innerHTML='['+TotSelected+' record selezionati]';
+
+}        
+        
+        
+        function loading(val, id) {
+            if (val) {
+                document.getElementById(id).style.display = 'block';
+                console.log(document.getElementById(id).innerHTML);
+                //document.getElementById('contentLoaded').style.display = 'none';
+            } else {
+                document.getElementById(id).style.display = 'none';
+                //document.getElementById('contentLoaded').style.display = 'block';
+            }
+        }
+        
+        
+ 
+    </script>
+
+    <apex:form >
+
+    <apex:sectionHeader title="Gestione nodi" subtitle="Estensione visibilità" description="{!CountRequiringVisibility} membri campagna non sono visibili all’utente <b>{!usrToassign.Name}</b>. Procedere con l’estensione di visibilità o premere «Torna alla Campagna»  per proseguire con un’altra assegnazione"/>
+        <apex:pageblock >
+
+        
+        
+        
+        
+        
+        <apex:pageblockSection title="Seleziona Nodo" columns="1" collapsible="false">
+                   <apex:pageBlockSectionItem >
+                        <apex:outputLabel for="nodes" value="Seleziona un nodo visibile a {!usrToassign.Name}" />
+                            <apex:selectList id="nodes" value="{!SelectedNodeVisibility}" size="1" >
+                                <apex:selectOptions value="{!NodesForVisibility}"/>
+                            </apex:selectList>
+                    </apex:pageBlockSectionItem>
+
+
+            <apex:pageBlockSectionItem dataStyle="text-align:center;" >
+                <apex:outputPanel >
+                    <apex:commandButton style="width:20vw"  value="Conferma" action="{!ExtendVisibility}" rerender="recTable,selected,messages" status="EstensioneStatus"/>
+                    <apex:commandButton style="width:20vw"  value="Torna alla campagna" action="{!goToCampaignPage}"/>
+                </apex:outputPanel>
+            </apex:pageBlockSectionItem>
+            
+                <apex:pageBlockSectionItem >
+
+                     <apex:actionStatus id="EstensioneStatus" onstart="loading(true,'contentLoadingFilters')" onstop="loading(false,'contentLoadingFilters')">
+                        <apex:facet name="start">
+                            <apex:outputPanel >
+                                <div id="contentLoadingFilters" style="display:none;">
+                                    <div style="text-align: center;">
+                                        Estensione visibilità in corso...
+                                        <br/>
+                                        <img src="/img/loading.gif" alt="Caricamento..." />
+                                    </div>
+                                </div>
+                            </apex:outputPanel>
+                        </apex:facet>
+                    </apex:actionStatus>
+                </apex:pageBlockSectionItem>
+
+                </apex:pageblockSection>
+
+        <apex:pageblockSection title="I clienti selezionati" columns="1" collapsible="false">
+            <apex:pageBlockTable id="recTable"  value="{!cmNotVisible}" var="rec" >
+                
+                <apex:column >
+                    <apex:facet name="header">
+                        <apex:inputCheckbox value="{!selectedAllpicksVisibility}" onclick="cvCheckAllOrNone(this)"/>
+                    </apex:facet>
+                    <apex:inputCheckbox value="{!rec.IsSelected}" onchange="doCheckboxChange(this)"/>
+               </apex:column> 
+               <!--
+               <apex:column >
+                    <apex:facet name="header">NDG</apex:facet>
+                    <apex:outputField value="{!rec.cm.Contact.Account.NDG__c}" rendered="{!NOT(ISBLANK(rec.cm.ContactId))}" />
+                </apex:column>
+               -->
+               <apex:column >
+                    <apex:facet name="header">Cliente</apex:facet>
+                    <apex:outputField value="{!rec.cm.LeadId}" rendered="{!ISBLANK(rec.cm.ContactId)}"/>
+                    <apex:outputField value="{!rec.cm.ContactId}" rendered="{!NOT(ISBLANK(rec.cm.ContactId))}" />
+                </apex:column>
+                
+               <apex:column >
+                    <apex:facet name="header">Nodi</apex:facet>
+                    <apex:outputField value="{!rec.cm.contact.Account.Nodes__c}" rendered="{!NOT(ISBLANK(rec.cm.ContactId))}"  />
+                </apex:column>
+<!-- removed as feedback from test on date 21/07
+                <apex:column >
+                    <apex:facet name="header">Titolare</apex:facet>
+                    <apex:outputField value="{!rec.cm.Owner__c}" />    
+                </apex:column>
+-->
+               <apex:column >
+                    <apex:facet name="header">Esito</apex:facet>
+                    <apex:outputText value="{!rec.Result}" />
+                </apex:column>
+            </apex:pageBlockTable>
+           <!-- <apex:outputPanel id="selected">{!cmNotVisibleToExtend}</apex:outputPanel>-->
+              <div id="counting">[0 record selezionati]</div>
+        </apex:pageblockSection>
+</apex:pageblock>
+    </apex:form>
+</apex:page>

@@ -1,0 +1,228 @@
+<aura:component  controller="LghtCallProcessingController">
+	
+	<aura:handler name="init" value="{!this}" action="{!c.onInit}"/>
+
+	<aura:attribute name="urlParameter" type="Object"/>
+	<aura:attribute name="accountData" type="Object"/>
+	<aura:attribute name="recordType" type="Object" />
+	<aura:attribute name="recordTypeCase" type="Object" />
+    <aura:attribute name="caseData" type = "Object"/>
+
+	<aura:attribute name="listCategory" type="Array" />
+	<aura:attribute name="listSubCategory" type="Array" />
+	<aura:attribute name="categoryContext" type="Object" />
+	<aura:attribute name="showCategoryForm" type="Boolean" />
+
+	<aura:attribute name="listAgent" type="Array" />
+	<aura:attribute name="listAccount" type="Array" />
+	<aura:attribute name="selectAccount" type="Object"/>
+	<aura:attribute name="listCase" type="Array" />
+	<aura:attribute name="selectCase" type="Object"/>
+	<aura:attribute name="spinner" type="Boolean" default="true"/>
+	<aura:attribute name="showNewCase" type="Boolean"/>
+	<aura:attribute name="showAllClaims" type="Boolean"/>
+
+	<aura:attribute name="visibilities" type="Object"/>
+	<aura:attribute name="visibilitiesCallback" type="Object"/>
+
+	<aura:registerEvent name="tabclosing" type="c:tabclosing" />
+	<aura:registerEvent name="lghtRedirectNew" type="c:lghtRedirectNew" />
+
+	<aura:if isTrue="{!v.spinner}">
+		<lightning:spinner alternativeText="Loading" size="medium" />
+	</aura:if>
+
+	<aura:if isTrue="{!v.visibilities.GetAllClaims}">
+		<c:lghtGetAllClaimsModal 
+		    source="Phone"
+			accountId="{!v.selectAccount.Id}"
+			visibilities="{!v.visibilitiesCallback}"
+		/>
+	</aura:if>
+	<aura:if isTrue="{!v.showCategoryForm}">
+		<section role="dialog" tabindex="-1" aria-labelledby="modal-select-category" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open slds-modal_large">
+			<div class="slds-modal__container">
+				<header class="slds-modal__header">
+					<h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Crea Case</h2>
+					<lightning:buttonIcon iconName="utility:close"
+						onclick="{!c.onCloseCategoryForm}"
+					 	alternativeText="close"
+					 	variant="bare-inverse"
+					 	class="slds-modal__close"/>
+				</header>
+				<div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+					<form onchange="{!c.onChangeCategory}">
+						<div class="slds-grid slds-wrap">
+							<div class="slds-col slds-size_6-of-12">
+								<div class="slds-form-element">
+									<label class="slds-form-element__label" for="select-category">Categoria</label>
+									<div class="slds-form-element__control">
+										<div class="slds-select_container">
+											<select class="slds-select" id="select-category">
+												<aura:iteration items="{!v.listCategory}" var="category">
+													<option value="{!category.value}">{!category.label}</option>
+												</aura:iteration>
+											</select>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="slds-col slds-size_6-of-12">
+								<div class="slds-form-element">
+									<label class="slds-form-element__label" for="select-category">Sotto Categoria</label>
+									<div class="slds-form-element__control">
+										<div class="slds-select_container">
+											<select class="slds-select" id="select-category">
+												<aura:iteration items="{!v.listSubCategory}" var="category">
+													<option value="{!category.value}">{!category.label}</option>
+												</aura:iteration>
+											</select>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="slds-col slds-size_12-of-12 slds-text-align_center">
+								<button class="slds-button slds-button_neutral" onclick="{!c.onRedirectNewCase}">Crea</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</section>
+		<div class="slds-backdrop slds-backdrop_open"></div>
+	</aura:if>
+
+	
+		<div class="lght-call-processing">
+			<div class="slds-grid slds-wrap">
+				<!-- Section Search - START -->
+				<div class="slds-col slds-size_12-of-12">
+					<article class="slds-card slds-has-bottom-magnet">
+						<!-- Header - START -->
+						<div class="slds-card__header slds-grid">
+							Ricerca
+						</div>
+						<!-- Header - END -->
+						<!-- Body - START -->
+						<div class="slds-card__body slds-card__body_inner">					
+                                <lightning:recordEditForm aura:id="createCaseForm" objectApiName="Case"  onsubmit="{!c.handleSubmit}">
+								<div class="slds-grid slds-wrap">
+									<!-- FIELD - START -->
+									<div class="slds-col slds-size_6-of-12">
+										<div class="slds-form-element">
+										<lightning:inputField aura:id="InputCode" fieldName="Partner_Code__c" variant="label-stacked" onchange="{!c.onChange}" value="{!v.caseData.Partner_Code__c}"/>
+										</div>
+									</div>
+									<!-- FIELD - END -->
+									<!-- FIELD - START ->
+									<div class="slds-col slds-size_6-of-12">
+										<div class="slds-form-element">
+											<lightning:inputField aura:id="InputLastName" fieldName="LastName" variant="label-stacked" onchange="{!c.onChange}"/>
+										</div>
+									</div>
+                                    <!- FIELD - END ->									
+                                    <!- FIELD - START ->
+                                    <div class="slds-col slds-size_6-of-12">
+                                        <div class="slds-form-element">
+                                            <lightning:inputField aura:id="InputPhone" fieldName="Phone" variant="label-stacked" onchange="{!c.onChange}"/> 
+                                        </div>
+                                    </div>
+                                    <!- FIELD - END ->
+                                    <!- FIELD - START ->
+                                    <div class="slds-col slds-size_6-of-12">
+                                        <div class="slds-form-element">
+                                            <lightning:inputField aura:id="InputMatricola" fieldName="Matricola__c" variant="label-stacked" onchange="{!c.onChange}"/>
+                                        </div>
+                                    </div>
+									<!- FIELD - END -->		
+								</div>
+							</lightning:recordEditForm>
+
+							<div class="slds-text-align_center" style="margin-top: 10px;">
+								<button class="slds-button slds-button_neutral" onclick="{!c.onFind}">Cerca</button>
+								<!-- <button class="slds-button slds-button_neutral" onclick="{!c.onRedirectNewCase}">Crea Case Rapido</button> -->
+								<!-- New Case - START -->
+								<button class="slds-button slds-button_neutral" onclick="{!c.onNewCase}">Crea Nuovo Case senza Anagrafica</button>
+								
+								<!-- New Case - END -->
+							</div>
+						</div>
+						<!-- Body - END -->
+					</article>
+				</div>
+                
+				<!-- Section Search - END -->				        
+                <!-- Account Result - START -->
+                <aura:if isTrue="{!v.listCase.length == 0}">
+                    <div class="slds-col slds-size_12-of-12">
+                        <article class="slds-card slds-has-bottom-magnet">
+                            <!-- Header - START -->
+                            <div class="slds-card__header slds-grid">
+                                Seleziona Case
+                            </div>
+                            <!-- Header - END -->
+                            <!-- Body - START -->
+                            <div class="slds-card__body slds-card__body_inner">
+                                Nessun Case Trovato
+                            </div>
+                            <!-- Body - END -->
+                        </article>
+                    </div>
+                </aura:if>
+                <aura:if isTrue="{!v.listCase.length > 0}">
+                    <div class="slds-col slds-size_12-of-12">
+                        <article class="slds-card slds-has-bottom-magnet">
+                            <!-- Header - START -->
+                            <div class="slds-card__header slds-grid">
+                                Seleziona Case
+                            </div>
+                            <!-- Header - END -->
+                            <!-- Body - START -->
+                            <div class="slds-card__body slds-card__body_inner">
+                                <!-- Account Result - START -->
+                                <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                                    <thead>
+                                        <tr class="slds-line-height_reset">
+                                            <th scope="col">Numero Case</th>
+                                            <th scope="col">Data Creazione</th>
+                                            <th scope="col">Stato</th>
+                                            <th scope="col">Nome e Cognome Partner</th>
+											<th scope="col">Codice Partner</th>
+											<th scope="col">Indirizzo Partner</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <aura:iteration items="{!v.listCase}" var="case">
+                                            
+                                            <tr>
+                                                <td>{!case.CaseNumber}</td>
+                                                <td>{!case.CreatedDateString}</td>
+                                                <td>{!case.Status}</td>
+                                                <td>{!case.Partner_Name__c}</td>
+                                                <td>{!case.Partner_Code__c}</td>
+                                                <td>{!case.Partner_Address__c}</td>
+                                                <td>
+                                                    
+                                                    <button class="slds-button slds-button_neutral" onclick="{!c.onGoToCase}" data-case-id="{!case.Id}" data-case-number="{!case.CaseNumber}">Seleziona</button>
+                                                    <button class="slds-button slds-button_neutral" onclick="{!c.onRedirectNewCase}" data-case-id="{!case.Id}">Crea Case</button>
+                                                    
+                                                </td>
+                                            </tr>
+                                        
+                                        </aura:iteration>
+                                    </tbody>
+                                </table>
+                                <!-- Account Result - END -->
+                            </div>
+                            <!-- Body - END -->
+                        </article>
+                    </div>
+
+                    
+                </aura:if>
+                <!-- Account Result - END -->          
+							
+			</div>
+		</div>
+	
+</aura:component>

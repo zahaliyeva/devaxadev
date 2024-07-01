@@ -1,0 +1,46 @@
+<aura:component controller="LiveAgentChatCmpCTRL" implements="flexipage:availableForAllPageTypes" access="global">
+    <aura:dependency resource="markup://force:navigateToSObject" type="EVENT"/>
+    <aura:dependency resource="force:navigateToURL" type="EVENT"/>   
+    <aura:attribute name="organizationId" type="String" default=""/>
+    <aura:attribute name="deploymentUrl" type="String"  default="" />
+    <aura:attribute name="endpoint" type="String"  default=""/>
+    <aura:attribute name="deploymentId" type="String"  default=""/>
+    <aura:attribute name="chatButtontId" type="String"  default=""/>
+    <aura:attribute name="onlineText" type="String"  required="true" default=""/>
+    <aura:attribute name="offlineText" type="String"  required="true" default=""/>
+    <aura:attribute name="isInvalidInput" type="Boolean"  />
+    <aura:attribute name="userSessionData" type="Boolean" default="false"/>
+    
+    
+    <aura:attribute name="previousIsLiveAgentOnline" type="Boolean" />
+    <aura:attribute name="isLiveAgentOnline" type="Boolean" default="false"/>
+    
+    
+    <aura:attribute name="contact" type="Contact"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    
+    <aura:if isTrue="{!v.isInvalidInput}">
+        <ui:message title="Warning" severity="warning" closable="false">
+            Live Agent Chat Button configuration data is empty.
+        </ui:message>
+    </aura:if>
+    <!-- parameters are ok -->
+    <c:WrapScriptsCmp paramURL="{!v.deploymentUrl}" />
+    <div id="btnContainer" class="selfServiceContactSupport forceCommunityCreateRecordButton">
+        <div class="sButton">
+            
+            <!--<button  aura:id ="btONline" id="btONline" class="uiButton contactSupport laBtn toggle"  onclick="{!c.startChat}">-->
+       <button  aura:id ="btONline" id="btONline" class="slds-button slds-button-brand toggle contactSupport"  onclick="{!c.startChat}">         
+            {!v.onlineText}
+            </button>
+            
+            <button  aura:id ="btOFFline" id="btOFFline" class="slds-button slds-button-brand contactSupport" disabled="true">         
+
+       <!--     <button  aura:id ="btOFFline"  id="btOFFline" class="uiButton contactSupport laBtn disabled"  > -->
+                {!v.offlineText}
+            </button>
+            
+        </div>
+    </div>
+</aura:component>

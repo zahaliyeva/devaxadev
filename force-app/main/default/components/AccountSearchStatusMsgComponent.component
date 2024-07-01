@@ -1,0 +1,16 @@
+<apex:component >
+<apex:stylesheet value="{!URLFOR($Resource.PopIn,'Style1.css')}"/>
+<apex:includeScript value="{!URLFOR($Resource.PopIn,'popin.js')}"/>
+<apex:actionStatus onstart="showMsg('waitmsg',1)" onstop="showMsg('waitmsg',0)" id="status001"/>
+         
+    <div id="waitmsg" style="visibility:hidden">
+        <div class="overlay1">
+            <div class="smallbox msgBx" id="addApp">
+                <img height="16" width="16" title="Processing..." alt="Processing..." src="/img/loading.gif" style="margin-top :17px;"/>
+                <span class="loadingText"><b>Loading...</b></span>
+            </div>
+        </div>
+        <div class="overback"></div>         
+    </div>
+    
+</apex:component>

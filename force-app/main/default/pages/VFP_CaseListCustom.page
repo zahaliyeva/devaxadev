@@ -1,0 +1,15 @@
+<apex:page >
+   <apex:includeLightning /> 
+	<apex:includeScript value="/support/console/46.0/integration.js"/>
+
+	<div class="slds-scope">
+		<div id="CaseListCustomComponent"></div>
+	</div>
+
+<script> 
+      $Lightning.use("c:CaseListCustomApp", function() {
+        $Lightning.createComponent("c:CaseListCustom", null, "CaseListCustomComponent");      
+    });
+    
+</script>
+</apex:page>

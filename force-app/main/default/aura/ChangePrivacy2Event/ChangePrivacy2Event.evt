@@ -1,0 +1,5 @@
+<aura:event type="APPLICATION" description="The event fires when Privacy 2 from Consensi section change">
+
+<aura:attribute name="changedPrivacy2" type="Map"/>
+
+</aura:event>

@@ -1,0 +1,42 @@
+<template>
+  <div class="slds-scope">
+    <div class = "slds-float_right slds-p-left_small" style = "position: relative; top:0.2rem">
+      <a href="#" aria-describedby="help" onmouseover={onHover} >
+        <span class="slds-icon_container slds-icon-utility-info">
+          <svg
+            class="
+              slds-icon slds-icon slds-icon_xx-small
+              slds-icon-text-default
+            "
+            aria-hidden="true"
+          >
+            <use
+              xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#info"
+            ></use>
+          </svg>
+          <span class="slds-assistive-text">Click here to learn more</span>
+        </span>
+      </a>
+      <template if:true={showPop}>
+        
+        <section aria-describedby="dialog-body-id-107" aria-label="Dialog Title" class="slds-popover_large slds-popover slds-nubbin_left-top" role="dialog" style="position: absolute;  left: 2.5rem; top: -1.5rem">
+          <button class="slds-button slds-button_icon slds-button_icon-small slds-float_right slds-popover__close" title="Close dialog" onclick={onOut}>
+            <svg class="slds-button__icon" aria-hidden="true">
+              <use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#close"></use>
+            </svg>
+            <span class="slds-assistive-text">Close dialog</span>
+          </button>
+            <div class="slds-popover__body" id="dialog-body-id-107">
+              <div class="slds-media">
+                <div class="slds-media__body">
+                    <lightning-formatted-rich-text class = 'message' value={text}>
+                    </lightning-formatted-rich-text>
+                </div>
+              </div>
+            </div>
+          </section>
+        
+      </template>
+    </div>
+  </div>
+</template>

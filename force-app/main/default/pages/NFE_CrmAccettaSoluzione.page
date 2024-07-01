@@ -1,0 +1,6 @@
+<apex:page standardController="Case" extensions="NFE_Default_Home_Page_CTRL" cache="false" sidebar="false" showHeader="false">
+    
+    <script>
+          window.top.location.href = '{!AccettaSoluzionePath}';
+    </script>
+</apex:page>

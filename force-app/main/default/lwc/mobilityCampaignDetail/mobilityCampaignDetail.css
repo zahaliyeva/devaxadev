@@ -1,0 +1,46 @@
+.detail-header {
+  margin-bottom: 35px;
+}
+
+.detail-top {
+  border-top: 1px solid #e5e5e5;
+}
+
+.detail-row {
+  margin: 0 15px !important;
+}
+
+.btn-detail {
+  text-align: left;
+  font-weight: 700;
+  font-size: 14px;
+  text-transform: uppercase;
+  text-align: center;
+  vertical-align: middle;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.btn-detail.btn-edit {
+  margin-top: 38px;
+  right: 0;
+  position: absolute;
+  z-index: 2;
+}
+
+.btn-detail.btn-border {
+  border: 0;
+}
+
+.detail-menu-bottom {
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.edit {
+  position: absolute;
+  right: 15px;
+  top: 15px;
+  background: transparent;
+  z-index: 5;
+}

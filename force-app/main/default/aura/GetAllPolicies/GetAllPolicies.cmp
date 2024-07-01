@@ -1,0 +1,593 @@
+<aura:component implements="flexipage:availableForAllPageTypes" access="global" controller="LightningGetAllPoliciesCTRL" >
+    
+    <!-- *** ATTRIBUTE BLOCK *** -->
+    <aura:attribute name="jsDebug" type="Boolean"/>
+	 
+    <aura:attribute name="isLoading" type="Boolean" default="false"/>
+    <aura:attribute name="mouseStart" type="String" />
+	<aura:attribute name="oldWidth" type="String" />
+	<aura:attribute name="mode" type="String"/>
+	<aura:attribute name="fiscalCode" type="String"/>
+	<aura:attribute name="startDate" type="String" />
+    <aura:attribute name="accountId" type="String"/>
+    <aura:attribute name="policies" type="object" />
+    <aura:attribute name="isSuccess" type="Boolean" default="true" />
+    <aura:attribute name="errorMessage" type="String"  />
+    <aura:attribute name="sortDirection" type="String" default="desc" />
+    <aura:attribute name="sortIconName" type="String" default="utility:chevronup" />
+    <aura:attribute name="title" type="String" default="Polizze sottoscritte" />
+    <aura:attribute name="policiesMap" type="Map" default="{}" />
+    <aura:attribute name="garanzie" type="object" />
+    <aura:attribute name="errorMessageGaranzie" type="String" />
+    <aura:attribute name="isErrorGaranzie" type="Boolean" default="false" />
+    <aura:attribute name="clienteGOLD" type="Boolean" default="false" />
+    <aura:attribute name="showToast" type="Boolean" default="false" />
+    <aura:attribute name="typeToast" type="String"  />
+    <aura:attribute name="messageToast" type="String"  />
+    <aura:attribute name="selectedPolicy" type = "Object"/>
+    <!--MOSCATELLI_M 18/03/2019: AXA Assistance -START -->
+    <aura:attribute name="isSinistri" type="Boolean" default="false"/>
+    <aura:attribute name="UsrProfile" type="String"/>
+	<aura:attribute name="CaseId" type="String"/>
+	<aura:attribute name="isSchedaCliente" type="Boolean" default="false"/>
+	<aura:attribute name="tipoPolizza" type="String[]"/>
+	<aura:attribute name="portfolio" type="String" />
+    <!--MOSCATELLI_M 18/03/2019: AXA Assistance -END -->
+	<!--*-+ 27-12-2022: idcrm028 "Targa" dell'oggetto  -->
+	<aura:attribute name="targa" type="String" />
+    
+    <!-- *** ATTRIBUTE BLOCK *** -->
+	<!-- *** HANDLER BLOCK *** -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <!-- *** HANDLER BLOCK *** -->
+    <!-- *** EVENT BLOCK *** -->
+    <aura:registerEvent name="refreshOpener" type="c:refreshOpener" />
+    <aura:registerEvent name="associatePolicyToQuestionarioCA" type="c:associatePolicyToQuestionarioCA"/>
+    <!-- *** EVENT BLOCK *** -->
+
+	<div class="fontSize" style="height: 300px">
+		<aura:if isTrue="{!v.isSuccess}">    
+			<aura:if isTrue="{!not(empty(v.policies))}">
+				<lightning:card class="slds-p-vertical_x-small borderNone slds-p-top_none" >
+				    <!--
+	        		<aura:set attribute="title">
+	            		<lightning:icon iconName="custom:custom26" size="small" class="icnSandyBrown" variant="inverse"/>
+	           				&nbsp;{! v.title }
+        			</aura:set> -->
+        			<aura:set attribute="actions">
+        				<aura:if isTrue="{!v.clienteGOLD}">
+       						<div style="display: inline-grid; margin: 0px 20px 0px 0px;">   
+	        					<lightning:icon class="goldOnTransparent" iconName="standard:reward" alternativeText="Polizze Gold" size="large"/>
+	        					<h1 style="font-size: 1em; vertical-align: middle; font-weight:bold;  color: rgb(0, 73, 229);">Polizza Gold</h1>
+        					</div>
+        				</aura:if>
+            			<!-- <lightning:button variant="Neutral" label="Chiudi" title="Chiudi" onclick="{! c.Cancel }"/> -->
+        			</aura:set>
+        			
+					<table aria-multiselectable="true" class="caringAngelTable tableHeader slds-table slds-table_bordered slds-table_fixed-layout slds-table_resizable-cols" role="grid">
+						<thead>
+			  				<tr class="slds-line-height_reset">
+			    				<th aria-label="Id" aria-sort="none" class=" slds-is-resizable slds-is-sortable" scope="col">
+			      					<a id="Id" class="slds-th__action slds-text-link_reset"  role="button" tabindex="-1" >
+			        					<span class="slds-assistive-text" name="Id">Ordina per: </span>
+			        					<div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate"  >
+			          						<span class="slds-truncate normalWhiteSpace"  title="Numero di polizza">Numero di polizza</span>
+			          						<span class="slds-icon_container slds-icon-utility-arrowdown" id="publicId" onclick="{!c.updateColumnSorting}">
+								              	<lightning:icon iconName="{!v.sortIconName}" alternativeText="Ordina" size="xx-small"/>
+								            </span>
+			        					</div>
+			      					</a>
+			      					<div class="slds-resizable">
+				        				<input aria-label="Name column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-8" max="1000" min="20" tabindex="-1" type="range" />
+				        				<span draggable="true" class="slds-resizable__handle" onmousedown="{!c.calculateWidth}" ondrag="{!c.setNewWidth}" >
+				          					<span class=""></span>  <!-- slds-resizable__divider -->
+				        				</span>
+			      					</div>
+			    				</th>
+                               <!--MOSCATELLI_M 18/03/2019: AXA Assistance - START-->
+                               <aura:if isTrue="{!!v.isSinistri==true}">
+			    				<th aria-label="Account Name" aria-sort="none" class=" slds-is-resizable slds-is-sortable" scope="col">
+			      					<a class="slds-th__action slds-text-link_reset" role="button" tabindex="-1">
+			        					<span class="slds-assistive-text">Ordina per: </span>
+			        					<div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate">
+			          						<span class="slds-truncate normalWhiteSpace" title="Categoria di Polizza">Categoria di Polizza</span>
+			          						<span class="slds-icon_container slds-icon-utility-arrowdown" id="commercialType" onclick="{!c.updateColumnSorting}">
+								              	<lightning:icon iconName="{!v.sortIconName}" alternativeText="Ordina" size="xx-small"/>
+								            </span>
+			        					</div>
+			      					</a>
+			      					<div class="slds-resizable">
+			        					<input aria-label="Account Name column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-9" max="1000" min="20" tabindex="-1" type="range" />
+				        				<span draggable="true" class="slds-resizable__handle" onmousedown="{!c.calculateWidth}" ondrag="{!c.setNewWidth}" >
+				          					<span class=""></span>  <!-- slds-resizable__divider -->
+			        					</span>
+			      					</div>
+			    				</th>
+                                </aura:if>
+                                <!--MOSCATELLI_M 18/03/2019: AXA Assistance - END-->
+			    				<th aria-label="Close Date" aria-sort="none" class=" slds-is-resizable slds-is-sortable" scope="col">
+			      					<a class="slds-th__action slds-text-link_reset" href="javascript:void(0);" role="button" tabindex="-1">
+			        					<span class="slds-assistive-text">Ordina per: </span>
+			        					<div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate">
+			          						<span class="slds-truncate normalWhiteSpace" title="Data di decorrenza">Data di decorrenza</span>
+			          						<span class="slds-icon_container slds-icon-utility-arrowdown" id="effectiveDate" onclick="{!c.updateColumnSorting}">
+								              	<lightning:icon iconName="{!v.sortIconName}" alternativeText="Ordina" size="xx-small"/>
+								            </span>
+			        					</div>
+			      					</a>
+			      					<div class="slds-resizable">
+			        					<input aria-label="Close Date column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-10" max="1000" min="20" tabindex="-1" type="range" />
+				        				<span draggable="true" class="slds-resizable__handle" onmousedown="{!c.calculateWidth}" ondrag="{!c.setNewWidth}" >
+				          					<span class=""></span>  <!-- slds-resizable__divider -->
+			        					</span>
+			      					</div>
+			    				</th>
+			    				<th aria-label="Close Date" aria-sort="none" class=" slds-is-resizable slds-is-sortable" scope="col">
+			      					<a class="slds-th__action slds-text-link_reset" href="javascript:void(0);" role="button" tabindex="-1">
+			        					<span class="slds-assistive-text">Ordina per: </span>
+			        					<div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate">
+			          						<span class="slds-truncate normalWhiteSpace" title="Data di scadenza">Data di scadenza</span>
+			          						<span class="slds-icon_container slds-icon-utility-arrowdown" id="expirationDate" onclick="{!c.updateColumnSorting}">
+								              	<lightning:icon iconName="{!v.sortIconName}" alternativeText="Ordina" size="xx-small"/>
+								            </span>
+			        					</div>
+			      					</a>
+			      					<div class="slds-resizable">
+			        					<input aria-label="Close Date column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-10" max="1000" min="20" tabindex="-1" type="range" />
+				        				<span draggable="true" class="slds-resizable__handle" onmousedown="{!c.calculateWidth}" ondrag="{!c.setNewWidth}" >
+			          						<span class=""></span>  <!-- slds-resizable__divider -->
+			        					</span>
+			      					</div>
+			    				</th>
+			    				<th aria-label="Close Date" aria-sort="none" class=" slds-is-resizable slds-is-sortable" scope="col">
+			      					<a class="slds-th__action slds-text-link_reset" href="javascript:void(0);" role="button" tabindex="-1">
+			        					<span class="slds-assistive-text">Ordina per: </span>
+			        					<div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate">
+			          						<span class="slds-truncate normalWhiteSpace" title="Nome prodotto">Nome prodotto</span>
+			          						<span class="slds-icon_container slds-icon-utility-arrowdown" id="productName" onclick="{!c.updateColumnSorting}">
+								              	<lightning:icon iconName="{!v.sortIconName}" alternativeText="Ordina" size="xx-small"/>
+								            </span>
+			        					</div>
+			      					</a>
+			      					<div class="slds-resizable">
+			        					<input aria-label="Close Date column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-10" max="1000" min="20" tabindex="-1" type="range" />
+			        					<span draggable="true" class="slds-resizable__handle" onmousedown="{!c.calculateWidth}" ondrag="{!c.setNewWidth}" >
+				          					<span class=""></span>  <!-- slds-resizable__divider -->
+			        					</span>
+			      					</div>
+			    				</th>
+			    				<th aria-label="Close Date" aria-sort="none" class=" slds-is-resizable slds-is-sortable" scope="col">
+			      					<a class="slds-th__action slds-text-link_reset" href="javascript:void(0);" role="button" tabindex="-1">
+			        					<span class="slds-assistive-text">Ordina per: </span>
+			        					<div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate">
+			          						<span class="slds-truncate" title="Compagnia">Compagnia</span>
+			          						<span class="slds-icon_container slds-icon-utility-arrowdown" id="dataSource" onclick="{!c.updateColumnSorting}">
+								              	<lightning:icon iconName="{!v.sortIconName}" alternativeText="Ordina" size="xx-small"/>
+								            </span>
+			        					</div>
+			      					</a>
+			      					<div class="slds-resizable">
+			        					<input aria-label="Close Date column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-10" max="1000" min="20" tabindex="-1" type="range" />
+				        				<span draggable="true" class="slds-resizable__handle" onmousedown="{!c.calculateWidth}" ondrag="{!c.setNewWidth}" >
+				          					<span class=""></span>  <!-- slds-resizable__divider -->
+			        					</span>
+			      					</div>
+			    				</th>
+                                
+                                <!--MOSCATELLI_M 18/03/2019: AXA Assistance - START-->
+                                <aura:if isTrue="{!v.isSinistri==true}">
+			    				<th aria-label="Close Date" aria-sort="none" class=" slds-is-resizable slds-is-sortable" scope="col">
+			      					<a class="slds-th__action slds-text-link_reset" href="javascript:void(0);" role="button" tabindex="-1">
+			        					<span class="slds-assistive-text">Ordina per: </span>
+			        					<div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate">
+			          						<span class="slds-truncate" title="Collettiva">Collettiva</span>
+			          						<span class="slds-icon_container slds-icon-utility-arrowdown" id="collettiva" onclick="{!c.updateColumnSorting}">
+								              	<lightning:icon iconName="{!v.sortIconName}" alternativeText="Ordina" size="xx-small"/>
+								            </span>
+			        					</div>
+			      					</a>
+			      					<div class="slds-resizable">
+			        					<input aria-label="Close Date column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-10" max="1000" min="20" tabindex="-1" type="range" />
+				        				<span draggable="true" class="slds-resizable__handle" onmousedown="{!c.calculateWidth}" ondrag="{!c.setNewWidth}" >
+				          					<span class=""></span>  <!-- slds-resizable__divider -->
+			        					</span>
+			      					</div>
+			    				</th>                                    
+                                </aura:if>   	 
+                                <!--MOSCATELLI_M 18/03/2019: AXA Assistance - END-->
+
+			    				<th aria-label="Close Date" aria-sort="none" class=" slds-is-resizable slds-is-sortable" scope="col">
+			      					<a class="slds-th__action slds-text-link_reset" href="javascript:void(0);" role="button" tabindex="-1">
+			        					<span class="slds-assistive-text">Ordina per: </span>
+			        					<div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate">
+			          						<span class="slds-truncate normalWhiteSpace" title="Stato polizza">Stato polizza</span>
+			          						<span class="slds-icon_container slds-icon-utility-arrowdown" id="statusCode" onclick="{!c.updateColumnSorting}">
+								              	<lightning:icon iconName="{!v.sortIconName}" alternativeText="Ordina" size="xx-small"/>
+								            </span>
+			        					</div>
+			      					</a>
+			      					<div class="slds-resizable">
+			        					<input aria-label="Close Date column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-10" max="1000" min="20" tabindex="-1" type="range" />
+				        				<span draggable="true" class="slds-resizable__handle" onmousedown="{!c.calculateWidth}" ondrag="{!c.setNewWidth}" >
+				          					<span class=""></span>  <!-- slds-resizable__divider -->
+			        					</span>
+			      					</div>
+			    				</th>
+                                <aura:if isTrue="{!v.mode !='CaringSalute'}">
+			    				<th aria-label="Close Date" aria-sort="none" class=" slds-is-resizable slds-is-sortable" scope="col">
+			      					<a class="slds-th__action slds-text-link_reset" href="javascript:void(0);" role="button" tabindex="-1">
+			        					<span class="slds-assistive-text">Ordina per: </span>
+			        					<div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate">
+			          						<span class="slds-truncate normalWhiteSpace" title="Veicolo Modello">Veicolo Modello</span>
+			          						<span class="slds-icon_container slds-icon-utility-arrowdown" id="model" onclick="{!c.updateColumnSorting}">
+								              	<lightning:icon iconName="{!v.sortIconName}" alternativeText="Ordina" size="xx-small"/>
+								            </span>
+			        					</div>
+			      					</a>
+			      					<div class="slds-resizable">
+			        					<input aria-label="Close Date column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-10" max="1000" min="20" tabindex="-1" type="range" />
+				        				<span draggable="true" class="slds-resizable__handle" onmousedown="{!c.calculateWidth}" ondrag="{!c.setNewWidth}" >
+				          					<span class=""></span>  <!-- slds-resizable__divider -->
+			        					</span>
+			      					</div>
+			    				</th>
+			    				<th aria-label="Close Date" aria-sort="none" class=" slds-is-resizable slds-is-sortable" scope="col">
+			      					<a class="slds-th__action slds-text-link_reset" href="javascript:void(0);" role="button" tabindex="-1">
+			        					<span class="slds-assistive-text">Ordina per: </span>
+			        					<div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate">
+			          						<span class="slds-truncate" title="Targa">Targa</span>
+			          						<span class="slds-icon_container slds-icon-utility-arrowdown" id="registrationId" onclick="{!c.updateColumnSorting}">
+								              	<lightning:icon iconName="{!v.sortIconName}" alternativeText="Ordina" size="xx-small"/>
+								            </span>
+			        					</div>
+			      					</a>
+			      					<div class="slds-resizable">
+			        					<input aria-label="Close Date column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-10" max="1000" min="20" tabindex="-1" type="range" />
+				        				<span draggable="true" class="slds-resizable__handle" onmousedown="{!c.calculateWidth}" ondrag="{!c.setNewWidth}" >
+				          					<span class=""></span>  <!-- slds-resizable__divider -->
+			        					</span>
+			      					</div>
+			    				</th>
+                                </aura:if>
+			    				<th aria-label="Close Date" aria-sort="none" class=" slds-is-resizable slds-is-sortable" scope="col">
+			      					<a class="slds-th__action slds-text-link_reset" href="javascript:void(0);" role="button" tabindex="-1">
+			        					<span class="slds-assistive-text"></span>
+			        					<div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate">
+			          						<span class="slds-truncate" title="Vedi Garanzie"></span>
+			          						
+			        					</div>
+			      					</a>
+			      					<div class="slds-resizable">
+			        					<input aria-label="Close Date column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-10" max="1000" min="20" tabindex="-1" type="range" />
+				        				<span draggable="true" class="slds-resizable__handle" onmousedown="{!c.calculateWidth}" ondrag="{!c.setNewWidth}" >
+				          					<span class=""></span>  <!-- slds-resizable__divider -->
+			        					</span>
+			      					</div>
+								</th>
+								<aura:if isTrue="{! !v.isSchedaCliente }">
+									<th aria-label="Close Date" aria-sort="none" class=" slds-is-resizable slds-is-sortable" scope="col">
+										<a class="slds-th__action slds-text-link_reset" href="javascript:void(0);" role="button" tabindex="-1">
+											<span class="slds-assistive-text"></span>
+											<div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate">
+												<span class="slds-truncate" title="Associa"></span>
+												
+											</div>
+										</a>
+										<div class="slds-resizable">
+											<input aria-label="Close Date column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-10" max="1000" min="20" tabindex="-1" type="range" />
+											<span draggable="true" class="slds-resizable__handle" onmousedown="{!c.calculateWidth}" ondrag="{!c.setNewWidth}" >
+												<span class=""></span>  <!-- slds-resizable__divider -->
+											</span>
+										</div>
+									</th>
+								</aura:if>
+			    			</tr>
+			  			</thead>
+			  			<tbody id="tBodyPolicies">
+			  				<aura:iteration items="{!v.policies}" var="policy">
+				    			<tr aria-selected="false" class="slds-hint-parent" id="{!policy.policyId}" >
+				      				<th scope="row" tabindex="0">
+				        				<div class="slds-truncate" title="{!policy.publicId}">{!policy.publicId}</div>
+				      				</th>
+                                    <!--MOSCATELLI_M 18/03/2019: AXA Assistance - START-->
+                                	<aura:if isTrue="{!!v.isSinistri==true}">
+				      				<td role="gridcell">
+				       	 				<div class="slds-truncate" title="{!policy.commercialType}">{!policy.commercialType}</div>
+				   					</td>
+                                    </aura:if>
+                                    <!--MOSCATELLI_M 18/03/2019: AXA Assistance - END-->
+				      				<td role="gridcell">
+				        				<div class="slds-truncate" title="{!policy.effectiveDate}"><ui:outputDate format="dd/MM/yyyy" value="{!policy.effectiveDate}"/></div>
+				      				</td>
+				      				<td role="gridcell">
+				        				<div class="slds-truncate normalWhiteSpace" title="{!policy.expirationDate}"><ui:outputDate format="dd/MM/yyyy" value="{!policy.expirationDate}"/></div>
+				      				</td>
+				      				<td role="gridcell">
+				        				<div class="slds-truncate normalWhiteSpace" title="{!policy.productName}">{!policy.productName}</div>
+				      				</td>
+				      				<td role="gridcell">
+				        				<div class="slds-truncate" title="{!policy.dataSource}">{!policy.dataSource}</div>
+				      				</td>
+                                    <!--MOSCATELLI_M 18/03/2019: AXA Assistance - START-->
+                                	<aura:if isTrue="{!v.isSinistri==true}">
+                                        <td role="gridcell">
+                                        <div class="slds-truncate" >{!if(policy.isCollective,'Si','No')}</div>
+                                        </td>
+                                        </aura:if>
+                                    <!--MOSCATELLI_M 18/03/2019: AXA Assistance - END-->
+				      				<td role="gridcell">
+				        				<div class="slds-truncate" title="{!policy.statusCode}">{!policy.statusCode}</div>
+				      				</td>
+                                    <aura:if isTrue="{!v.mode !='CaringSalute'}">
+				      				<td role="gridcell">
+				        				<div class="slds-truncate normalWhiteSpace" title="{!policy.model}">{!policy.assetDescription}</div>
+				      				</td>
+				      				<td role="gridcell">
+				        				<div class="slds-truncate" title="{!policy.licensePlate}">{!policy.licensePlate}</div>
+				      				</td>
+                                    </aura:if>
+				      				<td role="gridcell">
+				        				<div class="slds-truncate slds-button slds-button_neutral" title="Vedi Garanzie"><a id="{!policy.policyId}" onclick="{!c.vediGaranzie}" tabindex="-1">Vedi Garanzie</a></div>
+									  </td>
+									<aura:if isTrue="{! !v.isSchedaCliente }">
+										<td role="gridcell">
+											<div class="slds-truncate slds-button slds-button_neutral" title="Associa"><a id="{!policy.policyId}" onclick="{!c.associaPolizza}" tabindex="-1">Associa</a></div>
+										</td>
+									</aura:if>
+				    			</tr>
+			    			</aura:iteration>
+						</tbody>
+					</table>
+					<!-- tabella garanzie -->
+					<aura:if isTrue="{!not(v.isErrorGaranzie)}">
+						<aura:if isTrue="{!not(empty(v.garanzie))}">
+                            <aura:if isTrue="{!v.mode !='CaringProperty'}">
+							<table aria-multiselectable="true" class="tableHeader slds-table slds-table_bordered slds-table_fixed-layout slds-table_resizable-cols marginTop" role="grid">
+								<thead>
+					  				<tr class="slds-line-height_reset">
+					    				<th aria-label="Id" aria-sort="none" class=" slds-is-resizable slds-is-sortable" scope="col">
+					      					<a id="Id" class="slds-th__action slds-text-link_reset"  role="button" tabindex="-1" >
+					        					<span class="slds-assistive-text" name="Id">Ordina per: </span>
+					        					<div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate"  >
+					          						<span class="slds-truncate"  title="Nome Garanzia">Nome Garanzia</span>
+					          						
+					        					</div>
+					      					</a>
+					      					<div class="slds-resizable">
+						        				<input aria-label="Name column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-8" max="1000" min="20" tabindex="-1" type="range" />
+						        				<span draggable="true" class="slds-resizable__handle" onmousedown="{!c.calculateWidth}" ondrag="{!c.setNewWidth}" >
+						          					<span class=""></span>  <!-- slds-resizable__divider -->
+						        				</span>
+					      					</div>
+					    				</th>
+					    				<th aria-label="Account Name" aria-sort="none" class=" slds-is-resizable slds-is-sortable" scope="col">
+					      					<a class="slds-th__action slds-text-link_reset" role="button" tabindex="-1">
+					        					<span class="slds-assistive-text">Ordina per: </span>
+					        					<div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate">
+					          						<span class="slds-truncate" title="Bene Assicurato">Bene Assicurato</span>
+					          						
+					        					</div>
+					      					</a>
+					      					<div class="slds-resizable">
+					        					<input aria-label="Account Name column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-9" max="1000" min="20" tabindex="-1" type="range" />
+						        				<span draggable="true" class="slds-resizable__handle" onmousedown="{!c.calculateWidth}" ondrag="{!c.setNewWidth}" >
+						          					<span class=""></span>  <!-- slds-resizable__divider -->
+					        					</span>
+					      					</div>
+					    				</th>
+					    				<th aria-label="Close Date" aria-sort="none" class=" slds-is-resizable slds-is-sortable" scope="col">
+					      					<a class="slds-th__action slds-text-link_reset" href="javascript:void(0);" role="button" tabindex="-1">
+					        					<span class="slds-assistive-text">Ordina per: </span>
+					        					<div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate">
+					          						<span class="slds-truncate" title="Massimali">Massimali</span>
+					          						
+					        					</div>
+					      					</a>
+					      					<div class="slds-resizable">
+					        					<input aria-label="Close Date column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-10" max="1000" min="20" tabindex="-1" type="range" />
+						        				<span draggable="true" class="slds-resizable__handle" onmousedown="{!c.calculateWidth}" ondrag="{!c.setNewWidth}" >
+						          					<span class=""></span>  <!-- slds-resizable__divider -->
+					        					</span>
+					      					</div>
+					    				</th>
+					    				<th aria-label="Close Date" aria-sort="none" class=" slds-is-resizable slds-is-sortable" scope="col">
+					      					<a class="slds-th__action slds-text-link_reset" href="javascript:void(0);" role="button" tabindex="-1">
+					        					<span class="slds-assistive-text">Ordina per: </span>
+					        					<div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate">
+					          						<span class="slds-truncate" title="Nome Beneficiari">Nome Beneficiari</span>
+					          						
+					        					</div>
+					      					</a>
+					      					<div class="slds-resizable">
+					        					<input aria-label="Close Date column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-10" max="1000" min="20" tabindex="-1" type="range" />
+						        				<span draggable="true" class="slds-resizable__handle" onmousedown="{!c.calculateWidth}" ondrag="{!c.setNewWidth}" >
+						          					<span class=""></span>  <!-- slds-resizable__divider -->
+					        					</span>
+					      					</div>
+					    				</th>
+					    			</tr>
+					  			</thead>
+					  			<tbody>
+					  				<aura:iteration items="{!v.garanzie}" var="garanzia">
+						    			<tr aria-selected="false" class="slds-hint-parent">
+						      				<th scope="row" tabindex="0">
+						        				<div class="slds-truncate normalWhiteSpace" title="{!garanzia.name}">{!garanzia.name}</div>
+						      				</th>
+						      				<td role="gridcell">
+						       	 				<div class="slds-truncate normalWhiteSpace" title="{!garanzia.categoryName}">{!garanzia.categoryName}</div>
+						   					</td>
+						      				<td role="gridcell">
+						        				<div class="slds-truncate normalWhiteSpace" title="Massimali">
+						        					<aura:iteration items="{!garanzia.restrictions}" var="restricion" indexVar="index">{!restricion.description}{!index!=garanzia.restrictions.length-1?' - ':''}</aura:iteration>
+						        				</div>
+						      				</td>
+						      				<td role="gridcell">
+						        				<div class="slds-truncate normalWhiteSpace" title="Nome beneficiari">
+													<aura:iteration items="{!garanzia.beneficiaries}" var="beneficiary" indexVar="index">{!beneficiary.BeneficiaryName}{!index!=garanzia.beneficiaries.length-1?' - ':''}</aura:iteration>
+												</div>
+						      				</td>
+						    			</tr>
+					    			</aura:iteration>
+								</tbody>
+							</table>
+                            </aura:if>
+                            <aura:if isTrue="{!v.mode == 'CaringProperty'}">
+                                <table aria-multiselectable="true" class="tableHeader slds-table slds-table_bordered slds-table_fixed-layout slds-table_resizable-cols marginTop" role="grid">
+								<thead>
+					  				<tr class="slds-line-height_reset">
+					    				<th aria-label="Id" aria-sort="none" class=" slds-is-resizable slds-is-sortable" scope="col">
+					      					<a id="Id" class="slds-th__action slds-text-link_reset"  role="button" tabindex="-1" >
+					        					<span class="slds-assistive-text" name="Id">Ordina per: </span>
+					        					<div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate"  >
+					          						<span class="slds-truncate"  title="Garanzia Base">Garanzia Base</span>
+					          						
+					        					</div>
+					      					</a>
+					      					<div class="slds-resizable">
+						        				<input aria-label="Name column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-8" max="1000" min="20" tabindex="-1" type="range" />
+						        				<span draggable="true" class="slds-resizable__handle" onmousedown="{!c.calculateWidth}" ondrag="{!c.setNewWidth}" >
+						          					<span class=""></span>  <!-- slds-resizable__divider -->
+						        				</span>
+					      					</div>
+					    				</th>
+					    				<th aria-label="Account Name" aria-sort="none" class=" slds-is-resizable slds-is-sortable" scope="col">
+					      					<a class="slds-th__action slds-text-link_reset" role="button" tabindex="-1">
+					        					<span class="slds-assistive-text">Ordina per: </span>
+					        					<div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate">
+					          						<span class="slds-truncate" title="Garanzia Specifica">Garanzia Specifica</span>
+					          						
+					        					</div>
+					      					</a>
+					      					<div class="slds-resizable">
+					        					<input aria-label="Account Name column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-9" max="1000" min="20" tabindex="-1" type="range" />
+						        				<span draggable="true" class="slds-resizable__handle" onmousedown="{!c.calculateWidth}" ondrag="{!c.setNewWidth}" >
+						          					<span class=""></span>  <!-- slds-resizable__divider -->
+					        					</span>
+					      					</div>
+					    				</th>
+										<th aria-label="Account Name" aria-sort="none" class=" slds-is-resizable slds-is-sortable" scope="col">
+											<a class="slds-th__action slds-text-link_reset" role="button" tabindex="-1">
+											  <span class="slds-assistive-text">Ordina per: </span>
+											  <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate">
+													<span class="slds-truncate" title="Garanzia Specifica">Descrizione</span>
+													
+											  </div>
+											</a>
+											<div class="slds-resizable">
+											  <input aria-label="Account Name column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-9" max="1000" min="20" tabindex="-1" type="range" />
+											  <span draggable="true" class="slds-resizable__handle" onmousedown="{!c.calculateWidth}" ondrag="{!c.setNewWidth}" >
+													<span class=""></span>  <!-- slds-resizable__divider -->
+											  </span>
+											</div>
+									  </th>
+					    				<th aria-label="Close Date" aria-sort="none" class=" slds-is-resizable slds-is-sortable" scope="col">
+					      					<a class="slds-th__action slds-text-link_reset" href="javascript:void(0);" role="button" tabindex="-1">
+					        					<span class="slds-assistive-text">Ordina per: </span>
+					        					<div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate">
+					          						<span class="slds-truncate" title="Tipo di Bene">Tipo di Bene</span>
+					          						
+					        					</div>
+					      					</a>
+					      					<div class="slds-resizable">
+					        					<input aria-label="Close Date column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-10" max="1000" min="20" tabindex="-1" type="range" />
+						        				<span draggable="true" class="slds-resizable__handle" onmousedown="{!c.calculateWidth}" ondrag="{!c.setNewWidth}" >
+						          					<span class=""></span>  <!-- slds-resizable__divider -->
+					        					</span>
+					      					</div>
+					    				</th>
+					    				<th aria-label="Close Date" aria-sort="none" class=" slds-is-resizable slds-is-sortable" scope="col">
+					      					<a class="slds-th__action slds-text-link_reset" href="javascript:void(0);" role="button" tabindex="-1">
+					        					<span class="slds-assistive-text">Ordina per: </span>
+					        					<div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate">
+					          						<span class="slds-truncate" title="Ubicazione del Rischio">Ubicazione del Rischio</span>
+					          						
+					        					</div>
+					      					</a>
+					      					<div class="slds-resizable">
+					        					<input aria-label="Close Date column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-10" max="1000" min="20" tabindex="-1" type="range" />
+						        				<span draggable="true" class="slds-resizable__handle" onmousedown="{!c.calculateWidth}" ondrag="{!c.setNewWidth}" >
+						          					<span class=""></span>  <!-- slds-resizable__divider -->
+					        					</span>
+					      					</div>
+					    				</th>
+					    			</tr>
+					  			</thead>
+					  			<tbody>
+					  				<aura:iteration items="{!v.garanzie}" var="garanzia">
+						    			<tr aria-selected="false" class="slds-hint-parent">
+						      				<th scope="row" tabindex="0">
+						        				<div class="slds-truncate normalWhiteSpace" title="{!garanzia.GarBase}">{!garanzia.GarBase}</div>
+						      				</th>
+						      				<td role="gridcell">
+						       	 				<div class="slds-truncate normalWhiteSpace" title="{!garanzia.GarSpec}">{!garanzia.GarSpec}</div>
+						   					</td>
+											<td role="gridcell">
+												<div class="slds-truncate normalWhiteSpace" title="{!garanzia.GarSpec}">{!garanzia.Description}</div>
+										   </td>
+						      				<td role="gridcell">
+						        				
+                                                    <div class="slds-truncate normalWhiteSpace" title="{!garanzia.TipoBene}">{!garanzia.TipoBene}</div>
+						        					
+						        				
+						      				</td>
+						      				<td role="gridcell">
+						        				
+                                                    <div class="slds-truncate normalWhiteSpace" title="{!garanzia.UbicazioneRischio}">{!garanzia.UbicazioneRischio}</div>
+													
+												
+						      				</td>
+						    			</tr>
+					    			</aura:iteration>
+								</tbody>
+							</table>
+                            </aura:if>
+						</aura:if>
+						<aura:set attribute="else">
+							<div style="text-align: center; white-space: pre;">
+			                	<ui:message severity="error" >
+			                		{!v.errorMessageGaranzie}
+			                    </ui:message>
+			                </div>      
+					    </aura:set>
+					</aura:if>
+					<aura:if isTrue="{! v.isLoading }">
+	       				<lightning:spinner alternativeText="Loading"/>
+	   				</aura:if>
+				</lightning:card>
+				
+			</aura:if>
+			<aura:set attribute="else">
+				<div style="text-align: center;  white-space: pre-line;">
+                	<ui:message severity="error" >
+                		{!v.errorMessage}
+                    </ui:message>
+                </div>     
+                <!--<div class="slds-align_absolute-center slds-p-left_small">
+               		<lightning:button variant="Neutral" label="Indietro" title="Indietro" onclick="{! c.Cancel }"/>
+	            </div>-->     
+		    </aura:set>
+		</aura:if>
+		<aura:if isTrue="{! v.showToast }">
+	   		<div class="slds-notify_container slds-is-relative" style="position: fixed;margin-top: 10%;">
+	    		<div class="{!'slds-notify slds-notify_toast slds-theme_'+v.typeToast}" role="status" style="height: 3rem;">
+	      			<span class="slds-assistive-text">warning</span>
+	      			<span class="{!'slds-icon_container slds-m-right_small slds-no-flex slds-align-top slds-icon-utility-'+v.typeToast}" title="{!v.typeToast}">
+	        			<lightning:icon iconName="{!'utility:'+v.typeToast}" alternativeText="Approved" size="small" class="whiteIcon"/>
+	      			</span>
+	      			<div class="slds-notify__content">
+	        			<h2 class="slds-text-heading_small ">{!v.messageToast}</h2>
+	      			</div>
+	      			<div class="slds-notify__close">
+	        			<button class="slds-button slds-button_icon slds-button_icon-inverse" title="Chiudi" onclick="{!c.chiudiToast}">
+	        				<lightning:icon iconName="utility:close" alternativeText="Approved" size="small" class="whiteIcon"/>
+	          				<span class="slds-assistive-text">Chiudi</span>
+	        			</button>
+	      			</div>
+	    		</div>
+	  		</div>
+	  	</aura:if>
+	</div>
+    
+   
+   
+</aura:component>

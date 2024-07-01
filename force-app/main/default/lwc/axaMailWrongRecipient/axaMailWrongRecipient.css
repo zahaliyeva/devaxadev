@@ -1,0 +1,55 @@
+@font-face {
+  font-family: "CustomFont";
+  src: url(/resource/sourceCodeFont);
+}
+
+article,
+h1,
+h6 {
+  font-family: "CustomFont";
+}
+
+body {
+    background: #fafafa 0% 0% no-repeat padding-box;
+    opacity: 1;
+}
+
+.card {
+    top: 248px;
+    left: 47px;
+    width: 55%;
+    background: #ffffff 0% 0% no-repeat padding-box;
+    box-shadow: 0px 2px 27px #0000000a;
+    opacity: 1;
+    padding: 1rem;
+    margin: auto;
+}
+
+.title {
+    color: #00008f;
+    font-weight: bold;
+}
+
+.button {
+    height: 30px;
+    background: #00008f 0% 0% no-repeat padding-box;
+    text-align: center;
+    letter-spacing: 1.2px;
+    color: #ffffff;
+    text-transform: uppercase;
+    opacity: 1;
+    padding: 0px 15px;
+}
+
+@media screen and (max-width: 600px) {
+    .card {
+        width: 100%;
+        display: block;
+        margin-bottom: 20px;
+    }
+}
+
+img {
+    max-width: 60px;
+    max-height: 60px;
+}

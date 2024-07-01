@@ -1,0 +1,59 @@
+<apex:page standardController="Case" extensions="VFC07_CaseRequiredDocuments" tabStyle="Case">
+	<head>
+	<style>
+		body .pbBody table.list tr td {
+			border: none;		
+		}
+		table.clist{
+			border-collapse:collapsed;
+			/*border-top:solid 1px #e0e3e5;*/
+		}
+		table.clist tr td{
+			border-bottom:solid 1px #e0e3e5 !important;
+		}
+		table.clist tr:last-child td{
+			border-bottom:none !important;
+		}
+	</style>
+	</head>
+	<apex:form id="form1">       
+		<apex:inputHidden value="{!Case.Id}" />
+		<apex:inputHidden value="{!Case.RequiredDocumentList__c}" />
+		<apex:inputHidden value="{!Case.SubCategory__c}" />
+		<apex:inputHidden value="{!Case.CaseNumber}" />
+		<apex:inputHidden value="{!Case.TECHThreadId__c}" />
+		<apex:inputHidden value="{!Case.Account.Name}" />
+		<apex:inputHidden value="{!Case.RecordType.developername}" />
+		<apex:inputHidden value="{!Case.AgentName__r.name}" />
+		<apex:inputHidden value="{!Case.Account.PersonEmail}" />
+		<apex:inputHidden value="{!Case.Account.Account_email__c}" />
+		<apex:inputHidden value="{!Case.ContactId}" />
+		<apex:outputfield value="{!Case.AccountId}" rendered="false"/>
+		<apex:pageMessages />
+		
+		<apex:outputPanel rendered="{!IF(docResults.size >0 , true, false)}">
+			<table  width="100%" class="list clist">
+				<tr class="headerRow">
+					<th class=" zen-deemphasize" scope="col" colspan="2" style="text-align: center;background-color:#999999">{!$label.VFC07_DocumentName}</th>
+				</tr>
+				<apex:repeat value="{!docResults}" var="doc">
+					<tr class="dataRow even first" style="color: #000000">
+						<td class="dataCell"><apex:inputCheckbox value="{!doc.selected}" disabled="{!Case.isclosed}"/></td>
+						<td class="dataCell"><apex:outputText value="{!doc.docName}" /></td>
+					</tr>
+				</apex:repeat>
+				<tr>
+					<td colspan="2" align="center">
+						<apex:commandButton value="{!$Label.VFC07_SendEmail}" id="saveBtn" action="{!save}" status="StatusId" oncomplete="window.top.location='/{!Case.id}';" rendered="{!and(!case.isclosed,VisualizeButton)}"/>
+<!-- 						<apex:commandButton value="Update" id="updateBtn" rendered="{!!saveFlg}" action="{!allowUpdate}" status="StatusId" rerender="form1"/>
+ -->						<apex:actionStatus id="StatusId" >
+				          <apex:facet name="start" >
+				            <img src="/img/loading.gif" />                    
+				          </apex:facet>
+				        </apex:actionStatus>
+					</td>
+				</tr>
+			</table>         
+		</apex:outputPanel>
+	</apex:form>
+</apex:page>

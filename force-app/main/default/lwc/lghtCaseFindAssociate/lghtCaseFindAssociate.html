@@ -1,0 +1,375 @@
+<template>
+    <template if:true={spinner}>
+        <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+    </template>
+    
+    <div class="slds-grid slds-gutters">
+        <div class="slds-col">
+            <form onchange={onChange}>
+                <!-- CARD START -->
+                <article class="slds-card">
+                    <div class="slds-card__header slds-grid">
+                        <!-- CARD HEADER START -->
+                        <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                            <div class="slds-media__body">
+                                <h2 class="slds-card__header-title">
+                                    <a href="javascript:void(0);" class="slds-card__header-link slds-truncate" title={title}>
+                                        <span>{title}</span>
+                                    </a>
+                                </h2>
+                            </div>
+                        </header>
+                        <!-- CARD HEADER END -->
+                    </div>
+                    <div class="slds-card__body slds-card__body_inner">
+                        <!-- CARD BODY START -->
+                        <!-- FORM - START -->
+                        <div class="slds-grid slds-gutters">
+                            <div class="slds-col">
+                                <!-- FIELD - START -->
+                                <div class="slds-form-element">
+                                    <label class="slds-form-element__label" for="form-first-name">Nome</label>
+                                    <div class="slds-form-element__control">
+                                        <input type="text" id="form-first-name" name="FirstName" placeholder="Nome" class="slds-input" value={accountData.FirstName} />
+                                    </div>
+                                </div>
+                                <!-- FIELD - END -->
+                            </div>
+                            <div class="slds-col">
+                                <!-- FIELD - START -->
+                                <div class="slds-form-element">
+                                    <label class="slds-form-element__label" for="form-last-name">Cognome</label>
+                                    <div class="slds-form-element__control">
+                                        <input type="text" id="form-last-name" name="LastName" placeholder="Cognome" class="slds-input" value={accountData.LastName}/>
+                                    </div>
+                                </div>
+                                <!-- FIELD - END -->
+                            </div>
+                            <div class="slds-col">
+                                <template if:false={context.isAgent}>
+                                    <!-- FIELD - START -->
+                                    <div class="slds-form-element">
+                                        <label class="slds-form-element__label" for="form-fiscal-id">Codice Fiscale</label>
+                                        <div class="slds-form-element__control">
+                                            <input type="text" id="form-fiscal-id" name="Fiscal_ID__c" placeholder="Codice Fiscale" class="slds-input" value={accountData.Fiscal_ID__c}/>
+                                        </div>
+                                    </div>
+                                    <!-- FIELD - END -->
+                                </template>
+                                <template if:true={context.isAgent}>
+                                    <!-- FIELD - START -->
+                                    <div class="slds-form-element">
+                                        <label class="slds-form-element__label" for="form-matricola">Matricola</label>
+                                        <div class="slds-form-element__control">
+                                            <input type="text" id="form-matricola" name="Matricola__c" placeholder="Matricola" class="slds-input" value={accountData.Matricola__c}/>
+                                        </div>
+                                    </div>
+                                    <!-- FIELD - END -->
+                                </template>
+                            </div>
+                        </div>
+                        <!-- FORM - END -->
+                        <!-- CARD BODY END -->
+                    </div>
+                </article>
+                <!-- CARD END -->
+
+                <!-- CARD START -->
+                <template if:false={context.isAgent}>
+                    <article class="slds-card">
+                        <div class="slds-card__header slds-grid">
+                            <!-- CARD HEADER START -->
+                            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                                <div class="slds-media__body">
+                                    <h2 class="slds-card__header-title">
+                                        <a href="javascript:void(0);" class="slds-card__header-link slds-truncate" title="Azienda">
+                                            <span>Azienda</span>
+                                        </a>
+                                    </h2>
+                                </div>
+                            </header>
+                            <!-- CARD HEADER END -->
+                        </div>
+                        <div class="slds-card__body slds-card__body_inner">
+                            <!-- CARD BODY START -->
+                            <!-- FORM - START -->
+                            <div class="slds-grid slds-gutters">
+                                <div class="slds-col">
+                                    <!-- FIELD - START -->
+                                    <div class="slds-form-element">
+                                        <label class="slds-form-element__label" for="form-account-name">Ragione Sociale</label>
+                                        <div class="slds-form-element__control">
+                                            <input type="text" id="form-account-name" name="Name" placeholder="Ragione Sociale" class="slds-input" value={accountData.Name} />
+                                        </div>
+                                    </div>
+                                    <!-- FIELD - END -->
+                                </div>
+                                <div class="slds-col">
+                                    <!-- FIELD - START -->
+                                    <div class="slds-form-element">
+                                        <label class="slds-form-element__label" for="form-iva">Partita Iva</label>
+                                        <div class="slds-form-element__control">
+                                            <input type="text" id="form-iva" name="Partita_IVA__c" placeholder="Partita Iva" class="slds-input" value={accountData.Partita_IVA__c} />
+                                        </div>
+                                    </div>
+                                    <!-- FIELD - END -->
+                                </div>
+                            </div>
+                            <!-- FORM - END -->
+                            <!-- CARD BODY END -->
+                        </div>
+                    </article>
+                    <!-- CARD END -->
+                </template>
+
+                <div class="slds-text-align_center" style="margin-top: 20px;margin-bottom: 20px;">
+                    <button class="slds-button slds-button_neutral" onclick={onSearch}>Cerca</button>
+                    <!--
+                    <template if:true={hasResult}>
+                        <button class="slds-button slds-button_neutral" onclick={onNew}>Nuovo</button>
+                    </template>
+                     -->
+                </div>
+                
+                <!-- CUSTOMER RESULT - START -->
+                <template if:true={hasResult}>
+                    <!-- INDIVIDUAL - START -->
+                    <template if:false={context.isCorporate}>
+                        <!-- TABLE RESULT START -->
+                        <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                            <thead>
+                                <tr class="slds-line-height_reset">
+                                    <th scope="col">Cognome</th>
+                                    <th scope="col">Nome</th>
+                                    <template if:true={isNotCorporateAndAgent}>
+                                        <th scope="col">Codice Fiscale</th>
+                                    </template>
+                                    <template if:true={isAgentNotCorporate}>
+                                        <th scope="col">Matricola</th>
+                                        <th scope="col">Stato</th>
+                                    </template>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Tipologia Cliente</th>
+                                    <th scope="col">Codice Agenzia</th> 
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template for:each={data} for:index="index" for:item="record">
+                                    <tr key={record.Id}>
+                                        <td>{record.LastName}</td>
+                                        <td>{record.FirstName}</td>
+                                        <template if:true={isNotCorporateAndAgent}>
+                                            <template if:true={record.hasFiscalId}>
+                                                <td>{record.Fiscal_ID__c}</td>
+                                            </template>
+                                            <template if:true={record.hasAAIFiscalCode}>
+                                                <td>{record.AAI_Codice_fiscale__c}</td>
+                                            </template>
+                                            <template if:true={record.hasAAFFiscalCode}>
+                                                <td>{record.Codice_Fiscale_AAF__c}</td>
+                                            </template>
+                                        </template>
+                                        <template if:true={isAgentNotCorporate}>
+                                            <td>{record.Matricola__c}</td>
+                                            <td>{record.State__c}</td>
+                                        </template>
+                                        <template if:false={context.isCorporate}>
+                                            <template if:true={record.hasRecordTypeIndividual}>
+                                                <td>{record.PersonEmail}</td>
+                                            </template>
+                                            <template if:false={record.hasRecordTypeIndividual}>
+                                                <td></td>
+                                            </template>
+                                        </template>
+                                        <template if:false={isNotCorporateAndAgent}>
+                                            <template if:false={record.hasRecordTypeIndividual}>
+                                                <td>{record.Additional_Email__c}</td>
+                                            </template>
+                                            <template if:true={record.hasRecordTypeIndividual}>
+                                                <td></td>
+                                            </template>
+                                        </template>
+                                        <template if:false={context.isAgent}>
+                                            <td>{record.recordTypeLabel}</td>
+                                        </template>
+                                        <td>{record.AAI_Agency_Reference_Code__c}</td>
+                                        <td>
+                                            <template if:false={context.isFromCIF}>
+                                                <button class="slds-button slds-button_neutral" onclick={onAssociate} data-id={record.Id}>Associa al Case</button>
+                                             </template>
+                                             <template if:true={context.isFromCIF}>
+                                                <button class="slds-button slds-button_neutral" onclick={onImportAssociate} data-index={index}>Importa e Associa</button>
+                                             </template>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                        <!-- TABLE RESULT END -->
+                    </template>
+                    <!-- INDIVIDUAL - END -->
+                    <!-- CORPORATE - START -->
+                    <template if:true={context.isCorporate}>
+                        <!-- TABLE RESULT START -->
+                        <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                            <thead>
+                                <tr class="slds-line-height_reset">
+                                    <th scope="col">Ragione Sociale</th>
+                                    <th scope="col">Partita Iva</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Tipologia Cliente</th>            
+                                    <th scope="col">Codice Agenzia</th> 
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template for:each={data} for:index="index" for:item="record">
+                                    <tr key={record.Id}>
+                                        <td>{record.Name}</td>
+                                        <template if:true={record.hasRecordTypeCorporate}>
+                                            <td>{record.Partita_IVA__c}</td>
+                                        </template>
+                                        <template if:false={record.hasRecordTypeCorporate}>
+                                            <td>{record.AAI_Partita_IVA__c}</td>
+                                        </template>
+                                        <template if:true={record.hasRecordTypeCorporate}>
+                                            <td>{record.Account_email__c}</td>
+                                        </template>
+                                        <template if:false={record.hasRecordTypeCorporate}>
+                                            <td>{record.Additional_Email__c}</td>
+                                        </template>
+                                        <template if:false={context.isAgent}>
+                                            <td>{record.recordTypeLabel}</td>
+                                        </template>                                       
+                                        <td>{record.AAI_Agency_Reference_Code__c}</td>
+                                        <td>
+                                            <template if:false={context.isFromCIF}>
+                                                <button class="slds-button slds-button_neutral" onclick={onAssociate} data-id={record.Id}>Associa al Case</button>
+                                             </template>
+                                             <template if:true={context.isFromCIF}>
+                                                <button class="slds-button slds-button_neutral" onclick={onImportAssociate} data-index={index}>Importa e Associa</button>
+                                             </template>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                        <!-- TABLE RESULT END -->
+                    </template>
+                    <!-- CORPORATE - END -->
+                </template>
+                <!-- CUSTOMER RESULT - END -->
+
+                <template if:true={showEmptyFound}>
+                    <div class="slds-card__body slds-card__body_inner">
+                       Nessun {title} Trovato
+                   </div>
+                </template>
+            </form>
+            <!-- INSERT CUSTOMER FORM - START -->
+           
+            <template if:true={notShow}>
+                <!-- CARD START-->
+                <article class="slds-card" style="margin-bottom: 40px;">
+                    <div class="slds-card__body slds-card__body_inner">
+                        <!-- CARD BODY START -->
+                        <!-- FORM - START -->
+                        <lightning-record-edit-form
+                            id="recordViewForm"
+                            record-type-id={recordTypeInsert}
+                            object-api-name="Account"
+                            onsubmit={onSubmit}
+                        >
+                            <div class="slds-grid slds-wrap">
+                                <!-- IS INDIVIDUAL - START -->
+                                <template if:false={context.isCorporate}>
+                                    <div class="slds-size_6-of-12">
+                                        <lightning-input-field field-name="FirstName" required value={accountData.FirstName}></lightning-input-field>
+                                    </div>
+                                    <div class="slds-size_6-of-12">
+                                        <lightning-input-field field-name="LastName" required value={accountData.LastName}></lightning-input-field>
+                                    </div>
+                                    <template if:false={context.isAgent}>
+                                        <div class="slds-size_6-of-12">
+                                            <lightning-input-field field-name="PersonBirthdate"></lightning-input-field>
+                                        </div>
+                                    </template>
+                                    <template if:true={context.isAgent}>
+                                        <div class="slds-size_6-of-12">
+                                            <lightning-input-field field-name="Matricola__c" value={accountData.Matricola__c}></lightning-input-field>
+                                        </div>
+                                    </template>
+                                    <template if:false={context.isAgent}>
+                                        <div class="slds-size_6-of-12">
+                                            <lightning-input-field field-name="Fiscal_ID__c" value={accountData.Fiscal_ID__c}></lightning-input-field>
+                                        </div>
+                                    </template>
+                                    <template if:true={context.isAgent}>
+                                        <div class="slds-size_6-of-12">
+                                            <lightning-input-field field-name="Type"></lightning-input-field>
+                                        </div>
+                                    </template>
+                                    <div class="slds-size_6-of-12">
+                                        <lightning-input-field field-name="PersonEmail"></lightning-input-field>
+                                    </div>
+                                    <template if:false={context.isAgent}>
+                                        <div class="slds-size_6-of-12">
+                                            <lightning-input-field field-name="PersonHomePhone"></lightning-input-field>
+                                        </div>
+                                    </template>
+                                    <template if:true={context.isAgent}>
+                                        <div class="slds-size_6-of-12">
+                                            <lightning-input-field field-name="Phone"></lightning-input-field>
+                                        </div>
+                                    </template>
+                                    <div class="slds-size_6-of-12">
+                                        <lightning-input-field field-name="PersonMobilePhone"></lightning-input-field>
+                                    </div>
+                                    <template if:true={context.isAgent}>
+                                        <div class="slds-size_6-of-12">
+                                            <lightning-input-field field-name="CAB__pc"></lightning-input-field>
+                                        </div>
+                                    </template>
+                                    <template if:false={context.isAgent}>
+                                        <div class="slds-size_6-of-12">
+                                            <lightning-input-field field-name="CLTSEX__pc"></lightning-input-field>
+                                        </div>
+                                    </template>
+                                </template>
+                                <!-- IS INDIVIDUAL - END -->
+                                <!-- IS CORPORATE - START -->
+                                <template if:true={context.isCorporate}>
+                                    <div class="slds-size_6-of-12">
+                                        <lightning-input-field field-name="Name" required value={accountData.Name}></lightning-input-field>
+                                    </div>
+                                    <div class="slds-size_6-of-12">
+                                        <lightning-input-field field-name="Account_email__c"></lightning-input-field>
+                                    </div>
+                                    <div class="slds-size_6-of-12">
+                                        <lightning-input-field field-name="Phone"></lightning-input-field>
+                                    </div>
+                                    <div class="slds-size_6-of-12">
+                                        <lightning-input-field field-name="Partita_IVA__c" required value={accountData.Partita_IVA__c></lightning-input-field>
+                                    </div>
+                                </template>
+                                <div class="slds-size_12-of-12 slds-text-align_center">
+                                    <lightning-button 
+                                        type="submit"
+                                        label={submitLabel}
+                                        class="slds-m-top_medium">
+                                    </lightning-button>
+                                </div>
+                                <!-- IS CORPORATE - END -->
+                            </div>
+                        </lightning-record-edit-form>
+                        <!-- FORM - END -->
+                        <!-- CARD BODY END -->
+                    </div>
+                </article>
+                <!-- CARD END -->
+            </template>
+            <!-- INSERT CUSTOMER FORM - END -->
+        </div>
+    </div>
+</template>

@@ -1,0 +1,143 @@
+<aura:component controller="CreateCaseFAQCTRL" implements="force:appHostable,flexipage:availableForRecordHome,forceCommunity:availableForAllPageTypes" access="global" >
+
+
+    
+	<aura:attribute name="valueToSearch" type="String" />
+	<aura:attribute name="valueSuggested" type="String" />
+	<aura:attribute name="categoryToFilter" type="String" default="" />
+    <aura:attribute name="title" type="String" default="Domande Frequenti"/>
+    <aura:attribute name="suggestedKnowledge" type="String" default="Articoli suggeriti"/>
+    <aura:attribute name="tags" type="String[]" default="['']"/> 
+    <aura:attribute name="articles" type="Object" />
+    <aura:attribute name="showLoading" type="Boolean" default="false"/> 
+    <aura:attribute name="orderBy" type="String" default=""/>
+    <aura:handler name="init" action="{!c.onInit}" value="{!this}"/>
+	<aura:method name="ReceiveCategoryFromCmp" action="{!c.executeQuery}">
+        <aura:attribute name="Category" type="String"/>
+        <aura:attribute name="SubCategory" type="String"/>
+        <aura:attribute name="Lob" type="String"/>
+    </aura:method>
+    
+    
+	<div class="slds-p-vertical_x-small">
+	    <lightning:card class="slds-p-vertical_x-small borderNone" >
+	        <aura:set attribute="title">
+	            <lightning:icon iconName="standard:knowledge" size="small" class="icnSandyBrown" variant="inverse"/>
+	            &nbsp;{! v.title }
+	        </aura:set>
+	        
+	        <div class="slds-p-left_x-small">
+		        <aura:iteration items="{!v.tags}" var="tag">
+		      		<lightning:badge label="{!tag}"/>
+				</aura:iteration>
+	        </div>
+	        
+         	<lightning:layout multipleRows="true">
+            	<lightning:layoutItem padding="around-small" size="7">
+	                <div class="slds-form-element slds-p-top_small slds-p-left_small">
+			  			<div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_left">
+			    			<lightning:icon class="slds-icon slds-input__icon slds-input__icon_left slds-icon-text-default" iconName="utility:search" size="x-small" />
+			        		<input type="text" id="knowledgeInput" class="slds-input " onkeyup="{!c.searchKnowledge}" placeholder="Ricerca articoli" value="{!v.valueToSearch}"/>
+			  				<aura:if isTrue="{!v.showLoading}">
+			  					<div class="slds-input__icon-group slds-input__icon-group_right">
+			      					<div role="status" class="slds-spinner slds-spinner_brand slds-spinner_x-small slds-input__spinner">
+			        					<span class="slds-assistive-text">Loading</span>
+			        					<div class="slds-spinner__dot-a"></div>
+			        					<div class="slds-spinner__dot-b"></div>
+			      					</div>
+		    					</div>
+		    				</aura:if>
+			  			</div>
+					</div>
+            	</lightning:layoutItem>
+            	<lightning:layoutItem padding="around-small" size="5">
+					<div class="slds-p-top_small slds-p-left_small slds-float_right" >
+						Ordina per:&nbsp;{!v.orderBy}&nbsp;&nbsp;
+						<lightning:buttonMenu aura:id="menu" menuAlignment="right" alternativeText="Mostra ordinamenti" onselect="{! c.orderResults }" >
+        					<lightning:menuItem aura:id="menuItems" label="Data di pubblicazione" value="lastPublishedDateDesc" checked="false" />
+        					<lightning:menuItem aura:id="menuItems" label="Migliore valutazione" value="rating" checked="false" />
+        					<lightning:menuItem aura:id="menuItems" label="I più visti" value="score" checked="false" />
+        					<lightning:menuItem aura:id="menuItems" label="Titolo: A - Z" value="titleAsc" checked="false" />
+        					<lightning:menuItem aura:id="menuItems" label="Titolo: Z - A" value="titleDesc" checked="false" />
+    					</lightning:buttonMenu>
+					</div>
+				</lightning:layoutItem>
+			</lightning:layout>
+			
+			<div class="slds-text-heading_medium slds-p-top_small slds-p-left_small">{!v.suggestedKnowledge}</div>
+	        
+	        <!-- <a class="slds-text-heading_small" onclick="{!c.handleClick}">link to record</a>-->
+	        <aura:if isTrue="{!v.articles.length>0}">
+	 			<lightning:layout multipleRows="true" class=" slds-float_right">
+           			<!-- <lightning:layoutItem padding="" class="firstLayoutItem font_x_small">
+           				<div class="header-column slds-p-left_small">
+		 					<p class="field-title" title="Titolo" >Titolo</p>
+	 					</div>	
+	 				</lightning:layoutItem>-->
+	 				<lightning:layoutitem padding="" class="secondLayoutItem font_x_small slds-p-bottom_small">
+	 					<div class="header-column">
+		 					<p class="field-title" title="Visualizzazioni" >Visualizzazione</p>
+	 					</div>
+ 					</lightning:layoutitem>	
+ 					<lightning:layoutitem padding="" class="thirdLayoutItem font_x_small slds-p-bottom_small">
+	 					<div class="header-column">
+		 					<p class="field-title" title="Valutazioni" >Valutazione</p>
+	 					</div>
+ 					</lightning:layoutitem>	
+ 				</lightning:layout>
+	 			<aura:iteration items="{!v.articles}" var="article">
+	 				<lightning:layout multipleRows="true" class="slds-p-top_small">
+            			<lightning:layoutItem padding="" size="8"  >
+			 				<div class="slds-p-top_xx-small slds-p-left_small divImages">
+						        <a class="slds-text-heading_small slds-truncate" title="{!article.title}" alt="{!article.title}" id="{!article.idKnowArt}" data-UrlName="{!article.UrlName}" data-artVersionId="{!article.idArtVers}" onclick="{!c.goToKnowledge}">{!article.title}</a> 
+				        	</div>
+			        	</lightning:layoutItem>
+			        	<lightning:layoutitem padding="" size="4">
+				        <div class="innerDivImages">
+	                        <img class="viewStat" width="{!article.score/100*50}" src="/img/knowledge/kb2/img_trans.gif" alt="{!'View Score: '+article.score}" title="{!'View Score: '+article.score}"/>
+	                        <img class="viewStatBack" src="/img/knowledge/kb2/img_trans.gif" alt="{!'View Score: '+article.score}"  title="{!'View Score: '+article.score}" />
+				        	<img class="starClass" src="{!article.nStars}" title="{!'Rating: '+article.rating}" alt="{!'Rating: '+article.rating}"/>
+				        </div>
+				        </lightning:layoutitem>
+			        </lightning:layout>
+			        <div class="slds-text-font_monospace slds-p-left_small">
+						<a onclick="{!c.handleShowModal}" id="{!article.idArtVers}" style="display:inline-block; float:right; margin-right: 2.5%; margin-top: 2.5%;">
+							<lightning:icon iconName="action:more" alternativeText="More" size="small" />
+						</a>
+                        <lightning:formattedRichText value="{!'DOMANDA: ' + article.shortQuestion}" class="question slds-truncate" maxlength="80" max="80" rows="3" />
+						<lightning:formattedRichText value="{!'RISPOSTA: '+article.shortAnswer}" class="answer slds-truncate" maxlength="80" max="80" rows="3" />
+					</div>
+					<div style="height:640px; display:none;" id="{!'div-'+article.idArtVers}">
+						<section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+							<div class="slds-modal__container">
+								<header class="slds-modal__header">
+									<h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">{!article.title}</h2>
+								</header>
+								<div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+									<p><lightning:formattedRichText value="{!'DOMANDA: '+article.question}" /></p>
+									<br />
+									<p><lightning:formattedRichText value="{!'RISPOSTA: '+article.answer}" /></p>
+								</div>
+								<footer class="slds-modal__footer">
+									<button class="slds-button slds-button_neutral" onclick="{!c.handleHideModal}" id="{!article.idArtVers}">Chiudi</button>
+								</footer>
+							</div>
+						</section>
+						<div class="slds-backdrop slds-backdrop_open"></div>
+					</div>
+		        </aura:iteration>
+                <aura:set attribute="else">
+                    <div class="slds-p-left_small slds-p-top_small">
+   						Nessun articolo trovato
+                    </div>
+    			</aura:set>
+	  		</aura:if> 
+	        
+	        <aura:set attribute="footer">
+	            <!--  FOOTER Content -->
+	        </aura:set>
+	        
+	    </lightning:card>
+    </div>
+    
+</aura:component>

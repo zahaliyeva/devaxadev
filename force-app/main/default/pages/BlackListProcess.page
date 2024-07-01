@@ -1,0 +1,1640 @@
+<apex:page standardStylesheets="true" applyBodyTag="false" docType="html-5.0" showHeader="true" sidebar="false" controller="BlackListProcessCTRL">
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" lang="en">    
+
+        <head>
+            <apex:slds /> <!--Include SLDS -->
+            <apex:includeScript value="{!URLFOR($Resource.JQuery_DD)}"/>
+            <apex:includeScript value="{!URLFOR($Resource.DataTable,'DataTable/jquery.dataTables.min.js')}"/>
+            <apex:includeScript value="{!URLFOR($Resource.DataTable,'DataTable/dataTables.bootstrap.min.js')}"/>
+            <apex:includeScript value="{!URLFOR($Resource.DataTable,'DataTable/dataTables.select.min.js')}"/>
+<!--            
+            <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+            <script src="https://cdn.datatables.net/1.10.13/js/dataTables.bootstrap.min.js"></script>  
+            <script src="https://cdn.datatables.net/select/1.2.1/js/dataTables.select.min.js"></script>  
+-->
+            <!--<apex:stylesheet value="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css"/>
+            <apex:stylesheet value="https://cdn.datatables.net/select/1.2.1/css/select.dataTables.min.css"/>-->
+            <apex:includeScript value="../../soap/ajax/39.0/connection.js"/>
+            <apex:includeScript value="/soap/ajax/36.0/apex.js"/>
+            <style>
+                .applicaFiltri,.pointer{
+                    cursor: pointer !important;
+                }
+                .disabledButton{
+                    cursor: auto;
+                }
+                .dateFormat{
+                    display: none !important;
+                    visibility: hidden !important;
+                }
+                #mydatatable th{
+                    max-width: 100%;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    font-size: .75rem;
+                    line-height: 1.25 !important;
+                    color: #54698d;
+                    text-transform: uppercase;
+                    letter-spacing: .0625rem;
+                    font-family: "Salesforce Sans",Arial,sans-serif !important;
+                    font-weight: 400;
+                    border-top: 1px solid #d8dde6 !important;
+                    line-height: 1.5;
+                    padding: .5rem !important;
+                }
+                #mydatatable td,.dataTables_info{
+                    max-width: 100%;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    color: #16325c;
+                    -webkit-tap-highlight-color: transparent;
+                    padding: .5rem !important;
+                    border-top: 1px solid #d8dde6;
+                }
+                #mydatatable td:focus{
+                    outline: -webkit-focus-ring-color auto 5px;
+                    outline-color: -webkit-focus-ring-color;
+                    outline-style: auto;
+                    outline-width: 5px
+                }
+                #mydatatable tbody tr:hover {
+                    background-color: #f4f6f9;
+                }
+                .pagination{
+                    float: right;
+                }
+                .paginate_button{
+                    float: left;
+                    padding-left: 1rem;
+                    padding-right: 1rem;
+                    text-align: center;
+                    vertical-align: middle;
+                    border: 1px solid #d8dde6;
+                    background-color: white;
+                    padding-left: 1rem;
+                    padding-right: 1rem;
+                    line-height: 1.875rem;
+                }
+                .paginate_button:hover{
+                    background-color: #f4f6f9;
+                }
+                .paginate_button:first-child {
+                    border-radius: 0.25rem 0 0 0.25rem;
+                    border-right-width: 0.5px;
+                }
+                .paginate_button:last-child {
+                    border-radius: 0 0.25rem 0.25rem 0;
+                    border-left-width: 0.5px;
+                }
+                .paginate_button a:hover{
+                    text-decoration: none;
+                }
+                .paginate_button a:focus{
+                    text-decoration: none;
+                }
+            </style>
+        </head>
+
+        <body>
+        <div id="theSLDSscope" class="slds-scope">
+        <div id="popupDIV"></div>
+            <!--THE tooltips START -->
+            <div class="slds-popover slds-nubbin--right-top slds-theme--info slds-hide" role="dialog" id="helpSalvaModificheNodi">
+                <div class="slds-popover__body">Le esclusioni selezionate saranno aggiunte a quelle attualmente previste per i clienti. Tale procedura non è istantanea e può richiedere diversi minuti.</div>
+            </div>
+
+            <div class="slds-popover slds-nubbin--left-top slds-theme--info slds-hide" role="dialog" id="helpReset">
+                <div class="slds-popover__body">Tutte le esclusioni saranno rimosse dai clienti e verrà cancellata la data di ultima lavorazione blacklist. Tale procedura non è istantanea e può richiedere diversi minuti.</div>
+            </div>
+
+            <div class="slds-popover slds-nubbin--right-top slds-theme--info slds-hide" role="dialog" id="helpSalvaModificheClienti">
+                <div class="slds-popover__body">Tutte le esclusioni saranno impostate sui clienti selezionati e verrà impostata come ultima data di lavorazione la data odierna.</div>
+            </div>
+
+            <div class="slds-popover slds-nubbin--left-top slds-theme--info slds-hide" role="dialog" id="helpValidaPagina">
+                <div class="slds-popover__body">A tutti i clienti non lavorati della pagina corrente, non verrà applicato alcun criterio di svalidazione e sarà impostata come data di ultima lavorazione la data odierna.</div>
+            </div>
+
+            <!--THE tooltips END -->
+
+
+            <apex:form id="form" > 
+                <apex:actionFunction action="{!submitNodeRequest}" name="CTRL_submitNodeRequest" rerender="outer,thescript,errorFromServer,AllCheckboxes" />
+                <apex:inputHidden value="{!SelectedNodesList}" id="HiddenNodesList"/>
+                <apex:inputHidden value="{!isReset}" id="HiddenIsReset"/>
+
+
+                <!--<apex:outputPanel id="outer">{!teststring}{!hasError}</apex:outputPanel>-->
+
+                <div class="slds-spinner_container" id="theSpinner">
+                <!--
+                    <div role="status" class="slds-spinner slds-spinner--large">
+                        <span class="slds-assistive-text">Loading</span>
+                        <div class="slds-spinner__dot-a"></div>
+                        <div class="slds-spinner__dot-b"></div>
+                    </div>
+                    -->
+                    <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.75; z-index: 1000; background-color: white;">
+                        <div class="slds-align--absolute-center" style="position: absolute; top:0;   bottom: 0;    left: 0;    right: 0;    margin: auto;" >
+                            <div>
+                                <img src="{!URLFOR($Resource.SLDS, '/assets/images/spinners/slds_spinner.gif')}" width="100px" class="slds-align--absolute-center"/>
+                                <br/><span class="slds-align--absolute-center">Caricamento in corso...<span id="loadingPercent"></span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <fieldset class="slds-box slds-theme--default">
+                    <legend id="newgraphform" class="slds-text-heading--medium" style="position:absolute;">
+                        <span class="slds-icon_container slds-icon-custom-custom7" title="Blacklist Processi">
+                        <img src="{!URLFOR($Asset.SLDS, 'assets/icons/custom/custom101_60.png')}" width="30px" height="30px"/>
+                        <!--
+                            <svg class="slds-icon" aria-hidden="true">
+                                <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/custom-sprite/svg/symbols.svg#custom101')}"></use>
+                            </svg>
+                            -->
+                            <span class="slds-assistive-text">Blacklist Processi</span>
+                        </span>
+                &nbsp;Blacklist Processi
+                    </legend>
+                    <div class="slds-col--padded slds-size--1-of-1 slds-align--absolute-center" >
+                        <div class="slds-button-group" role="group">
+                            <apex:commandButton action="{!PageIsNodi}" value="Nodi" id="btn-TypeNodi"  styleClass="{!IF(PageType = 'NODI','slds-button slds-button--brand','slds-button slds-button--neutral')}"  />
+                            <apex:commandButton action="{!PageIsClienti}" value="Clienti" id="btn-TypeClienti"  styleClass="{!IF(PageType = 'CLIENTI','slds-button slds-button--brand','slds-button slds-button--neutral')}"/>
+                        </div>
+
+                    </div>
+
+                    <div id="filtersPanel" style="{!IF(PageType = 'CLIENTI','display:block','display:none')}" class="slds-box slds-theme--shade slds-m-vertical--medium">
+                        <div id="newgraphform" class="slds-text-heading--small">
+                                <p class="slds-text-heading--small slds-m-bottom--medium">Filtri</p>
+                        </div>
+                        <div class="slds-grid slds-wrap slds-grid--pull-padded">
+                            <!--Picklist for Nodi-->
+                            <div class="slds-col--padded slds-size--1-of-2" >
+                                <div class="slds-form-element slds-p-vertical--xx-small">
+                                    <label class="slds-form-element__label" for="Nodi">Nodi</label>
+                                    <div class="slds-form-element__control">
+                                        <div class="slds-select_container">
+                                            <select id="Nodi" class="slds-select">
+                                                <option value="Tutti">---- Nessun filtro ----</option>
+                                                <!-- to be replaced by javascript-->
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!--Picklist for Da Lavorare-->
+                            <div class="slds-col--padded slds-size--1-of-2" >
+                                <div class="slds-form-element slds-p-vertical--xx-small">
+                                    <c:TextBubble helpText="Clienti non ancora svalidati/validati"/> 
+                                    <label class="slds-form-element__label" for="DaLavorare">Da lavorare:</label>
+                                    <div class="slds-form-element__control">
+                                        <div class="slds-select_container">
+                                            <select id="DaLavorare" class="slds-select">
+                                                <option value="Tutti">---- Nessun filtro ----</option>
+                                                <option value="true">Sì</option>
+                                                <option value="false">No</option>                                                        
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!--Picklist for Privacy-->
+                            <div class="slds-col--padded slds-size--1-of-2" >
+                                <div class="slds-form-element slds-p-vertical--xx-small">
+                                    <label class="slds-form-element__label" for="AreaManager">Privacy</label>
+                                    <div class="slds-form-element__control">
+                                        <div class="slds-select_container">
+                                            <select id="Privacy" class="slds-select">
+                                                <option value="Tutti">---- Nessun filtro ----</option>
+                                                <option value="true">Clienti CON Privacy Commerciale</option>
+                                                <option value="false">Clienti SENZA Privacy Commerciale</option>                                                        
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!--Picklist for Tipologia Prodotto-->
+                            <div class="slds-col--padded slds-size--1-of-2" >
+                                <div class="slds-form-element slds-p-vertical--xx-small">
+                                    <c:TextBubble helpText="Filtra i clienti che sono già esclusi per una tipologia di processo"/> 
+                                    <label class="slds-form-element__label" for="processType">Tipologia di Processo escluso:</label>
+                                    <div class="slds-form-element__control">
+                                        <div class="slds-select_container">
+                                            <select id="processType" class="slds-select">
+                                                <option value="Nessuno">---- Nessun filtro ----</option>
+												<apex:repeat value="{!listProcess}" var="process">
+													<option value="{!process.value}">{!process.value}</option>
+												</apex:repeat>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!--Picklist for Data Creazione-->
+                            <div class="slds-col--padded slds-size--1-of-2" >
+                                <div class="slds-grid slds-wrap slds-grid--pull-padded">
+                                    <div class="slds-col--padded slds-size--1-of-2" >
+                                        <div class="slds-form-element slds-p-vertical--xx-small">
+                                            <label class="slds-form-element__label" for="dataCreazione">Data Creazione Cliente da:</label>
+                                            <div class="slds-form-element__control">
+                                                <apex:inputField value="{!accountDa.PersonBirthdate}" styleClass="slds-input dataCreazioneDa"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="slds-col--padded slds-size--1-of-2" >
+                                        <div class="slds-form-element slds-p-vertical--xx-small">
+                                            <label class="slds-form-element__label" for="dataCreazione">a:</label>
+                                            <div class="slds-form-element__control">
+                                                <apex:inputField value="{!accountA.PersonBirthdate}" styleClass="slds-input dataCreazioneA"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="slds-col--padded slds-size--1-of-1 slds-align--absolute-center" >
+                                <div class="slds-button-group slds-m-top--medium" role="group">
+                                    <div class="slds-button slds-button--neutral applicaFiltri">Applica filtri</div>
+                                    <apex:commandButton action="{!PageIsClienti}" value="Reset filtri" id="btn-resetfilter"  styleClass="slds-button slds-button--neutral" />
+                                </div>
+                            </div>
+                            <!--DISMISSED
+                            <div class="slds-align--absolute-center">
+                                <div id="theMessage" class="slds-hide slds-m-around--small"></div>
+                            </div>
+                            -->
+                        </div>
+                    </div>
+
+                    <apex:outputpanel id="AllCheckboxes">
+                        <div class="slds-grid">
+                            <div class="slds-box slds-theme--shade slds-m-vertical--medium slds-col slds-grid--vertical-stretch slds-m-right--small slds-size--1-of-1 slds-small-size--1-of-1 slds-medium-size--5-of-8 slds-large-size--5-of-8" >
+                                <p class="slds-text-heading--small slds-m-bottom--medium">Tipologia di processi da escludere:</p>
+
+                                <div class="slds-form-element">
+                                    <div class="slds-form-element__control slds-grid" id="CheckBoxesPrdotti">
+										<span class="slds-checkbox" style="{!if(PageType = 'CLIENTI','','display:none')}">
+                                            <input type="checkbox" name="checkbox-NessunProdotto" id="checkbox-NessunProdotto" checked="" onClick="cleanSelectProcess(this);"/>
+                                            <label class="slds-checkbox__label" for="checkbox-NessunProdotto">
+                                                <span class="slds-checkbox--faux"></span>
+                                                <span class="slds-form-element__label">Nessuno</span>
+                                            </label>
+                                        </span>
+										<apex:repeat value="{!listProcess}" var="process">
+											<div class="slds-checkbox">
+												<label class="slds-checkbox__label">
+													<apex:inputcheckbox styleclass="slds-input" label="{!process.value}" value="{!process.checked}" onClick="selectProcess(this, '{!process.value}');"/>
+													<span class="slds-checkbox--faux"></span>
+												</label>
+												<label class="slds-form-element__label" for="{!process.value}">{!process.value}</label> 
+											</div>
+										</apex:repeat>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </apex:outputpanel>
+
+
+                </fieldset>
+
+                <div id="ListPage" class="slds-box slds-theme--default slds-m-vertical--medium">
+                    <div id="NodiPage" style="{!if(PageType = 'NODI','display:block','display:none')}">
+                        <div class="slds-col--padded slds-size--1-of-1 slds-align--absolute-center" >
+                            <div class="slds-button-group" role="group">
+                                <div class="slds-button slds-button--neutral pointer" aria-describedby="helpSalvaModificheNodi" onClick="SalvaModificheNodes();" onmouseover="showHelp(this);" onmouseout="hideHelp(this);">Salva Modifiche</div>
+                                <div class="slds-button slds-button--neutral pointer" aria-describedby="helpReset" onClick="ResetNodes();" onmouseover="showHelp(this);" onmouseout="hideHelp(this);">Reset</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div  id="ClientiPage" style="{!if(PageType = 'CLIENTI','display:block','display:none')}">
+                        <div class="slds-col--padded slds-size--1-of-1 slds-align--absolute-center" >
+                            <div class="slds-button-group" role="group">
+                                <div class="slds-button slds-button--neutral pointer" aria-describedby="helpSalvaModificheClienti" onClick="salvaModificheClienti();" onmouseover="showHelp(this);" onmouseout="hideHelp(this);">Salva Modifiche</div>
+                                <div class="slds-button slds-button--neutral pointer" aria-describedby="helpValidaPagina" onClick="validatePage();" onmouseover="showHelp(this);" onmouseout="hideHelp(this);">Valida Pagina</div>      
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slds-p-vertical--large">
+                        <table id="mydatatable" class="hover" cellspacing="0" width="100%">
+                            <apex:outputPanel rendered="{!PageType = 'NODI'}">
+                                <thead><tr>
+                                    <th></th>
+                                    <th>Nodo</th>
+                                    <th>Descrizione</th>
+                                    <th>Processo Escluso</th>
+                                    <th>Data Ultima Lavorazione</th>
+                                </tr></thead>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!PageType = 'CLIENTI'}">
+                                <thead><tr>
+                                    <th></th>
+                                    <th>Cliente</th>
+                                    <th>Nodi</th>
+                                    <th>Data Creazione CRM</th>
+                                    <th>Processo Escluso</th>
+                                    <th>Data Ultima Lavorazione</th>
+                                </tr></thead>
+                            </apex:outputPanel>
+                        </table>
+                    </div>
+
+                    <!-- INIZIO POPUP Error from Server -->
+                    <apex:outputPanel id="errorFromServer">
+                        <!-- FRONT -->
+                        <div id="PupUpErrorServer" class="{!IF(hasError,'slds-show','slds-hide')}">
+                            <div role="alertdialog" tabindex="-1" aria-labelledby="prompt-heading-id" aria-describedby="prompt-message-wrapper" class="slds-modal slds-fade-in-open" >
+                                <div class="slds-modal__container">
+                                    <div class="slds-modal__header slds-theme--info slds-theme--alert-texture">
+
+                                        <h2 class="slds-text-heading--medium" id="prompt-heading-id">
+                                            <apex:image id="theImage" value="{!$Resource.ban_icon}" width="30px" height="30px"/>
+                                    Attenzione
+                                        </h2>
+                                    </div>
+                                    <div class="slds-modal__content slds-p-around--medium">
+                                {!ErrorMsg}
+                                    </div>
+                                    <div class="slds-modal__footer slds-theme--default">
+                                        <div align="center">  
+                                            <button class="slds-button slds-button--neutral" onClick="hidePopUp('PupUpErrorServer'); return false;">OK</button>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- BACKGROUND -->
+                            <div class="slds-backdrop slds-backdrop--open" style="block"></div>
+                        </div>
+                    </apex:outputPanel>
+                    <!-- FINE POPUP Error  -->
+                </div>
+
+                <apex:actionFunction name="updateCampaignFilterSelection" action="{!selectCampaign}" rerender="">
+                    <apex:param name="selectedValue" value="" />
+                </apex:actionFunction>
+            </apex:form> 
+        </div> <!--END of SLDS DIV-->
+
+        </body>
+        <script type ="text/javascript">
+        var remoteActionGetCampaignMember= '{!$RemoteAction.BlackListProcessCTRL.getCampaignMember}';
+        Visualforce.remoting.timeout = 120000; 
+        var totalRecords = 0;
+    </script>
+        <apex:outputPanel id="thescript">
+            <script type="text/javascript">
+function setFocusOnLoad(){}
+var $ = jQuery.noConflict();
+var ViewType = '{!PageType}'; //Clienti or Nodi
+var htmltable ='';
+var nodeHeader = ['','Nodo','Descrizione','Processo Escluso','Data Ultima Lavorazione'];
+var clientHeader = ['','Cliente','Nodi','Data Creazione CRM','Processo Escluso','Data Ultima Lavorazione'];
+var allQueryResult = new Array();
+sforce.connection.sessionId = '{!$Api.Session_ID}';
+var customPageLength = 30;
+//var LIMIT_QUERY_RECORD = 10000; dismissed
+var tipologieProdotti= ['Auto','Abitazione','Aziende','Infortuni','Malattia','Protection','Saving'];
+var tipologieCampagne = ['Rinnovo','Servizio','Commerciale'];
+var queryFilter = {};
+var dateTimeParser = function(value){
+    console.log(value);
+    var re = /^(0[1-9]|1[0-9]|2[0-9]|3[0-1])\/(0[0-9]|1[0-2])\/\d\d\d\d$/;
+    if (re.test(value)) {
+        var dateIn = value.split('/');
+        var dateOut = dateIn[2] + '-' + dateIn[1] + '-' + dateIn[0];
+        return dateOut;
+    } else {
+        return '';
+    }
+    /*
+    var d = new Date(value);
+    console.log(d);
+    if (isNaN(d)) {
+        return '';
+    } else {
+        var yearstring=d.getFullYear();
+        var monthstring = '000'+(d.getMonth()+1);
+        var dayString = '0'+d.getDate();
+        var finalString = yearstring+'-'+monthstring.slice(-2)+'-'+dayString.slice(-2);
+        console.log(finalString);
+        return finalString;
+    }
+
+    var re = /^(0[1-9]|1[0-9]|2[0-9]|3[0-1])\/(0[1-9]|1[1-2])\/\d\d\d\d (00|0[0-9]|1[0-9]|2[0-3]).([0-5][0-9])$/;
+    if(re.test(value)){
+        var dateIn = value.split(' ')[0].split('/');
+        var timeIn = value.split(' ')[1].split('.');
+        var dateOut = dateIn[2] + '-' + dateIn[1] + '-' + dateIn[0];
+        var timeOut = timeIn[0] + ':' + timeIn[1];
+        return dateOut + 'T' + timeOut + ':00Z';
+    } else {
+        return '';
+    }
+    */
+};
+var getValueByHeader = {
+    '': function(record){
+       // console.log ('RECORD CORRENTE'+JSON.stringify(record, null, 4));
+       // console.log ('NDG CORRENTE'+record.Contact.Account.NDG__c);
+        //var checkboxId = {!IF(PageType='NODI','record.Node_unique_code__c',IF(PageType='CLIENTI_CAMPAGNA','record.Contact.Account.NDG__c','record.NDG__c'))};
+        if (ViewType=='NODI') checkboxId = {!'record.Node_unique_code__c'};
+        else if (ViewType=='CLIENTI') checkboxId = {!'record.NDG__c'};
+        else if (ViewType=='CLIENTI_CAMPAGNA') checkboxId = {!'record.Contact.Account.NDG__c'};
+        // console.log ('CURRENT VIEWTYPE {!PageType} {!IF(PageType='NODI','record.Node_unique_code__c',IF(PageType='CLIENTI_CAMPAGNA','record.Contact.Account.NDG__c','record.NDG__c'))}'+ViewType+checkboxId);
+        var returnStirng = "<td><div class='slds-form-element slds-checkbox'>"
+            +"<input type='checkbox' id=" + checkboxId + " />"
+            +"<label class='slds-checkbox__label' for='" + checkboxId + "'>"
+            +"<span class='slds-checkbox--faux'></span>"
+            +"<span class='slds-form-element__label'></span></label></div></td>";
+        return returnStirng;
+    },
+	'Processo Escluso': function(record){
+		return record.Blacklist_Processi__c || '';
+	},
+    'Cliente': function(record){
+        if (!(ViewType=='CLIENTI_CAMPAGNA')){
+            if(record.LastName==undefined || record.LastName=='' || record.LastName==null || record.FirstName==undefined || record.FirstName=='' || record.FirstName==null) {
+                return record.Name;
+            } else {
+                var OrderedName = record.LastName+' ' +record.FirstName;
+                return OrderedName;
+            }
+        }
+        else
+        {
+            
+            if(record.Contact.Account.LastName==undefined || record.Contact.Account.LastName=='' || record.Contact.Account.LastName==null || record.Contact.Account.FirstName==undefined || record.Contact.Account.FirstName=='' || record.Contact.Account.FirstName==null) {
+                return record.Contact.Account.Name;
+            } else {
+                var OrderedName = record.Contact.Account.LastName+' ' +record.Contact.Account.FirstName;
+                return OrderedName;
+            }
+        }
+    },
+    'Nodo': function(record){
+        if (!(ViewType=='CLIENTI_CAMPAGNA')){
+            return record.Node_unique_code__c;
+        }
+        else
+        {
+            return record.Contact.Account.Node_unique_code__c;
+        }
+    },
+    'Descrizione': function(record){
+        if (!(ViewType=='CLIENTI_CAMPAGNA')){
+            return record.Node_description__c;
+        }
+        else
+        {
+            return record.Contact.Name.Node_description__c;
+        }
+    },
+    'Nodi': function(record){
+        var theNodes = "";
+        if(!(ViewType=='CLIENTI_CAMPAGNA')){
+            if(record.Nodes__c != null){
+                var thenodelist = record.Nodes__c.split(";");
+                for (var j = 0; j < thenodelist.length; j++) {
+                    if (j==(thenodelist.length-1)) {
+                            theNodes = theNodes+thenodelist[j];
+                    } else {
+                            theNodes = theNodes+thenodelist[j]+", ";
+                    }
+                }
+            }
+        }
+        else
+        {
+            if(record.Contact.Account.Nodes__c != null){
+                var thenodelist = record.Contact.Account.Nodes__c.split(";");
+                for (var j = 0; j < thenodelist.length; j++) {
+                    if (j==(thenodelist.length-1)) {
+                            theNodes = theNodes+thenodelist[j];
+                    } else {
+                            theNodes = theNodes+thenodelist[j]+", ";
+                    }
+                }
+            }            
+        }
+        return theNodes;
+    },
+    'Data Creazione CRM': function(record){
+        var createdDateString ="";
+        if(!(ViewType=='CLIENTI_CAMPAGNA'))
+        {
+            var tempDateString = record.CreatedDate;
+            var d = new Date(tempDateString.split("T")[0]);
+        }
+        else {
+            var d = new Date(record.Contact.Account.CreatedDate); //Result from remoting is in millisecs
+        } 
+        createdDateString = d.toLocaleDateString("it-IT");
+        
+        return createdDateString;
+    },
+    'Data Ultima Lavorazione': function(record){
+        var dateString ="";
+        if(!(ViewType=='CLIENTI_CAMPAGNA')){
+            if (record.Ultima_modifica_blacklist__c != null){
+                var tempDateString = record.Ultima_modifica_blacklist__c;
+                
+                //var d = new Date(record.Ultima_modifica_blacklist__c);
+                var d = new Date(tempDateString.split("T")[0]);
+                dateString = d.toLocaleDateString("it-IT");//+" @"+d.toLocaleTimeString();
+            }
+        }else
+        {
+             if (record.Contact.Account.Ultima_modifica_blacklist__c != null){
+                var tempDateString = record.Contact.Account.Ultima_modifica_blacklist__c;
+                
+                //var d = new Date(record.Ultima_modifica_blacklist__c);
+                var d = new Date(tempDateString);
+                dateString = d.toLocaleDateString("it-IT");//+" @"+d.toLocaleTimeString();
+            }           
+        }
+        return dateString;
+    }
+};
+
+let selectedProcessData = [];
+function selectProcess(event, value){
+
+	selectedProcessData = selectedProcessData.filter(e=>e!==value);
+	if(event?.checked) selectedProcessData.push(value);
+
+	$('#checkbox-NessunProdotto').prop('checked', false);
+	console.log('selectedProcessData', selectedProcessData);
+}
+
+function cleanSelectProcess(event){
+	selectedProcessData = [];
+	console.log('selectedProcessData', selectedProcessData);
+
+	const checked = event?.checked;
+	$('#CheckBoxesPrdotti input').prop('checked', false);
+	if(checked) $('#checkbox-NessunProdotto').prop('checked', true);
+}
+
+//JQUERY METHODS START AT DOC READY
+$(document).ready(function(){ //Waiting that the doc is ready before running methods
+    //Inizialization
+    $("head").prepend("<meta http-equiv='X-UA-Compatible' content='IE=EmulateIE10'/>");
+    clearDatefields();
+    populateNodesPicklist();
+    populateCampaignPicklist(); //BOVOLENTA_D Blacklist 2018
+    console.log('CURRENT VIEWTYPE be4 getdata'+ViewType);
+    getData();
+
+
+    var currentWidth = $( window ).width();
+    $("#theSLDSscope").css("max-width", 0.97*currentWidth+'px');
+
+    
+    //Data binding
+    $('#filtersPanel').on('change','input,select',function(){
+        var applicaFiltri = $('.applicaFiltri');
+        //applicaFiltri.removeAttr('disabled');
+        //applicaFiltri.removeClass('disabledButton');
+    });
+    $('.applicaFiltri').on('click', function(){
+        elem = $(this);
+        if(elem.hasClass('disabledButton'))
+            return;
+        //elem.attr('disabled','disabled');
+        //elem.addClass('disabledButton');
+        displayPopUp('theSpinner');
+        $('#mydatatable tbody').html('');
+        getData();
+    });
+    $('#filtersPanel select').on('change',function(){
+        var elem = $(this);
+        window.queryFilter[elem.attr('id')] = elem.val();
+        console.log('<--queryfilter-->');
+        console.log(window.queryFilter);
+    });
+    $('.dataCreazioneDa').on('change',function(){
+        var elem = $(this);
+        window.queryFilter.DataCreazioneDa = dateTimeParser(elem.val());
+        console.log('<--queryfilter-->');
+        console.log(window.queryFilter);
+
+    });
+    $('.dataCreazioneA').on('change',function(){
+        var elem = $(this);
+        window.queryFilter.DataCreazioneA = dateTimeParser(elem.val());
+        console.log('<--queryfilter-->');
+        console.log(window.queryFilter);
+    });
+});
+
+//From the retrieved nodes on the controller i populate the picklist as well
+function populateNodesPicklist() {
+    var NodeListString = '{!AllNodes}';
+    records = JSON.parse(NodeListString);
+    console.log('NODI: ');
+    console.log(records);
+    var htmlInj = '';
+    for (var i = 0; i < records.length; i++){
+        var nodeUniqueCode = records[i].Node_unique_code__c;
+        htmlInj += '<option value="' + nodeUniqueCode + '">' + nodeUniqueCode + ' - ' + records[i].Node_description__c + '</option>';
+    }
+    $('#Nodi').append($(htmlInj));
+}
+
+//BOVOLENTA_D Blacklist 2018 From the retrieved campaigns on the controller i populate the picklist as well
+function populateCampaignPicklist() {
+    var CampaignListString = '{!AllCampaigns}';
+    records = JSON.parse(CampaignListString);
+    console.log('Campaigns: ');
+    console.log(records);
+    var htmlInj = '';
+    var preselectValue = '';
+    for (var i = 0; i < records.length; i++){
+        //console.log ('RECORD CAMPAGNA CORRENTE '+JSON.stringify(records[i], null, 4));
+        var campId = records[i].Id;
+        if (i==0) preselectValue = campId;
+        var campName = records[i].Name;
+        htmlInj += '<option value="' + campId + '">' + campName + ' </option>';
+    }
+    $('#CampagneBlacklist').append($(htmlInj));
+    //console.log ('PRESELECTED VALUE'+preselectValue);
+    if (htmlInj!='') 
+    {
+        //console.log ('SETTING PRESELECTED VALUE'+preselectValue);
+        $("#CampagneBlacklist").val(preselectValue);
+    }
+    //$("#CampagneBlacklist").val(preselectValue);
+}
+
+function clearDatefields() {
+$('.dataCreazioneDa').val("");
+$('.dataCreazioneA').val("");
+
+}
+
+function getData(){
+    allQueryResult = new Array();//reset array for table
+    var campaignMode = getfilterCampaign();
+    console.log('CURRENT VIEWTYPE: '+ViewType);
+    if(ViewType=='NODI') {
+        var NodeListString = '{!AllNodes}';
+        var records = JSON.parse(NodeListString);      
+        drawTable(records, window.nodeHeader);
+        hidePopUp('theSpinner');
+    } else if(ViewType == 'CLIENTI') {
+        
+
+        var myQ = "Select Name,FirstName,LastName, Nodes__c, CreatedDate, Blacklist_Processi__c,";
+
+        //Other fields
+        myQ += "Tutte_le_tipologie__c,";
+        myQ += "Tutti_i_prodotti__c,";
+        myQ += "Ultima_modifica_blacklist__c,";
+        myQ += "NDG__c "
+        //myQ += "FROM Account WHERE TECH_Company__c='AAI' AND AAI_Agency_Reference_Code__c= '{!UserAgency}' ";
+        myQ += "FROM Account WHERE State__c in {!ActiveStatuses}  AND TECH_Company__c='AAI' AND AAI_Agency_Reference_Code__c= '{!UserAgency}' ";
+        var filterString = getfilterString();
+
+        if(filterString != undefined && filterString != '') {
+             myQ += filterString;
+        }
+
+        myQ = myQ + ' ORDER BY LastName NULLS LAST';
+
+        //if(filterString == undefined || filterString == '') {
+        //     myQ += ' LIMIT '+ LIMIT_QUERY_RECORD;
+        //}
+
+        console.log('QUERY ACCOUT: ');
+        console.log(myQ);
+        console.log('############################--START QUERY--'+performance.now());
+        $('#loadingPercent').text('0%');
+        sforce.connection.query(myQ, {
+            onSuccess: successHandler,
+            onFailure: failureHandler
+        });
+
+    }
+    else if (ViewType == 'CLIENTI_CAMPAGNA')
+    {
+       getDataCampaign(); 
+    }
+}
+
+//BOVOLENTA_D Blacklist 2018
+function getDataCampaign(){
+    allQueryResult = new Array();//reset array for table
+    var myQ = "Select Contact.Account.Name,Contact.Account.FirstName,Contact.Account.LastName, Contact.Account.Nodes__c, Contact.Account.CreatedDate,";
+    for(var i = 0; i < window.tipologieProdotti.length; i++){
+         myQ += "Contact.Account.BlackList_" + window.tipologieProdotti[i] + "__c,";
+    }
+    for(var i = 0; i < window.tipologieCampagne.length; i++){
+         myQ += "Contact.Account.BlackList_" + window.tipologieCampagne[i] + "__c,";
+    }
+
+    //Other fields
+    myQ += "Contact.Account.Tutte_le_tipologie__c,";
+    myQ += "Contact.Account.Tutti_i_prodotti__c,";
+    myQ += "Contact.Account.Ultima_modifica_blacklist__c,";
+    myQ += "Contact.Account.NDG__c "
+    myQ += "FROM CampaignMember WHERE Campaignmember.Contact.Account.State__c in {!ActiveStatuses} AND CampaignMember.Contact.Account.TECH_Company__c='AAI' AND CampaignMember.Contact.Account.AAI_Agency_Reference_Code__c= '{!UserAgency}' ";
+    var filterString = getfilterCampaignString();
+
+    if(filterString != undefined && filterString != '') {
+         myQ += filterString;
+    }
+
+    myQ = myQ + ' ORDER BY CampaignMember.Contact.Account.LastName NULLS LAST';
+
+    console.log('QUERY CAMPAIGN MEMBERS: ');
+    console.log(myQ);
+    console.log('############################--START QUERY--'+performance.now());
+    $('#loadingPercent').text('0%');
+    getRemoteCampaignMembers(filterString,"","","",true,"B2C");
+    /*
+    sforce.connection.query(myQ, {
+        onSuccess: successHandler,
+        onFailure: failureHandler
+    });
+    */
+}
+
+function getRemoteCampaignMembers(filterString, lastName,firstName,name,firstTime,accType) {
+    //'Graffa!$RemoteAction.BlackListProcessCTRL.getCampaignMemberGraffa'
+    console.log ('remoteActionGetCampaignMember VALUE'+remoteActionGetCampaignMember);
+        /*Visualforce.remoting.Manager.invokeAction(
+            remoteActionGetCampaignMember,
+            filterString,
+            lastName,
+            firstName,
+            name,
+            firstTime, 
+            function(result, event){
+                if (event.status) {
+                    //console.log ('RISULTATO: '+JSON.stringify(result, null, 4));
+                    allQueryResult = allQueryResult.concat(result.queryResult);
+                    var recordArray = new Array();
+                    recordArray= recordArray.concat(result.queryResult);
+                    if (firstTime) totalRecords = result.externalCount;
+                    console.log ("total records ="+totalRecords);
+                    console.log ("allQueryResult.length ="+allQueryResult.length);
+                    console.log ("recordArray.length ="+recordArray.length);
+                    if (allQueryResult.length >= totalRecords)
+                     //(result.firstName == null && result.lastName == null && result.name == null)
+                    {
+                        drawTable(allQueryResult, window.clientHeader);
+                        hidePopUp('theSpinner');
+
+                    }
+                    else
+                    {
+                        console.log ("recordArray.length ="+recordArray.length);
+                        if(recordArray.length==4000)
+                        {
+                            if(result.lastName!= null) lastName = result.lastName;
+                            if(result.firstName!= null) firstName = result.firstName;
+                            if(result.name!= null) name = result.name;
+                            console.log (" assign parameters");
+                        }
+
+                        getRemoteCampaignMembers(filterString, lastName,firstName,name,false) ;
+                    }*/
+        Visualforce.remoting.Manager.invokeAction(
+            remoteActionGetCampaignMember,
+            filterString,
+            lastName,
+            firstName,
+            name,
+            firstTime, 
+            accType, 
+            function(result, event){
+                if (event.status) {
+                    //console.log ('RISULTATO: '+JSON.stringify(result, null, 4));
+                    //console.log('Last Array Element ='+JSON.stringify(allQueryResult[allQueryResult.length-1], null, 4));
+                    //console.log('Last Array Element ='+JSON.stringify(result.queryResult[0], null, 4));
+                    /*if (!firstTime)
+
+                    console.log('Last Array Element ='+JSON.stringify(allQueryResult[allQueryResult.length-1], null, 4));
+                    console.log('First Array Element ='+JSON.stringify(result.queryResult[0], null, 4));   
+                    console.log ("lastName ="+lastName);
+                    console.log ("firstName ="+firstName);
+                    console.log ("name ="+name);    */             
+                    if (typeof allQueryResult[allQueryResult.length-1]!= "undefined" && typeof result.queryResult[0] != "undefined" &&  allQueryResult[allQueryResult.length-1].ContactId == result.queryResult[0].ContactId ) 
+                    {
+                        console.log ("Removing ");
+                        allQueryResult.pop();
+                    }
+                    allQueryResult = allQueryResult.concat(result.queryResult);
+                    if (firstTime) totalRecords = result.externalCount;
+                   /* console.log ("total records ="+totalRecords);
+                    console.log ("allQueryResult.length ="+allQueryResult.length);
+                    console.log ("lastName ="+lastName);
+                    console.log ("firstName ="+firstName);
+                    console.log ("name ="+name);
+                    console.log ("accType= "+accType);*/
+                    firstTime = false;
+
+                    if ((result.firstName == "" || result.firstName == null) && (result.lastName == "" || result.lastName == null) && (result.name == "" ||  result.name == null)  && accType == "B2B"){
+                        drawTable(allQueryResult, window.clientHeader);
+                        hidePopUp('theSpinner');                        
+                    }
+                    else
+                    {
+                        var currentPercent = Math.round(100*allQueryResult.length/totalRecords);
+                        $('#loadingPercent').text(currentPercent+'%');                    
+                        //debugger;
+                        if (accType == "B2C" )
+                        {
+                            if (result.lastName != "" && result.lastName != null)
+                            {
+                                firstName = result.firstName; 
+                                lastName = result.lastName;
+                            }else
+                            {
+                                accType = "B2B"; 
+                            }
+                            getRemoteCampaignMembers(filterString, lastName,firstName,name,firstTime,accType) ;
+                            
+                        }else
+                        {
+                            if(result.name!= "") 
+                            {
+                                name = result.name;
+                                getRemoteCampaignMembers(filterString, lastName,firstName,name,firstTime,accType) ;
+                            }else
+                            {
+                                //return;
+                            }
+                        }
+                        /*
+                        if(result.lastName!= null) lastName = result.lastName;
+                        if(result.firstName!= null) firstName = result.firstName;
+                        if(result.name!= null) name = result.name;
+                        getRemoteCampaignMembers(filterString, lastName,firstName,name,firstTime,accType) ;*/
+                        
+                    }
+        
+                } else if (event.type === 'exception') {
+
+                } else {
+
+                }
+            }, 
+            {escape: true}
+        );
+    }
+/*
+if(result.done=="false"){
+        //Update percentage
+        var currentPercent = Math.round(100*allQueryResult.length/result.size);
+        $('#loadingPercent').text(currentPercent+'%');
+        console.log('####currentPercent'+currentPercent);
+        sforce.connection.queryMore(result.queryLocator,{
+            onSuccess: successHandler,
+            onFailure: failureHandler
+        });
+    } else {
+        $('#loadingPercent').text('99%');
+        console.log('############################--END QUERY--'+performance.now());
+        drawTable(allQueryResult, window.clientHeader);
+        hidePopUp('theSpinner');
+    }
+
+*/
+
+function failureHandler(error){
+    console.log('Query error: ');
+    console.log(error);
+}
+function successHandler(result){
+    console.log('allQueryResult-->'+allQueryResult.length);
+     var theMessage = '';
+     var filterString = getfilterString();
+    // if (result.size>=LIMIT_QUERY_RECORD /*&& (filterString=='' || filterString==undefined)*/) {
+    //    var theMessage = 'La tabella presenta i primi '+LIMIT_QUERY_RECORD+' record per la selezione effettuata. Si consiglia di applicare dei filtri più restrittivi per ridurne il numero';
+    //    $('#theMessage').text(theMessage);
+    //    displayPopUp('theMessage');
+    //} else {
+    //    hidePopUp('theMessage');
+    //}
+
+
+    console.log('result.done-->'+result.done);
+    result = result.records == undefined? {records: []}: result;
+    //console.log ('RESULT '+JSON.stringify(result, null, 4));
+    allQueryResult = allQueryResult.concat(result.records);
+    if(result.done=="false"){
+        //Update percentage
+        var currentPercent = Math.round(100*allQueryResult.length/result.size);
+        $('#loadingPercent').text(currentPercent+'%');
+        console.log('####currentPercent'+currentPercent);
+        sforce.connection.queryMore(result.queryLocator,{
+            onSuccess: successHandler,
+            onFailure: failureHandler
+        });
+    } else {
+        $('#loadingPercent').text('99%');
+        console.log('############################--END QUERY--'+performance.now());
+        drawTable(allQueryResult, window.clientHeader);
+        hidePopUp('theSpinner');
+    }
+}
+
+//BOVOLENTA_D Blacklist 2018
+function getfilterCampaign() {
+    var campaignFiltered = false;
+    var tmpFilter = $("#CampagneBlacklist").val();//window.queryFilter.CampagneBlacklist;
+    console.log ('the campaign filter'+tmpFilter);
+    if(tmpFilter != undefined && tmpFilter != null && tmpFilter != '' &&  tmpFilter != 'Tutti' &&  ViewType!= 'NODI'){
+        if (tmpFilter.length>0) {
+            campaignFiltered = true;
+           // $(“. exampleDataToSetVariable”).val(data);
+           ViewType = 'CLIENTI_CAMPAGNA';
+        }
+    }
+    else if (ViewType!= 'NODI')
+    {
+        ViewType= 'CLIENTI';
+    }
+    return campaignFiltered;
+}
+
+
+function getfilterCampaignString() {
+    var returnString = '';
+    console.log(window.queryFilter);
+    var campagignFiltered = false;
+    var tmpFilter =  $("#CampagneBlacklist").val();//window.queryFilter.CampagneBlacklist;
+
+    if(tmpFilter != undefined && tmpFilter != null && tmpFilter != '' &&  tmpFilter != 'Tutti'){
+        if (tmpFilter.length>0) {
+            campagignFiltered = true;
+            returnString += " AND CampaignId = '" + tmpFilter + "' "; 
+        }
+    }
+    
+    var tmpFilter = window.queryFilter.Nodi;
+    if(tmpFilter != undefined && tmpFilter != null && tmpFilter != '' &&  tmpFilter != 'Tutti'){
+        if (tmpFilter.length>6) {
+            returnString += " AND Contact.Account.Nodes__c like '%" + tmpFilter + "%' ";    
+        } else {
+            returnString += " AND (Contact.Account.Nodes__c = '" + tmpFilter + ";' OR Contact.Account.Nodes__c ='" + tmpFilter + "') ";    
+        }
+    }
+
+    tmpFilter = window.queryFilter.DaLavorare;
+     if(tmpFilter != undefined && tmpFilter != null && tmpFilter != '' &&  tmpFilter != 'Tutti'){
+        returnString += " AND Contact.Account.Ultima_modifica_blacklist__c ";
+        if(tmpFilter == 'true'){
+            returnString += " = NULL ";
+        } else {
+            returnString += " != NULL ";
+        }
+    }
+
+    tmpFilter = window.queryFilter.TipologiaProdotti;
+    if(tmpFilter != undefined && tmpFilter != null && tmpFilter != '' && tmpFilter != 'Nessuno'){
+        if(tmpFilter == 'Tutti'){
+            returnString += " AND Contact.Account.Tutti_i_prodotti__c = TRUE ";
+        } else  if (tmpFilter =='NoFlag'){
+            returnString += " AND Contact.Account.BlackList_Auto__c = FALSE ";
+            returnString += " AND Contact.Account.BlackList_Abitazione__c = FALSE ";
+            returnString += " AND Contact.Account.BlackList_Aziende__c = FALSE ";
+            returnString += " AND Contact.Account.BlackList_Infortuni__c = FALSE ";
+            returnString += " AND Contact.Account.BlackList_Malattia__c = FALSE ";
+            returnString += " AND Contact.Account.BlackList_Protection__c = FALSE ";
+            returnString += " AND Contact.Account.BlackList_Saving__c = FALSE ";
+        } else {
+            returnString += " AND Contact.Account.BlackList_" + tmpFilter + "__c = TRUE ";
+        }
+    }
+
+    tmpFilter = window.queryFilter.Privacy;
+    if(tmpFilter != undefined && tmpFilter != null && tmpFilter != '' &&  tmpFilter != 'Tutti'){
+        if(tmpFilter == "true"){
+            returnString += " AND Contact.Account.CIF_Privacy_2__c = 'Sì' ";
+        }else
+        {
+            returnString += " AND Contact.Account.CIF_Privacy_2__c in ('No','') ";
+        }
+    }
+
+    tmpFilter = window.queryFilter.DataCreazioneDa;
+    if(tmpFilter != undefined && tmpFilter != null && tmpFilter != ''){
+        returnString += " AND Contact.Account.CreatedDate >= " +tmpFilter + "T00:00:00Z ";    
+    }
+
+
+    tmpFilter = window.queryFilter.DataCreazioneA;
+    if(tmpFilter != undefined && tmpFilter != null && tmpFilter != ''){
+        returnString += " AND Contact.Account.CreatedDate <= " +tmpFilter + "T23:59:00Z ";
+    }
+
+    tmpFilter = window.queryFilter.Campagne;
+    if(tmpFilter != undefined && tmpFilter != null && tmpFilter != '' && tmpFilter != 'Nessuna'){
+        if(tmpFilter == 'Tutte'){
+            returnString += " AND Contact.Account.Tutte_le_tipologie__c = TRUE ";
+        } else if (tmpFilter=='NoFlag') {
+            returnString += " AND Contact.Account.BlackList_Rinnovo__c = FALSE ";
+            returnString += " AND Contact.Account.BlackList_Servizio__c = FALSE ";
+            returnString += " AND Contact.Account.BlackList_Commerciale__c = FALSE ";
+        } else {
+            returnString += " AND Contact.Account.BlackList_" + tmpFilter + "__c = TRUE ";
+        }  
+    }
+    return returnString;;
+}
+
+
+function getfilterString() {
+    var returnString = '';
+    console.log(window.queryFilter);
+
+    var tmpFilter = window.queryFilter.Nodi;
+    if(tmpFilter != undefined && tmpFilter != null && tmpFilter != '' &&  tmpFilter != 'Tutti'){
+        if (tmpFilter.length>6) {
+            returnString += " AND Nodes__c like '%" + tmpFilter + "%' ";    
+        } else {
+            returnString += " AND (Nodes__c = '" + tmpFilter + ";' OR Nodes__c ='" + tmpFilter + "') ";    
+        }
+    }
+
+    tmpFilter = window.queryFilter.DaLavorare;
+     if(tmpFilter != undefined && tmpFilter != null && tmpFilter != '' &&  tmpFilter != 'Tutti'){
+        returnString += " AND Ultima_modifica_blacklist__c ";
+        if(tmpFilter == 'true'){
+            returnString += " = NULL ";
+        } else {
+            returnString += " != NULL ";
+        }
+    }
+
+    tmpFilter = window.queryFilter.TipologiaProdotti;
+    if(tmpFilter != undefined && tmpFilter != null && tmpFilter != '' && tmpFilter != 'Nessuno'){
+        if(tmpFilter == 'Tutti'){
+            returnString += " AND Tutti_i_prodotti__c = TRUE ";
+        } else  if (tmpFilter =='NoFlag'){
+            returnString += " AND BlackList_Auto__c = FALSE ";
+            returnString += " AND BlackList_Abitazione__c = FALSE ";
+            returnString += " AND BlackList_Aziende__c = FALSE ";
+            returnString += " AND BlackList_Infortuni__c = FALSE ";
+            returnString += " AND BlackList_Malattia__c = FALSE ";
+            returnString += " AND BlackList_Protection__c = FALSE ";
+            returnString += " AND BlackList_Saving__c = FALSE ";
+        } else {
+            returnString += " AND BlackList_" + tmpFilter + "__c = TRUE ";
+        }
+    }
+
+    tmpFilter = window.queryFilter.Privacy;
+    if(tmpFilter != undefined && tmpFilter != null && tmpFilter != '' &&  tmpFilter != 'Tutti'){
+        if(tmpFilter == "true"){
+            returnString += " AND CIF_Privacy_2__c = 'Sì' ";
+        }else
+        {
+            returnString += " AND CIF_Privacy_2__c in ('No','') ";
+        }
+    }
+
+    tmpFilter = window.queryFilter.DataCreazioneDa;
+    if(tmpFilter != undefined && tmpFilter != null && tmpFilter != ''){
+        returnString += " AND CreatedDate >= " +tmpFilter + "T00:00:00Z ";    
+    }
+
+
+    tmpFilter = window.queryFilter.DataCreazioneA;
+    if(tmpFilter != undefined && tmpFilter != null && tmpFilter != ''){
+        returnString += " AND CreatedDate <= " +tmpFilter + "T23:59:00Z ";
+    }
+
+    tmpFilter = window.queryFilter.Campagne;
+    if(tmpFilter != undefined && tmpFilter != null && tmpFilter != '' && tmpFilter != 'Nessuna'){
+        if(tmpFilter == 'Tutte'){
+            returnString += " AND Tutte_le_tipologie__c = TRUE ";
+        } else if (tmpFilter=='NoFlag') {
+            returnString += " AND BlackList_Rinnovo__c = FALSE ";
+            returnString += " AND BlackList_Servizio__c = FALSE ";
+            returnString += " AND BlackList_Commerciale__c = FALSE ";
+        } else {
+            returnString += " AND BlackList_" + tmpFilter + "__c = TRUE ";
+        }  
+    }
+
+	tmpFilter = window.queryFilter.processType;
+	if(tmpFilter != undefined && tmpFilter != null && tmpFilter != '' && tmpFilter != 'Nessuna'){
+		returnString += " AND Blacklist_Processi__c INCLUDES ('" + tmpFilter + "') ";
+    }
+    return returnString;
+}
+
+function changeAllProdotti(cb) {
+    var checked = cb.checked;
+    console.log('changeAllProdotti--found this'+checked);
+    //setting all flags
+     $('#CheckBoxesPrdotti input').prop('checked', checked);
+    $('#checkbox-NessunProdotto').prop('checked', false);
+    $('#checkbox-NessunaTipologia').prop('checked', false);
+
+}
+
+function clearAllProdotti(cb) {
+    var checked = cb.checked;
+    console.log('clearAllProdotti--found this'+checked);
+    if (checked)
+    {
+        $('#CheckBoxesPrdotti input').prop('checked', false);
+        //also clearing tipologie
+        $('#CheckBoxesTipologie input').prop('checked', false);
+        $('#checkbox-NessunProdotto').prop('checked', true);
+        $('#checkbox-NessunaTipologia').prop('checked', true);
+    } 
+    else
+    {
+        $('#checkbox-NessunaTipologia').prop('checked', false);      
+    }     
+}
+
+function checkClearProdotti (cb)
+{
+    var checked = cb.checked;
+    //clear tutti prodotti
+    if (!checked)
+    {
+        $('#checkbox-TuttiProdotti').prop('checked', false);
+    }
+    //clear nessun prodotto nessuna campagna
+    checkClearNones(cb);
+}
+
+function checkClearTipologie (cb)
+{
+    var checked = cb.checked;
+    //clear tutti prodotti
+    if (!checked)
+    {
+        $('#checkbox-TutteTipologie').prop('checked', false);
+    }
+    //clear nessun prodotto nessuna campagna
+    checkClearNones(cb);
+}
+
+function checkClearNones(cb) {
+    var checked = cb.checked;
+
+    if (checked)
+    {
+        $('#checkbox-NessunProdotto').prop('checked', false);
+        $('#checkbox-NessunaTipologia').prop('checked', false);
+    }
+
+}
+
+function changeAllTipologie(cb) {
+    var checked = cb.checked;
+    console.log('changeAllTipologie--found this'+checked);
+    $('#CheckBoxesTipologie input').prop('checked', checked);
+    $('#checkbox-NessunProdotto').prop('checked', false);
+    $('#checkbox-NessunaTipologia').prop('checked', false);
+}
+
+function clearAllTipologie(cb) {
+    var checked = cb.checked;
+    console.log('clearAllTipologie--found this'+checked);
+    if (checked)
+    {
+        $('#CheckBoxesTipologie input').prop('checked', false);
+        //also clearing prodotti
+        $('#CheckBoxesPrdotti input').prop('checked', false);
+        $('#checkbox-NessunProdotto').prop('checked', true);
+        $('#checkbox-NessunaTipologia').prop('checked', true);
+    }
+    else
+    {
+        $('#checkbox-NessunProdotto').prop('checked', false);      
+    }   
+}
+
+function drawTable(records, header) {
+    console.log('############################--START DRAW TABLE--'+performance.now());
+    htmltable ='<table id="mydatatable" class="hover" cellspacing="0" width="100%"><thead>';
+    //TABLE HEAD
+    htmltable +='<tr>';
+    for(var i = 0; i < header.length; i++){
+        htmltable +="<th>" + header[i] + "</th>";
+    }
+    htmltable +="</thead><tbody>";    
+    htmltable +="</tbody></table>";
+    var dataRecords = new Array();
+    console.log('############################--START pushing TABLE--'+performance.now());
+
+    for(var i = 0; i < records.length; i++){
+        var dataRecord = new Array();
+        for(var j = 0; j < header.length; j++){
+            //dataRecord.push(getValueByHeader[header[j]](records[i]));
+            dataRecord[j] = getValueByHeader[header[j]](records[i]);
+        }
+        //dataRecords.push(dataRecord);
+        dataRecords[i]= dataRecord;
+    }
+    
+    console.log('############################--END pushing TABLE--'+performance.now());
+
+    console.log('############################--Start init TABLE--'+performance.now());
+    $('#mydatatable').css("display", "none");
+    $('#mydatatable tbody').html('');
+    $('#mydatatable').on( 'page.dt', function (){
+
+    });
+    $('#mydatatable').DataTable({
+        destroy: true,
+        searching: false,
+        lengthChange: false,
+        pageLength: customPageLength,
+        ordering: false,
+        pagingType: "full_numbers",
+        data: dataRecords,
+        deferRender: true,
+        language: {
+            "emptyTable": "Nessun Dato",
+            "info": "_START_ - _END_ di _TOTAL_",
+            "infoEmpty": "Nessun Dato",
+            "loadingRecords": "Caricamento...",
+            "processing": "Elaborazione...",
+            "zeroRecords": "Nessun dato trovato",
+            "paginate": {
+                "first": "<| Inizio",
+                "last":  "Fine |>",
+                "next":   "Avanti >>",
+                "previous": "<< Indietro"
+            }
+        }
+    });
+    console.log('showing');
+    $('#mydatatable').css("display", "table");
+
+    console.log('############################--END init TABLE--'+performance.now());
+}
+
+//NODI
+
+function SalvaModificheNodes() {
+    console.log('salvamodifiche');
+    var error = '';
+    if (areAllTableCheckboxSelected()) {
+        error = error+ '<li>Non è possibile selezionare tutti i clienti in una singola operazione. Modificare la selezione e ripetere l&apos;operazione.</li>';
+    } 
+    if (hasTableNoCheckboxSelected()) {
+        error = error+'<li>Selezionare almeno un nodo</li>';
+    }
+    if (hasNotSelectedOption()) {
+        error = error+'<li>Selezionare almeno un processo</li>';
+    }
+    if (error!='') {
+        var data = {
+            title: 'Attenzione',
+            message: '<ul class="slds-list--dotted">' + error + '</ul>',
+            buttons : [{title: 'OK', fn: 'destroyPopup'}],
+            icon: {repo: 'utility', symbol: 'ban'}
+        }
+    } else {
+        var data = {
+            title: 'Conferma',
+            message: 'Con la seguente operazione verrà applicata la selezione effettuata a tutti i clienti dei nodi selezionati. Si desidera procedere con l&apos;operazione?<br/><div class="slds-text-body--small slds-m-vertical--medium">Tale procedura non è istantanea e può richiedere diversi minuti.</div>',
+            buttons : [{title: 'Si', fn: 'submitNodeRequest'},{title:'Annulla',fn: 'destroyPopup'}],
+            icon: {repo: 'action', symbol: 'edit_groups'}
+        }
+    }
+    drawPopup(data);
+}
+
+function ResetNodes() {
+    console.log('ResetNodes');
+    var error = false;
+    if (areAllTableCheckboxSelected()) {
+        error = '<li>Non è possibile selezionare tutti i nodi in una singola operazione. Modificare la selezione e ripetere l&apos;operazione.</li>';
+    } 
+    if (hasTableNoCheckboxSelected()) {
+        error = '<li>Selezionare almeno un nodo</li>';
+        haserror = true;
+    }
+    if (error!='') {
+        var data = {
+            title: 'Attenzione',
+            message: '<ul class="slds-list--dotted">' + error + '</ul>',
+            buttons : [{title: 'OK', fn: 'destroyPopup'}],
+            icon: {repo: 'utility', symbol: 'ban'}
+        }
+    } else {
+        var data = {
+            title: 'Conferma',
+            message: 'Con la seguente operazione verrà applicata la selezione effettuata a tutti i clienti dei nodi selezionati. Si desidera procedere con l&apos;operazione?<br/><div class="slds-text-body--small slds-m-vertical--medium">Tale procedura non è istantanea e può richiedere diversi minuti.</div>',
+            buttons : [{title: 'Si', fn: 'submitNodeRequest'},{title:'Annulla',fn: 'destroyPopup'}],
+            icon: {repo: 'action', symbol: 'edit_groups'}
+        }
+        $('[id$=HiddenIsReset]').val(true);
+    }
+    drawPopup(data);
+}
+
+function submitNodeRequest(){
+    var thenodes = getSelectedNodes();
+    $('[id$=HiddenNodesList]').val(thenodes);
+    CTRL_submitNodeRequest();
+    destroyPopup();
+    displayPopUp('theSpinner');
+}
+
+//CLIENTI
+function salvaModificheClienti(){
+    var error = '';
+    var data = {}
+    if (areAllTableCheckboxSelected()) {
+        error = error+ '<li>Non è possibile selezionare tutti i clienti in una singola operazione. Modificare la selezione e ripetere l&apos;operazione.</li>';
+    } 
+    if (hasTableNoCheckboxSelected()) {
+        error = error+'<li>Selezionare almeno un cliente</li>';
+    }
+    if (hasNotSelectedOption()) {
+        error = error+'<li>Selezionare almeno un processo</li>';
+    }
+    if (hasOnlyNoProdOrTypeSelected()) {
+        error = error+'<li>Non è possibile selezionare alcuna tipologia di prodotto o campagna se è stato selezionato nessun prodotto o nessuna campagna</li>';
+    }
+    
+    if (error != '') {
+        data = {
+            title: 'Attenzione',
+            message: '<ul class="slds-list--dotted">' + error + '</ul>',
+            buttons : [{title: 'OK', fn: 'destroyPopup'}],
+            icon: {repo: 'utility', symbol: 'ban'}
+        }
+    } else {
+        data = {
+            title: 'Conferma',
+            message: 'Con la seguente operazione verrà applicata la selezione effettuata a tutti i clienti selezionati. Si desidera procedere con l&apos;operazione?',
+            buttons : [{title: 'Si', fn: 'submitClientiRequest'},{title:'Annulla',fn: 'destroyPopup'}],
+            icon: {repo: 'action', symbol: 'edit_groups'}
+        }
+    }
+    drawPopup(data);
+}
+
+function submitClientiRequest(){
+    destroyPopup();
+    displayPopUp('theSpinner');
+    var fieldValue = {
+		Blacklist_Processi__c: selectedProcessData.join(';')
+	};
+    // for(var i = 0; i < window.tipologieProdotti.length; i++){
+    //     var tipo = window.tipologieProdotti[i];
+    //     fieldValue['BlackList_' + tipo + '__c'] = $('[id*="checkbox-' + tipo + '"]')[0].checked;
+    // }
+    // for(var i = 0; i < window.tipologieCampagne.length; i++){
+    //     var tipo = window.tipologieCampagne[i];
+    //     fieldValue['BlackList_' + tipo + '__c'] = $('[id*="checkbox-' + tipo + '"]')[0].checked;
+    // }
+    var ndgs = new Array();
+    $('#mydatatable input').each(function(){
+        var elem = $(this);
+        if(elem[0].checked){
+            ndgs.push(elem.attr('id'));
+        }
+    });
+    BlackListProcessCTRL.saveClientiBlackList(ndgs,fieldValue,function(result){
+        if(result.success){
+			console.log('saveClientiBlackList.result', result);
+            for(var i = 0; i < result.ids.length; i++){
+                var rowColumns = $($('#' + result.ids[i]).parents('tr')[0]).find('td');
+                $($(rowColumns[4])).text(result.process.join(';'));
+                // $($(rowColumns[5])).text(result.campagne);
+                // $($(rowColumns[6])).text(result.data);
+            }
+        } else {
+            console.log(result.description);
+        }
+        deselectAllOptions();
+        deselectAllClients();
+        hidePopUp('theSpinner');
+    });
+}
+function validatePage(){
+    data = {
+        title: 'Conferma',
+        message: 'Con la seguente operazione tutti i clienti verranno validati. Si desidera procedere con l&apos;operazione?',
+        buttons : [{title: 'Si', fn: 'confirmPageValidation'},{title:'Annulla',fn: 'destroyPopup'}],
+        icon: {repo: 'action', symbol: 'edit_groups'}
+    }
+    drawPopup(data);
+}
+function confirmPageValidation(){
+    destroyPopup();
+    displayPopUp('theSpinner');
+    var ndgs = new Array();
+    $('#mydatatable input').each(function(){
+        ndgs.push($(this).attr('id'));
+    });
+    BlackListProcessCTRL.validateClients(ndgs,function(result){
+    console.log(result);
+    console.log(result.ids);
+        if(result.success){
+            for(var i = 0; i < result.ids.length; i++){
+                var rowColumns = $($('#' + result.ids[i]).parents('tr')[0]).find('td');
+                $($(rowColumns[5])).text(result.data);
+            }
+        }
+        deselectAllOptions();
+        deselectAllClients();
+        hidePopUp('theSpinner');
+    });
+}
+
+function getSelectedNodes(){
+    var res = '';
+    $('#mydatatable').find('input[type="checkbox"]:checked').each(function () {
+        console.log(this);
+        res = res + this.id+';';
+    });
+    return res;
+}
+
+function deselectAllOptions(){
+    console.log('deselecting checkboxes');
+    $('#CheckBoxesPrdotti').find('input:checkbox').prop('checked', false);
+    $('#CheckBoxesTipologie').find('input:checkbox').prop('checked', false);
+}
+
+function deselectAllClients() {
+    $('#mydatatable').find('td input:checkbox').prop('checked', false);
+}
+
+
+
+
+function areAllTableCheckboxSelected(){
+    var elems = $('#mydatatable input');
+    for(var i = 0; i < elems.length; i++){
+        if(!elems[i].checked){
+            return false;
+        }
+    }
+    if (elems.length==1) {//in case there is only one client or node
+        return false;
+    } 
+    return true;
+    
+}
+
+function hasTableNoCheckboxSelected() {
+    var elems = $('#mydatatable input');
+    for(var i = 0; i < elems.length; i++){
+        if(elems[i].checked){
+            return false;
+        }
+    }
+    return true;
+}
+
+function hasNotSelectedOption() {
+    var CheckBoxesPrdotti = $('#CheckBoxesPrdotti').find('input[type="checkbox"]:checked').length;
+    //var CheckBoxesTipologie = $('#CheckBoxesTipologie').find('input[type="checkbox"]:checked').length;
+    var areOptionsNotSelected =CheckBoxesPrdotti <1;
+    return areOptionsNotSelected;
+}
+
+function hasOnlyNoProdOrTypeSelected() {
+
+    var isNessunProdottoChecked = $('#checkbox-NessunProdotto').prop('checked');  
+  /*  var isAutoChecked = $('#checkbox-Auto').prop('checked');
+    var isAbitazioneChecked = $('#checkbox-Abitazione').prop('checked');
+    var isAziendeChecked = $('#checkbox-Aziende').prop('checked');
+    var isInfortuniChecked = $('#checkbox-Infortuni').prop('checked'); 
+    var isMalattiaChecked = $('#checkbox-Malattia').prop('checked');  
+    var isProtectionChecked = $('#checkbox-Protection').prop('checked'); 
+    var isSavingChecked = $('#checkbox-Saving').prop('checked');  */   
+
+    var isNessunaTipologiaChecked = $('#checkbox-NessunaTipologia').prop('checked');
+ /*   var isRinnovoChecked = $('#checkbox-Rinnovo').prop('checked');  
+    var isServizioChecked = $('#checkbox-Servizio').prop('checked'); 
+    var isCommercialeChecked = $('#checkbox-Commerciale').prop('checked'); */
+
+    var CheckBoxesPrdotti = $('#CheckBoxesPrdotti').find('input[type="checkbox"]:checked').length;
+    var CheckBoxesTipologie = $('#CheckBoxesTipologie').find('input[type="checkbox"]:checked').length;
+
+    var result;
+    if ((isNessunProdottoChecked && CheckBoxesPrdotti>1) || (isNessunaTipologiaChecked && CheckBoxesTipologie>1) || (isNessunProdottoChecked && !isNessunaTipologiaChecked && CheckBoxesTipologie>0) || (isNessunProdottoChecked && isNessunaTipologiaChecked && CheckBoxesTipologie>1) || (isNessunaTipologiaChecked && !isNessunProdottoChecked && CheckBoxesPrdotti>0) || (isNessunaTipologiaChecked && isNessunProdottoChecked && CheckBoxesPrdotti>1))
+    {
+        result = true;
+    }
+    else
+    {
+        result = false;
+    }
+    //console.log ('result: '+result+' nessun'+isNessunProdottoChecked+isNessunaTipologiaChecked+' others'+isAutoChecked+isAbitazioneChecked+isAziendeChecked+isInfortuniChecked+isMalattiaChecked+isProtectionChecked+isSavingChecked+isRinnovoChecked+isServizioChecked+isCommercialeChecked);
+    return result;
+}
+
+var destroyPopup = function(){
+    $('[id$=HiddenIsReset]').val(false);//I make sure that every time i close the popup is not reset
+    $('#customPopUp').remove();
+}
+
+var drawPopup = function (data){
+    var buttonHmtl = ''
+    if(data.buttons != undefined){
+        for(var i=0; i < data.buttons.length; i++){
+            var onClickHtml = '';
+            if(data.buttons[i].fn != undefined)
+                onClickHtml = ' onClick="' + data.buttons[i].fn +'();" ';
+            buttonHmtl += '<div class="slds-button slds-button--neutral pointer"' + onClickHtml + '>' + data.buttons[i].title + '</div>';
+        }
+    }
+    
+    
+    var img_URL = "";
+    if (data.icon.symbol=='ban') {
+        img_URL = "{!$Resource.ban_icon}";
+    }
+    if (data.icon.symbol=='edit_groups') {
+        img_URL = "{!URLFOR($Asset.SLDS, 'assets/icons/action/edit_groups_60.png')}"
+    }
+    
+    var html = '<div id="customPopUp">' +
+                '<div role="alertdialog" tabindex="-1" aria-labelledby="prompt-heading-id" aria-describedby="prompt-message-wrapper" class="slds-modal slds-fade-in-open" >' +
+                    '<div class="slds-modal__container">' + 
+                        '<div class="slds-modal__header slds-theme--info slds-theme--alert-texture">' +
+                            '<h2 class="slds-text-heading--medium" id="prompt-heading-id">' +
+                                '<span class="slds-icon_container slds-icon_container--circle" title="">' +                                       
+                                    '<img src='+img_URL+' width="30px" height="30px"/>'+
+                                '</span>'+ data.title +'</h2>' +
+                        '</div>' +
+                    '<div class="slds-modal__content slds-p-around--medium">' + 
+                        '<div><p>' + data.message + '</p></div>' + 
+                    '</div>' + 
+                    '<div class="slds-modal__footer slds-theme--default">' + 
+                       '<div align="center">' + buttonHmtl + 
+                       '</div>' +
+                    '</div>' +
+                '</div>' +
+            '</div>' +
+            '<div class="slds-backdrop slds-backdrop--open" style="block"></div>' +
+        '</div>'; 
+    $('#popupDIV').append(html);    
+}
+
+
+function displayPopUp(popupId) {
+    console.log('displaying-->'+popupId);
+    $('#'+popupId).removeClass('slds-hide').addClass('slds-show');
+}
+
+function hidePopUp(popupId) {
+    console.log('hiding-->'+popupId);
+    $('#' + popupId).addClass('slds-hide').removeClass('slds-show');
+}
+
+function showHelp(item) {
+    console.log(item);
+    var helpId = item.getAttribute("aria-describedby");
+    var currentposition = $(item).position();
+    var helpwidth = $('#'+helpId).outerWidth();
+    var currentItemWidth = $(item).outerWidth();
+    $('#'+helpId).css('top', currentposition.top);
+    $('#'+helpId).css('position', 'absolute');
+
+    var theClass = $('#'+helpId).attr('class');
+
+    if (theClass.indexOf('right')!=-1) {//position callout to the left as arrow is to the right
+        $('#'+helpId).css('left', currentposition.left-(helpwidth*1.05));
+    }
+    if (theClass.indexOf('left')!=-1) {//position to the right
+        $('#'+helpId).css('left', currentposition.left+currentItemWidth+(helpwidth*0.05));
+    }
+    console.log(helpId);
+    displayPopUp(helpId);
+}
+
+function hideHelp(item) {
+    console.log(item);
+    var helpId = item.getAttribute("aria-describedby");
+    console.log(helpId);
+    hidePopUp(helpId);
+}
+
+
+                                                        </script>
+                                                    </apex:outputPanel>
+                                                    <script type="text/javascript">
+var __sfdcSessionId = '{!GETSESSIONID()}';
+                                                    </script>
+                                                    <script src="../../soap/ajax/39.0/connection.js"></script>
+                                                </html>
+                                            </apex:page>

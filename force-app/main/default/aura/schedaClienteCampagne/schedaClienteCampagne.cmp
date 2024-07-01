@@ -1,0 +1,109 @@
+<aura:component controller="SchedaClienteCampagneController">
+  <aura:attribute name="accountId" type="String" />
+  <aura:attribute name="campaignMembers" type="CampaignMember[]" />
+  <lightning:navigation aura:id="navService"/>
+  <aura:handler name="init" value="{! this }" action="{! c.doInit }"/> 
+  <aura:attribute name="accordionOpened" type="Boolean" />
+  
+  <ul class="slds-accordion">
+  <li class="slds-accordion__list-item">
+      <section class="slds-accordion__section slds-is-open">
+        <div class="slds-accordion__summary">
+          <h3 class="slds-accordion__summary-heading">
+            <button aria-controls="accordion-details-01" aria-expanded="true" class="slds-button slds-button_reset slds-accordion__summary-action" onclick="{!c.toggleAccordion}">
+                  <lightning:icon aura:id="accordion" class="slds-show" iconName="utility:add" size="x-small" />
+                  <lightning:icon aura:id="accordion" class="slds-hide" iconName="utility:dash" size="x-small" />
+              <span class="slds-accordion__summary-content" title="Accordion summary">Campagne</span>
+            </button>
+          </h3>  
+        </div>
+      <div aura:id="accordion"  class="slds-hide slds-accordion__content" id="accordion-details-01">
+        <article class="slds-card slds-card_boundary">
+          <div class="slds-card__header slds-grid">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+              <div class="slds-media__figure">
+                <span class="slds-icon_container slds-icon-standard-account" title="Storico Campagne">
+                      <lightning:icon iconName="standard:campaign"/>
+                </span>
+              </div>
+              <div class="slds-media__body"> 
+                <h2 class="slds-card__header-title">
+                  <a href="javascript:void(0);" class="slds-card__header-link slds-truncate not-active" title="Storico Campagne">
+                    <span>Storico Campagne</span>
+                  </a>
+                </h2>
+              </div>
+            </header>
+          </div>
+          <div class="slds-card__body slds-card__body_inner">
+            <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_fixed-layout slds-table_resizable-cols">
+              <thead>
+                <tr class="slds-line-height_reset">
+                  <th class="" scope="col">
+                    <div class="slds-truncate" title="Nome">Nome</div>
+                  </th>
+                  <th class="" scope="col">
+                    <div class="slds-truncate" title="Tipologia">Tipologia</div>
+                  </th>
+                  <th class="" scope="col">
+                    <div class="slds-truncate" title="Data Inizio">Data Inizio</div>
+                  </th>
+                  <th class="" scope="col">
+                    <div class="slds-truncate" title="Data Fine">Data Fine</div>
+                  </th>
+                  <th class="" scope="col">
+                    <div class="slds-truncate" title="Stato">Stato</div>
+                  </th>
+                </tr>
+              </thead>
+                <tbody>
+                  <aura:if isTrue="{!v.loading}">
+                    <div class="spinner-container">
+                        <lightning:spinner alternativeText="Loading..." size="medium"/>
+                    </div>
+                </aura:if>
+                <aura:if isTrue="{!and(not(v.loading), v.campaignMembers.length > 0)}">
+                  <aura:iteration items="{!v.campaignMembers}" var="campaignMember">
+                    <tr class="slds-hint-parent">
+                        <th data-label="Nome" scope="row">
+                          <div id="{!campaignMember.CampaignId}" class="slds-truncate link" onclick="{!c.navigateToSObject}">
+                          {!campaignMember.Campaign.Name}
+                          </div>
+                        </th> 
+                        <td data-label="Tipologia">
+                          <div class="slds-truncate">{!campaignMember.Campaign.Tipologia}</div>
+                        </td>
+                        <td data-label="Data Inizio">
+                          <div class="slds-truncate"><ui:outputDate value="{!campaignMember.Campaign.StartDate}" format="DD/MM/YYYY"/></div>
+                        </td>
+                        <td data-label="Data Fine">
+                          <div class="slds-truncate"><ui:outputDate value="{!campaignMember.Campaign.EndDate}" format="DD/MM/YYYY"/></div>
+                        </td>
+                        <td data-label="Stato">
+                          <div class="slds-truncate">{!campaignMember.Campaign.Status}</div>
+                        </td>
+                    </tr> 
+                  </aura:iteration>
+                </aura:if>
+                  <aura:if isTrue="{!and(not(v.loading), empty(v.campaignMembers))}">
+                    <tr>
+                      <td align="center" colspan="7">  
+                      <div class="slds-text-heading_small no-result slds-text-align_center slds-m-vertical_large"
+                    title="{!v.errorMessageResult ? 'Errore: non è possibile mostrare i risultati' : 'Non sono presenti campagne'}">
+                            {!v.errorMessageResult ? 'Errore: non è possibile mostrare i risultati' : 'Non sono presenti campagne'}
+                        </div>
+                      </td>
+                  </tr>    
+                </aura:if>
+                </tbody>
+              </table>
+          </div>
+          <footer class="slds-card__footer slds-border_top slds-align_absolute-center">
+              <button class="slds-button slds-button_neutral"  disabled="{! empty(v.campaignMembers) }" onclick="{!c.onVisualizzaTutto}">Visualizza Tutto</button>
+          </footer>
+        </article>
+      </div>
+    </section>
+  </li>
+</ul>
+</aura:component>

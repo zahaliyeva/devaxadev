@@ -1,0 +1,56 @@
+<aura:component implements="flexipage:availableForAllPageTypes" access="global" controller="VFC33_SendDocumentValidationCTRL" >
+	
+	<!-- *** ATTRIBUTE BLOCK *** -->
+    <aura:attribute name="isLoading" type="Boolean" default="false"/>
+    <aura:attribute name="caseId" type="String" />
+    <aura:attribute name="typeToast" type="String" />
+    <aura:attribute name="messageToast" type="String" />
+    <aura:attribute name="DetailsMessageToast" type="String" />
+    <aura:attribute name="showToast" type="Boolean" />
+    <aura:attribute name="isPopupAssociatePolicyOpen" type="Boolean"/>
+    <aura:attribute name="policyNumber" type="String" />
+    <aura:attribute name="techCompany" type="String" />
+    <aura:attribute name="techCompanies" type="String[]" default="AAI,MPS,Quadra,AAF,AMF,AXA MPS,AXA MPS ASSICURAZIONI DANNI,AXA QUADRA ASSICURAZIONI DANNI"/>
+    <!-- *** ATTRIBUTE BLOCK *** -->
+    <!-- *** HANDLER BLOCK *** -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <!-- *** HANDLER BLOCK *** -->
+    <!-- *** EVENT BLOCK *** -->
+    <!-- aura:registerEvent name="tabclosing" type="c:tabclosing" /-->
+    <aura:registerEvent name="closeModal" type="c:closeModal" />
+    <!-- *** EVENT BLOCK *** -->
+    <aura:if isTrue="{! v.isLoading }">
+        <lightning:spinner alternativeText="Loading" class="spinnerFixed"/>
+    </aura:if>
+    <aura:if isTrue="{! v.showToast }">
+        <div class="{!'slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_'+v.typeToast}" role="alert">
+  		<span class="slds-assistive-text">error</span>
+		<span class="slds-icon_container slds-icon-utility-error slds-m-right_x-small" title="{!v.typeToast}">
+    		<lightning:icon iconName="{!'utility:'+v.typeToast}" alternativeText="Approved" class="whiteIcon"/>
+  		</span>
+  		<h2 style="font-size: 16px;">{!v.messageToast}</h2>
+	</div>
+    </aura:if>
+    <!-- Popup di associazione Polizza -->
+    <aura:if isTrue="{! v.isPopupAssociatePolicyOpen }">
+                <header class="slds-modal__header" style='border: none;'>
+                    <h2 class="slds-modal__title slds-hyphenate">Creazione Polizza per Registrazione</h2>
+                </header>
+                <div class="slds-align_absolute-center slds-p-top_medium slds-p-bottom_medium">
+                    <div class="slds-size_medium">
+                        <lightning:input label="Numero Polizza" value="{!v.policyNumber}" required="true"/>
+                        <lightning:select label="Compagnia" value="{!v.techCompany}" required="true">
+                            <option value=""></option>
+                            <aura:iteration var="option" items="{!v.techCompanies}">
+                                <option value="{! option }">{! option }</option>
+                            </aura:iteration>
+                        </lightning:select>
+                    </div>
+                </div>
+                <footer class="slds-card__footer slds-border_top">
+                    <lightning:button variant="neutral" label="Annulla" title="Annulla" onclick="{! c.closeModal }"/>
+                    <lightning:button variant="brand" label="Conferma" title="Conferma" onclick="{! c.onAssociatePolicy }"/>
+                </footer>
+    </aura:if>
+    <!---->
+</aura:component>

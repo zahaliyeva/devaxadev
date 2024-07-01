@@ -1,0 +1,70 @@
+<template>
+	<c-mobility-spinner show={spinner} show-overlay="true"></c-mobility-spinner>
+	<c-mobility-messages model={messages}></c-mobility-messages>
+
+	<template if:true={authorized}>
+		<template if:false={hideModal}>
+		<div class="overload-contain overload-on-top" style="z-index: 10000;">
+			<div class="overload-contain-child">
+				<div class="overload-element">
+					<div class="row">
+						<div class="col-12">
+							<h3>{_label.task_task}</h3>
+							<c-mobility-layout 
+								hook={onHookCustomLayout} 
+								type-layout={typeLayout} 
+								object-name={objectName} 
+								record-type={recordType}
+								can-not-save-data={canNotSaveData}
+								
+								ready-callback={readyCallback} 
+								save-callback={saveCallback} 
+								params={params}
+								record-default={recordDefault}
+								record-override={recordOverride}
+								fields-override={fieldsOverride}
+							>
+							</c-mobility-layout>
+						</div>
+						<div class="col-12 text-right">
+							<div class="btn" onclick={onClose}>{_label.task_cancel}</div>
+							<div class="btn btn-primary" onclick={onSave}>{_label.task_saveEdit}</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		</template>
+		<template if:true={hideModal}>
+			
+				
+					
+			<div class="col-12">
+				<h3>{_label.task_task}</h3>
+				<c-mobility-layout 
+					hook={onHookCustomLayout} 
+					type-layout={typeLayout} 
+					object-name={objectName} 
+					record-type={recordType}
+					can-not-save-data={canNotSaveData}
+					
+					ready-callback={readyCallback} 
+					save-callback={saveCallback} 
+					params={params}
+					record-default={recordDefault}
+					record-override={recordOverride}
+					fields-override={fieldsOverride}
+				>
+				</c-mobility-layout>
+			</div>
+			<div class="col-12 text-right">
+				<div class="btn" onclick={onClose}>{_label.task_cancel}</div>
+				<div class="btn btn-primary" onclick={onSave}>{_label.task_saveEdit}</div>
+			</div>
+						
+		</template>
+	</template>
+	<template if:false={authorized}>
+		<c-mobility-unauthorized></c-mobility-unauthorized>
+	</template>
+</template>

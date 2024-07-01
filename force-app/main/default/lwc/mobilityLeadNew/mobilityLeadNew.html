@@ -1,0 +1,56 @@
+<template>
+	<c-mobility-spinner show={spinner} show-overlay={spinnerOverlay}></c-mobility-spinner>
+	<c-mobility-messages model={messages}></c-mobility-messages>
+
+	<template if:true={authorized}>
+		<!-- Inizio Header -->
+		<div class="row lead-header shadow-bottom">
+
+			<!-- Breadcrumb -->
+			<div class="col-12">
+				<c-mobility-breadcrumb params={params} current={componentView}></c-mobility-breadcrumb>
+			</div>
+
+			<!-- Sections -->
+			<div class="col-12 lead-sections">
+				<c-mobility-layout type-layout='edit' object-name='Lead' record-type="Lead_AXA_Assicurazioni"
+					ready-callback={readyCallback} save-callback={saveCallback} params={params}>
+				</c-mobility-layout>
+			</div>
+		</div>
+		<div class="bottom-space"></div>
+		<!-- Fine Header -->
+
+		<!-- Inizio Footer -->
+		<div class="footer row justify-content-between fixed-bottom">
+			<div class="col-2 up">
+				<a onclick={scroll} onmouseout={onOutScrollTop} onmouseover={onOverScrollTop}>
+					{_label.leadListView_up}
+					<span class="pl-2">
+						<c-mobility-icon name='arrow-up' width='10.5px' height='10.5px'>
+						</c-mobility-icon>
+					</span>
+				</a>
+			</div>
+			<div class="col-4 action ml-auto text-right">
+				<div class="row" style="flex-flow: nowrap;">
+					<div class="btn-box-action" onclick={navigateToEvent} data-component="mobilityLeadListView">
+						<div class="btn btn-outline-primary btn-action">
+							{_label.leadNew_cancel}
+						</div>
+					</div>
+					<div class="btn-box-action" onclick={save}>
+						<div class="btn btn-primary btn-action">
+							{_label.leadNew_create}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Fine Footer -->
+	</template>
+
+	<template if:false={authorized}>
+		<c-mobility-unauthorized></c-mobility-unauthorized>
+	</template>
+</template>

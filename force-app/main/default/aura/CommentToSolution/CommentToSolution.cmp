@@ -1,0 +1,67 @@
+<aura:component controller="CommentToSolutionServer" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <lightning:spinner aura:id="mySpinner" class="slds-hide" />
+    <aura:attribute name="jsDebug" type="Boolean" default="true" required="true" /> <!-- SOLO PER DEBUG -->
+    <aura:attribute name="comment" type="String" default="" required="true" />
+    <aura:attribute name="caseId" type="Id" default="" />
+    <aura:attribute name="isMobility" type="Boolean" default="false"/>
+    <aura:attribute name="showError" type="String" default="true" required="true" />
+    <aura:attribute name="error" type="String" default="" />
+    <aura:attribute name="MandatoryInputsMissing" type="Boolean" default="false" /> 
+    <aura:attribute name="OrgLink" type="String" default="" required="true" />
+    <aura:attribute name="isCommentToBeInsert" type="Boolean" default="true"/> 
+    <aura:attribute name="showWhite" type="Boolean" default="true" required="true" />  
+    <aura:attribute name="remainingCharacters" type="String" default="1000" /> <!-- OAVERSANO 30/10/2018 : Nuovo Modello di Assistenza ENHANCEMENT -->
+    
+    <!-- OAVERSANO 24/01/2019 : NMA Fix Mobile - START -->
+    <aura:registerEvent name="tabclosing" type="c:tabclosing" />
+    <!-- OAVERSANO 24/01/2019 : NMA Fix Mobile - END -->
+    
+    
+    <aura:if isTrue="{! not(v.showWhite) }">
+        <div>
+        <aura:if isTrue="{! v.showError }">
+            <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error" role="alert">
+                <h3>La funzionalità non è disponibile non essendo stata ancora proposta alcuna soluzione da parte del Supporto.</h3>
+            </div>
+        </aura:if>
+        <aura:if isTrue="{! not(v.showError) }">
+            <div>
+                <aura:if isTrue="{!not(v.isMobility)}">
+                <div>
+                    <img src="{!$Resource.LogoAxaAssistenza}" style="width:275px;" />
+                </div>
+				</aura:if>
+                
+                <aura:if isTrue='{!v.isCommentToBeInsert}'>
+                    <form class="slds-form--stacked">
+                        <h1 class="slds-text-heading_medium" style="margin-top: 20px;">Rifiuta soluzione</h1>
+                        <br></br>
+                        <lightning:textarea label="Inserisci di seguito la tua osservazione in merito alla soluzione proposta" style="margin-bottom: 20px;" value="{! v.comment }" required="true" maxlength="1000" onchange="{!c.countCharacters}"/> <!-- OAVERSANO 30/10/2018 : Nuovo Modello di Assistenza ENHANCEMENT -->
+                            	<div class="slds-text-font_monospace slds-text-align_right">Caratteri rimanenti : {!v.remainingCharacters}</div> <!-- OAVERSANO 30/10/2018 : Nuovo Modello di Assistenza ENHANCEMENT -->
+                        <div class="slds-clearfix" style="margin-top: 20px;">
+                            <div class="slds-align_absolute-center" style="margin-bottom: 10px;">
+                                <lightning:button label="Indietro" onclick="{!c.cancelBtn}" />
+                                <lightning:button class ="slds-button_brand" label="Rifiuta soluzione" onclick="{!c.clickCreate}" />
+                            </div> 
+                            <aura:if isTrue="{!v.MandatoryInputsMissing}" >      
+                                <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error" role="alert">
+                                    <h3>{! v.error }</h3>
+                                </div>
+                            </aura:if>
+                        </div>
+                    </form>
+                    <aura:set attribute="else">                    
+                        <div class="slds-align_absolute-center" style="margin-bottom: 10px;"> 
+                            <label class="slds-form-element__label">Grazie per aver lasciato un commento in merito alla soluzione fornita dal Supporto.</label>
+                        </div>                
+                        <div class="slds-align_absolute-center" style="margin-bottom: 10px;"> 
+                            <lightning:button label="Termina" onclick="{!c.closeComment}" />
+                        </div>
+                    </aura:set>
+                </aura:if>
+            </div>
+        </aura:if>
+            </div>
+    </aura:if>
+</aura:component>

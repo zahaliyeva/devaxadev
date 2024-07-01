@@ -1,0 +1,58 @@
+.main-column {
+    padding: 15px 15px;
+    background: white;
+}
+
+.main-column h2 {
+    color: #000;
+    font-family: Source Sans Pro;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 27px;
+    margin-bottom: 22px;
+}
+
+.main-column h3 {
+    color: #000;
+    font-family: Source Sans Pro;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 25px;
+    margin-bottom: 16px;
+}
+
+.main-column__filter {
+    margin-bottom: 22px;
+}
+
+.main-column__filter select {
+    border-radius: 4px;
+    border: 1px solid var(--gray-300, #CCC);
+}
+
+.mobility-modal__actions {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+}
+
+
+.mobility-modal__actions .btn {
+    padding: 17px 20px;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 13px;
+    letter-spacing: 1.3px;
+    text-transform: uppercase;
+}
+
+.mobility-modal__actions .btn.btn-outline-primary {
+    border: 2px solid var(--uiaxa-blue, var(--primary, #00008F));
+}
+
+.mobility-modal__actions .btn.btn-primary {
+    background-color: var(--uiaxa-blue, var(--primary, #00008F));
+    border: 2px solid var(--uiaxa-blue, var(--primary, #00008F));
+}

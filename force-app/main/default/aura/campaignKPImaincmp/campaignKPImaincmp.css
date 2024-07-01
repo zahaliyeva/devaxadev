@@ -1,0 +1,40 @@
+.THIS .slds-section__title {
+    width:100%;
+    margin-bottom: 10px;
+   	text-transform: uppercase;
+    font-size: .65rem;
+    background-color:#f4f6f9;
+    letter-spacing: .0625em;
+    padding-left: 12px;
+    color: #54698d;
+    align-content:left;
+
+}
+
+.THIS .slds-border_bottom{
+    
+   
+}
+
+.THIS .slds-form-element__control{
+
+	vertical-align: middle;
+	
+
+}
+
+.THIS .slds-form-element__label{
+
+	padding-top: 0%!important;
+	padding-right: 3%!important;
+	max-width: 100%;
+	margin-right: .75rem!important;
+	
+}
+
+.THIS .slds-form-element{
+
+	margin-bottom: 0%!important; 
+	float: right !important;
+
+}

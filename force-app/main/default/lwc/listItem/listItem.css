@@ -1,0 +1,30 @@
+.title {
+  color: #0176d3;
+}
+
+body {
+  font-size: 1rem;
+  line-height: 1.25rem;
+}
+.border-bottom {
+  border-bottom: 1px solid #dddbda;
+}
+/* lightning-icon {
+    cursor: pointer;
+} */
+.slds-popover {
+  position: absolute;
+  right: 7rem;
+  /* bottom: 10.5rem; */
+}
+
+.pop-action {
+  padding-right: 1.5rem;
+}
+
+@media (max-width: 1366px) {
+  .pop-action {
+    padding-top: 0.25rem;
+    padding-right: 1.25rem;
+  }
+}

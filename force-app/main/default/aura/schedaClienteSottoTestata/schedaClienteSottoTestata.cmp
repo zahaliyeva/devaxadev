@@ -1,0 +1,508 @@
+<aura:component>
+    <aura:attribute name="wrapper" type="Object" />
+    <aura:attribute name="tooltipPrivacy" type="boolean" default="false" />
+    <aura:attribute name="tooltipClienteDigitale" type="boolean" default="false" />
+    <aura:attribute name="fullAddress" type="string" />
+    <aura:attribute name="privacyBullets" type="string" />
+    <aura:attribute name="clientDigiBullets" type="string" />
+    <aura:attribute name="PreferenzeBullet" type="string" />
+    <aura:attribute name="tooltipPreferenze" type="boolean" default="false" />
+    
+    <aura:handler name="init" value="{! this }" action="{! c.doInit }"/> 
+
+
+    <div class="schedaClienth-100">
+    <div class="slds-grid slds-gutters_x-small slds-wrap slds-m-vertical_medium slds-grid-custom">
+        <!--Card 1 -->
+        <div class="{!and (v.wrapper.isAAI, v.wrapper.isPerson) ? 'slds-col slds-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-5' : 'slds-col slds-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-5'}">
+            <article class="slds-card">
+                <div class="slds-card__header slds-grid">
+                <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                    <div class="slds-media__body">
+                    <h2 class="slds-card__header-title">
+                        <a href="javascript:void(0);" class="slds-card__header-link slds-truncate not-active">
+                        <span>Dati Cliente</span>
+                        </a>
+                    </h2>
+                    </div>
+                </header>
+                </div>
+                <div class="slds-card__body slds-card__body_inner">    
+                    <aura:if isTrue="{!and (v.wrapper.isAAI, v.wrapper.isPerson)}"> 
+                        <div class=" slds-m-bottom_x-small">
+                            <lightning:icon class="icon-blue-axa" size="small" src="{!$Resource.IconeSchedaCliente + '/IconeSchedaCliente/calendar_blue.svg#calendar_blue'}"/>
+                            {!v.wrapper.account.Age__c }
+                        </div> 
+                        <div class="slds-m-bottom_x-small">
+                            <lightning:icon class="icon-blue-axa" size="small" src="{!$Resource.IconeSchedaCliente + '/IconeSchedaCliente/birthday_blue.svg#birthday_blue'}"/>
+                            <ui:outputDate value="{!v.wrapper.account.PersonBirthdate}" format="DD/MM/YYYY"/>  {! v.wrapper.account.Place_of_birth__c ? ', ' + v.wrapper.account.Place_of_birth__c : ''}
+                        </div> 
+                        <div class="slds-m-bottom_x-small">
+                            <lightning:icon class="icon-blue-axa" size="small" src="{!$Resource.IconeSchedaCliente + '/IconeSchedaCliente/pc_badge_blue.svg#pc_badge_blue'}"/>
+                            {!v.wrapper.account.Codice_fiscale_ListView__c }
+                        </div>
+                        <div class="slds-m-bottom_x-small">
+                            <lightning:icon class="icon-blue-axa" size="small" src="{!$Resource.IconeSchedaCliente + '/IconeSchedaCliente/house_blue.svg#house_blue'}"/>
+                            {!v.fullAddress }
+                        </div>
+                        <div class="slds-m-bottom_x-small">  
+                            <lightning:icon class="icon-blue-axa" size="small" src="{!$Resource.IconeSchedaCliente + '/IconeSchedaCliente/architect_blue.svg#architect_blue'}"/>                      
+                             {!v.wrapper.account.CIF_Job__c }
+                        </div>          
+                    </aura:if>                                                                                                              
+                    <aura:if isTrue="{!and (v.wrapper.isAAI, ! v.wrapper.isPerson)}">
+                        <div class=" slds-m-bottom_x-small">
+                            <lightning:icon class="icon-blue-axa" size="small" src="{!$Resource.IconeSchedaCliente + '/IconeSchedaCliente/pc_badge_blue.svg#pc_badge_blue'}"/>
+                            {!v.wrapper.account.AAI_Partita_IVA__c}
+                        </div> 
+                        <div class=" slds-m-bottom_x-small">
+                            <lightning:icon class="icon-blue-axa" size="small" src="{!$Resource.IconeSchedaCliente + '/IconeSchedaCliente/house_blue.svg#house_blue'}"/>
+                            {!v.fullAddress }
+                        </div>                                
+                    </aura:if> 
+                    <aura:if isTrue="{!and (! v.wrapper.isAAI, v.wrapper.isPerson)}"> 
+                        <div class=" slds-m-bottom_x-small">
+                            <lightning:icon class="icon-blue-axa" size="small" src="{!$Resource.IconeSchedaCliente + '/IconeSchedaCliente/calendar_blue.svg#calendar_blue'}"/>
+                            {!v.wrapper.account.Age__c }
+                        </div> 
+                        <div class=" slds-m-bottom_x-small">
+                            <lightning:icon class="icon-blue-axa" size="small" src="{!$Resource.IconeSchedaCliente + '/IconeSchedaCliente/birthday_blue.svg#birthday_blue'}"/>
+                            <ui:outputDate value="{!v.wrapper.account.PersonBirthdate}" format="DD/MM/YYYY"/> {! v.wrapper.account.Place_of_birth__c ? ', ' + v.wrapper.account.Place_of_birth__c : ''}
+                        </div> 
+                        <div class=" slds-m-bottom_x-small">
+                            <lightning:icon class="icon-blue-axa" size="small" src="{!$Resource.IconeSchedaCliente + '/IconeSchedaCliente/pc_badge_blue.svg#pc_badge_blue'}"/>
+                            {!v.wrapper.account.Codice_fiscale_ListView__c }
+                        </div>
+                        <div class=" slds-m-bottom_x-small">
+                            <lightning:icon class="icon-blue-axa" size="small" src="{!$Resource.IconeSchedaCliente + '/IconeSchedaCliente/house_blue.svg#house_blue'}"/>
+                            {!v.fullAddress }
+                        </div>  
+                        <div class="slds-m-bottom_x-small">  
+                            <lightning:icon class="icon-blue-axa" size="small" src="{!$Resource.IconeSchedaCliente + '/IconeSchedaCliente/architect_blue.svg#architect_blue'}"/>                      
+                             {!v.wrapper.account.CIF_Job__c }
+                        </div>        
+                    </aura:if>                                                                                                              
+                    <aura:if isTrue="{!and (! v.wrapper.isAAI, ! v.wrapper.isPerson)}">
+                        <div class=" slds-m-bottom_x-small">
+                            <lightning:icon class="icon-blue-axa" size="small" src="{!$Resource.IconeSchedaCliente + '/IconeSchedaCliente/pc_badge_blue.svg#pc_badge_blue'}"/>
+                            {!v.wrapper.account.Partita_IVA__c }
+                        </div> 
+                        <div class=" slds-m-bottom_x-small">
+                            <lightning:icon class="icon-blue-axa" size="small" src="{!$Resource.IconeSchedaCliente + '/IconeSchedaCliente/house_blue.svg#house_blue'}"/>
+                            {!v.fullAddress }
+                        </div>                                
+                    </aura:if>                                                                                                                                  
+                </div>
+            </article>
+        </div>
+        <!--Card 2 -->
+        <div class="{!and (v.wrapper.isAAI, v.wrapper.isPerson) ? 'slds-col slds-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-5' : 'slds-col slds-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-5'}">
+            <article class="slds-card">
+                <div class="slds-card__header slds-grid">
+                <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                    <div class="slds-media__body">
+                    <h2 class="slds-card__header-title">
+                        <a href="javascript:void(0);" class="slds-card__header-link slds-truncate not-active">
+                        <span>Contatti</span>
+                        </a>
+                    </h2>
+                    </div>
+                </header>
+                </div>
+                <div class="slds-card__body slds-card__body_inner">
+                    <aura:if isTrue="{! v.wrapper.isAAI }"> 
+                        <div class=" slds-m-bottom_x-small">
+                            <lightning:icon class="icon-blue-axa" size="small" src="{!$Resource.IconeSchedaCliente + '/IconeSchedaCliente/phone_blue.svg#phone_blue'}"/>
+                           <!--  <a class="slds-text-color_default" href="{'tel:'+!v.wrapper.account.Mobile_Master_AAI__c}">{!v.wrapper.account.Mobile_Master_AAI__c}</a>-->
+                           <lightning:clickToDial value="{!v.wrapper.account.Mobile_Master_AAI__c}"/>
+                        </div>
+                        <div class=" slds-m-bottom_x-small">
+                            <lightning:icon class="icon-blue-axa" size="small" src="{!$Resource.IconeSchedaCliente + '/IconeSchedaCliente/email_blue.svg#email_blue'}"/>
+                            {!v.wrapper.account.Email_Master_AAI__c}
+                        </div> 
+                    </aura:if>   
+                    <aura:if isTrue="{! (!v.wrapper.isAAI) }"> 
+                        <aura:if isTrue="{! v.wrapper.isQuadra }"> 
+                            <div class=" slds-m-bottom_x-small">
+                                <lightning:icon class="icon-blue-axa" size="small" src="{!$Resource.IconeSchedaCliente + '/IconeSchedaCliente/phone_blue.svg#phone_blue'}"/>
+                                <!--<a class="slds-text-color_default" href="{'tel:'+!v.wrapper.account.Mobile_Master_QUADRA__c}">{!v.wrapper.account.Mobile_Master_QUADRA__c}</a>-->
+                                <lightning:clickToDial value="{!v.wrapper.account.Mobile_Master_QUADRA__c}"/>
+                                <div class="slds-badge badge-axa badge-axa-blue">
+                                        <span>Quadra</span>
+                                </div>
+                            </div>
+                            <div class=" slds-m-bottom_x-small">
+                                <lightning:icon class="icon-blue-axa" size="small" src="{!$Resource.IconeSchedaCliente + '/IconeSchedaCliente/email_blue.svg#email_blue'}"/>
+                                {!v.wrapper.account.Email_Master_QUADRA__c}
+                                <div class="slds-badge badge-axa badge-axa-blue">
+                                    <span>Quadra</span>
+                                </div> 
+                            </div>
+                        </aura:if>
+                        <aura:if isTrue="{! v.wrapper.isAMAV }"> 
+                            <div class=" slds-m-bottom_x-small">
+                                <lightning:icon class="icon-blue-axa" size="small" src="{!$Resource.IconeSchedaCliente + '/IconeSchedaCliente/phone_blue.svg#phone_blue'}"/>
+                                <lightning:clickToDial value="{!v.wrapper.account.Mobile_Master_AMAV__c}"/>
+                                <!--<a class="slds-text-color_default" href="{'tel:'+!v.wrapper.account.Mobile_Master_AMAV__c}">{!v.wrapper.account.Mobile_Master_AMAV__c}</a>-->
+                                <div class="slds-badge badge-axa badge-axa-blue">
+                                        <span>AMAV</span>
+                                </div>
+                            </div>
+                            <div class=" slds-m-bottom_x-small">
+                                <lightning:icon class="icon-blue-axa" size="small" src="{!$Resource.IconeSchedaCliente + '/IconeSchedaCliente/email_blue.svg#email_blue'}"/>
+                                {!v.wrapper.account.Email_Master_AMAV__c}
+                                <div class="slds-badge badge-axa badge-axa-blue">
+                                    <span>AMAV</span>
+                                </div> 
+                            </div>
+                            
+                        </aura:if>
+                        <aura:if isTrue="{! v.wrapper.isAMAD }"> 
+                            <div class=" slds-m-bottom_x-small">
+                                <lightning:icon class="icon-blue-axa" size="small" src="{!$Resource.IconeSchedaCliente + '/IconeSchedaCliente/phone_blue.svg#phone_blue'}"/>
+                                <lightning:clickToDial value="{!v.wrapper.account.Mobile_Master_AMAD__c}"/>
+                                <!--<a class="slds-text-color_default" href="{'tel:'+!v.wrapper.account.Mobile_Master_QUADRA__c}">{!v.wrapper.account.Mobile_Master_AMAD__c}</a>-->
+                                <div class="slds-badge badge-axa badge-axa-blue">
+                                        <span id="company-name">AMAD</span>
+                                </div>
+                            </div>
+                            <div class=" slds-m-bottom_x-small">
+                                <lightning:icon class="icon-blue-axa" size="small" src="{!$Resource.IconeSchedaCliente + '/IconeSchedaCliente/email_blue.svg#email_blue'}"/>
+                                {!v.wrapper.account.Email_Master_AMAD__c}
+                                <div class="slds-badge badge-axa badge-axa-blue">
+                                    <span id="company-name">AMAD</span>
+                                </div> 
+                            </div>
+                            
+                        </aura:if>
+                    </aura:if>                                                              
+                </div>
+            </article>
+        </div>
+        <!--Card 3 -->
+        <div class="{!and (v.wrapper.isAAI, v.wrapper.isPerson) ? 'slds-col slds-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-5' : 'slds-col slds-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-5'}">
+            <aura:if isTrue="{!v.wrapper.isAAI}">
+                <article class="slds-card">
+                    <div class="slds-card__header slds-grid">
+                    <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                        <div class="slds-media__body">
+                        <h2 class="slds-card__header-title">
+                            <a href="javascript:void(0);" class="slds-card__header-link slds-truncate not-active">
+                            <span>Consensi e Preferenze</span>
+                            </a>
+                        </h2>
+                        </div>
+                    </header>
+                    </div>
+                    <div class="slds-card__body slds-card__body_inner">
+                        
+                        <div>    
+                            <div class="slds-m-bottom_x-small">Privacy <lightning:icon iconName="utility:info" size="x-small" alternativeText="Info" class="grey-icon" onmouseover="{!c.showToolTipPrivacy}" onmouseout="{!c.HideToolTipPrivacy}"/></div>
+                            <span style="position:relative;">                            
+                                    <aura:if isTrue="{!v.tooltipPrivacy}" >
+                                        <section aria-label="Dialog title" aria-describedby="popover-body-id" class="slds-popover slds-nubbin_top-left popover-dark" role="dialog" style="position:absolute;top:32px;left:-17px">
+                                            <div class="slds-popover__body">
+                                                <div class="slds-media">
+                                                    <div class="slds-media__figure">
+                                                        <span aura:id="trattamentoDatiPersonaliBullet" class="slds-icon_container dot"></span>
+                                                    </div>
+                                                    <div class="slds-media__body">
+                                                        <p>Autorizzazione trattamento di dati personali</p>
+                                                        <aura:if isTrue="{!(v.wrapper.account.CIF_Privacy_1__c == 'Sì' || v.wrapper.account.CIF_Privacy_1__c == 'No')}">
+                                                            <p>{!v.wrapper.account.CIF_Privacy_1__c}</p>
+                                                            <aura:set attribute="else">
+                                                                <p>Non espresso</p>
+                                                            </aura:set>
+                                                        </aura:if>
+                                                    </div>
+                                                </div>
+                                                <hr />
+                                                <div class="slds-media">
+                                                    <div class="slds-media__figure">
+                                                        <span aura:id="attPromoVenditaBullet" class="slds-icon_container dot"></span>
+                                                    </div>
+                                                    <div class="slds-media__body">
+                                                        <p>Consenso attività promozionali e di vendita</p>
+                                                        <aura:if isTrue="{!(v.wrapper.account.CIF_Privacy_2__c == 'Sì' || v.wrapper.account.CIF_Privacy_2__c == 'No')}">
+                                                            <p>{!v.wrapper.account.CIF_Privacy_2__c}</p>
+                                                            <aura:set attribute="else">
+                                                                <p>Non espresso</p>
+                                                            </aura:set>
+                                                        </aura:if>
+                                                    </div>
+                                                </div>
+                                                <hr />                                           
+                                                <div class="slds-media">
+                                                    <div class="slds-media__figure">
+                                                        <span aura:id="ricercheMercatoBullet" class="slds-icon_container dot"></span>
+                                                    </div>
+                                                    <div class="slds-media__body">
+                                                        <p>Consenso ricerche di mercato</p>
+                                                        <aura:if isTrue="{!(v.wrapper.account.CIF_Privacy_3__c == 'Sì' || v.wrapper.account.CIF_Privacy_3__c == 'No')}">
+                                                            <p>{!v.wrapper.account.CIF_Privacy_3__c}</p>
+                                                            <aura:set attribute="else">
+                                                                <p>Non espresso</p>
+                                                            </aura:set>
+                                                        </aura:if>
+                                                    </div>
+                                                </div>
+                                                <hr />     
+                                                <div class="slds-media">
+                                                    <div class="slds-media__figure">
+                                                        <span aura:id="attPromoVendMercBullet" class="slds-icon_container dot "></span>
+                                                    </div>
+                                                    <div class="slds-media__body">
+                                                        <p>Consenso attività promozionale, di vendita e ricerche di prodotti e servizi di società partner</p>
+                                                        <aura:if isTrue="{!(v.wrapper.account.CIF_Privacy_4__c == 'Sì' || v.wrapper.account.CIF_Privacy_4__c == 'No')}">
+                                                            <p>{!v.wrapper.account.CIF_Privacy_4__c}</p>
+                                                            <aura:set attribute="else">
+                                                                <p>Non espresso</p>
+                                                            </aura:set>
+                                                        </aura:if>
+                                                    </div>
+                                                </div>
+                                                <hr />     
+                                                <div class="slds-media">
+                                                    <div class="slds-media__figure">
+                                                        <span aura:id="profilazioneBullet" class="slds-icon_container dot "></span>
+                                                    </div>
+                                                    <div class="slds-media__body">
+                                                        <p>Consenso di profilazione</p>
+                                                        <aura:if isTrue="{!(v.wrapper.account.Cprivacy_Profilazione_Ndg_AAI__c == 'Sì' || v.wrapper.account.Cprivacy_Profilazione_Ndg_AAI__c == 'No')}">
+                                                            <p>{!v.wrapper.account.Cprivacy_Profilazione_Ndg_AAI__c}</p>
+                                                            <aura:set attribute="else">
+                                                                <p>Non espresso</p>
+                                                            </aura:set>
+                                                        </aura:if>
+                                                    </div>
+                                                </div>                       
+                                            </div>
+                                        </section>
+                                    </aura:if>
+                            </span>             
+                            <aura:unescapedHtml value="{!v.privacyBullets}" />         
+                        </div>
+
+                        <div class="slds-m-top_x-small">    
+                            <div class="slds-m-bottom_x-small">Cliente Digitale <lightning:icon iconName="utility:info" size="x-small" alternativeText="Info" class="grey-icon" onmouseover="{!c.showToolTipClienteDigitale}" onmouseout="{!c.HideToolTipClienteDigitale}"/></div>
+                            <span style="position:relative;">                            
+                                    <aura:if isTrue="{!v.tooltipClienteDigitale}" >
+                                        <section aria-label="Dialog title" aria-describedby="popover-body-id" class="slds-popover slds-nubbin_top-left popover-dark" role="dialog" style="position:absolute;top:32px;left:-17px">
+                                            <div class="slds-popover__body">
+                                                <div class="slds-media">
+                                                    <div class="slds-media__figure">
+                                                        <span aura:id="invioDocDigitBullet" class="slds-icon_container dot "></span>
+                                                    </div>
+                                                    <div class="slds-media__body">
+                                                        <p>Consenso invio della documentazione in formato digitale</p>
+                                                        <aura:if isTrue="{!(v.wrapper.account.CIF_Privacy_5__c == 'Sì' || v.wrapper.account.CIF_Privacy_5__c == 'No')}">
+                                                            <p>{!v.wrapper.account.CIF_Privacy_5__c}</p>
+                                                            <aura:set attribute="else">
+                                                                <p>Non espresso</p>
+                                                            </aura:set>
+                                                        </aura:if>
+                                                    </div>
+                                                </div>
+                                                <hr />                                           
+                                                <div class="slds-media">
+                                                    <div class="slds-media__figure">
+                                                        <span aura:id="utilizzFirmGrafoBullet" class="slds-icon_container dot "></span>
+                                                    </div>
+                                                    <div class="slds-media__body">
+                                                        <p>Consenso all’utilizzo della firma grafometrica</p>
+                                                        <aura:if isTrue="{!(v.wrapper.account.CIF_Privacy_7__c == 'Sì' || v.wrapper.account.CIF_Privacy_7__c == 'No')}">
+                                                            <p>{!v.wrapper.account.CIF_Privacy_7__c}</p>
+                                                            <aura:set attribute="else">
+                                                                <p>Non espresso</p>
+                                                            </aura:set>
+                                                        </aura:if>
+                                                    </div>
+                                                </div>
+                                                <hr />     
+                                                <div class="slds-media">
+                                                    <div class="slds-media__figure">
+                                                        <span aura:id="adesioneSrvOtpBullet" class="slds-icon_container dot "></span>
+                                                    </div>
+                                                    <div class="slds-media__body">
+                                                        <p>Adesione al servizio di firma elettronico OTP</p>
+                                                        <aura:if isTrue="{!(v.wrapper.account.CIF_Privacy_8__c == 'Sì' || v.wrapper.account.CIF_Privacy_8__c == 'No')}">
+                                                            <p>{!v.wrapper.account.CIF_Privacy_8__c}</p>
+                                                            <aura:set attribute="else">
+                                                                <p>Non espresso</p>
+                                                            </aura:set>
+                                                        </aura:if>
+                                                    </div>
+                                                </div>                                           
+                                            </div>
+                                        </section>
+                                    </aura:if>
+                            </span>        
+                            <aura:unescapedHtml value="{!v.clientDigiBullets}" />      
+                        </div>                    
+
+                        <div class="slds-m-top_x-small">    
+                            <div class="slds-m-bottom_x-small">Preferenze di Contatto <lightning:icon iconName="utility:info" size="x-small" alternativeText="Info" class="grey-icon" onmouseover="{!c.showToolTipPreferenze}" onmouseout="{!c.HideToolTipPreferenze}"/></div>
+                            <span style="position:relative;"> 
+                                <aura:if isTrue="{!v.tooltipPreferenze}" >
+                                        <section aria-label="Dialog title" aria-describedby="popover-body-id" class="slds-popover slds-nubbin_top-left popover-dark" role="dialog" style="position:absolute;top:32px;left:-17px">
+                                            <div class="slds-popover__body">
+                                                <div class="slds-media">
+                                                    <div class="slds-media__figure">
+                                                        <span aura:id="PreferenzeBullet" class="slds-icon_container dot "></span>
+                                                    </div>
+                                                    <div class="slds-media__body">
+                                                        <p>Contattabile per comunicazioni informative</p>
+                                                        <aura:if isTrue="{!(v.wrapper.account.Comunicazioni_informative__c == 'Sì' || v.wrapper.account.Comunicazioni_informative__c == 'No')}">
+                                                            <p>{!v.wrapper.account.Comunicazioni_informative__c}</p>
+                                                            <aura:set attribute="else">
+                                                                <p>Non espresso</p>
+                                                            </aura:set>
+                                                        </aura:if>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </section>
+                                    </aura:if>                          
+                            </span>        
+                            <aura:unescapedHtml value="{!v.PreferenzeBullet}" />      
+                        </div>  
+
+                    </div>
+                </article>
+            </aura:if>
+            <aura:if isTrue="{! !v.wrapper.isAAI}">
+                <article class="slds-card">
+                    <div class="slds-card__header slds-grid">
+                    <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                        <div class="slds-media__body">
+                        <h2 class="slds-card__header-title">
+                            <a href="javascript:void(0);" class="slds-card__header-link slds-truncate not-active">
+                            <span>Contatti Smart Center</span>
+                            </a>
+                        </h2>
+                        </div>
+                    </header>
+                    </div>
+                    <div class="slds-card__body slds-card__body_inner">
+                        <div class="slds-m-bottom_x-small">
+                            <lightning:icon class="icon-blue-axa" size="small" src="{!$Resource.IconeSchedaCliente + '/IconeSchedaCliente/phone_blue.svg#phone_blue'}"/>
+                            <lightning:clickToDial value="{!v.wrapper.account.Additional_Phone__c}"/>
+                            <!-- <a class="slds-text-color_default" href="{'tel:'+!v.wrapper.account.Additional_Phone__c}">{!v.wrapper.account.Additional_Phone__c}</a> -->
+                        </div> 
+                        <div class="slds-m-bottom_x-small">                            
+                            <lightning:icon class="icon-blue-axa" size="small" src="{!$Resource.IconeSchedaCliente + '/IconeSchedaCliente/email_blue.svg#email_blue'}"/>
+                            {!v.wrapper.account.Additional_Email__c }
+                        </div>                                                                        
+                    </div>
+                </article>  
+            </aura:if>          
+        </div>
+        <!--Card 4 -->
+        <div class="{!and (v.wrapper.isAAI, v.wrapper.isPerson) ? 'slds-col slds-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-5' : 'slds-col slds-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-5'}">
+            <article class="slds-card">
+                <div class="slds-card__header slds-grid">
+                    <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                        <div class="slds-media__body">
+                        <h2 class="slds-card__header-title">
+                            <a href="javascript:void(0);" class="slds-card__header-link slds-truncate not-active">
+                            <span>Profilo Digitale</span>
+                            </a>
+                        </h2>
+                        </div>
+                    </header>
+                </div>
+                <aura:if isTrue="{!v.wrapper.isAAI}">
+                    <div class="slds-card__body slds-card__body_inner">
+                        <aura:if isTrue="{!v.wrapper.account.Flag_registrazione_area_privata__c}">
+                            <span class="slds-badge slds-theme_info">REGISTRATO ALL'AREA RISERVATA</span>
+                                <div class="slds-m-top_small">
+                                    <strong>Mail Registrazione Area Clienti:</strong>
+                                    <div class="dont-break-out">
+                                        {!v.wrapper.account.Mail_Registrazione_Area_Clienti__c}
+                                    </div>
+                                </div> 
+                                <div class="slds-m-top_small">
+                                    <strong>Ultimo Accesso Area Clienti:</strong><br />
+                                    <aura:if isTrue="{!v.wrapper.account.Last_Private_Area_Access__c}">
+                                            <ui:outputDateTime value="{!v.wrapper.account.Last_Private_Area_Access__c}" format="DD/MM/YYYY hh:mm"/>
+                                        <aura:set attribute="else">
+                                            <br />
+                                        </aura:set>
+                                    </aura:if>
+                                </div>
+                                <div class="slds-m-top_small">
+                                    <strong>Totale Accessi ultimi 30 giorni:</strong><br />
+                                    <div class="dont-break-out">
+                                        {!v.wrapper.customerPrivateAreaAccessCounter}
+                                    </div>
+                                </div>   
+                            <aura:set attribute="else">
+                                <span class="slds-badge">NON REGISTRATO ALL'AREA RISERVATA</span>
+                            </aura:set>
+                        </aura:if>                    
+                    </div>
+                </aura:if> 
+                <aura:if isTrue="{! !v.wrapper.isAAI}">
+                    <div class="slds-card__body slds-card__body_inner">
+                        <aura:if isTrue="{!v.wrapper.account.Flag_registrazione_area_privata__c}">
+                            <span class="slds-badge slds-theme_info">REGISTRATO ALL'AREA RISERVATA</span>
+                            <div class="slds-m-top_small">
+                                <strong>Totale Accessi ultimi 30 giorni:</strong><br />
+                                <div class="dont-break-out">
+                                    {!v.wrapper.customerPrivateAreaAccessCounter}
+                                </div>
+                            </div>      
+                            <aura:set attribute="else">
+                                <span class="slds-badge">NON REGISTRATO ALL'AREA RISERVATA</span>
+                            </aura:set>
+                        </aura:if>  
+                    </div>
+                </aura:if>                                                       
+            </article>
+        </div>
+        <!--Card 5 -->
+        <aura:if isTrue="{! v.wrapper.isAAI }">
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-5">
+                <article class="slds-card">
+                    <div class="slds-card__header slds-grid">
+                    <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                        <div class="slds-media__body">
+                        <h2 class="slds-card__header-title">
+                            <a href="javascript:void(0);" class="slds-card__header-link slds-truncate not-active">
+                            <span>Dati Agenzia</span>
+                            </a>
+                        </h2>
+                        </div>
+                    </header>
+                    </div>
+                    <div class="slds-card__body slds-card__body_inner">
+                        <div class="slds-m-bottom_x-small">                            
+                            <strong>Nodo:</strong><br />
+                            {!v.wrapper.account.AAI_Agency__r.Agency_Code__c}
+                        </div> 
+                        <div class="slds-m-bottom_x-small">
+                            <strong>Nome:</strong><br />
+                            {!v.wrapper.account.AAI_Agency__r.Name}
+                        </div> 
+                        <div class="slds-m-bottom_x-small">
+                            <strong>Indirizzo Agenzia:</strong><br />
+                            {!v.wrapper.account.AAI_Agency__r.Head_Office_Address__c}
+                        </div> 
+                        <div class="slds-m-bottom_x-small">
+                            <strong>Email Agenzia:</strong><br />
+                            <div class="dont-break-out">
+                                {!v.wrapper.account.AAI_Agency__r.Agency_email__c}
+                            </div>
+                        </div> 
+                        <div class="slds-m-bottom_x-small">
+                            <strong>Telefono Agenzia:</strong><br />
+                            <lightning:clickToDial value="{!v.wrapper.account.AAI_Agency__r.Phone}"/>
+                            <!-- <a class="slds-text-color_default" href="{'tel:'+!v.wrapper.account.AAI_Agency__r.Phone}">{!v.wrapper.account.AAI_Agency__r.Phone}</a> -->
+                        </div>                                                                                 
+                    </div>
+                </article>
+            </div>
+        </aura:if>
+    </div>
+    </div>
+</aura:component>

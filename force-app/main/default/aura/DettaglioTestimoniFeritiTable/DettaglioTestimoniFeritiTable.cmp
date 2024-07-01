@@ -1,0 +1,41 @@
+<!-- d.pirelli CAI DIGITALE start 02/12/2019 -->
+
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction,lightning:actionOverride"  access="global" >
+	<!--Parent Lightning Compomemt-->
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/> 
+    
+ <!--Event handler for Add and Delete Row Event which is fire from Child Component-->    
+    <aura:handler name="DeleteRowEvt" event="c:deleteRowEvt" action="{!c.removeDeletedRow}"/>
+    <aura:handler name="AddRowEvt" event="c:AddNewRowEvt" action="{!c.addNewRow}"/>
+    
+<!--Aura Attribute for store testimoniFeritiList Object List as Array-->    
+<aura:attribute name="testimoniFeritiList" type="Testimone_Ferito__c[]"/> 
+<aura:attribute name="RecordType" type="String"/>
+<!--Table Part-->          
+<table class="slds-table slds-table_bordered slds-table_cell-buffer">
+     <aura:if isTrue="{!v.RecordType == 'Testimone'}">
+      
+       <tbody>
+          <!--Iterate the child Component for display Table rows-->        
+           <aura:iteration items="{!v.testimoniFeritiList}" var="item" indexVar="index">
+               <c:DettaglioTestimoniRowItem TestimoniFeritiInstance="{!item}" rowIndex="{!index}" />
+           </aura:iteration>
+       </tbody>  
+         </aura:if>
+
+         <aura:if isTrue="{!v.RecordType == 'Ferito'}">
+                <tbody>
+                 <!--Iterate the child Component for display Table rows-->         
+                    <aura:iteration items="{!v.testimoniFeritiList}" var="item" indexVar="index">
+                        <c:DettaglioFeritiRowItem TestimoniFeritiInstance="{!item}" rowIndex="{!index}" />
+                    </aura:iteration>
+                </tbody>
+                
+                </aura:if>
+
+    </table>
+   <br/>
+   
+</aura:component>
+   <!-- d.pirelli CAI DIGITALE end 02/12/2019 -->

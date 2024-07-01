@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>SettingsPS</label>
+    <protected>false</protected>
+    <values>
+        <field>PermissionName__c</field>
+        <value xsi:type="xsd:string">CRM_Analytics_for_Communities</value>
+    </values>
+    <values>
+        <field>ProfileName__c</field>
+        <value xsi:type="xsd:string">NFE - AAI - Vendite Avanzato;NFE - AAI - Vendite Base</value>
+    </values>
+</CustomMetadata>

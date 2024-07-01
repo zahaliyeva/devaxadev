@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="20" viewBox="0 0 20 20">
+  <defs>
+    <clipPath id="clip-User_AXA">
+      <rect width="20" height="20"/>
+    </clipPath>
+  </defs>
+  <g id="User_AXA" data-name="User – AXA" clip-path="url(#clip-User_AXA)">
+    <rect width="20" height="20" fill="#fff"/>
+    <g id="Group_3" data-name="Group 3" transform="translate(0 0)">
+      <path id="Path_5" data-name="Path 5" d="M670,223a2.665,2.665,0,1,0-2.666-2.666A2.665,2.665,0,0,0,670,223Zm0,1.332c-1.779,0-5.33.894-5.33,2.666v1.332h10.66v-1.332C675.327,225.223,671.776,224.329,670,224.329Z" transform="translate(-659.667 -216.667)" fill="#00008e"/>
+      <path id="Path_6" data-name="Path 6" d="M1.322-2.184l.1-.374c.112-.4.224-.878.318-1.308h.025c.112.424.218.9.33,1.308l.1.374ZM2.63-.5H3.6L2.325-4.564h-1.1L-.049-.5H.886l.249-.966H2.381Zm.953,0h.978l.38-.829c.093-.212.181-.417.28-.667h.025c.106.249.2.455.305.667l.4.829H6.973L5.851-2.545,6.9-4.564H5.926L5.6-3.8c-.081.187-.162.4-.255.654H5.321c-.118-.255-.206-.467-.3-.654l-.349-.766H3.646L4.7-2.589ZM8.331-2.184l.1-.374c.112-.4.224-.878.318-1.308h.025c.112.424.218.9.33,1.308l.1.374ZM9.639-.5h.972L9.334-4.564h-1.1L6.96-.5h.935l.249-.966H9.39Z" transform="translate(5.049 18.674)" fill="#00008e"/>
+    </g>
+  </g>
+</svg>

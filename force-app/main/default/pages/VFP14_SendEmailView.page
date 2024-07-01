@@ -1,0 +1,203 @@
+<!--
+**********************************************************************************************
+----------------------------------------------------------------------------------------------
+-- - Name          : VFP14_SendEmailView
+-- - Author        : Marco Moscatelli
+-- - Description   : Custom Page used to substitute the standard Case Email section and introduce 
+-- -                 new logics in the email sending process
+--
+-- Maintenance History:
+--
+-- Date          Version  Remarks
+-- -----------  -------  ---------------------------------------------------------------------
+-- 26-05-2016   1.0     
+----------------------------------------------------------------------------------------------
+**********************************************************************************************
+-->
+
+<apex:page standardcontroller="Case" extensions="VFC14_SendEmailView" sidebar="false" showHeader="false" cache="false">
+    <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" />    
+    <apex:includeScript value="/support/console/22.0/integration.js"/>    
+    <apex:includeScript value="/soap/ajax/41.0/connection.js"/>
+    <apex:includeScript value="/soap/ajax/41.0/apex.js"/>
+    <apex:includeScript value="/canvas/sdk/js/36.0/publisher.js"/>
+    <!-- <apex:includeScript value="https://mobile1.t.salesforce.com/soap/ajax/30.0/connection.js" /> -->
+    <script type="text/javascript">    
+    function openSubTab(url,label,name,openimmediately)
+    {
+        if(sforce.console.isInConsole())
+        {
+            sforce.console.getEnclosingPrimaryTabId(function(primarytab){
+                sforce.console.openSubtab(primarytab.id , url, openimmediately, label, null, function(result){
+                }, name);
+            }); 
+        }
+        else
+        {
+            window.top.location.href=(url);            
+        }
+    }
+
+    
+    </script>
+    
+    <apex:pageMessages />   
+ <!--   <apex:slds />  -->
+    
+<!--    <div class="slds-scope">-->
+    <apex:outputPanel layout="block" style="height:250px;margin: 0 2px">        
+        <apex:form >
+            <apex:pageBlock >                
+                <apex:pageBlockButtons location="top" >
+                    
+                    
+                   <!-- MDANTONIO 04/04/2019: esclusione case DAC AXA Agenti - start -->
+                    <!--<apex:commandButton value="{!$Label.VFP14_Email_to_Customer}" style="height: 18px; padding: 2px 2px;"  onclick="openSubTab('{!emailToClientURL}?p2_lkid=&rtype=003&p3_lkid={!CaseId15digit}&p24={!toCustomerAddress}&p5={!BCCforGDRP}&p26={!FromAddressforCustomer}&retURL=/{!CaseId15digit}','{!$Label.VFP14_SendAnEmail}','',true);return false;"/>     -->               
+                    <apex:commandButton rendered="{!renderEmailToCustomer}" value="{!$Label.VFP14_Email_to_Customer}" style="height: 18px; padding: 2px 2px;"  onclick="openSubTab('{!emailToClientURL}?p2_lkid=&rtype=003&p3_lkid={!CaseId15digit}&p24={!toCustomerAddress}&p5={!BCCforGDRP}&p26={!FromAddressforCustomer}&retURL=/{!CaseId15digit}','{!$Label.VFP14_SendAnEmail}','',true);return false;"/>
+                    <!-- Giorgio Bonifazi START -->
+                    <apex:commandButton rendered="{!renderEmailToCustomerMobility}" value="{!$Label.VFP14_Email_to_Customer}" style="height: 18px; padding: 2px 2px;" onclick="window.top.location.href='{!emailToClientURL}/s/invio-nuova-email?recordId={!CaseId15digit}'"/>
+                    
+                    <apex:commandButton rendered="{!AND(NOT(renderEmailToCustomer),NOT(renderEmailToCustomerMobility))}" value="{!$Label.VFP14_Email_to_AAI_Agent}" style="height: 18px; padding: 2px 2px;"  onclick="openSubTab('{!emailToClientURL}?p2_lkid=&rtype=003&p3_lkid={!CaseId15digit}&p24={!SuppliedEmail}&p5={!BCCforGDRP}&p26={!FromAddressforDAC}&retURL=/{!CaseId15digit}&template_id={!blankEmailTemplateDAC}','{!$Label.VFP14_SendAnEmail}','',true);return false;"/>
+                    <!-- Giorgio Bonifazi END -->
+                    <!-- MDANTONIO 04/04/2019: esclusione case DAC AXA Agenti - end -->
+                    <!-- OAVERSANO 05/07/2018: VFP14_SendEmailView START -->
+                    <apex:commandButton rendered="{!AND(BankAgentBtnAvailability,!isAgentUser, renderEmailToCustomer)}" value="{!$Label.VFP14_Email_to_Agent}" style="height: 18px; padding: 2px 2px;"   onclick="openSubTab('{!URLBASE2}/_ui/core/email/author/EmailAuthor?p2_lkid=&rtype=003&p3_lkid={!CaseId15digit}&p24={!toAgentAddress}&p26={!FromAddressforAgent}&retURL=/{!CaseId15digit}','{!$Label.VFP14_SendAnEmail}','',true); return false;" >
+                                            <apex:param name="nickName"
+                                                value="BankAgent"
+                                                assignTo="{!ExternalProviderType}"/>
+                    </apex:commandButton> 
+                    
+                    <apex:commandButton rendered="{!AND(AgentBtnAvailability,!isAgentUser, renderEmailToCustomer)}" value="{!$Label.VFP14_Email_to_AAI_Agent}" style="height: 18px; padding: 2px 2px;"   onclick="openSubTab('{!URLBASE2}/_ui/core/email/author/EmailAuthor?p2_lkid=&rtype=003&p3_lkid={!CaseId15digit}&p24={!toAgencyAAIAddress}&p26={!FromAddressforAgent}&retURL=/{!CaseId15digit}','{!$Label.VFP14_SendAnEmail}','',true); return false;" >
+                                            <apex:param name="nickName"
+                                                value="Agent"
+                                               assignTo="{!ExternalProviderType}"/>
+                    </apex:commandButton> 
+                    
+                    <!-- ACAPOBIANCO 22/08/2017 : EVO 87 -- START -- -->
+                    <apex:commandButton rendered="{!AND(TechnicalBtnAvailability,!isAgentUser, renderEmailToCustomer)}" value="{!$Label.VFP14_Email_to_Technical_Office}" style="height: 18px; padding: 2px 2px;"  onclick="openSubTab('{!URLBASE2}/_ui/core/email/author/EmailAuthor?p2_lkid=&rtype=003&p3_lkid={!CaseId15digit}&p24=&p26={!FromAddressforTechnicalOffice}&retURL=/{!CaseId15digit}','{!$Label.VFP14_SendAnEmail}','',true); return false;" >
+                                            <apex:param name="nickName"
+                                                value="Technical"
+                                                assignTo="{!ExternalProviderType}"/>
+                    </apex:commandButton> 
+                    <!-- OAVERSANO 05/07/2018: VFP14_SendEmailView END -->
+                    
+                    
+                    <apex:commandButton rendered="{!AND(AMFTechnicalOfficeAvailability,!isAgentUser, renderEmailToCustomer)}" value="{!$Label.VFP14_Email_To_IPSI}" style="height: 18px; padding: 2px 2px;"  action="{!getExternalProviderInfo}" oncomplete="openSubTab('{!URLBASE2}/_ui/core/email/author/EmailAuthor?p2_lkid=&rtype=003&p3_lkid={!CaseId15digit}&p24={!ExternalProviderEmail}&p26={!FromAddressforCustomer}&template_id={!EmailTemplateId}&retURL=/{!CaseId15digit}','{!$Label.VFP14_SendAnEmail}','',true);return false;">
+                                               <apex:param name="nickName"
+                                                value="AMF"
+                                                assignTo="{!ExternalProviderType}"/>
+                    </apex:commandButton>                    
+                    <!--ACAPOBIANCO 22/08/2017: Evo 87 -- END -->
+
+                    <!--MOSCATELLI_M 28/10/2016: Evo71-ConnectedHome -- START-->
+                    <apex:commandButton rendered="{!AND(MyFoxBtnAvailability,!isAgentUser, renderEmailToCustomer)}" value="{!$Label.VFP14_Email_to_My_Fox}" style="height: 18px; padding: 2px 2px;"  action="{!getExternalProviderInfo}" oncomplete="openSubTab('{!URLBASE2}/_ui/core/email/author/EmailAuthor?p2_lkid=&rtype=003&p3_lkid={!CaseId15digit}&p24={!ExternalProviderEmail}&p26={!FromAddressforCustomer}&template_id={!EmailTemplateId}&retURL=/{!CaseId15digit}','{!$Label.VFP14_SendAnEmail}','',true);return false;">
+                                               <apex:param name="nickName"
+                                                value="MyFox"
+                                                assignTo="{!ExternalProviderType}"/>
+                    </apex:commandButton>
+                    <!--MOSCATELLI_M 28/10/2016: Evo71-ConnectedHome -- END-->
+                    
+                    <!--MOSCATELLI_M 16/11/2016: Evo 70 -- START-->
+                    <apex:commandButton rendered="{!AND(BlueAssBtnAvailability,!isAgentUser, renderEmailToCustomer)}" value="{!$Label.VFP14_Email_to_Blue_Ass}" style="height: 18px; padding: 2px 2px;"  action="{!getExternalProviderInfo}" oncomplete="openSubTab('{!URLBASE2}/_ui/core/email/author/EmailAuthor?p2_lkid=&rtype=003&p3_lkid={!CaseId15digit}&p24={!ExternalProviderEmail}&p26={!FromAddressforCustomer}&template_id={!EmailTemplateId}&retURL=/{!CaseId15digit}','{!$Label.VFP14_SendAnEmail}','',true);return false;">
+                                               <apex:param name="nickName"
+                                                value="BlueAss"
+                                                assignTo="{!ExternalProviderType}"/>
+                    </apex:commandButton>
+                    <!--MOSCATELLI_M 16/11/2016: Evo 70 -- END-->      
+
+                    <!--BOVOLENTA_D 16052018 US 688 -- START-->
+                    <apex:commandButton rendered="{!AND(isAaiAccount,!isAgentUser, renderEmailToCustomer)}" value="{!$Label.VFP14_Email_to_Agency}" style="height: 18px; padding: 2px 2px;"  oncomplete="openSubTab('{!URLBASE2}/_ui/core/email/author/EmailAuthor?p2_lkid=&rtype=003&p3_lkid={!CaseId15digit}&p24={!toAgencyAddress}&p26={!FromAddressforAgency}&template_id={!EmailTemplateId}&retURL=/{!CaseId15digit}','{!$Label.VFP14_SendAnEmail}','',true);return false;"/>
+
+                    <!--BOVOLENTA_D 16052018 US 688 -- END-->               
+
+                    <!--BOVOLENTA_D 16052018 US 684 -- START-->
+                    <apex:commandButton rendered="false" value="{!$Label.VFP14_Email_Request_GDPR_Assistance}" style="height: 18px; padding: 2px 2px;" action="{!getExternalProviderInfo}" oncomplete="openSubTab('{!URLBASE2}/_ui/core/email/author/EmailAuthor?p2_lkid=&rtype=003&p3_lkid={!CaseId15digit}&p24={!ExternalProviderEmail}&p26={!FromAddressforGDPR}&template_id={!EmailTemplateId}&retURL=/{!CaseId15digit}','{!$Label.VFP14_SendAnEmail}','',true);return false;">
+                                                <apex:param name="nickName"
+                                                value="GDPR"
+                                                assignTo="{!ExternalProviderType}"/>
+                    </apex:commandButton>
+
+                    <!--BOVOLENTA_D 16052018 US 684 -- END-->                                               
+                       
+                </apex:pageBlockButtons>  
+                <apex:pageBlockTable value="{!EmailWrapList}" var="emess">
+                <apex:column value="{!emess.MsgStatus}" headerValue="{!$ObjectType.EmailMessage.fields.Status.label}" style="width:6%!important;"/>  
+                    <apex:column >                
+                        <apex:image value="/img/emailInbound.gif" rendered="{!emess.MsgIsIncoming}" />
+                        <apex:image value="/img/emailOutbound.gif" rendered="{!!emess.MsgIsIncoming}" />
+                        &nbsp;<apex:image value="/img/emailHasAttach.gif" rendered="{!emess.MsgHasAttachments}"/>
+                    </apex:column>  
+                    
+                    <apex:column >                             
+                        <apex:facet name="header">{!$ObjectType.EmailMessage.fields.Subject.label}</apex:facet>                                      
+                        <apex:outputLink value="#" onclick="openSubTab('{!URLBASE2}/{!emess.MsgId}','{!IF(emess.MsgIsIncoming,$Label.VFP14_IncomingEmail,$Label.VFP14_Outbound_Email)}','',true);return false;" >{!emess.MsgSubject}</apex:outputLink>                        
+                        <br/>
+                        <apex:outputText value="{!emess.MsgBody}" style="font-style: italic;"/>                
+                    </apex:column>
+                    
+                    <apex:column >
+                        <apex:facet name="header">{!$Label.VFP14_Email_Address}</apex:facet>
+                        <apex:outputText value="{!emess.MsgFromAddress}" rendered="{!emess.MsgIsIncoming}" />
+                        <apex:outputText value="{!emess.MsgToAddress}" rendered="{!!emess.MsgIsIncoming}" />
+                    </apex:column>
+                    
+                    <apex:column value="{!emess.MsgDate}" headerValue="{!$ObjectType.EmailMessage.fields.MessageDate.label}" style="width:12%!important;"/>            
+                </apex:pageBlockTable>                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     <!--           <apex:pageBlockTable value="{!listEmailMessage}" var="emess">
+     
+                    <apex:column value="{!emess.Status}" headerValue="{!$ObjectType.EmailMessage.fields.Status.label}" style="width:6%!important;"/>  
+                    <apex:column >                
+                        <apex:image value="/img/emailInbound.gif" rendered="{!emess.Incoming}" />
+                        <apex:image value="/img/emailOutbound.gif" rendered="{!!emess.Incoming}" />
+                        &nbsp;<apex:image value="/img/emailHasAttach.gif" rendered="{!emess.HasAttachment}"/>
+                    </apex:column>  
+                    
+                    <apex:column >                             
+                        <apex:facet name="header">{!$ObjectType.EmailMessage.fields.Subject.label}</apex:facet>                                      
+                        <apex:outputLink value="#" onclick="openSubTab('{!URLBASE2}/{!emess.id}','{!IF(emess.Incoming,$Label.VFP14_IncomingEmail,$Label.VFP14_Outbound_Email)}','',true);return false;" >{!emess.Subject}</apex:outputLink>                        
+                        <br/>
+                        <apex:outputText value="{!emess.TextBody}" style="font-style: italic;"/>                
+                    </apex:column>
+                    
+                    <apex:column >
+                        <apex:facet name="header">{!$Label.VFP14_Email_Address}</apex:facet>
+                        <apex:outputText value="{!emess.FromAddress}" rendered="{!emess.Incoming}" />
+                        <apex:outputText value="{!emess.ToAddress}" rendered="{!!emess.Incoming}" />
+                    </apex:column>
+                    
+                    <apex:column value="{!emess.MessageDate}" headerValue="{!$ObjectType.EmailMessage.fields.MessageDate.label}" style="width:12%!important;"/>            
+                </apex:pageBlockTable>    -->            
+                
+                <apex:commandButton action="{!doPrevious}" disabled="{!!hasPrevious}"  value="{!$Label.VFP14_Previous}" />
+                <apex:outputLabel value=" ({!$Label.VFP14_Page} {!page} {!$Label.VFP14_Of} {!totalPages}) " />                
+                <apex:commandButton action="{!doNext}" disabled="{!!hasNext}" value="{!$Label.VFP14_Next}" />          
+                <br/>                
+            </apex:pageBlock> 
+        </apex:form>
+    </apex:outputPanel> 
+ <!--   </div>   -->
+</apex:page>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>ValidazioneVisuraCameraleMessage006</label>
+    <protected>false</protected>
+    <values>
+        <field>High_Volume_Values__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Key__c</field>
+        <value xsi:type="xsd:string">MissingArguments</value>
+    </values>
+    <values>
+        <field>Value__c</field>
+        <value xsi:type="xsd:string">Attenzione! Non è possibile chiudere il Case.
+Verificare che i seguenti valori non siano nulli:
+Email Web, Numero polizza, TECH Company (Cliente), Partita IVA (Cliente), TECH Company (Polizza)</value>
+    </values>
+</CustomMetadata>

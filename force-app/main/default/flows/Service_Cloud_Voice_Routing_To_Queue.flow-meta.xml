@@ -1,0 +1,1361 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Route_to_queue_0</name>
+        <label>redirectToQueue</label>
+        <locationX>3218</locationX>
+        <locationY>650</locationY>
+        <actionName>routeWork</actionName>
+        <actionType>routeWork</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>agentLabel</name>
+        </inputParameters>
+        <inputParameters>
+            <name>agentId</name>
+        </inputParameters>
+        <inputParameters>
+            <name>botLabel</name>
+        </inputParameters>
+        <inputParameters>
+            <name>botId</name>
+        </inputParameters>
+        <inputParameters>
+            <name>skillRequirementsResourceItem</name>
+        </inputParameters>
+        <inputParameters>
+            <name>isQueueVariable</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>skillOption</name>
+        </inputParameters>
+        <inputParameters>
+            <name>queueId</name>
+            <value>
+                <elementReference>GetQueue.Id</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>queueLabel</name>
+        </inputParameters>
+        <inputParameters>
+            <name>recordId</name>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>routingConfigLabel</name>
+        </inputParameters>
+        <inputParameters>
+            <name>routingConfigId</name>
+        </inputParameters>
+        <inputParameters>
+            <name>routingType</name>
+            <value>
+                <stringValue>QueueBased</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>serviceChannelLabel</name>
+            <value>
+                <stringValue>Telefono</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>serviceChannelDevName</name>
+            <value>
+                <stringValue>sfdc_phone</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>serviceChannelId</name>
+            <value>
+                <stringValue>0N908000000g27gCAA</stringValue>
+            </value>
+        </inputParameters>
+        <nameSegment>routeWork</nameSegment>
+        <versionSegment>1</versionSegment>
+    </actionCalls>
+    <apiVersion>54.0</apiVersion>
+    <assignments>
+        <name>Agenti</name>
+        <label>Agenti</label>
+        <locationX>578</locationX>
+        <locationY>350</locationY>
+        <assignmentItems>
+            <assignToReference>QueueToRedirect</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>ChooseQueueAgenti</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>GetQueue</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Assignment</name>
+        <label>AAI</label>
+        <locationX>50</locationX>
+        <locationY>350</locationY>
+        <assignmentItems>
+            <assignToReference>QueueToRedirect</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>ChooseQueueClientiAAI</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>GetQueue</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>AXA_Direct_Marketing1</name>
+        <label>AXA Direct Marketing</label>
+        <locationX>4802</locationX>
+        <locationY>350</locationY>
+        <assignmentItems>
+            <assignToReference>QueueToRedirect</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>ChooseQueueDirectMarketing</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>GetQueue</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>BPB1</name>
+        <label>BPB</label>
+        <locationX>5066</locationX>
+        <locationY>350</locationY>
+        <assignmentItems>
+            <assignToReference>QueueToRedirect</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>ChooseQueueBPB</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>GetQueue</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>BPPB_0</name>
+        <label>BPPB</label>
+        <locationX>4538</locationX>
+        <locationY>350</locationY>
+        <assignmentItems>
+            <assignToReference>QueueToRedirect</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>ChooseQueueBPPB</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>GetQueue</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>CaringDirectMarketing</name>
+        <label>CaringDirectMarketing</label>
+        <locationX>1898</locationX>
+        <locationY>350</locationY>
+        <assignmentItems>
+            <assignToReference>QueueToRedirect</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>ChooseQueueCaringDirectMarketing</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>GetQueue</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>CentriConvenzionati</name>
+        <label>CentriConvenzionati</label>
+        <locationX>1634</locationX>
+        <locationY>350</locationY>
+        <assignmentItems>
+            <assignToReference>QueueToRedirect</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>ChooseQueueCentriConvenzionati</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>GetQueue</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>CLIENTI_BNL_0</name>
+        <label>CLIENTI BNL</label>
+        <locationX>3218</locationX>
+        <locationY>350</locationY>
+        <assignmentItems>
+            <assignToReference>QueueToRedirect</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>ChooseQueueClientiBNL</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>GetQueue</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>CLIENTI_ING_LIVING_0</name>
+        <label>CLIENTI ING LIVING</label>
+        <locationX>4010</locationX>
+        <locationY>350</locationY>
+        <assignmentItems>
+            <assignToReference>QueueToRedirect</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>ChooseQueueClientiINGLiving</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>GetQueue</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>CLIENTI_RCI1</name>
+        <label>CLIENTI RCI</label>
+        <locationX>2954</locationX>
+        <locationY>350</locationY>
+        <assignmentItems>
+            <assignToReference>QueueToRedirect</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>ChooseQueueCLIENTIRCI</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>GetQueue</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>CRAsti</name>
+        <label>CRAsti</label>
+        <locationX>1106</locationX>
+        <locationY>350</locationY>
+        <assignmentItems>
+            <assignToReference>QueueToRedirect</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>ChooseQueueCRAsti</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>GetQueue</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Filiali_BNL_0</name>
+        <label>Filiali BNL</label>
+        <locationX>3482</locationX>
+        <locationY>350</locationY>
+        <assignmentItems>
+            <assignToReference>QueueToRedirect</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>ChooseQueueFilialiBNL</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>GetQueue</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Gestori</name>
+        <label>Gestori</label>
+        <locationX>842</locationX>
+        <locationY>350</locationY>
+        <assignmentItems>
+            <assignToReference>QueueToRedirect</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>ChooseQueueGestori</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>GetQueue</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>MedicalConcierge</name>
+        <label>MedicalConcierge</label>
+        <locationX>1370</locationX>
+        <locationY>350</locationY>
+        <assignmentItems>
+            <assignToReference>QueueToRedirect</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>ChooseQueueMedicalConcierge</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>GetQueue</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>MPS</name>
+        <label>MPS</label>
+        <locationX>314</locationX>
+        <locationY>350</locationY>
+        <assignmentItems>
+            <assignToReference>QueueToRedirect</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>ChooseQueueClientiMPS</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>GetQueue</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>MPS_0</name>
+        <label>Sinistri MPS</label>
+        <locationX>5330</locationX>
+        <locationY>350</locationY>
+        <assignmentItems>
+            <assignToReference>QueueToRedirect</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>ChooseQueueSinistriMPS</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>GetQueue</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>My_AXA1</name>
+        <label>My AXA</label>
+        <locationX>3746</locationX>
+        <locationY>350</locationY>
+        <assignmentItems>
+            <assignToReference>QueueToRedirect</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>ChooseQueueMyAXA</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>GetQueue</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>QUADRA</name>
+        <label>QUADRA</label>
+        <locationX>4274</locationX>
+        <locationY>350</locationY>
+        <assignmentItems>
+            <assignToReference>QueueToRedirect</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>ChooseQueueQuadra</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>GetQueue</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>RCI_Dealer1</name>
+        <label>RCI Dealer</label>
+        <locationX>2690</locationX>
+        <locationY>350</locationY>
+        <assignmentItems>
+            <assignToReference>QueueToRedirect</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>ChooseQueueRCIDealer</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>GetQueue</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Sinistri_AAI11</name>
+        <label>Sinistri AAI</label>
+        <locationX>5594</locationX>
+        <locationY>350</locationY>
+        <assignmentItems>
+            <assignToReference>QueueToRedirect</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>ChooseQueueSinistriAAI</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>GetQueue</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Sparkasse</name>
+        <label>Sparkasse</label>
+        <locationX>2426</locationX>
+        <locationY>350</locationY>
+        <assignmentItems>
+            <assignToReference>QueueToRedirect</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>ChooseQueueSparkasse</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>GetQueue</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Supporto_HR</name>
+        <label>Supporto HR</label>
+        <locationX>2162</locationX>
+        <locationY>350</locationY>
+        <assignmentItems>
+            <assignToReference>QueueToRedirect</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>ChooseQueueSupportoHR</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>GetQueue</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>VitaLOL</name>
+        <label>VitaLOL</label>
+        <locationX>5858</locationX>
+        <locationY>350</locationY>
+        <assignmentItems>
+            <assignToReference>QueueToRedirect</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>ChooseQueueVitaLOL</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>GetQueue</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Voice_Bot</name>
+        <label>Voice Bot</label>
+        <locationX>6122</locationX>
+        <locationY>350</locationY>
+        <assignmentItems>
+            <assignToReference>QueueToRedirect</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>ChooseQueueClientiAAIVoiceBot</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>GetQueue</targetReference>
+        </connector>
+    </assignments>
+    <decisions>
+        <name>IVR_Name_Decision</name>
+        <label>IVR Name Decision</label>
+        <locationX>3218</locationX>
+        <locationY>242</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Sinistri_AAI</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GetVoiceCall.IVR_Name__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Clienti AAI</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Assignment</targetReference>
+            </connector>
+            <label>Clienti AAI</label>
+        </rules>
+        <rules>
+            <name>Sinistri_MPS</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GetVoiceCall.IVR_Name__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Clienti MPS</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>MPS</targetReference>
+            </connector>
+            <label>Clienti MPS</label>
+        </rules>
+        <rules>
+            <name>Assistenza_Agenti</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GetVoiceCall.IVR_Name__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Assistenza Agenti</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Agenti</targetReference>
+            </connector>
+            <label>Assistenza Agenti</label>
+        </rules>
+        <rules>
+            <name>Gestori_MPS</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GetVoiceCall.IVR_Name__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Assistenza Gestori MPS</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Gestori</targetReference>
+            </connector>
+            <label>Gestori MPS</label>
+        </rules>
+        <rules>
+            <name>Assistenza_Clienti_CR_Asti</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GetVoiceCall.IVR_Name__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Assistenza Clienti CR Asti</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>CRAsti</targetReference>
+            </connector>
+            <label>Assistenza Clienti CR Asti</label>
+        </rules>
+        <rules>
+            <name>Medical_Concierge</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GetVoiceCall.IVR_Name__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Medical Concierge</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>MedicalConcierge</targetReference>
+            </connector>
+            <label>Medical Concierge</label>
+        </rules>
+        <rules>
+            <name>Centri_Convenzionati</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GetVoiceCall.IVR_Name__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Centri Convenzionati</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>CentriConvenzionati</targetReference>
+            </connector>
+            <label>Centri Convenzionati</label>
+        </rules>
+        <rules>
+            <name>Direct_Marketing</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GetVoiceCall.IVR_Name__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Direct Marketing</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>CaringDirectMarketing</targetReference>
+            </connector>
+            <label>Direct Marketing</label>
+        </rules>
+        <rules>
+            <name>Supporto_HR_AG_Dipendenti</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GetVoiceCall.IVR_Name__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Supporto HR. AG Dipendenti</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Supporto_HR</targetReference>
+            </connector>
+            <label>Supporto HR. AG Dipendenti</label>
+        </rules>
+        <rules>
+            <name>Sparkasse1</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GetVoiceCall.IVR_Name__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Sparkasse</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Sparkasse</targetReference>
+            </connector>
+            <label>Sparkasse</label>
+        </rules>
+        <rules>
+            <name>RCI_Dealer</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GetVoiceCall.IVR_Name__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>RCI Dealer</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>RCI_Dealer1</targetReference>
+            </connector>
+            <label>RCI Dealer</label>
+        </rules>
+        <rules>
+            <name>CLIENTI_RCI</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GetVoiceCall.IVR_Name__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>CLIENTI RCI</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>CLIENTI_RCI1</targetReference>
+            </connector>
+            <label>CLIENTI RCI</label>
+        </rules>
+        <rules>
+            <name>ClientiBNL</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GetVoiceCall.IVR_Name__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>CLIENTI BNL</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>CLIENTI_BNL_0</targetReference>
+            </connector>
+            <label>ClientiBNL</label>
+        </rules>
+        <rules>
+            <name>Filiali_BNL1</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GetVoiceCall.IVR_Name__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Filiali BNL</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Filiali_BNL_0</targetReference>
+            </connector>
+            <label>Filiali BNL</label>
+        </rules>
+        <rules>
+            <name>My_AXA</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GetVoiceCall.IVR_Name__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>My AXA</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>My_AXA1</targetReference>
+            </connector>
+            <label>My AXA</label>
+        </rules>
+        <rules>
+            <name>CLIENTI_ING_LIVING</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GetVoiceCall.IVR_Name__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>CLIENTI ING LIVING</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>CLIENTI_ING_LIVING_0</targetReference>
+            </connector>
+            <label>CLIENTI ING LIVING</label>
+        </rules>
+        <rules>
+            <name>QUADRA1</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GetVoiceCall.IVR_Name__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>QUADRA</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>QUADRA</targetReference>
+            </connector>
+            <label>QUADRA</label>
+        </rules>
+        <rules>
+            <name>BPPB</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GetVoiceCall.IVR_Name__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>BPPB</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>BPPB_0</targetReference>
+            </connector>
+            <label>BPPB</label>
+        </rules>
+        <rules>
+            <name>AXA_Direct_Marketing</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GetVoiceCall.IVR_Name__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>AXA Direct Marketing</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>AXA_Direct_Marketing1</targetReference>
+            </connector>
+            <label>AXA Direct Marketing</label>
+        </rules>
+        <rules>
+            <name>BPB</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GetVoiceCall.IVR_Name__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Assistenza BPB</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>BPB1</targetReference>
+            </connector>
+            <label>BPB</label>
+        </rules>
+        <rules>
+            <name>Sinistri_MPS1</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GetVoiceCall.IVR_Name__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Sinistri MPS</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>MPS_0</targetReference>
+            </connector>
+            <label>Sinistri MPS</label>
+        </rules>
+        <rules>
+            <name>Sinistri_AAI1</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GetVoiceCall.IVR_Name__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Sinistri AAI</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Sinistri_AAI11</targetReference>
+            </connector>
+            <label>Sinistri AAI</label>
+        </rules>
+        <rules>
+            <name>LOL</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GetVoiceCall.IVR_Name__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Assistenza Agenti LOL</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>VitaLOL</targetReference>
+            </connector>
+            <label>LOL</label>
+        </rules>
+        <rules>
+            <name>Clienti_AAI_Voice_Bot</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GetVoiceCall.IVR_Name__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Clienti AAI Voice Bot</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Voice_Bot</targetReference>
+            </connector>
+            <label>Clienti AAI Voice Bot</label>
+        </rules>
+    </decisions>
+    <description>OmniFlow used by AWS to routing the Voice Call record to correct Queue</description>
+    <environments>Default</environments>
+    <formulas>
+        <name>ChooseQueueAgenti</name>
+        <dataType>String</dataType>
+        <expression>IF({!GetVoiceCall.LOB__c} = &quot;Auto&quot;, &quot;HD1_VOICE_AGENTI_AUTO&quot;,
+IF({!GetVoiceCall.LOB__c} = &quot;IT&quot;, &quot;HD1_VOICE_IT&quot;,
+IF({!GetVoiceCall.LOB__c} = &quot;Famiglia&quot;, &quot;HD1_VOICE_AGENTI_FAMIGLIA&quot;,
+IF({!GetVoiceCall.LOB__c} = &quot;Sinistri Salute&quot;, &quot;HD1_VOICE_AGENTI_AXA_CARING&quot;,
+IF({!GetVoiceCall.LOB__c} = &quot;Salute&quot;, &quot;HD1_VOICE_AGENTI_SALUTE&quot;,
+IF({!GetVoiceCall.LOB__c} = &quot;Vita&quot;, &quot;HD1_VOICE_AGENTI_VITA&quot;,
+IF({!GetVoiceCall.LOB__c} = &quot;Commercial line&quot;, &quot;HD1_VOICE_AGENTI_COMMERCIAL_LINE&quot;,
+&quot;HD1_VOICE_AGENTI_CONTABILITA&quot;) ) ) ) ) ) )</expression>
+    </formulas>
+    <formulas>
+        <name>ChooseQueueBPB</name>
+        <dataType>String</dataType>
+        <expression>
+IF({!GetVoiceCall.TECH_Queue_Destination__c} = &quot;AXA Caring Banca PIC&quot;, &quot;HD1_VOICE_AXA_CARING_BANCA_PIC&quot;, 
+
+IF({!GetVoiceCall.TECH_Queue_Destination__c} = &quot;AXA Caring Banca Info&quot;, &quot;HD1_VOICE_AXA_CARING_BANCA_INFO&quot;, 
+
+IF({!GetVoiceCall.TECH_Queue_Destination__c} = &quot;Banche terze&quot;, &quot;HD1_VOICE_BANCHE_TERZE&quot;,
+ 
+IF(AND(
+                        {!GetVoiceCall.LOB__c} = &quot;Sinistri&quot;,
+                        {!GetVoiceCall.Category__c} = &quot;Informazioni su sinistro&quot;,
+                        {!GetVoiceCall.SubCategory__c} = &quot;Sinistro Protezione Danni&quot;
+                    ), &quot;HD1_VOICE_INFO_SINISTRI_RE&quot;, 
+IF(AND(
+                        {!GetVoiceCall.LOB__c} = &quot;Casa e Famiglia&quot;,
+                        {!GetVoiceCall.Category__c} = &quot;Sinistro Caring Angel Property&quot;,
+                        {!GetVoiceCall.SubCategory__c} = &quot;Denuncia sinistro&quot;
+                    ), &quot;HD1_VOICE_DENUNCIA_SINISTRI_RE&quot;,
+
+
+&quot;HD1_VOICE_INFO_SINISTRI_RE&quot;) ) ) ) )</expression>
+    </formulas>
+    <formulas>
+        <name>ChooseQueueBPPB</name>
+        <dataType>String</dataType>
+        <expression>IF({!GetVoiceCall.TECH_Queue_Destination__c} = &quot;AXA Caring Banca PIC&quot;, &quot;HD1_VOICE_AXA_CARING_BANCA_PIC&quot;, 
+
+IF({!GetVoiceCall.TECH_Queue_Destination__c} = &quot;AXA Caring Banca Info&quot;, &quot;HD1_VOICE_AXA_CARING_BANCA_INFO&quot;, 
+
+IF({!GetVoiceCall.TECH_Queue_Destination__c} = &quot;Banche terze&quot;, &quot;HD1_VOICE_BANCHE_TERZE&quot;,
+ 
+IF(AND(
+                        {!GetVoiceCall.LOB__c} = &quot;Sinistri&quot;,
+                        {!GetVoiceCall.Category__c} = &quot;Informazioni su sinistro&quot;,
+                        {!GetVoiceCall.SubCategory__c} = &quot;Sinistro Protezione Danni&quot;
+                    ), &quot;HD1_VOICE_INFO_SINISTRI_RE&quot;, 
+IF(AND(
+                        {!GetVoiceCall.LOB__c} = &quot;Casa e Famiglia&quot;,
+                        {!GetVoiceCall.Category__c} = &quot;Sinistro Caring Angel Property&quot;,
+                        {!GetVoiceCall.SubCategory__c} = &quot;Denuncia sinistro&quot;
+                    ), &quot;HD1_VOICE_DENUNCIA_SINISTRI_RE&quot;,
+
+
+&quot;HD1_VOICE_INFO_SINISTRI_RE&quot;) ) ) ) )</expression>
+    </formulas>
+    <formulas>
+        <name>ChooseQueueCaringDirectMarketing</name>
+        <dataType>String</dataType>
+        <expression>IF({!GetVoiceCall.TECH_Queue_Destination__c} = &quot;AXA Caring Banca PIC&quot;, &quot;HD1_VOICE_AXA_CARING_BANCA_PIC&quot;, 
+
+IF({!GetVoiceCall.TECH_Queue_Destination__c} = &quot;AXA Caring Banca Info&quot;, &quot;HD1_VOICE_AXA_CARING_BANCA_INFO&quot;, 
+
+&quot;HD1_VOICE_AXA_CARING_BANCA_INFO&quot;) )</expression>
+    </formulas>
+    <formulas>
+        <name>ChooseQueueCentriConvenzionati</name>
+        <dataType>String</dataType>
+        <expression>IF({!GetVoiceCall.TECH_Queue_Destination__c} = &quot;AXA Caring Centri Convenzionati&quot;, &quot;HD1_VOICE_CARING_CENTRI_CONVENZIONATI&quot;,
+&quot;HD1_VOICE_CARING_CENTRI_CONVENZIONATI&quot;)</expression>
+    </formulas>
+    <formulas>
+        <name>ChooseQueueClientiAAI</name>
+        <dataType>String</dataType>
+        <expression>IF(AND(
+                        {!GetVoiceCall.LOB__c} = &quot;Sinistri&quot;,
+                        {!GetVoiceCall.Category__c} = &quot;Informazioni su sinistro&quot;,
+                        {!GetVoiceCall.SubCategory__c} = &quot;Sinistro Motor&quot;
+                    ), &quot;HD1_VOICE_INFO_SINISTRI_MOTOR&quot;,  
+IF(AND(
+                            {!GetVoiceCall.LOB__c} = &quot;Motor&quot;,
+                            {!GetVoiceCall.Category__c} = &quot;Sinistro Caring Angel&quot;,
+                            {!GetVoiceCall.SubCategory__c} = &quot;Denuncia sinistro&quot;
+                        ), &quot;HD1_VOICE_DENUNCIA_SINISTRI_MOTOR&quot;, 
+ 
+IF({!GetVoiceCall.TECH_Queue_Destination__c} = &quot;AXA Clienti&quot;, &quot;HD1_VOICE_AXA_CLIENTI&quot;, 
+ 
+IF(AND(
+                        {!GetVoiceCall.LOB__c} = &quot;Sinistri&quot;,
+                        {!GetVoiceCall.Category__c} = &quot;Informazioni su sinistro&quot;,
+                        {!GetVoiceCall.SubCategory__c} = &quot;Sinistro Protezione Danni&quot;
+                    ), &quot;HD1_VOICE_INFO_SINISTRI_RE&quot;, 
+IF(AND(
+                        {!GetVoiceCall.LOB__c} = &quot;Casa e Famiglia&quot;,
+                        {!GetVoiceCall.Category__c} = &quot;Sinistro Caring Angel Property&quot;,
+                        {!GetVoiceCall.SubCategory__c} = &quot;Denuncia sinistro&quot;
+                    ), &quot;HD1_VOICE_DENUNCIA_SINISTRI_RE&quot;,
+
+IF({!GetVoiceCall.TECH_Queue_Destination__c} = &quot;AXA Caring Clienti AAI Info&quot;, &quot;HD1_VOICE_AXA_CARING_CLIENTI_AAI_INFO&quot;,
+
+IF({!GetVoiceCall.TECH_Queue_Destination__c} = &quot;AXA Caring Clienti AAI PIC&quot;, &quot;HD1_VOICE_AXA_CARING_CLIENTI_AAI_PIC&quot;,
+IF({!GetVoiceCall.TECH_Queue_Destination__c} = &quot;AXA Caring Corporate AAI Info&quot;, &quot;HD1_VOICE_AXA_CARING_CORPORATE_AAI_INFO&quot;,
+IF({!GetVoiceCall.TECH_Queue_Destination__c} = &quot;AXA Caring Corporate AAI PIC&quot;, &quot;HD1_VOICE_AXA_CARING_CORPORATE_AAI_PIC&quot;,
+
+&quot;HD1_VOICE_INFO_SINISTRI_RE&quot;) ) ) ) ) ) ) ) )</expression>
+    </formulas>
+    <formulas>
+        <name>ChooseQueueClientiAAIVoiceBot</name>
+        <dataType>String</dataType>
+        <expression>IF({!GetVoiceCall.TECH_Queue_Destination__c} = &quot;AAI Danni &amp; Vita Fallback&quot;, &quot;HD1_VOICE_AAI_DANNI_VITA_FALLBACK&quot;,
+IF({!GetVoiceCall.TECH_Queue_Destination__c} = &quot;AAI Salute Fallback&quot;, &quot;HD1_VOICE_AAI_SALUTE_FALLBACK&quot;,
+IF(AND(
+                        {!GetVoiceCall.LOB__c} = &quot;Sinistri&quot;,
+                        {!GetVoiceCall.Category__c} = &quot;Informazioni su sinistro&quot;,
+                        {!GetVoiceCall.SubCategory__c} = &quot;Sinistro Motor&quot;
+                    ), &quot;HD1_VOICE_INFO_SINISTRI_MOTOR&quot;,  
+IF(AND(
+                            {!GetVoiceCall.LOB__c} = &quot;Motor&quot;,
+                            {!GetVoiceCall.Category__c} = &quot;Sinistro Caring Angel&quot;,
+                            {!GetVoiceCall.SubCategory__c} = &quot;Denuncia sinistro&quot;
+                        ), &quot;HD1_VOICE_DENUNCIA_SINISTRI_MOTOR&quot;, 
+ 
+IF({!GetVoiceCall.TECH_Queue_Destination__c} = &quot;AXA Clienti&quot;, &quot;HD1_VOICE_AXA_CLIENTI&quot;, 
+ 
+IF(AND(
+                        {!GetVoiceCall.LOB__c} = &quot;Sinistri&quot;,
+                        {!GetVoiceCall.Category__c} = &quot;Informazioni su sinistro&quot;,
+                        {!GetVoiceCall.SubCategory__c} = &quot;Sinistro Protezione Danni&quot;
+                    ), &quot;HD1_VOICE_INFO_SINISTRI_RE&quot;, 
+IF(AND(
+                        {!GetVoiceCall.LOB__c} = &quot;Casa e Famiglia&quot;,
+                        {!GetVoiceCall.Category__c} = &quot;Sinistro Caring Angel Property&quot;,
+                        {!GetVoiceCall.SubCategory__c} = &quot;Denuncia sinistro&quot;
+                    ), &quot;HD1_VOICE_DENUNCIA_SINISTRI_RE&quot;,
+IF({!GetVoiceCall.TECH_Queue_Destination__c} = &quot;AXA Caring Clienti AAI Info&quot;, &quot;HD1_VOICE_AXA_CARING_CLIENTI_AAI_INFO&quot;,
+
+IF({!GetVoiceCall.TECH_Queue_Destination__c} = &quot;AXA Caring Clienti AAI PIC&quot;, &quot;HD1_VOICE_AXA_CARING_CLIENTI_AAI_PIC&quot;,
+
+ &quot;HD1_VOICE_AAI_DANNI_VITA_FALLBACK&quot;) ) ) ) ) ) ) ) )</expression>
+    </formulas>
+    <formulas>
+        <name>ChooseQueueClientiBNL</name>
+        <dataType>String</dataType>
+        <expression>IF({!GetVoiceCall.LOB__c} = &quot;Protezione Danni&quot;, &quot;HD1_VOICE_BANCHE_TERZE&quot;,
+ 
+IF(AND(
+                        {!GetVoiceCall.LOB__c} = &quot;Sinistri&quot;,
+                        {!GetVoiceCall.Category__c} = &quot;Informazioni su sinistro&quot;,
+                        {!GetVoiceCall.SubCategory__c} = &quot;Sinistro Protezione Danni&quot;
+                    ), &quot;HD1_VOICE_INFO_SINISTRI_RE&quot;, 
+IF(AND(
+                        {!GetVoiceCall.LOB__c} = &quot;Casa e Famiglia&quot;,
+                        {!GetVoiceCall.Category__c} = &quot;Sinistro Caring Angel Property&quot;,
+                        {!GetVoiceCall.SubCategory__c} = &quot;Denuncia sinistro&quot;
+                    ), &quot;HD1_VOICE_DENUNCIA_SINISTRI_RE&quot;,
+
+
+&quot;HD1_VOICE_INFO_SINISTRI_RE&quot;) ) )</expression>
+    </formulas>
+    <formulas>
+        <name>ChooseQueueClientiINGLiving</name>
+        <dataType>String</dataType>
+        <expression>IF({!GetVoiceCall.LOB__c} = &quot;Protezione Danni&quot;, &quot;HD1_VOICE_ING_LIVING_CLIENTI&quot;,
+IF({!GetVoiceCall.LOB__c} = &quot;Sinistri&quot;, &quot;HD1_VOICE_ING_SINISTRI_CLIENTI&quot;,
+&quot;HD1_VOICE_ING_LIVING_CLIENTI&quot;) )</expression>
+    </formulas>
+    <formulas>
+        <name>ChooseQueueClientiMPS</name>
+        <dataType>String</dataType>
+        <expression>IF(AND(
+                        {!GetVoiceCall.LOB__c} = &quot;Sinistri&quot;,
+                        {!GetVoiceCall.Category__c} = &quot;Informazioni su sinistro&quot;,
+                        {!GetVoiceCall.SubCategory__c} = &quot;Sinistro Motor&quot;
+                    ), &quot;HD1_VOICE_INFO_SINISTRI_MOTOR&quot;,  
+IF(AND(
+                            {!GetVoiceCall.LOB__c} = &quot;Motor&quot;,
+                            {!GetVoiceCall.Category__c} = &quot;Sinistro Caring Angel&quot;,
+                            {!GetVoiceCall.SubCategory__c} = &quot;Denuncia sinistro&quot;
+                        ), &quot;HD1_VOICE_DENUNCIA_SINISTRI_MOTOR&quot;, 
+ 
+IF({!GetVoiceCall.TECH_Queue_Destination__c} = &quot;AXA Caring Banca PIC&quot;, &quot;HD1_VOICE_AXA_CARING_BANCA_PIC&quot;, 
+
+IF({!GetVoiceCall.TECH_Queue_Destination__c} = &quot;AXA Caring Banca Info&quot;, &quot;HD1_VOICE_AXA_CARING_BANCA_INFO&quot;, 
+
+IF({!GetVoiceCall.LOB__c} = &quot;Auto&quot;, &quot;HD1_VOICE_CLIENTI_AMPS_MOTOR&quot;,
+ 
+IF(AND(
+                        {!GetVoiceCall.LOB__c} = &quot;Sinistri&quot;,
+                        {!GetVoiceCall.Category__c} = &quot;Informazioni su sinistro&quot;,
+                        {!GetVoiceCall.SubCategory__c} = &quot;Sinistro Protezione Danni&quot;
+                    ), &quot;HD1_VOICE_INFO_SINISTRI_RE&quot;, 
+IF(AND(
+                        {!GetVoiceCall.LOB__c} = &quot;Casa e Famiglia&quot;,
+                        {!GetVoiceCall.Category__c} = &quot;Sinistro Caring Angel Property&quot;,
+                        {!GetVoiceCall.SubCategory__c} = &quot;Denuncia sinistro&quot;
+                    ), &quot;HD1_VOICE_DENUNCIA_SINISTRI_RE&quot;,
+
+IF({!GetVoiceCall.LOB__c} = &quot;Investimento&quot;, &quot;HD1_VOICE_AMF_CLIENTI&quot;,
+IF({!GetVoiceCall.LOB__c} = &quot;Savings&quot;, &quot;HD1_VOICE_AMPS_RISPARMIO_CLIENTI&quot;,
+IF({!GetVoiceCall.LOB__c} = &quot;Pension&quot;, &quot;HD1_VOICE_AMPS_PREVIDENZA_CLIENTI&quot;,
+IF({!GetVoiceCall.LOB__c} = &quot;Protezione Vita&quot;, &quot;HD1_VOICE_AMPS_PROTEZIONE_VITA_CLIENTI&quot;,
+IF({!GetVoiceCall.LOB__c} = &quot;Protezione Danni&quot;, &quot;HD1_VOICE_PROTEZIONE_DANNI_CLIENTI&quot;,
+IF({!GetVoiceCall.LOB__c} = &quot;Private Area and My AXA&quot;, &quot;HD1_VOICE_AMPS_AREE_RISERVATE&quot;,
+
+&quot;HD1_VOICE_INFO_SINISTRI_RE&quot;) ) ) ) ) ) ) ) ) ) ) ))</expression>
+    </formulas>
+    <formulas>
+        <name>ChooseQueueCLIENTIRCI</name>
+        <dataType>String</dataType>
+        <expression>IF(AND(
+                        {!GetVoiceCall.LOB__c} = &quot;Sinistri&quot;,
+                        {!GetVoiceCall.Category__c} = &quot;Informazioni su sinistro&quot;,
+                        {!GetVoiceCall.SubCategory__c} = &quot;Sinistro Motor&quot;
+                    ), &quot;HD1_VOICE_INFO_SINISTRI_MOTOR&quot;,  
+IF(AND(
+                            {!GetVoiceCall.LOB__c} = &quot;Motor&quot;,
+                            {!GetVoiceCall.Category__c} = &quot;Sinistro Caring Angel&quot;,
+                            {!GetVoiceCall.SubCategory__c} = &quot;Denuncia sinistro&quot;
+                        ), &quot;HD1_VOICE_DENUNCIA_SINISTRI_MOTOR&quot;, 
+ 
+IF({!GetVoiceCall.TECH_Queue_Destination__c} = &quot;RCI Digital&quot;, &quot;HD1_VOICE_RCI_DIGITAL&quot;,
+
+&quot;HD1_VOICE_INFO_SINISTRI_RE&quot;) ) )</expression>
+    </formulas>
+    <formulas>
+        <name>ChooseQueueCRAsti</name>
+        <dataType>String</dataType>
+        <expression>IF({!GetVoiceCall.TECH_Queue_Destination__c} = &quot;AXA Caring Banca PIC&quot;, &quot;HD1_VOICE_AXA_CARING_BANCA_PIC&quot;, 
+
+IF({!GetVoiceCall.TECH_Queue_Destination__c} = &quot;AXA Caring Banca Info&quot;, &quot;HD1_VOICE_AXA_CARING_BANCA_INFO&quot;, 
+
+IF({!GetVoiceCall.TECH_Queue_Destination__c} = &quot;Banche terze&quot;, &quot;HD1_VOICE_BANCHE_TERZE&quot;,
+ 
+IF(AND(
+                        {!GetVoiceCall.LOB__c} = &quot;Sinistri&quot;,
+                        {!GetVoiceCall.Category__c} = &quot;Informazioni su sinistro&quot;,
+                        {!GetVoiceCall.SubCategory__c} = &quot;Sinistro Protezione Danni&quot;
+                    ), &quot;HD1_VOICE_INFO_SINISTRI_RE&quot;, 
+IF(AND(
+                        {!GetVoiceCall.LOB__c} = &quot;Casa e Famiglia&quot;,
+                        {!GetVoiceCall.Category__c} = &quot;Sinistro Caring Angel Property&quot;,
+                        {!GetVoiceCall.SubCategory__c} = &quot;Denuncia sinistro&quot;
+                    ), &quot;HD1_VOICE_DENUNCIA_SINISTRI_RE&quot;,
+
+
+&quot;HD1_VOICE_INFO_SINISTRI_RE&quot;) ) ) ) )</expression>
+    </formulas>
+    <formulas>
+        <name>ChooseQueueDirectMarketing</name>
+        <dataType>String</dataType>
+        <expression>IF(AND(
+                        {!GetVoiceCall.LOB__c} = &quot;Sinistri&quot;,
+                        {!GetVoiceCall.Category__c} = &quot;Informazioni su sinistro&quot;,
+                        {!GetVoiceCall.SubCategory__c} = &quot;Sinistro Protezione Danni&quot;
+                    ), &quot;HD1_VOICE_INFO_SINISTRI_RE&quot;, 
+IF({!GetVoiceCall.LOB__c} = &quot;Protezione Vita&quot;, &quot;HD1_VOICE_AMPS_PROTEZIONE_VITA_CLIENTI&quot;,
+IF({!GetVoiceCall.LOB__c} = &quot;Protezione Danni&quot;, &quot;HD1_VOICE_PROTEZIONE_DANNI_CLIENTI&quot;,
+
+&quot;HD1_VOICE_INFO_SINISTRI_RE&quot;) ) )</expression>
+    </formulas>
+    <formulas>
+        <name>ChooseQueueFilialiBNL</name>
+        <dataType>String</dataType>
+        <expression>IF({!GetVoiceCall.LOB__c} = &quot;Protezione Danni&quot;, &quot;HD1_VOICE_BANCHE_TERZE&quot;,
+&quot;HD1_VOICE_BANCHE_TERZE&quot;)</expression>
+    </formulas>
+    <formulas>
+        <name>ChooseQueueGestori</name>
+        <dataType>String</dataType>
+        <expression>IF({!GetVoiceCall.LOB__c} = &quot;Auto&quot;, &quot;HD1_VOICE_GESTORI_AMPS_MOTOR_RETE&quot;,
+IF({!GetVoiceCall.LOB__c} = &quot;Savings&quot;, &quot;HD1_VOICE_GESTORI_AMPS_RISPARMIO_RETE&quot;,
+IF({!GetVoiceCall.LOB__c} = &quot;Investimento&quot;, &quot;HD1_VOICE_GESTORI_AMF&quot;,
+IF({!GetVoiceCall.LOB__c} = &quot;Pension&quot;, &quot;HD1_VOICE_GESTORI_AMPS_PREVIDENZA_RETE&quot;,
+IF({!GetVoiceCall.LOB__c} = &quot;Protezione Vita&quot;, &quot;HD1_VOICE_GESTORI_PROTEZIONE_VITA_RETE&quot;,
+IF({!GetVoiceCall.LOB__c} = &quot;Protezione Danni&quot;, &quot;HD1_VOICE_GESTORI_PROTEZIONE_DANNI_RETE&quot;,
+
+&quot;HD1_VOICE_GESTORI_AMPS_MOTOR_RETE&quot;) ) ) ) ) )</expression>
+    </formulas>
+    <formulas>
+        <name>ChooseQueueMedicalConcierge</name>
+        <dataType>String</dataType>
+        <expression>IF({!GetVoiceCall.TECH_Queue_Destination__c} = &quot;AXA Caring Medical Concierge&quot;, &quot;HD1_VOICE_AXA_CARING_MEDICAL_CONCIERGE&quot;,
+&quot;HD1_VOICE_AXA_CARING_MEDICAL_CONCIERGE&quot;)</expression>
+    </formulas>
+    <formulas>
+        <name>ChooseQueueMyAXA</name>
+        <dataType>String</dataType>
+        <expression>IF({!GetVoiceCall.LOB__c} = &quot;Area Clienti e APP My AXA&quot;, &quot;HD1_VOICE_AMPS_AREE_RISERVATE&quot;,
+&quot;HD1_VOICE_AMPS_AREE_RISERVATE&quot;)</expression>
+    </formulas>
+    <formulas>
+        <name>ChooseQueueQuadra</name>
+        <dataType>String</dataType>
+        <expression>IF({!GetVoiceCall.LOB__c} = &quot;Protezione Danni&quot;, &quot;HD1_VOICE_BANCHE_TERZE&quot;,
+&quot;HD1_VOICE_BANCHE_TERZE&quot;)</expression>
+    </formulas>
+    <formulas>
+        <name>ChooseQueueRCIDealer</name>
+        <dataType>String</dataType>
+        <expression>IF({!GetVoiceCall.LOB__c} = &quot;Sinistri&quot;, &quot;HD1_VOICE_RCI_DEALER&quot;,
+&quot;HD1_VOICE_RCI_DEALER&quot;)</expression>
+    </formulas>
+    <formulas>
+        <name>ChooseQueueSinistriAAI</name>
+        <dataType>String</dataType>
+        <expression>IF(AND(
+                        {!GetVoiceCall.LOB__c} = &quot;Sinistri&quot;,
+                        {!GetVoiceCall.Category__c} = &quot;Informazioni su sinistro&quot;,
+                        {!GetVoiceCall.SubCategory__c} = &quot;Sinistro Motor&quot;
+                    ), &quot;HD1_VOICE_INFO_SINISTRI_MOTOR&quot;,  
+IF(AND(
+                            {!GetVoiceCall.LOB__c} = &quot;Motor&quot;,
+                            {!GetVoiceCall.Category__c} = &quot;Sinistro Caring Angel&quot;,
+                            {!GetVoiceCall.SubCategory__c} = &quot;Denuncia sinistro&quot;
+                        ), &quot;HD1_VOICE_DENUNCIA_SINISTRI_MOTOR&quot;,  
+IF(AND(
+                        {!GetVoiceCall.LOB__c} = &quot;Sinistri&quot;,
+                        {!GetVoiceCall.Category__c} = &quot;Informazioni su sinistro&quot;,
+                        {!GetVoiceCall.SubCategory__c} = &quot;Sinistro Protezione Danni&quot;
+                    ), &quot;HD1_VOICE_INFO_SINISTRI_RE&quot;, 
+IF(AND(
+                        {!GetVoiceCall.LOB__c} = &quot;Casa e Famiglia&quot;,
+                        {!GetVoiceCall.Category__c} = &quot;Sinistro Caring Angel Property&quot;,
+                        {!GetVoiceCall.SubCategory__c} = &quot;Denuncia sinistro&quot;
+                    ), &quot;HD1_VOICE_DENUNCIA_SINISTRI_RE&quot;,
+&quot;HD1_VOICE_INFO_SINISTRI_RE&quot;) ) ) )</expression>
+    </formulas>
+    <formulas>
+        <name>ChooseQueueSinistriMPS</name>
+        <dataType>String</dataType>
+        <expression>IF(AND(
+                        {!GetVoiceCall.LOB__c} = &quot;Sinistri&quot;,
+                        {!GetVoiceCall.Category__c} = &quot;Informazioni su sinistro&quot;,
+                        {!GetVoiceCall.SubCategory__c} = &quot;Sinistro Motor&quot;
+                    ), &quot;HD1_VOICE_INFO_SINISTRI_MOTOR&quot;,  
+IF(AND(
+                            {!GetVoiceCall.LOB__c} = &quot;Motor&quot;,
+                            {!GetVoiceCall.Category__c} = &quot;Sinistro Caring Angel&quot;,
+                            {!GetVoiceCall.SubCategory__c} = &quot;Denuncia sinistro&quot;
+                        ), &quot;HD1_VOICE_DENUNCIA_SINISTRI_MOTOR&quot;,  
+IF(AND(
+                        {!GetVoiceCall.LOB__c} = &quot;Sinistri&quot;,
+                        {!GetVoiceCall.Category__c} = &quot;Informazioni su sinistro&quot;,
+                        {!GetVoiceCall.SubCategory__c} = &quot;Sinistro Protezione Danni&quot;
+                    ), &quot;HD1_VOICE_INFO_SINISTRI_RE&quot;, 
+IF(AND(
+                        {!GetVoiceCall.LOB__c} = &quot;Casa e Famiglia&quot;,
+                        {!GetVoiceCall.Category__c} = &quot;Sinistro Caring Angel Property&quot;,
+                        {!GetVoiceCall.SubCategory__c} = &quot;Denuncia sinistro&quot;
+                    ), &quot;HD1_VOICE_DENUNCIA_SINISTRI_RE&quot;,
+&quot;HD1_VOICE_INFO_SINISTRI_RE&quot;) ) ) )</expression>
+    </formulas>
+    <formulas>
+        <name>ChooseQueueSparkasse</name>
+        <dataType>String</dataType>
+        <expression>
+IF({!GetVoiceCall.TECH_Queue_Destination__c} = &quot;AXA Caring Banca PIC&quot;, &quot;HD1_VOICE_AXA_CARING_BANCA_PIC&quot;, 
+
+IF({!GetVoiceCall.TECH_Queue_Destination__c} = &quot;AXA Caring Banca Info&quot;, &quot;HD1_VOICE_AXA_CARING_BANCA_INFO&quot;, 
+
+IF({!GetVoiceCall.TECH_Queue_Destination__c} = &quot;Banche terze&quot;, &quot;HD1_VOICE_BANCHE_TERZE&quot;,
+ 
+IF(AND(
+                        {!GetVoiceCall.LOB__c} = &quot;Sinistri&quot;,
+                        {!GetVoiceCall.Category__c} = &quot;Informazioni su sinistro&quot;,
+                        {!GetVoiceCall.SubCategory__c} = &quot;Sinistro Protezione Danni&quot;
+                    ), &quot;HD1_VOICE_INFO_SINISTRI_RE&quot;, 
+IF(AND(
+                        {!GetVoiceCall.LOB__c} = &quot;Casa e Famiglia&quot;,
+                        {!GetVoiceCall.Category__c} = &quot;Sinistro Caring Angel Property&quot;,
+                        {!GetVoiceCall.SubCategory__c} = &quot;Denuncia sinistro&quot;
+                    ), &quot;HD1_VOICE_DENUNCIA_SINISTRI_RE&quot;,
+
+&quot;HD1_VOICE_INFO_SINISTRI_RE&quot;) ) ) ) )</expression>
+    </formulas>
+    <formulas>
+        <name>ChooseQueueSupportoHR</name>
+        <dataType>String</dataType>
+        <expression>IF(AND(
+                        {!GetVoiceCall.LOB__c} = &quot;Sinistri&quot;,
+                        {!GetVoiceCall.Category__c} = &quot;Informazioni su sinistro&quot;,
+                        {!GetVoiceCall.SubCategory__c} = &quot;Sinistro Motor&quot;
+                    ), &quot;HD1_VOICE_INFO_SINISTRI_MOTOR&quot;,  
+IF(AND(
+                            {!GetVoiceCall.LOB__c} = &quot;Motor&quot;,
+                            {!GetVoiceCall.Category__c} = &quot;Sinistro Caring Angel&quot;,
+                            {!GetVoiceCall.SubCategory__c} = &quot;Denuncia sinistro&quot;
+                        ), &quot;HD1_VOICE_DENUNCIA_SINISTRI_MOTOR&quot;, 
+ 
+IF({!GetVoiceCall.TECH_Queue_Destination__c} = &quot;AXA Caring Dipendenti Info&quot;, &quot;HD1_VOICE_AXA_CARING_DIPENDENTI_INFO&quot;, 
+
+IF({!GetVoiceCall.TECH_Queue_Destination__c} = &quot;AXA Caring Dipendenti PIC&quot;, &quot;HD1_VOICE_AXA_CARING_DIPENDENTI_PIC&quot;, 
+
+IF({!GetVoiceCall.TECH_Queue_Destination__c} = &quot;Agenzia Dipendenti&quot;, &quot;HD1_VOICE_AGENZIA_DIPENDENTI&quot;,
+
+IF({!GetVoiceCall.TECH_Queue_Destination__c} = &quot;Risorse Umane&quot;, &quot;HD1_VOICE_RISORSE_UMANE&quot;,
+ 
+IF(AND(
+                        {!GetVoiceCall.LOB__c} = &quot;Sinistri&quot;,
+                        {!GetVoiceCall.Category__c} = &quot;Informazioni su sinistro&quot;,
+                        {!GetVoiceCall.SubCategory__c} = &quot;Sinistro Protezione Danni&quot;
+                    ), &quot;HD1_VOICE_INFO_SINISTRI_RE&quot;, 
+IF(AND(
+                        {!GetVoiceCall.LOB__c} = &quot;Casa e Famiglia&quot;,
+                        {!GetVoiceCall.Category__c} = &quot;Sinistro Caring Angel Property&quot;,
+                        {!GetVoiceCall.SubCategory__c} = &quot;Denuncia sinistro&quot;
+                    ), &quot;HD1_VOICE_DENUNCIA_SINISTRI_RE&quot;,
+
+
+&quot;HD1_VOICE_INFO_SINISTRI_RE&quot;) ) ) ) ) ) ) )</expression>
+    </formulas>
+    <formulas>
+        <name>ChooseQueueVitaLOL</name>
+        <dataType>String</dataType>
+        <expression>IF({!GetVoiceCall.TECH_Queue_Destination__c} = &quot;HD1 Agenti Vita LOL&quot;, &quot;HD1_Agenti_Vita_LOL&quot;,
+IF({!GetVoiceCall.TECH_Queue_Destination__c} = &quot;HD1 Agenti Blocco&quot;, &quot;HD1_Agenti_Blocco&quot;,
+&quot;HD1_Agenti_Vita_LOL&quot;) )</expression>
+    </formulas>
+    <interviewLabel>Service Cloud Voice Routing To Queue {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Service Cloud Voice Routing To Queue</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>RoutingFlow</processType>
+    <recordLookups>
+        <name>GetQueue</name>
+        <label>GetQueue</label>
+        <locationX>3218</locationX>
+        <locationY>542</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Route_to_queue_0</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Type</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Queue</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>DeveloperName</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>QueueToRedirect</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Group</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>GetVoiceCall</name>
+        <label>GetVoiceCall</label>
+        <locationX>3218</locationX>
+        <locationY>134</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>IVR_Name_Decision</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>VoiceCall</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <start>
+        <locationX>3092</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>GetVoiceCall</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
+    <variables>
+        <description>The voice call record that is being inputted into the flow. Necessary for the flow to run.</description>
+        <name>input_record</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+        <objectType>VoiceCall</objectType>
+    </variables>
+    <variables>
+        <name>QueueToRedirect</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>The ID of the record being inputted into the flow. Necessary for the flow to run.</description>
+        <name>recordId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>relatedRecordId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>

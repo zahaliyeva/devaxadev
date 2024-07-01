@@ -1,0 +1,78 @@
+<aura:component implements="force:appHostable,force:hasRecordId,flexipage:availableForAllPageTypes" controller="MobilityDashboardUtility" access="global">
+    <!--aura:handler name="test" event="c:dashboardNavigation" action="{!c.handleEvent}"/-->
+    <aura:attribute name="params" type="Object" access="GLOBAL"/>
+    
+    <aura:attribute name="componentView" type="String" default="mobilityPushHomepage"/>
+    <aura:attribute name="showDash" type="Boolean" default="false"/>
+    <aura:attribute name="navigationHeight" type="Integer" default="850"/>
+    <aura:attribute name="dashboardId" type="String"/>
+    <aura:handler name="init" action="{!c.Init}" value="{!this}"/>
+    <aura:attribute name="iniziativaScelta" type="Object"/>
+    <aura:attribute name="tipologiaScelta" type="Object"/>
+    <aura:attribute name="targetScelta" type="Object"/>
+    <aura:attribute name="filter" type="String" default="{}"/>
+    <aura:attribute name="previousPage" type="String"/>
+    <aura:attribute name="isAllowed" type="Boolean" default="true"/>
+    <aura:handler event="wave:selectionChanged" action="{!c.handleSelectionChanged}"/>
+    <ltng:require styles="{!$Resource.mobilityEngine+'/main.css'}" />
+    <aura:registerEvent name="pageChange" type="wave:pageChange"/>
+
+    <div class="slds-scope-removed">
+    <aura:if isTrue="{!!v.isAllowed}">
+           
+        
+                    
+                    
+        <div class = 'mobility_modal'>
+                    <div class="mobility-modal__card">
+                        <div class="mobility-modal__scroller">
+                            <div class="text-right sticky-top" style="z-index: 1;">
+                                <c:mobilityIcon name="close_push" width="36px" heigth="36px" onclick="{!c.closeComponent}" class="closeButton overflow-hidden rounded-circle"></c:mobilityIcon>
+                            </div>
+                    <c:mobilityModalDinamicMessage nameLayout="ModalAbilitazioneProfilo"></c:mobilityModalDinamicMessage>
+                </div>
+            </div>
+        </div>
+    </aura:if>
+    <aura:if isTrue="{!v.isAllowed}">
+        <c:mobilityBreadcrumb params="{!v.params}" current="{!v.componentView}"></c:mobilityBreadcrumb>
+    <div style="{! 'height:'+v.navigationHeight+'px;'}">
+    <wave:waveDashboard developerName="Push_Notification_Dashboard_Navigazione" 
+                        height="{!v.navigationHeight}"
+                        aura:id="navigation"
+                        showTitle="false" 
+                        showSharing = "false" 
+                        enableSubscriptions="false" 
+                        enableNotifications="false" 
+                        openLinksInNewWindow="false"  
+                        showHeader = "false" 
+                        openLocation = "HIDE"/>
+    </div>
+
+    
+    <aura:if isTrue="{!v.showDash}">
+
+            <wave:waveDashboard developerName="{!v.dashboardId}" 
+                        aura:id="targetDashboard" 
+                        height="950"
+                        showTitle="false" 
+                        showSharing = "false" 
+                        enableSubscriptions="false" 
+                        enableNotifications="false" 
+                        openLinksInNewWindow="false"  
+                        showHeader = "false" 
+                        openLocation = "HIDE"
+                        />
+
+            <center>
+                <button type="button" class="btn btn-outline-primary" style="font-size:1rem;" onclick="{!c.changePage}">Torna indietro</button>
+                <div style="padding-bottom: 25px;"/>
+            </center>
+        
+    </aura:if>
+    
+    
+</aura:if>
+    
+</div>
+</aura:component>

@@ -1,0 +1,47 @@
+<!--
+**********************************************************************************************
+----------------------------------------------------------------------------------------------
+-- - Name          : VFP12_SelectSenderEmail
+-- - Author        : Veronica Raniello
+-- - Description   : Page used to visualize all the Organization Wide Email adress and select
+-- - 				 the email address that has to be associated to the Record Type, Caller
+--
+-- Maintenance History:
+--
+-- Date          Version  Remarks
+-- -----------  -------  ---------------------------------------------------------------------
+-- 13-05-2016   1.0     
+----------------------------------------------------------------------------------------------
+**********************************************************************************************
+-->
+<apex:page standardController="Record_Type_Email__c" tabstyle="Record_Type_Email__c" extensions="VFC12_SelectSenderEmail" showHeader="true" sidebar="true">
+    <div id="errmgs"></div>    
+    <div class="bPageTitle"><div class="ptBody"><div class="content">
+        <img src="/s.gif" alt="Record Type/Email" class="pageTitleIcon" title="Record Type/Email"/>
+        <h1 class="pageType">{!$Label.VFP12_Page_Title}<span class="titleSeparatingColon">:</span></h1>                    
+        <h2 class="pageDescription"> {!$Label.VFP12_Page_Sub_Title} </h2>
+        <div class="blank">&nbsp;</div></div></div></div>
+    <apex:form >
+        <apex:outputPanel id="blockDashboard" >
+            <apex:pageMessages />  
+            <apex:pageBlock >                                
+                <apex:pageBlockSection columns="2">                    
+                    <apex:inputfield value="{!RecEmail.Caller__c}" required="true" />
+                    <apex:inputfield value="{!RecEmail.Record_Type__c}" required="true" style="width:173px"/>
+                </apex:pageBlockSection>
+                <div class="blank">&nbsp;</div><div class="blank">&nbsp;</div><div class="blank">&nbsp;</div>
+                <apex:pageBlockSection columns="2">
+                    <apex:selectList value="{!RecEmail.Email__c}" id="Email" size="1" style="width:373px">
+                        <apex:selectOptions value="{!listEmailResult}"/>
+                    </apex:selectList>
+                    <apex:inputfield value="{!RecEmail.Additional_Email__c}" style="width:373px"/>
+                </apex:pageBlockSection>                
+                <div align="center" draggable="false" >
+                    <apex:commandButton action="{!save}" value="{!$Label.Save}"/>
+                    <apex:commandButton action="{!SaveAndNew}" value="{!$Label.SaveAndNew}" />
+                    <apex:commandButton action="{!cancel}" immediate="true" value="{!$Label.Cancel}"/>  
+                </div>                
+            </apex:pageBlock>         
+        </apex:outputPanel>  
+    </apex:form>
+</apex:page>

@@ -1,0 +1,68 @@
+<template>
+    <c-mobility-spinner show={spinner} show-overlay={spinnerOverlay}></c-mobility-spinner>
+    <c-mobility-messages model={messages}></c-mobility-messages>
+
+    <template if:true={authorized}>
+        <div class="row detail-header shadow-bottom">
+            <template if:false={spinner}>
+            <div class="col-12">
+                    <c-mobility-breadcrumb params={params} current={componentView} from-agency={fromAgency}></c-mobility-breadcrumb>
+            </div>
+            </template>
+
+            <!-- Sections -->
+            <div class="col-12 mt-2">
+                <template if:true={canEdit}>
+                    <span class="edit">
+                        <a onclick={navigateToEvent} data-component="mobilityCampaignEdit" data-record-id={params.recordId}>
+                            <span>
+                                {_label.campaignDetail_edit}
+                                <span class="pl-2">
+                                    <c-mobility-icon name='edit' width='10.5px' height='10.5px'></c-mobility-icon>
+                                </span>
+                            </span>
+                        </a>
+                    </span>
+                </template>
+                <c-mobility-layout ready-callback={readyCallback} load-callback={loadCallback} type-layout='detail' object-name='Campaign' record-id={params.recordId}>
+                </c-mobility-layout>
+            </div>
+        </div>
+        
+        <template if:true={dataLoad}>
+            <c-mobility-campaign-counters 
+                params={params}
+                record-type={recordType}
+            ></c-mobility-campaign-counters>
+            <div class="bottom-space"></div>
+        </template>
+
+        <!-- Inizio Footer -->
+        <div class="footer row justify-content-between fixed-bottom">
+            <div class="col-2 up">
+                <a onclick={scroll} onmouseout={onOutScrollTop} onmouseover={onOverScrollTop}>
+                    {_label.campaignDetail_up}
+                    <span class="pl-2">
+                        <c-mobility-icon name='arrow-up' width='10.5px' height='10.5px'>
+                        </c-mobility-icon>
+                    </span>
+                </a>
+            </div>
+            <div class="col-4 action ml-auto text-right">
+                <div class="row" style="flex-flow: nowrap;">
+                    <div class="btn-box-action">
+                        <div class="btn btn-primary btn-action" onclick={navigateToEvent} data-component="mobilityCampaignProcessing"
+                            data-record-id={params.recordId} data-from-agency={fromAgency}>
+                            {_label.campaignDetail_processing}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Fine Footer -->
+
+    </template>
+    <template if:false={authorized}>
+        <c-mobility-unauthorized></c-mobility-unauthorized>
+    </template>
+</template>

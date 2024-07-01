@@ -1,0 +1,12 @@
+<aura:component implements="flexipage:availableForAllPageTypes,lightning:utilityItem" controller="OCNotificationCTRL" access="global" >
+  <aura:attribute name="supportsPopOut" type="Boolean" default="false" />
+  <lightning:omniToolkitAPI aura:id="omniToolkit" />
+  <aura:attribute name="setMeOnInit" type="Boolean" default="false" />
+  <aura:handler name="init" action="{!c.onInit}" value="{!this}"/>  
+  <aura:handler event="lightning:omniChannelWorkAssigned" action="{! c.onWorkAssigned }"/>
+  <!--aura:handler event="lightning:omniChannelWorkAssigned" action="{! c.acceptWork }"/-->
+  <div class="slds-align_absolute-center">
+   <lightning:button class="slds-button slds-button_brand"
+                    label="Enable" onclick="{!c.requestPermission}"/>
+  </div>
+</aura:component>

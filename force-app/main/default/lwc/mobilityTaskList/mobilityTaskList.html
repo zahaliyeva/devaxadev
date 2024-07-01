@@ -1,0 +1,56 @@
+<template>
+    <c-mobility-spinner show={spinner} show-overlay={spinnerOverlay}></c-mobility-spinner>
+    <c-mobility-messages model={messages}></c-mobility-messages>
+
+    <template if:true={authorized}>
+        <c-mobility-no-data show={noData}></c-mobility-no-data>
+        <template for:each={allData} for:item="record">
+            <div key={record.Id}>
+                <div class="row flex-nowrap justify-content-between align-items-center my-1">
+
+                    <div class='col-8'>
+                        <h5 class="text-truncate">
+                            <span>{record.Subject}</span>
+                        </h5>
+                        <div class="d-inline text-uppercase">
+                            <div>
+                                {record.ActivityDateString}<template if:true={record.WhoName}>
+                                    <span class='px-1'>-</span>
+                                </template>
+                                {record.WhoName}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-1">
+                        <template if:true={record.IsHighPriority}>
+                            <div class="text-right badge badge-red">{_label.task_label_highPriority}&nbsp;
+                            </div>
+                        </template>
+                        <template if:false={record.IsHighPriority}>
+                            <h5 class="text-truncate">
+                                <span>&nbsp;</span>
+                            </h5>
+                            <div>
+                                &nbsp;
+                            </div>
+                        </template>
+                    </div>
+
+                    <div class="col-1">
+                        <div class="text-right align-middle" onclick={openCallbackEvent} data-record-id={record.Id}
+                            data-record-type='Task' data-type='OPEN_SECTION'>
+                            <c-mobility-icon name="icon-arrow-right" width="15px" height="15px">
+                            </c-mobility-icon>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="page-border my-0 w-100"></div>
+            </div>
+        </template>
+    </template>
+    <template if:false={authorized}>
+        <c-mobility-unauthorized></c-mobility-unauthorized>
+    </template>
+</template>

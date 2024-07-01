@@ -1,0 +1,18 @@
+.outer {
+    overflow: hidden;
+    padding-top: 10px;
+}
+
+.axaNav {
+    background: #fff;
+    height: 40px;
+}
+
+.title {
+    text-align: left;
+    font-weight: 700;
+    font-size: 16px;
+    font-family: 'Publico Headline Web', Georgia, 'Times New Roman', Times, serif;
+
+    padding-left: 10px;
+}

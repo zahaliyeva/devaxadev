@@ -1,0 +1,7 @@
+.content { 
+    margin-left:300px;
+    background-color: white;
+    min-height:500px; /* for modern browsers */
+    height:auto !important; /* for modern browsers */
+    height:500px; /* for IE5.x and IE6 */
+}

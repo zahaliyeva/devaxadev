@@ -1,0 +1,22 @@
+.right-border {
+  border-right: 1px solid #cccccc;
+  padding-right: 20px;
+}
+
+.btn-box-action select {
+  min-width: 150px;
+}
+
+.back-mt {
+  margin-top: 20px;
+}
+
+.btn-apply {
+  min-width: 130px;
+  height: 40px;
+  font-size: 14px;
+}
+
+.up {
+  z-index: 5;
+}

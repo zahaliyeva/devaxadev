@@ -1,0 +1,71 @@
+<template>
+	<c-mobility-spinner show={spinner} show-overlay="true"></c-mobility-spinner>
+	<c-mobility-messages 
+		model={messages} 
+		confirm-success-callback={closeCallbackReload}
+
+		confirm-warning-callback={warningConfirm}
+		cancel-warning-callback={warningCancel}
+
+		label-warning-back={labelWarningBack}
+		label-warning-confirmation={labelWarningConfirmation}
+	></c-mobility-messages>
+
+	<template if:true={authorized}>
+		<div class="overload-contain overload-on-top" style="z-index: 10000;">
+			<div class="overload-contain-child">
+				<div class="overload-element">
+					<div class="row">
+						<div class="col-12 mb-5">
+							<h1>Cliente interessato</h1>
+						</div>
+						<div class="col-12 mb-5">
+							<form onchange={onChangeSelect}>
+								<div class="form-group form-row align-items-center">
+									<label class='mr-2'>Crea Trattativa</label>
+									<div class="button r">
+										<input type="checkbox" name="createOpportunity" class="form-control checkbox"
+											checked={createOpportunity}>
+										<div class="knobs"></div>
+										<div class="layer"></div>
+									</div>
+								</div>
+								<template if:true={createOpportunity}>
+									<div class="form-group form-row align-items-center">
+										<label class='mr-2'>Crea Appuntamento</label>
+										<div class="button r">
+											<input type="checkbox" name="createAppoiment" class="form-control checkbox"
+												checked={createAppoiment}>
+											<div class="knobs"></div>
+											<div class="layer"></div>
+										</div>
+									</div>
+								</template>
+							</form>
+						</div>
+						<div class="col-12 text-right">
+							<div class="btn" onclick={onClose}>Annulla</div>
+							<button class="btn btn-primary" onclick={onSave}>Salva</button>
+						</div>
+					</div>
+					<template if:true={showEvent}>
+						<c-mobility-event 
+							hooh={hookEvent} 
+							type-layout='edit' 
+							can-not-save-data='true'
+							record-type='AAI_Event' 
+							record-default={eventData} 
+							close-callback={toogleEvent}
+							save-callback={onSaveEvent}
+							fields-override={fieldsEventOverride}
+						>
+						</c-mobility-event>
+					</template>
+				</div>
+			</div>
+		</div>
+	</template>
+	<template if:false={authorized}>
+		<c-mobility-unauthorized></c-mobility-unauthorized>
+	</template>
+</template>

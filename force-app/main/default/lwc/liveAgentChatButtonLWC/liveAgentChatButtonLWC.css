@@ -1,0 +1,27 @@
+.laBtn{
+    padding: 14px !important;
+    height: auto !important;
+    width: 100% !important;
+  }
+  
+  .disabled{
+    background-color: #c2cacf !important;
+    cursor: default !important;
+    pointer-events: none;
+  }
+  
+  .disabled:hover{
+    background-color: #c2cacf !important;
+    cursor: default !important;
+    pointer-events: none;
+  }
+  
+  .disabled:focus{
+    background-color: #c2cacf !important;
+    cursor: default !important;
+    pointer-events: none;
+  }
+  
+  .toggle {
+      display: none !important;
+  }

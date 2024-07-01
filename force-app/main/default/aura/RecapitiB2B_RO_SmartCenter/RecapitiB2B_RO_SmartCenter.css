@@ -1,0 +1,48 @@
+.THIS .slds-form-element__label{
+  
+    vertical-align: top;
+    opacity: 0.4;
+}
+
+.THIS .uiOutputText{
+     opacity:0.4;
+    
+}
+
+.THIS .uiOutputDate{
+     opacity:0.4;
+    
+}
+
+.THIS .uiOutputNumber{
+     
+       opacity:0.4;
+    
+}
+
+
+
+
+
+.THIS .slds-form-elementinput__label{
+ 
+    vertical-align: top;
+    opacity: 0.6;
+    color: black;
+}
+
+
+
+.THIS .right {
+     padding-right: 0;
+     padding-left: .35rem;
+}
+
+
+.THIS .input {
+min-height: 10px;
+height:20px;
+line-height: 0.875rem;
+
+
+}

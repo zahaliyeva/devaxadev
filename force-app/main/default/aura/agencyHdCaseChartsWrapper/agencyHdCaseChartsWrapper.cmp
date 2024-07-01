@@ -1,0 +1,100 @@
+<aura:component access="global">
+
+	<aura:attribute name="selectedYear" type="String" default="None"/>
+	<aura:attribute name="selectedMonth" type="String" default="None"/>
+	<aura:attribute name="selectedWeek" type="String" default="None"/>
+	<aura:attribute name="selectedLob" type="String" default="None"/>
+	<aura:attribute name="selectedCategory" type="String" default="None"/>
+	<aura:attribute name="selectedSubCategory" type="String" default="None"/>
+	<aura:attribute name="selectedOwnership" type="String" default="None" />
+
+
+
+	<aura:handler name="init" value="{!this}" action="{!c.createChart}"/>
+
+    <div id="container_news" class="slds-col_padded slds-p-bottom_x-small slds-m-top_small slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1">
+
+        <div class="slds-card__header slds-grid">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__body slds-truncate">
+                	<div class="slds-section-title_divider">
+                    <h2>
+                        <span class="slds-text-heading_small">Monitoraggio</span>
+                    </h2>
+                </div>
+                </div>
+            </header>
+        </div>
+
+    <div class="slds-card__body">
+	
+
+    <div class="slds-grid slds-wrap slds-grid_pull-padded">
+    	<div id="filters" class="slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1">
+			<c:caseChartFilters 
+					aura:id="childFilters"
+				    selectedYear="{!v.selectedYear}" 
+				    selectedMonth="{!v.selectedMonth}" 
+				    selectedWeek="{!v.selectedWeek}" 
+				    selectedLob="{!v.selectedLob}" 
+				    selectedCategory="{!v.selectedCategory}" 
+				    selectedSubCategory="{!v.selectedSubCategory}" 
+				    selectedOwnership="{!v.selectedOwnership}" 
+				/>
+    	</div>
+    	<div id="spazio_vuoto" class="slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1">
+	      	<div class="slds-align_absolute-center"> 
+				&nbsp;
+	    	</div>
+    	</div>
+    	<div id="headersA" class="slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1">
+			<div class="slds-grid slds-wrap">
+			  <div id="chart_header_first" class="slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+			        <!-- OAVERSANO 11/02/2019 : NMA Fix Mobile - START -->
+			        <!-- div class="slds-section-title_divider">
+				        <h2>
+				            <span class="slds-text-heading_small">Totale delle richieste per stato</span>
+				        </h2>
+				    </div-->
+				    <!-- OAVERSANO 11/02/2019 : NMA Fix Mobile - END -->
+				</div>
+			  <div id="chart_header_second" class="slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+			        <!-- OAVERSANO 11/02/2019 : NMA Fix Mobile - START -->
+			        <!-- div class="slds-section-title_divider">
+				        <h2>
+				            <span class="slds-text-heading_small">Tempo medio lavorazione richieste chiuse</span>
+				        </h2>
+				    </div-->
+				    <!-- OAVERSANO 11/02/2019 : NMA Fix Mobile - END -->
+				</div>       			
+	    	</div>
+    	</div>
+
+
+    	<div id="spazio_vuoto" class="slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1">
+	      	<div class="slds-align_absolute-center"> 
+				&nbsp;
+	    	</div>
+    	</div>
+	   <div id="buttonApplica" class="slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1 slds-text-align--center">
+	      	<div class="slds-align_absolute-center alignCenterButton"> 
+	      		<div class="slds-form-element slds-align_absolute-center ">  
+	    			<lightning:button iconName="action:apex" iconPosition="center" label="Applica filtri" title="Applica filtri" onclick="{!c.applyFilters}"/>
+	    			<lightning:button iconName="action:apex" iconPosition="center" label="Reset filtri" title="Reset filtri" onclick="{!c.createChart}"/>
+	    		</div>
+	    	</div>
+    	</div>
+    	<div id="charts_case" class="slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1">
+			
+    	</div>
+    <br />
+
+    {!v.body}
+    <br />
+	    	
+
+	</div>
+</div>
+ </div>
+
+</aura:component>

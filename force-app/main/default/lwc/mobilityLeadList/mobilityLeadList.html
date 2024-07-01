@@ -1,0 +1,59 @@
+<template>
+	<c-mobility-spinner show={spinner} show-overlay={spinnerOverlay}></c-mobility-spinner>
+	<c-mobility-messages model={messages}></c-mobility-messages>
+
+	<template if:true={authorized}>
+		<template if:true={hasData}>
+			<div class="row padding-border title-column">
+				<div class='col-1 my-auto'>
+				</div>
+				<div class='col my-auto'>
+					{_label.lead_header_customer}
+				</div>
+				<div class='col my-auto'>
+					{_label.lead_header_source}
+				</div>
+				<div class='col my-auto'>
+					{_label.lead_header_phone}
+				</div>
+				<div class='col my-auto'>
+					{_label.lead_header_email}
+				</div>
+				<div class='col my-auto'>
+					{_label.lead_header_statusLead}
+				</div>
+				<div class="col arrow"></div>
+			</div>
+		</template>
+		<c-mobility-no-data show={noData}></c-mobility-no-data>
+		<template for:each={allData} for:item="record">
+			<div key={record.Id} class="row padding-border text-gray">
+				<div class='col-1 my-auto align-center'>
+					<c-mobility-icon name={record.clientIcon} width="28px" height="28px"></c-mobility-icon>
+				</div>
+				<div class='col my-auto text-truncate'>
+					{record.Name}
+				</div>
+				<div class='col my-auto text-truncate'>
+					{record.Landing_Page__c}
+				</div>
+				<div class='col my-auto text-truncate'>
+					{record.Phone}
+				</div>
+				<div class='col my-auto text-truncate'>
+					{record.Email}
+				</div>
+				<div class='col my-auto text-truncate text-nowrap d-inline-block'>
+					{record.StatusLabel}
+				</div>
+				<div class="col text-right arrow" onclick={openCallbackEvent} data-record-id={record.Id} data-record-type='Lead' data-type='OPEN_SECTION'>
+					<c-mobility-icon name="icon-arrow-right" width="15px" height="15px"></c-mobility-icon>
+				</div>
+			</div>
+		</template>
+	</template>
+	<template if:false={authorized}>
+		<c-mobility-unauthorized></c-mobility-unauthorized>
+	</template>
+
+</template>

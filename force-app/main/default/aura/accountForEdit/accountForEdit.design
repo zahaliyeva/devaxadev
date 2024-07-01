@@ -1,0 +1,3 @@
+<design:component label="AccountEdit">
+    <design:attribute name="accountId"  />
+</design:component>

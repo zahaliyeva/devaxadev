@@ -1,0 +1,304 @@
+.THIS {
+}
+
+.THIS .linkXX {
+    width: auto;
+}
+
+.THIS.body {
+    margin: 0 !important;
+}
+
+.THIS .cursor {
+    cursor: pointer;
+}
+
+.THIS .slds-page-header {
+    background: transparent;
+}
+
+.THIS .slds-page-header__title {
+    font-size: 130%;
+}
+
+.THIS .icons-container {
+    text-align: center;
+}
+
+.THIS .icons-container .slds-media__figure.slds-timeline__icon {
+    margin: auto;
+}
+
+.THIS .icons-container .main-icon svg {
+    width: 28px;
+    height: 28px;
+}
+
+.THIS .icons-container .direction-icon-size svg {
+    width: 14px;
+    height: 14px;
+    position: relative;
+    bottom: 2px;
+}
+
+.THIS .icons-container .direction-icon-size svg:hover {
+    fill: rgb(22, 150, 192);
+}
+
+.THIS .main-icon.slds-icon-custom-custom11 {
+    background: #ffb600;
+}
+
+.THIS .main-icon.slds-icon-custom-custom11 svg {
+    fill: white;
+}
+
+.THIS .main-icon.slds-icon-utility-incoming-call {
+    background: #F1CE5D;
+}
+
+.THIS .main-icon.slds-icon-standard-email {
+    background: #6B9EE2;
+}
+
+.THIS .main-icon.slds-icon-utility-incoming-call svg {
+    fill: white;
+    padding: 17%;
+}
+
+.THIS .flag-utility-icon svg {
+    width: 16px;
+    height: 16px;
+    position: relative;
+    bottom: 2px;
+}
+
+.THIS .flag-utility-icon.sent svg:hover {
+    fill: #97999c;
+}
+
+.THIS .flag-utility-icon.open svg {
+    fill: #246FBB;
+}
+
+.THIS .flag-utility-icon.open svg:hover {
+    fill: #26abff;
+}
+
+.THIS .flag-utility-icon.clicked svg {
+    fill: #246FBB;
+}
+
+.THIS .flag-utility-icon.clicked svg:hover {
+    fill: #26abff;
+}
+
+.THIS .flag-utility-icon.bounce svg {
+    fill: #b70000;
+}
+
+.THIS .flag-utility-icon.bounce svg:hover {
+    fill: red;
+}
+
+.THIS .icons-container .direction-icon-container.align-left {
+    text-align: left;
+    position: relative;
+    left: 4px;
+}
+
+.THIS .icons-container .direction-icon-container.align-right {
+    text-align: right;
+    position: relative;
+    right: 4px;
+}
+
+.THIS .slds-form-element__icon.slds-align-middle {
+    padding-top: unset;
+    position: relative;
+    bottom: 2px;
+}
+
+.THIS .slds-timeline__trigger:hover {
+    background-color: transparent;
+}
+
+.THIS .detail-list {
+    display: inline-flex;
+    margin-right: 16px;
+}
+
+.THIS .title {
+    color: #698fc7;
+    font-weight: bold;
+    white-space: normal;
+    display: initial;
+}
+
+.THIS .no-result {
+    color: #246fbb;
+    font-weight: bold;
+}
+
+.THIS .title.cursor:hover {
+    color: #246fbb;
+    -webkit-transform: scale(1.01); /*for Chrome*/
+    -ms-transform: scale(1.01); /*for Safari*/
+    -moz-transform: scale(1.01); /*for Mozilla*/
+}
+
+.THIS .detail-list-element.cursor:hover {
+    color: #246fbb;
+    -webkit-transform: scale(1.02); /*for Chrome*/
+    -ms-transform: scale(1.02); /*for Safari*/
+    -moz-transform: scale(1.02); /*for Mozilla*/
+}
+
+.THIS .detail-list-element {
+    white-space: normal;
+}
+
+.THIS .detail-list-element.cursor {
+    color: rgb(0, 139, 249);
+}
+
+.THIS .slds-timeline__date {
+}
+
+.THIS .time-checkmark {
+    display: inline;
+}
+
+.THIS .details-date.slds-grid.slds-grid_align-spread {
+    margin-top: 2px;
+}
+
+.THIS .slds-timeline__actions.slds-timeline__actions_inline.time-checkmark.slds-truncate_container_33 {
+    text-align: right;
+    display: flex;
+    flex-flow: unset;
+    overflow: unset;
+}
+
+.THIS.bottom-link {
+    min-height: 19px;
+}
+
+/*_____Tooltip Styling______*/
+.THIS .direction-icon-container .left-tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.THIS .direction-icon-container .left-tooltip .tooltiptext {
+    visibility: hidden;
+    width: auto;
+    background-color: #094991;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 6px 8px 6px 8px;
+    position: absolute;
+    z-index: 1;
+    bottom: -6px;
+    left: 155%;
+    opacity: 0;
+    transition: opacity 0.7s;
+    white-space: nowrap;
+}
+
+.THIS .direction-icon-container .left-tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 33%;
+    right: 100%;
+    border: 5px solid transparent;
+    border-right-color: #094991;
+}
+
+.THIS .direction-icon-container .left-tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.THIS .right-tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.THIS .slds-grid.slds-wrap.slds-truncate_container_75.detail-list {
+    overflow: unset;
+}
+
+.THIS.desktop .right-tooltip .tooltiptext {
+    visibility: hidden;
+    width: auto;
+    background-color: #094991;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 6px 8px 6px 8px;
+    position: absolute;
+    z-index: 1;
+    bottom: -6px;
+    left: 130%;
+    opacity: 0;
+    transition: opacity 0.7s;
+    white-space: nowrap;
+}
+
+.THIS.desktop .right-tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 33%;
+    right: 100%;
+    border: 5px solid transparent;
+    border-right-color: #094991;
+}
+
+.THIS.desktop .right-tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.THIS.spinner-container {
+    height: 30px;
+}
+
+/*----------FOR MOBILE---------*/
+.THIS.mobile {
+    font-size: 100% !important;
+    margin: 0 -7%;
+}
+
+.THIS.mobile .mobile-dateTime {
+    width: 100%;
+}
+
+.THIS.mobile .right-tooltip .tooltiptext {
+    visibility: hidden;
+    width: 600%;
+    background-color: #094991;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 6px 8px 6px 8px;
+    position: absolute;
+    z-index: 1;
+    bottom: -30px;
+    right: 22px;
+    opacity: 0;
+    transition: opacity 0.7s;
+}
+
+.THIS.mobile .right-tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.THIS .icon-blue-axa{
+    margin-right: 5px;
+}
+.THIS .icon-blue-axa svg{
+    fill:#00008f;
+}

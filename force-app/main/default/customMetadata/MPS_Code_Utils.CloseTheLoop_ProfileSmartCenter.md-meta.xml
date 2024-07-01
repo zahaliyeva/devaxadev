@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>CloseTheLoop_ProfileSmartCenter</label>
+    <protected>false</protected>
+    <values>
+        <field>High_Volume_Values__c</field>
+        <value xsi:type="xsd:string">SmartCenter AMF Advisor;SmartCenter AMF Manager;SmartCenter Motor Advisor;SmartCenter Motor Manager;SmartCenter Non Motor Advisor;SmartCenter Non Motor Manager;AAI - Supporto HD1;AAI - Supervisor Supporto HD1;AAI - Supervisor Supporto HD1 BIZ;AAI - Supporto HD1 BIZ; SmartCenter AMF Advisor - Lightning;SmartCenter AMF Supervisor - Lightning;AAI - Supervisor Supporto HD1 - Lightning;AAI - Supervisor Supporto HD1 BIZ - Lightning;AAI - Supervisor Supporto HD1 Contabilita - Lightning;AAI - Supervisor Supporto HD1 Contenzioso - Lightning;AAI - Supervisor Supporto HD2 - Lightning;AAI - Supervisor Supporto HD2 BIZ - Lightning;AAI - Supporto HD1 - Lightning;AAI - Supporto HD1 BIZ - Buon Lavoro - Lightning;AAI - Supporto HD1 BIZ - Lightning;SmartCenter Buon Lavoro Advisor - Lightning;SmartCenter Motor Advisor - Lightning;SmartCenter Motor Manager - Lightning;SmartCenter Non Motor Advisor - Lightning;SmartCenter Non Motor Manager - Lightning;SmartCenter Atti giudiziari Manager;SmartCenter Atti giudiziari Advisor;</value>
+    </values>
+    <values>
+        <field>Key__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Value__c</field>
+        <value xsi:nil="true"/>
+    </values>
+</CustomMetadata>

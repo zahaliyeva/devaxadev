@@ -1,0 +1,108 @@
+<template>
+  <section
+    role="dialog"
+    tabindex="-1"
+    aria-labelledby="modal-heading-01"
+    aria-modal="true"
+    aria-describedby="modal-content-id-1"
+    class="slds-modal slds-fade-in-open slds-modal_medium"
+  >
+    <div class="slds-modal__container">
+      <div class="slds-card">
+        <header class="slds-modal__header">
+          <h2 class="slds-text-heading_medium slds-hyphenate">
+            Carica Documento
+          </h2>
+        </header>
+
+        <div
+          class="list-container slds-modal__content slds-p-around_medium"
+          id="modal-content-id-1"
+        >
+        <template if:true={spinner}>
+					<lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+				</template>
+        <template if:false={scelto}>
+        <center>
+          <p>Attenzione! Per poter visualizzare il file dopo averlo caricato sara' necessario premere il pulsante Salva dalla pagina di dettaglio del soggetto!</p>
+          <br>
+            <button
+            class="slds-button slds-button_brand"
+            onclick={chooseCarica}
+            
+            >
+            Carica da PC
+            </button>
+            <button class="slds-button slds-button_brand" onclick={chooseAtt}>
+            Scegli tra gli allegati
+            </button>
+        </center>
+        </template>
+        <template if:true={showAtt}>
+        <div class="slds-section slds-is-open">
+            
+            <div aria-hidden="false" class="slds-section__content">
+                <template if:true={showTable}>
+                    <c-data-grid-generate
+                                    hook={hookDataGrid}
+                                    set-data={attachments}
+                                    grid-name="files"
+                                    s-object-name="document"
+                                    columns-definition-callback={onColumnsDefinition}
+                                    load-callback={onLoadDataGrid}
+                                    row-action-callback={handleRowAction}
+                                    hide-checkbox-column
+                                >
+                    </c-data-grid-generate>
+                    <br>
+                    <center>
+                        <div class="form-field slds-size_3-of-12">
+                            <lightning-input type="text" value={selectedName} disabled="true" label="File Selezionato"></lightning-input>
+                        </div>
+                    </center>
+                </template>
+            </div>
+          </div>
+          </template>
+          <template if:true={showCarica}>
+                <div class="slds-section slds-is-open">
+                    
+                    <div aria-hidden="false" class="slds-section__content">
+                        <div class="slds-grid slds-wrap">
+                            <div class="form-field slds-size_3-of-12">
+                                <lightning-file-upload
+                                    type="file"
+                                    accept=".xlsx, .xls, .csv, .png, .doc, .docx, .pdf, .jpg, .jpeg"
+                                    label="Carica Documento"
+                                    onuploadfinished={handleUpload}
+                                    
+                                >
+                                </lightning-file-upload>
+                            </div>
+                            <div class="form-field slds-size_6-of-12">
+                                <lightning-input type="text" value={fileName} disabled="true" label="Nome del File"></lightning-input>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
+      </div>
+      <footer class="slds-modal__footer">
+        <template if:true={scelto}>
+        <button
+          class="slds-button slds-button_brand"
+          onclick={handleConfirm}
+          disabled={isDisabledConferma}
+        >
+          Conferma
+        </button>
+      </template>
+        <button class="slds-button slds-button_neutral" onclick={handleAnnulla}>
+          Annulla
+        </button>
+      </footer>
+    </div>
+  </section>
+  <div class="slds-backdrop slds-backdrop_open"></div>
+</template>

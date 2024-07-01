@@ -1,0 +1,42 @@
+<template>
+    
+    <div  class="slds-size_medium">
+	<lightning-card class = "bordered">
+        <center> 
+            <div slot="title">
+               <h1><b>{params.Title}</b></h1>
+                <h3>{params.SubTitle}</h3>
+            </div>
+        </center>
+        
+        <br>
+        
+		<template if:true={params.setData}>
+            
+            <center>
+			<c-mobility-doughnut width="160px" height="160px" set-data={params.setData} is-for-lead=true></c-mobility-doughnut>
+            </center>
+             
+        <div slot = "footer" style = "text-align:left">  
+                   
+                <ul class="slds-list_dotted">  
+                <template for:each={params.setData.groupings} for:item='group'>
+                    <li key={group.key}>
+                        
+                        <b>{group.label}</b>
+                    </li>
+                </template>
+                </ul>    
+               
+            </div>
+			<span class="d-block mx-auto">
+				<!-- <a class='text-center' onclick={onOpenReport}>{_label.campaignDetail_moreInfo}</a> -->
+			</span>
+		</template> 
+		<template if:false={params.setData}>
+			<c-mobility-no-data show='true' no-image='true'></c-mobility-no-data>
+		</template>
+    </lightning-card>
+</div>
+
+</template>

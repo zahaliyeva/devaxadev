@@ -1,0 +1,13 @@
+.col-4 select {
+  width: 100%;
+}
+
+a .new-icon {
+  padding-left: 10px;
+  vertical-align: baseline;
+}
+
+.page-border {
+  border-bottom: 1px solid #e5e5e5;
+  margin-bottom: 22px;
+}

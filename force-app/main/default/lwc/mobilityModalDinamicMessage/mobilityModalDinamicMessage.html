@@ -1,0 +1,42 @@
+<template >
+    <c-mobility-modal-style onclose={closeModal}>
+        <template for:each={sections} for:item='section'>
+        <div class={section.cssClass} key={section.name}>
+                <template if:true={section.isUsingIcon}>
+                    <c-mobility-icon name={section.Icon} width="128px" height="128px" ></c-mobility-icon>
+                </template>
+    
+                <template if:true={section.name}>
+                    <lightning-formatted-rich-text class="modal-style__h1" value={section.name} ></lightning-formatted-rich-text>
+                </template>
+                
+                <template if:true={section.subName}>
+                    <lightning-formatted-rich-text class="modal-style__h2" value={section.subName} ></lightning-formatted-rich-text>  
+                </template>
+
+                <template if:true={section.underSubName}>
+                    <lightning-formatted-rich-text value={section.underSubName} ></lightning-formatted-rich-text>
+                </template>
+    
+                <template if:true={section.isUsingLink}>
+                    <a class="download-link" onclick={reportDownloadLink}> <c-mobility-icon name="download" width="16px" height="16px"></c-mobility-icon> Scarica il report</a>   
+                </template>    
+                
+                <div class="actions">     
+                    <template for:each={section.fields} for:item='bottone'>
+                        <template if:true={bottone.isPrimary}>
+                            <button key={bottone.redirectURL} onclick={primaryCallback} class="btn btn-primary" value={bottone.redirectURL} >
+                                {bottone.labelName} 
+                            </button>
+                        </template>
+                        <template if:false={bottone.isPrimary}>
+                            <button key={bottone.redirectURL} onclick={backCallback} class="btn btn-outline-primary" value={bottone.redirectURL} >
+                                {bottone.labelName} 
+                            </button>
+                        </template>
+                    </template>
+                </div>
+            </div>
+        </template>
+    </c-mobility-modal-style>
+</template>

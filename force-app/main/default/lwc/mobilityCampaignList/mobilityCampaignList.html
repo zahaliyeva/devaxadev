@@ -1,0 +1,73 @@
+<template>
+	<c-mobility-spinner show={spinner} show-overlay={spinnerOverlay}></c-mobility-spinner>
+	<c-mobility-messages model={messages}></c-mobility-messages>
+
+	<template if:true={authorized}>
+		<c-mobility-no-data show={noData}></c-mobility-no-data>
+		<template for:each={allData} for:item="record">
+			<div key={record.Id} class="row campaign-item justify-content-between">
+				<div class="col-md col-sm">
+					<div class="row justify-content-start align-items-center">
+						<div>
+							<div>
+								<h3>{record.Name}</h3>
+							</div>
+							<div class={record.closedStyle}>
+								<div class="progress-bar" role="progressbar" style={record.percentageClosedWidth}
+									aria-valuenow={record.percentageClosed} aria-valuemin="0"
+									aria-valuemax={record.NumberOfMembers}>
+									{record.NumberOfClosed}
+								</div>
+							</div>
+						</div>
+						<div class='hSpace pl-2'>
+							<h5>{record.NumberOfMembersLabel}</h5>
+						</div>
+						<div class="pt-3 px-2">
+							<template if:true={record.priorityLabel}>
+								<span class="badge-green rounded py-1 px-2">
+									<span class="align-bottom">
+										<c-mobility-icon name="user-white" width="20px" height="20px">
+										</c-mobility-icon>
+									</span>
+									<span class="text-uppercase text-white text-center font-weight-bold">
+										{record.priorityNumber} {record.priorityLabel}
+									</span>
+								</span>
+							</template>
+						</div>
+					</div>
+				</div>
+
+				<div class='col-md-2 col-sm-3 hSpace ml-auto pr-0'>
+					<div class="d-inline-block">
+						<h6>
+							<template if:true={record.EndDateString}>
+								{_label.customerCampaign_endDate_expires}
+							</template>
+							&nbsp;{record.EndDateString}
+						</h6>
+					</div>
+					<div class='arrow float-right' onclick={openCallbackEvent} data-record-id={record.Id}
+						data-record-type='Campaign' data-type='OPEN_SECTION'>
+						<c-mobility-icon name="icon-arrow-right" width="15px" height="15px">
+						</c-mobility-icon>
+					</div>
+				</div>
+			</div>
+		</template>
+		<template if:true={hasData}>
+			<div class="legend justify-content-start">
+				<div class="legend-item">
+					<span class="circle axa p-1 d-inline-block mr-2"></span>{_label.campaign_legend_managementAXA}
+				</div>
+				<div class="legend-item">
+					<span class="circle agency p-1 d-inline-block mr-2"></span>{_label.campaign_legend_agency}
+				</div>
+			</div>
+		</template>
+	</template>
+	<template if:false={authorized}>
+		<c-mobility-unauthorized></c-mobility-unauthorized>
+	</template>
+</template>

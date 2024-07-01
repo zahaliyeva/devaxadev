@@ -1,0 +1,36 @@
+button {
+    border: none;
+    margin: 0;
+    padding: 0;
+    width: auto;
+    overflow: visible;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    line-height: normal;
+    -webkit-font-smoothing: inherit;
+    -moz-osx-font-smoothing: inherit;
+    -webkit-appearance: none;
+}
+
+.page-item-border {
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.page-item {
+    font-size: 18px;
+    font-weight: 700;
+    color: #00008F;  
+    outline: none;
+    padding: 0 25px;
+}
+
+.page-item.active {
+    color: #F07662
+}
+
+.page-item.disabled {
+    font-weight: 400;
+    color: #999999;
+}

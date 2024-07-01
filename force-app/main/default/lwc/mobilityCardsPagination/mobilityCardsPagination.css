@@ -1,0 +1,147 @@
+.grid-cards {
+    /* NB font cambiato e variabili default non trovate*/
+    --font-family: Helvetica;
+
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(30%, 1fr));
+    grid-auto-rows: max-content;
+    gap: 1.25rem;
+}
+
+.card {
+    min-height: 250px;
+
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+    border-radius: 0.5rem;
+    border-color: var(--greys-grey-400, #CCC);
+}
+
+.card__header {
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    flex: 0 0 auto;
+}
+
+.card__body {
+    color: var(--gray-700, #333);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    row-gap: 0.5rem;
+    flex: 1 1 auto;
+    font-size: 1rem;
+    font-family: var(--font-family);
+    line-height: 1.5625rem;
+}
+
+.card__body > h2 {
+    line-height: 2rem;
+    font-family: var(--font-family);
+    font-size: 1.3125rem;
+    font-weight: 700;
+    color: #000;
+    margin: 0;
+}
+
+.card__body > span {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+}
+
+.card__footer {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    row-gap: 0.5rem;
+}
+
+.card-action, .card-action__label {
+    height: 1.5rem;
+    display: flex;
+    align-items: center;
+    column-gap: 0.625rem;
+
+    font-family: 'Source Sans Pro', Helvetica;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 12px;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+}
+
+.card-action:nth-child(1), .card-action:nth-child(1) .card-action__label {
+    color: var(--uiaxa-blue, var(--primary, #00008F));
+}
+
+.card-action:nth-child(2), .card-action:nth-child(2) .card-action__label {
+    color: var(--ui-burnt-sienna, var(--secondary, #F07662));
+}
+
+.badge {
+    border-radius: 1.625rem;
+    padding: 0px 0.625rem;
+    font-size: 0.75rem;
+    font-weight: 400;
+    line-height: 1.25rem;
+    letter-spacing: 0.015rem;
+    font-family: var(--font-family);
+
+    /* NB colori non corrispondono a quelli trovati attualmente sono stati gestiti solo red e green */
+}
+
+.badge-red {
+    background: var(--redlining-magenta-main, #EF577B);
+    color: var(--theme-colors-white, #FFF);
+}
+
+.badge-green {
+    background: var(--ui-success-green, #1CC54E);
+    color: var(--theme-colors-white, #FFF);
+}
+
+.badge-malattia { background-color: #00ADC6; color: black; }
+.badge-casa { background-color: #7B61FF; color: white; }
+.badge-auto { background-color: #3D3DAA; color: white; }
+.badge-infortuni { background-color: #EF577B; color: white; }
+.badge-investimento { background-color: #B5AADC; color: black; }
+.badge-previdenza { background-color: #F07662; color: white; }
+.badge-aziende { background-color: #39443F; color: white; }
+.badge-protezione { background-color: #027180; color: white; }
+.badge-attivit� { background-color: #B5D0EE; color: black; }
+.badge-risparmio { background-color: #9FBEAF; color: black; }
+.badge-generica { background-color: #FCD385; color: black; }
+
+.overload-on-top {
+    backdrop-filter: blur(4px);
+}
+
+.overload-contain .overload-contain-child .overload-element {
+    --overload-padding: 1.125rem;
+
+    width: auto;
+    height: auto;
+    border-radius: 0.625rem;
+    background: #FFF;
+    box-shadow: 2px 4px 8px 0px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+    padding: var(--overload-padding) 0;
+}
+
+.overload-contain .overload-contain-child .overload-element .modal-body {
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-height: 80vh;
+    max-width: 80vw;
+    padding: 0 var(--overload-padding);
+    margin-bottom: calc(var(--overload-padding) * 2);
+}

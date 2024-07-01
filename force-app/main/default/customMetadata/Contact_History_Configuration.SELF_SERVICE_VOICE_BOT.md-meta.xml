@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>SELF SERVICE VOICE BOT</label>
+    <protected>false</protected>
+    <values>
+        <field>Communication_Direction__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Date_Unsubscribed__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Date_and_Time_Link__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Date_and_Time__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Detail_1_Link_NFE__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Detail_1_Link__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Detail_1__c</field>
+        <value xsi:type="xsd:string">Invio del link per prenotazione visita</value>
+    </values>
+    <values>
+        <field>Detail_2_Link_NFE__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Detail_2_Link__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Detail_2__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Detail_3_Link_NFE__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Detail_3_Link__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Detail_3__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Detail_4_Link_NFE__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Detail_4_Link__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Detail_4__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Detail_5_Link_NFE__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Detail_5_Link__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Detail_5__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Field_Type__c</field>
+        <value xsi:type="xsd:string">Account/Contact</value>
+    </values>
+    <values>
+        <field>Filter_SOQL_Field__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Filter_SOQL_Operator__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Filter_SOQL_Values__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Flag_Click_Field__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Flag_Click_Operator__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Flag_Click_Parameter__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Flag_Hard_Bounce_Field__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Flag_Hard_Bounce_Operator__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Flag_Hard_Bounce_Parameter__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Flag_Mouseover_Bounce__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Flag_Mouseover_Click__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Flag_Mouseover_Open__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Flag_Mouseover_Sent__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Flag_Open_Field__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Flag_Open_Operator__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Flag_Open_Parameter__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Flag_Sent_Field__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Flag_Sent_Operator__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Flag_Sent_Parameter__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Flag_Soft_Bounce_Field__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Flag_Soft_Bounce_Operator__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Flag_Soft_Bounce_Parameter__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>HideFieldsInNFE__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>HideInNFE__c</field>
+        <value xsi:type="xsd:boolean">false</value>
+    </values>
+    <values>
+        <field>IconSVG_Component__c</field>
+        <value xsi:type="xsd:string">/IconeSchedaCliente/mobile_blue.svg#mobile_blue</value>
+    </values>
+    <values>
+        <field>Icon_Component__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Icon__c</field>
+        <value xsi:type="xsd:string">SMS</value>
+    </values>
+    <values>
+        <field>Query2_Field_Id__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Query2_Object__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Query2__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Query__c</field>
+        <value xsi:type="xsd:string">Select Id, Communication_Description__c, Send_Date__c, AccountId__c, MC_Email_Opened__c, MC_Email_Opened_Date__c, MC_Email_Clicked__c, MC_Email_Clicked_Date__c, Status__c FROM Communications_to_customer__c where AccountId__c IN :§accountIds§  and Process__c = &apos;VoiceBot_PIC&apos; and Communication_Code__c = &apos;PIC_01&apos; and RecordType.Name = &apos;SMS da SmartCenter&apos;</value>
+    </values>
+    <values>
+        <field>Title_Link__c</field>
+        <value xsi:type="xsd:string">§Id§</value>
+    </values>
+    <values>
+        <field>Title__c</field>
+        <value xsi:type="xsd:string">SMS per prenotazione visita Self Service</value>
+    </values>
+</CustomMetadata>

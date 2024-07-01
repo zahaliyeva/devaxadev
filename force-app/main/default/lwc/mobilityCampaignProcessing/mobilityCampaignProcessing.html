@@ -1,0 +1,205 @@
+<template>
+    <c-mobility-spinner show={spinner} show-overlay={spinnerOverlay}></c-mobility-spinner>
+    <c-mobility-messages model={messages} label-success-ok={labelSuccessOk} label-warning-back={labelWarningBack}
+        label-alert-back={labelAlertBack} label-warning-confirmation={labelWarningConfirmation}
+        cancel-warning-callback={cancelWarningCallback} confirm-warning-callback={confirmWarningCallback}>
+    </c-mobility-messages>
+
+    <template if:true={authorized}>
+        <div class="row mb-n3">
+            <div class="col-12 mb-n3">
+                <template if:false={spinner}>
+                <c-mobility-breadcrumb params={params} redirect-params={redirectParams} current={componentView} from-agency={fromAgency}>
+                </c-mobility-breadcrumb>
+            </template>
+            </div>
+
+            <div class="col-9 py-2">
+                <h1>{_label.campaignProcessing_campaignProcessing}: {campaignTitle}</h1>
+            </div>
+        </div>
+        <div class="page-border mb-4"></div>
+        <!-- <div class="btn btn-success" onclick={onTest}>Test</div> -->
+        <template if:true={availableFilters}>
+            <div class="row">
+                <template if:false={showFilter}>
+                    <div class="col-9">
+                        <h4>{_label.campaignProcessing_allFilters}</h4>
+                    </div>
+                </template>
+                <template if:true={showFilter}>
+                    <div class="col-1 ml-auto text-right mb-n5 up">
+                        <a onclick={toggleFilter}>
+                            <c-mobility-icon name='chevron-up-grey' width='12px' height='12px'>
+                            </c-mobility-icon>
+                        </a>
+                    </div>
+                    <div class="page-border w-100 mb-4"></div>
+                </template>
+                <template if:false={showFilter}>
+                    <div class="col-1 ml-auto text-right mt-2">
+                        <a onclick={toggleFilter}>
+                            <c-mobility-icon name='chevron-grey' width='12px' height='12px'>
+                            </c-mobility-icon>
+                        </a>
+                    </div>
+                </template>
+            </div>
+
+            <template if:true={showCustomLayout}>
+                <div style={styleFilter}>
+                    <c-mobility-layout 
+                        type-layout='filter' 
+                        object-name='CampaignMember' 
+                        layout-name={pageLayout}
+                        ready-callback={readyCallback} 
+                        load-callback={loadCallback} 
+                        hide-title='true'
+                    >
+                    </c-mobility-layout>
+                </div>
+            </template>
+
+            <div class="row justify-content-end">
+                <div class="col-2 ml-auto text-right">
+                    <a onclick={filterReset} style="margin-top: 9.5px;">
+                        <span>{_label.campaignProcessing_resetFilters}</span>
+                    </a>
+                </div>
+                <template if:true={showFilter}>
+                    <div class="col-2">
+                        <button class="btn btn-outline-primary btn-apply" onclick={filterApply}>
+                            {_label.campaignProcessing_apply}
+                        </button>
+                    </div>
+                </template>
+            </div>
+        </template>
+
+        <div class="shadow-bottom">
+            <c-s-object-data-grid tabledata={dataGrid} backgroud-color='#fff'></c-s-object-data-grid>
+        </div>
+        <div class="bottom-space"></div>
+
+        <template if:true={showCreateProposal}>
+            <c-mobility-campaign-new-proposal 
+                params={params} 
+                context={contextCreateProposal}
+                close-callback={toogleCreateProposal} 
+                close-callback-reload={toogleCreateProposalReload}
+            >
+            </c-mobility-campaign-new-proposal>
+        </template>
+
+        <template if:true={showInformativeCampaign}>
+            <c-mobility-campaign-informative 
+                context={contextInformativeCampaign}
+                close-callback={toggleInformativeCampaign} 
+                close-callback-reload={toggleInformativeCampaignReload}
+                campaign-id={params.recordId} 
+                campaign-member-id={selectCampaignMemberId}
+            >
+            </c-mobility-campaign-informative>
+        </template>
+
+        <template if:true={showNotInterested}>
+            <c-mobility-campaign-not-interested 
+                params={params} 
+                campaign-member-id={selectCampaignMemberId}
+                close-callback={toogleNotInterested} 
+                close-callback-reload={toogleNotInterestedReload}
+            >
+            </c-mobility-campaign-not-interested>
+        </template>
+
+        <template if:true={showInterested}>
+            <c-mobility-campaign-interested 
+                params={params} 
+                campaign-title={campaignTitle}
+                campaign-member-id={selectCampaignMemberId}
+                close-callback={toogleInterested} 
+                close-callback-reload={toogleInterestedReload}
+            >
+            </c-mobility-campaign-interested>
+        </template>
+
+        <template if:true={showRecontact}>
+            <c-mobility-campaign-recontact 
+                params={params} 
+                campaign-member-id={selectCampaignMemberId}
+                close-callback={toogleRecontact} 
+                close-callback-reload={toogleRecontactReload}
+            >
+            </c-mobility-campaign-recontact>
+        </template>
+
+        <template if:true={showDataEnrichment}>
+            <c-mobility-campaign-enrichment 
+                params={params} 
+                campaign-member-id={selectCampaignMemberId}
+                close-callback={onDataEnrichment} 
+                close-callback-reload={onDataEnrichmentReload}
+            >
+            </c-mobility-campaign-enrichment>
+        </template>
+
+        <!-- Inizio Footer -->
+        <div class="footer row justify-content-between fixed-bottom">
+            <div class="col-2 up back-mt">
+                <template if:true={params.ndgId}>
+                    <a onclick={navigateToEvent} data-component="mobilityCustomerCampaignListView"
+                        data-ndg-id={params.ndgId}>
+                        {_label.campaignProcessing_back}
+                    </a>
+                </template>
+                <template if:false={params.ndgId}>
+                    <a onclick={navigateToEvent} data-component="mobilityCampaignDetail" data-ndg-id={params.ndgId}
+                        data-record-id={params.recordId}>
+                        {_label.campaignProcessing_back}
+                    </a>
+                </template>
+            </div>
+            <div class="col action ml-auto text-right">
+                <div class="row flex-nowrap">
+                    <template if:true={recordTypeAgency}>
+                        <div class="btn-box-action right-border">
+                            <button class="btn btn-outline-primary btn-action" onclick={statusExclude}
+                                disabled={isDisabledExclude}>
+                                {_label.campaignProcessing_exclude}
+                            </button>
+                        </div>
+                    </template>
+                    <div class="btn-box-action">
+                        <select class="empty" onchange={onStatusSelect}>
+                            <template for:each={status} for:item='statusItem'>
+                                <option key={statusItem.value} value={statusItem.value}>{statusItem.label}</option>
+                            </template>
+                        </select>
+                    </div>
+                    <div class="btn-box-action right-border">
+                        <button class="btn btn-primary btn-action" onclick={statusUpdate} disabled={isDisabledUpdate}>
+                            {_label.campaignProcessing_update}
+                        </button>
+                    </div>
+                    <div class="btn-box-action">
+                        <select class="empty" onchange={onUserSelect}>
+                            <template for:each={userList} for:item='user'>
+                                <option key={user.value} value={user.value}>{user.label}</option>
+                            </template>
+                        </select>
+                    </div>
+                    <div class="btn-box-action">
+                        <button class="btn btn-primary btn-action" onclick={changeOwner}
+                            disabled={isDisabledChangeOwner}>
+                            {_label.campaignProcessing_assigns}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Fine Footer -->
+    </template>
+    <template if:false={authorized}>
+        <c-mobility-unauthorized></c-mobility-unauthorized>
+    </template>
+</template>

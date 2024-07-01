@@ -1,0 +1,36 @@
+<apex:page extensions="WarrantiesCtrl" standardController="Quotazione__c" showHeader="false" standardStylesheets="false" sidebar="false" applyHtmlTag="true" applyBodyTag="false" docType="html-5.0" >
+	 <style>
+        html {
+            background-color: white;
+        }
+    </style>
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>      
+    </head>
+    
+    <apex:includeScript value="/lightning/lightning.out.js" />
+    <apex:includeScript value="/soap/ajax/41.0/connection.js"/>
+    <apex:includeScript value="/soap/ajax/41.0/apex.js"/>
+ 
+    <script>
+        
+        var source = "{!$CurrentPage.parameters.source}"; //OAVERSANO 16/10/2018 : Fix Feedback
+    
+    
+        $Lightning.use("c:WarrantiesApp", function() {
+            $Lightning.createComponent(
+                "c:WarrantiesCmp",
+                {
+                    "recordId" : "{!apexQuotazioneId}"
+                },
+                "warranties",
+                function(cmp) {
+                    console.log("Component created!");
+                    console.log(cmp);
+                });
+            });
+    </script>
+    
+    <div id="warranties"></div>    
+    
+</apex:page>

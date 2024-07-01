@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+<apiVersion>59.0</apiVersion>
+<isExposed>true</isExposed>
+<targets>
+<target>lightning__FlowScreen</target>
+</targets>
+<targetConfigs>
+<targetConfig targets="lightning__FlowScreen">
+<property name="pageSize" type="Integer" label="Righe da mostrare" default="10" />
+<propertyType name="Obj" extends="SObject" label="Oggetto" description="Generic sObject data type used for input sObject properties" />
+<property name="collectionData" type="{Obj[]}" label="Collections" />
+<property name="columns" type="String" label="Columns" />
+<property name="filterValue1" type="String" label="Valore Filtro 1" />
+<property name="filterValue2" type="String" label="Valore Filtro 2" />
+<property name="filterValue3" type="String" label="Valore Filtro 3" />
+<property name="filterValue4" type="String" label="Valore Filtro 4" />
+<property name="filterValue5" type="String" label="Valore Filtro 5" />
+<property name="filterValue6" type="String" label="Valore Filtro 6" />
+<property name="filterValue7" type="String" label="Valore Filtro 7" />
+<property name="filterValue8" type="String" label="Valore Filtro 8" />
+<property name="filterValue9" type="String" label="Valore Filtro 9" />
+<property name="targetFilter1" type="String" label="Target Filtro 1" />
+<property name="targetFilter2" type="String" label="Target Filtro 2" />
+<property name="targetFilter3" type="String" label="Target Filtro 3" />
+<property name="targetFilter4" type="String" label="Target Filtro 4" />
+<property name="targetFilter5" type="String" label="Target Filtro 5" />
+<property name="targetFilter6" type="String" label="Target Filtro 6" />
+<property name="targetFilter7" type="String" label="Target Filtro 7" />
+<property name="targetFilter8" type="String" label="Target Filtro 8" />
+<property name="targetFilter9" type="String" label="Target Filtro 9" />
+</targetConfig>
+</targetConfigs>
+</LightningComponentBundle>

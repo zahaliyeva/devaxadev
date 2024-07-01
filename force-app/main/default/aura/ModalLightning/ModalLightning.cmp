@@ -1,0 +1,14 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes" access="global" >
+	
+	<aura:attribute name="modalContentBody" type="String" />
+    <aura:attribute name="HeaderTitle" type="String" />
+    <aura:attribute name="labelButton" type="String" />
+    <aura:attribute name="ConfirmFooterButton" type="String" />
+    <aura:attribute name="CancelFooterButton" type="String" />
+    <aura:attribute name="showCloseButton" type="Boolean" default="true"/>
+    <aura:attribute name="attributes" type="Object" />
+ 	<aura:attribute name="body" type="Object" default="{}" /> <!-- OAVERSANO 18/12/2018 : Enhancement NMA Biz III - HEADER BODY -->
+	
+ 	<lightning:overlayLibrary aura:id="overlayLib"/>
+    <lightning:button name="modal" label="{!v.labelButton}" onclick="{!c.handleShowModal}"/>
+</aura:component>

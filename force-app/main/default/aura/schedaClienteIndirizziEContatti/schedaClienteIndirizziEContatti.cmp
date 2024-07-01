@@ -1,0 +1,1036 @@
+<aura:component>
+    <aura:attribute name="wrapper" type="Object" />
+    <aura:attribute name="fullAddress" type="string" />
+
+    <aura:handler name="init" value="{! this }" action="{! c.doInit }" />
+
+    <!-- START AAI e Persona Fisica - B2C Client -->
+    <aura:if isTrue="{!and (v.wrapper.isAAI, v.wrapper.isPerson)}">
+
+        <div class="slds-p-around_small">
+            <div class="title">
+                <strong>Residenza</strong>
+            </div>
+            <div class="slds-m-top_small slds-text-color_weak">Indirizzo di Residenza/Sede Legale</div>
+            <div class="box-address">
+                <aura:unescapedHtml value="{!v.fullAddress}" />
+            </div>
+
+            <hr />
+
+            <div class="title slds-m-top_xx-large">
+                <strong>Contatti Telefonici</strong>
+            </div>
+            <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_small">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Telefono cellulare</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">
+                                <!-- <a href="{'tel'+!v.wrapper.account.CIF_PersonMobilePhone__c}">{!v.wrapper.account.CIF_PersonMobilePhone__c}</a> -->
+                                <lightning:clickToDial value="{!v.wrapper.account.CIF_PersonMobilePhone__c}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Telefono principale</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static"> <!-- <a
+                                    href="{'tel'+!v.wrapper.account.CIF_Phone__c}">{!v.wrapper.account.CIF_Phone__c}</a> -->
+                                    <lightning:clickToDial value="{!v.wrapper.account.CIF_Phone__c}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Telefono ufficio</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static"> <!-- <a
+                                    href="{'tel'+!v.wrapper.account.CIF_Work_phone__c}">{!v.wrapper.account.CIF_Work_phone__c}</a> -->
+                                    <lightning:clickToDial value="{!v.wrapper.account.CIF_Work_phone__c}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Fax</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static"> <a
+                                    href="{'tel'+!v.wrapper.account.Fax}">{!v.wrapper.account.Fax}</a>></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_small">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div dir="rtl">
+                        <div class="slds-form-element slds-float_left">
+                            <label class="slds-checkbox_toggle slds-grid">
+                                <span class="slds-form-element__label slds-m-bottom_none">Opposizione cellulare</span>
+                                <lightning:input type="toggle" aura:id="OppoCellPF" label="" name="OppoCellPF"
+                                    checked="{!v.wrapper.account.Flag_Opposizione_Tel_Cell_B2C__c}"
+                                    messageToggleActive="" messageToggleInactive="" disabled="true" />
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div dir="rtl">
+                        <div class="slds-form-element slds-float_left">
+                            <label class="slds-checkbox_toggle slds-grid">
+                                <span class="slds-form-element__label slds-m-bottom_none">Opposizione telefono
+                                    principale</span>
+                                <lightning:input type="toggle" aura:id="OppoCellPrin" label="" name="OppoCellPrin"
+                                    checked="{!v.wrapper.account.Flag_Opposizione_Tel_Princ__c}" messageToggleActive=""
+                                    messageToggleInactive="" disabled="true" />
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div dir="rtl">
+                        <div class="slds-form-element slds-float_left">
+                            <label class="slds-checkbox_toggle slds-grid">
+                                <span class="slds-form-element__label slds-m-bottom_none">Opposizione telefono
+                                    ufficio</span>
+                                <lightning:input type="toggle" aura:id="OppoCellUff" label="" name="OppoCellUff"
+                                    checked="{!v.wrapper.account.Flag_Opposizione_Tel_Uff__c}" messageToggleActive=""
+                                    messageToggleInactive="" disabled="true" />
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div dir="rtl">
+                        <div class="slds-form-element slds-float_left">
+                            <label class="slds-checkbox_toggle slds-grid">
+                                <span class="slds-form-element__label slds-m-bottom_none">Opposizione Fax</span>
+                                <lightning:input type="toggle" aura:id="OppoCellUff" label="" name="OppoCellUff"
+                                    checked="{!v.wrapper.account.Flag_Opposizione_Fax__c}" messageToggleActive=""
+                                    messageToggleInactive="" disabled="true" />
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_small">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Motivo opposizione cellulare</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">
+                                {!v.wrapper.account.Motivo_opposizione_Tel_Cell_B2C__c}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Motivo opposizione telefono principale</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Motivo_opposizione_Tel_Princ__c}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Motivo opposizione telefono ufficio</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Motivo_opposizione_Tel_Uff__c}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Motivo opposizione fax</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Motivo_opposizione_Fax__c}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_small">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Mobile Master</span>
+                        <div class="slds-form-element__control">
+                            <lightning:clickToDial value="{!v.wrapper.account.Mobile_Master_AAI__c}"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Mobile Recente 1</span>
+                        <div class="slds-form-element__control">
+                            <!-- <div class="slds-form-element__static">{!v.wrapper.account.Mobile_Recente_1_AAI__c}</div> -->
+                            <lightning:clickToDial value="{!v.wrapper.account.Mobile_Recente_1_AAI__c}"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Mobile Recente 2</span>
+                        <div class="slds-form-element__control">
+                            <lightning:clickToDial value="{!v.wrapper.account.Mobile_Recente_2_AAI__c}"/>
+                            <!-- <div class="slds-form-element__static">{!v.wrapper.account.Mobile_Recente_2_AAI__c}</div> -->
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Mobile Recente 3</span>
+                        <div class="slds-form-element__control">
+                           <!-- <div class="slds-form-element__static">{!v.wrapper.account.Mobile_Recente_3_AAI__c}</div> -->
+                           <lightning:clickToDial value="{!v.wrapper.account.Mobile_Recente_3_AAI__c}"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="title slds-m-top_xx-large">
+                <strong>Contatti Email</strong>
+            </div>
+            <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_small">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Email personale</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.CIF_PersonEmail__c}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Email ufficio</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.CIF_Work_email__c}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_small">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div dir="rtl">
+                        <div class="slds-form-element slds-float_left">
+                            <label class="slds-checkbox_toggle slds-grid">
+                                <span class="slds-form-element__label slds-m-bottom_none">Opposizione email
+                                    personale</span>
+                                <lightning:input type="toggle" aura:id="OppEmailPF" label="" name="OppEmailPF"
+                                    checked="{!v.wrapper.account.Flag_Opposizione_Email_Pers_B2C__c}"
+                                    messageToggleActive="" messageToggleInactive="" disabled="true" />
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div dir="rtl">
+                        <div class="slds-form-element slds-float_left">
+                            <label class="slds-checkbox_toggle slds-grid">
+                                <span class="slds-form-element__label slds-m-bottom_none">Opposizione email
+                                    ufficio</span>
+                                <lightning:input type="toggle" aura:id="OppEmailUff" label="" name="OppEmailUff"
+                                    checked="{!v.wrapper.account.Flag_Opposizione_Email_Uff__c}" messageToggleActive=""
+                                    messageToggleInactive="" disabled="true" />
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_small">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Motivo opposizione email personale</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">
+                                {!v.wrapper.account.Motivo_opposizione_Email_Pers_B2C__c}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Motivo opposizione email ufficio</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Motivo_opposizione_Email_Uff__c}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_small">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Email Master</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Email_Master_AAI__c}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Email Recente 1</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Email_Recente_1_AAI__c}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Email Recente 2</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Email_Recente_2_AAI__c}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Email Recente 3</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Email_Recente_3_AAI__c}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="title slds-m-top_xx-large">
+                <strong>Contatti Close the loop</strong>
+            </div>
+            <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_small">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Telefono cellulare</span>
+                        <div class="slds-form-element__control">
+                            <!-- <div class="slds-form-element__static">{!v.wrapper.account.Claim_PersonalMobile__c}</div> -->
+                            <lightning:clickToDial value="{!v.wrapper.account.Claim_PersonalMobile__c}"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Email</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Claim_PersonalEmail__c}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </aura:if>
+    <!-- END AAI e Persona Fisica - B2C Client  -->
+
+    <!-- START AAI e Persona Giuridica - B2B Client -->
+    <aura:if isTrue="{!and (v.wrapper.isAAI, !v.wrapper.isPerson)}">
+
+        <div class="slds-p-around_small">
+            <div class="title">
+                <strong>Residenza</strong>
+            </div>
+            <div class="slds-m-top_small slds-text-color_weak">Indirizzo di Residenza/Sede Legale</div>
+            <div class="box-address">
+                <aura:unescapedHtml value="{!v.fullAddress}" />
+            </div>
+
+            <hr />
+
+            <div class="title slds-m-top_xx-large">
+                <strong>Contatti Telefonici</strong>
+            </div>
+            <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_small">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Telefono cellulare</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static"><!-- <a
+                                    href="{'tel'+!v.wrapper.account.CIF_MobilePhone__c}">{!v.wrapper.account.CIF_MobilePhone__c}</a> -->
+                                    <lightning:clickToDial value="{!v.wrapper.account.CIF_MobilePhone__c}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Telefono principale</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static"><!-- <a
+                                    href="{'tel'+!v.wrapper.account.CIF_Phone__c}">{!v.wrapper.account.CIF_Phone__c}</a> -->
+                                    <lightning:clickToDial value="{!v.wrapper.account.CIF_Phone__c}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Telefono ufficio</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static"> <!-- <a
+                                    href="{'tel'+!v.wrapper.account.CIF_Work_phone__c}">{!v.wrapper.account.CIF_Work_phone__c}</a> -->
+                                    <lightning:clickToDial value="{!v.wrapper.account.CIF_Work_phone__c}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Fax</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static"> <a
+                                    href="{'tel'+!v.wrapper.account.Fax}">{!v.wrapper.account.Fax}</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_small">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div dir="rtl">
+                        <div class="slds-form-element slds-float_left">
+                            <label class="slds-checkbox_toggle slds-grid">
+                                <span class="slds-form-element__label slds-m-bottom_none">Opposizione cellulare</span>
+                                <lightning:input type="toggle" aura:id="OppoCellPG" label="" name="OppoCellPG"
+                                    checked="{!v.wrapper.account.Flag_Opposizione_Tel_Cell_B2B__c}"
+                                    messageToggleActive="" messageToggleInactive="" disabled="true" />
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div dir="rtl">
+                        <div class="slds-form-element slds-float_left">
+                            <label class="slds-checkbox_toggle slds-grid">
+                                <span class="slds-form-element__label slds-m-bottom_none">Opposizione telefono
+                                    principale</span>
+                                <lightning:input type="toggle" aura:id="OppoCellPrinPG" label="" name="OppoCellPrinPG"
+                                    checked="{!v.wrapper.account.Flag_Opposizione_Tel_Princ__c}" messageToggleActive=""
+                                    messageToggleInactive="" disabled="true" />
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div dir="rtl">
+                        <div class="slds-form-element slds-float_left">
+                            <label class="slds-checkbox_toggle slds-grid">
+                                <span class="slds-form-element__label slds-m-bottom_none">Opposizione telefono
+                                    ufficio</span>
+                                <lightning:input type="toggle" aura:id="OppoCellUffPG" label="" name="OppoCellUffPG"
+                                    checked="{!v.wrapper.account.Flag_Opposizione_Tel_Uff__c}" messageToggleActive=""
+                                    messageToggleInactive="" disabled="true" />
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div dir="rtl">
+                        <div class="slds-form-element slds-float_left">
+                            <label class="slds-checkbox_toggle slds-grid">
+                                <span class="slds-form-element__label slds-m-bottom_none">Opposizione Fax</span>
+                                <lightning:input type="toggle" aura:id="OppoCellUffPG" label="" name="OppoCellUffPG"
+                                    checked="{!v.wrapper.account.Flag_Opposizione_Fax__c}" messageToggleActive=""
+                                    messageToggleInactive="" disabled="true" />
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_small">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Motivo opposizione cellulare</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">
+                                {!v.wrapper.account.Motivo_opposizione_Tel_Cell_B2B__c}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Motivo opposizione telefono principale</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Motivo_opposizione_Tel_Princ__c}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Motivo opposizione telefono ufficio</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Motivo_opposizione_Tel_Uff__c}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Motivo opposizione fax</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Motivo_opposizione_Fax__c}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_small">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Mobile Master</span>
+                        <div class="slds-form-element__control">
+                           <!-- <div class="slds-form-element__static">{!v.wrapper.account.Mobile_Master_AAI__c}</div> -->
+                           <lightning:clickToDial value="{!v.wrapper.account.Mobile_Master_AAI__c}"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Mobile Recente 1</span>
+                        <div class="slds-form-element__control">
+                            <lightning:clickToDial value="{!v.wrapper.account.Mobile_Recente_1_AAI__c}"/>
+                           <!-- <div class="slds-form-element__static">{!v.wrapper.account.Mobile_Recente_1_AAI__c}</div>-->
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Mobile Recente 2</span>
+                        <div class="slds-form-element__control">
+                           <!-- <div class="slds-form-element__static">{!v.wrapper.account.Mobile_Recente_2_AAI__c}</div>-->
+                           <lightning:clickToDial value="{!v.wrapper.account.Mobile_Recente_2_AAI__c}"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Mobile Recente 3</span>
+                        <div class="slds-form-element__control">
+                           <!-- <div class="slds-form-element__static">{!v.wrapper.account.Mobile_Recente_3_AAI__c}</div> -->
+                           <lightning:clickToDial value="{!v.wrapper.account.Mobile_Recente_3_AAI__c}"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="title slds-m-top_xx-large">
+                <strong>Contatti Email</strong>
+            </div>
+            <!--div class="slds-grid slds-gutters slds-wrap slds-m-bottom_x-small">
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                <div class="slds-form-element slds-form-element_readonly">
+                    <span class="slds-form-element__label">Email</span>
+                    <div class="slds-form-element__control">
+                        <div class="slds-form-element__static">{!v.wrapper.account.Account_email__c}</div>
+                    </div>
+                </div>
+            </div>          
+        </div-->
+            <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_x-small">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Email personale</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.CIF_Personalemail__c}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Email ufficio</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.CIF_Work_email__c}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_small">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div dir="rtl">
+                        <div class="slds-form-element slds-float_left">
+                            <label class="slds-checkbox_toggle slds-grid">
+                                <span class="slds-form-element__label slds-m-bottom_none">Opposizione email
+                                    personale</span>
+                                <lightning:input type="toggle" aura:id="OppEmailPG" label="" name="OppEmailPG"
+                                    checked="{!v.wrapper.account.Flag_Opposizione_Email_Pers_B2B__c}"
+                                    messageToggleActive="" messageToggleInactive="" disabled="true" />
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div dir="rtl">
+                        <div class="slds-form-element slds-float_left">
+                            <label class="slds-checkbox_toggle slds-grid">
+                                <span class="slds-form-element__label slds-m-bottom_none">Opposizione email
+                                    ufficio</span>
+                                <lightning:input type="toggle" aura:id="OppEmailUffPG" label="" name="OppEmailUffPG"
+                                    checked="{!v.wrapper.account.Flag_Opposizione_Email_Uff__c}" messageToggleActive=""
+                                    messageToggleInactive="" disabled="true" />
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_small">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Motivo opposizione email personale</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">
+                                {!v.wrapper.account.Motivo_opposizione_Email_Pers_B2B__c}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Motivo opposizione email ufficio</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Motivo_opposizione_Email_Uff__c}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_small">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Email Master</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Email_Master_AAI__c}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Email Recente 1</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Email_Recente_1_AAI__c}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Email Recente 2</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Email_Recente_2_AAI__c}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Email Recente 3</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Email_Recente_3_AAI__c}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="title slds-m-top_xx-large">
+                <strong>Contatti Close the loop</strong>
+            </div>
+            <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_small">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Telefono cellulare</span>
+                        <div class="slds-form-element__control">
+                            <lightning:clickToDial value="{!v.wrapper.account.Claim_PersonalMobile__c}"/>
+                            <!-- <div class="slds-form-element__static">{!v.wrapper.account.Claim_PersonalMobile__c}</div> -->
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Email</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Claim_PersonalEmail__c}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </aura:if>
+    <!-- END AAI e Persona Giuridica - B2B Client -->
+
+    <!-- START NON AAI e Persona Fisica - Individual-->
+    <aura:if isTrue="{!and (!v.wrapper.isAAI, v.wrapper.isPerson)}">
+
+        <div class="slds-p-around_small">
+            <div class="title">
+                <strong>Residenza</strong>
+            </div>
+            <div class="slds-m-top_small slds-text-color_weak">Indirizzo di Residenza/Sede Legale</div>
+            <div class="box-address">
+                <aura:unescapedHtml value="{!v.fullAddress}" />
+            </div>
+
+            <hr />
+
+            <div class="title slds-m-top_xx-large">
+                <strong>Contatti Telefonici</strong>
+            </div>
+            <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_small">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Telefono cellulare</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static"> <!-- <a
+                                    href="{'tel'+!v.wrapper.account.PersonMobilePhone}">{!v.wrapper.account.PersonMobilePhone}</a> -->
+                                    <lightning:clickToDial value="{!v.wrapper.account.PersonMobilePhone}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_small">
+                
+                <aura:if isTrue="{! v.wrapper.isAMAV }">
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12 slds-large-size_3-of-12">
+                        <div class="slds-form-element slds-form-element_readonly">
+                            <span class="slds-form-element__label">Mobile Master AMAV</span>
+                            <div class="slds-form-element__control">
+                                <div class="slds-form-element__static"> <!-- <a
+                                        href="{'tel'+!v.wrapper.account.Mobile_Master_AMAV__c}">{!v.wrapper.account.Mobile_Master_AMAV__c}</a> -->
+                                        <lightning:clickToDial value="{!v.wrapper.account.Mobile_Master_AMAV__c}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </aura:if>
+                <aura:if isTrue="{! v.wrapper.isAMAD }">
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12 slds-large-size_3-of-12">
+                        <div class="slds-form-element slds-form-element_readonly">
+                            <span class="slds-form-element__label">Mobile Master AMAD</span>
+                            <div class="slds-form-element__control">
+                                <div class="slds-form-element__static"> <!-- <a
+                                        href="{'tel'+!v.wrapper.account.Mobile_Master_AMAD__c}">{!v.wrapper.account.Mobile_Master_AMAD__c}</a> -->
+                                        <lightning:clickToDial value="{!v.wrapper.account.Mobile_Master_AMAD__c}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </aura:if>
+                <aura:if isTrue="{! v.wrapper.isQuadra }">
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12 slds-large-size_3-of-12">
+                        <div class="slds-form-element slds-form-element_readonly">
+                            <span class="slds-form-element__label">Mobile Master QUADRA</span>
+                            <div class="slds-form-element__control">
+                                <div class="slds-form-element__static"> <!-- <a
+                                        href="{'tel'+!v.wrapper.account.Mobile_Master_QUADRA__c}">{!v.wrapper.account.Mobile_Master_QUADRA__c}</a> -->
+                                        <lightning:clickToDial value="{!v.wrapper.account.Mobile_Master_QUADRA__c}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </aura:if>
+            </div>
+
+            <div class="title slds-m-top_xx-large">
+                <strong>Contatti Email</strong>
+            </div>
+            <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_x-small">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Email principale</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.PersonEmail}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_x-small">
+                <aura:if isTrue="{! v.wrapper.isAMAV }">
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                        <div class="slds-form-element slds-form-element_readonly">
+                            <span class="slds-form-element__label">Email Master AMAV</span>
+                            <div class="slds-form-element__control">
+                                <div class="slds-form-element__static">{!v.wrapper.account.Email_Master_AMAV__c}</div>
+                            </div>
+                        </div>
+                    </div>
+                </aura:if>
+                <aura:if isTrue="{! v.wrapper.isAMAD }">
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                        <div class="slds-form-element slds-form-element_readonly">
+                            <span class="slds-form-element__label">Email Master AMAD</span>
+                            <div class="slds-form-element__control">
+                                <div class="slds-form-element__static">{!v.wrapper.account.Email_Master_AMAD__c}</div>
+                            </div>
+                        </div>
+                    </div>
+                </aura:if>
+                <aura:if isTrue="{! v.wrapper.isQuadra }">
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                        <div class="slds-form-element slds-form-element_readonly">
+                            <span class="slds-form-element__label">Email Master QUADRA</span>
+                            <div class="slds-form-element__control">
+                                <div class="slds-form-element__static">{!v.wrapper.account.Email_Master_QUADRA__c}</div>
+                            </div>
+                        </div>
+                    </div>
+                </aura:if>
+            </div>
+
+            <div class="title slds-m-top_xx-large">
+                <strong>Contatti Smart Center</strong>
+            </div>
+            <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_small">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Telefono Aggiuntivo</span>
+                        <div class="slds-form-element__control">
+                            <lightning:clickToDial value="{!v.wrapper.account.Additional_Phone__c}"/>
+                            <!--<div class="slds-form-element__static">{!v.wrapper.account.Additional_Phone__c}</div>-->
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Email Aggiuntiva</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Additional_Email__c}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_12-of-12 slds-large-size_6-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Commenti Aggiuntivi</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Additional_Comments__c}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="title slds-m-top_xx-large">
+                <strong>Contatti Close the loop</strong>
+            </div>
+            <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_small">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Telefono cellulare</span>
+                        <div class="slds-form-element__control">
+                            <lightning:clickToDial value="{!v.wrapper.account.Claim_PersonalMobile__c}"/>
+                           <!-- <div class="slds-form-element__static">{!v.wrapper.account.Claim_PersonalMobile__c}</div> -->
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Email</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Claim_PersonalEmail__c}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </aura:if>
+    <!-- END NON AAI e Persona Fisica - Individual -->
+
+    <!-- START NON AAI e Persona Giuridica - Corporate -->
+    <aura:if isTrue="{!and (!v.wrapper.isAAI, !v.wrapper.isPerson)}">
+
+        <div class="slds-p-around_small">
+            <div class="title">
+                <strong>Residenza</strong>
+            </div>
+            <div class="slds-m-top_small slds-text-color_weak">Indirizzo di Residenza/Sede Legale</div>
+            <div class="box-address">
+                <aura:unescapedHtml value="{!v.fullAddress}" />
+            </div>
+
+            <hr />
+
+
+            <div class="title slds-m-top_xx-large">
+                <strong>Contatti Telefonici</strong>
+            </div>
+            <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_small">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Telefono cellulare</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static"> <!-- <a
+                                    href="{'tel'+!v.wrapper.account.PersonMobilePhone}">{!v.wrapper.account.MobilePhone__c}</a> -->
+                                    <lightning:clickToDial value="{!v.wrapper.account.MobilePhone__c}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Telefono (abit.)</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static"> <!-- <a
+                                    href="{'tel'+!v.wrapper.account.PersonHomePhone}">{!v.wrapper.account.PersonHomePhone}</a> -->
+                                    <lightning:clickToDial value="{!v.wrapper.account.PersonHomePhone}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_small">
+
+                <aura:if isTrue="{! v.wrapper.isAMAV }">
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12 slds-large-size_3-of-12">
+                        <div class="slds-form-element slds-form-element_readonly">
+                            <span class="slds-form-element__label">Mobile Master AMAV</span>
+                            <div class="slds-form-element__control">
+                                <div class="slds-form-element__static"><!-- <a
+                                        href="{'tel'+!v.wrapper.account.Mobile_Master_AMAV__c}">{!v.wrapper.account.Mobile_Master_AMAV__c}</a> -->
+                                        <lightning:clickToDial value="{!v.wrapper.account.Mobile_Master_AMAV__c}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </aura:if>
+                <aura:if isTrue="{! v.wrapper.isAMAD }">
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12 slds-large-size_3-of-12">
+                        <div class="slds-form-element slds-form-element_readonly">
+                            <span class="slds-form-element__label">Mobile Master AMAD</span>
+                            <div class="slds-form-element__control">
+                                <div class="slds-form-element__static"> <!-- <a
+                                        href="{'tel'+!v.wrapper.account.Mobile_Master_AMAD__c}">{!v.wrapper.account.Mobile_Master_AMAD__c}</a> -->
+                                        <lightning:clickToDial value="{!v.wrapper.account.Mobile_Master_AMAD__c}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </aura:if>
+                <aura:if isTrue="{! v.wrapper.isQuadra }">
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12 slds-large-size_3-of-12">
+                        <div class="slds-form-element slds-form-element_readonly">
+                            <span class="slds-form-element__label">Mobile Master QUADRA</span>
+                            <div class="slds-form-element__control">
+                                <div class="slds-form-element__static"> <!-- <a
+                                        href="{'tel'+!v.wrapper.account.Mobile_Master_QUADRA__c}">{!v.wrapper.account.Mobile_Master_QUADRA__c}</a> -->
+                                        <lightning:clickToDial value="{!v.wrapper.account.Mobile_Master_QUADRA__c}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </aura:if>
+            </div>
+
+
+            <div class="title slds-m-top_xx-large">
+                <strong>Contatti Email</strong>
+            </div>
+            <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_x-small">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Email principale</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Account_email__c}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_x-small">
+                <aura:if isTrue="{! v.wrapper.isAMAV }">
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                        <div class="slds-form-element slds-form-element_readonly">
+                            <span class="slds-form-element__label">Email Master AMAV</span>
+                            <div class="slds-form-element__control">
+                                <div class="slds-form-element__static">{!v.wrapper.account.Email_Master_AMAV__c}</div>
+                            </div>
+                        </div>
+                    </div>
+                </aura:if>
+                <aura:if isTrue="{! v.wrapper.isAMAD }">
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                        <div class="slds-form-element slds-form-element_readonly">
+                            <span class="slds-form-element__label">Email Master AMAD</span>
+                            <div class="slds-form-element__control">
+                                <div class="slds-form-element__static">{!v.wrapper.account.Email_Master_AMAD__c}</div>
+                            </div>
+                        </div>
+                    </div>
+                </aura:if>
+                <aura:if isTrue="{! v.wrapper.isQuadra }">
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                        <div class="slds-form-element slds-form-element_readonly">
+                            <span class="slds-form-element__label">Email Master QUADRA</span>
+                            <div class="slds-form-element__control">
+                                <div class="slds-form-element__static">{!v.wrapper.account.Email_Master_QUADRA__c}</div>
+                            </div>
+                        </div>
+                    </div>
+                </aura:if>
+            </div>
+
+            <div class="title slds-m-top_xx-large">
+                <strong>Contatti Smart Center</strong>
+            </div>
+            <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_small">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Telefono Aggiuntivo</span>
+                        <div class="slds-form-element__control">
+                            <lightning:clickToDial value="{!v.wrapper.account.Additional_Phone__c}"/>
+                            <!--<div class="slds-form-element__static">{!v.wrapper.account.Additional_Phone__c}</div>-->
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Email Aggiuntiva</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Additional_Email__c}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_12-of-12 slds-large-size_6-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Commenti Aggiuntivi</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Additional_Comments__c}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="title slds-m-top_xx-large">
+                <strong>Contatti Close the loop</strong>
+            </div>
+            <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_small">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Telefono cellulare</span>
+                        <div class="slds-form-element__control">
+                            <lightning:clickToDial value="{!v.wrapper.account.Claim_PersonalMobile__c}"/>
+                          <!--  <div class="slds-form-element__static">{!v.wrapper.account.Claim_PersonalMobile__c}</div> -->
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element slds-form-element_readonly">
+                        <span class="slds-form-element__label">Email</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__static">{!v.wrapper.account.Claim_PersonalEmail__c}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </aura:if>
+    <!-- END NON AAI e Persona Giuridica - Corporate -->
+
+</aura:component>

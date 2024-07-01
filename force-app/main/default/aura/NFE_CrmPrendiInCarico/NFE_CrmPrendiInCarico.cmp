@@ -1,0 +1,7 @@
+<aura:component description="NFE_CrmPrendiInCarico" controller="CaseToMySelfCommunityCTL" implements="force:lightningQuickAction,force:hasRecordId,forceCommunity:availableForAllPageTypes" access="global">
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="recordId" type="String" default="" />
+    <aura:attribute name="caseId" type="String" default="{!v.recordId}" />
+    <aura:attribute name="showToast" type="Boolean" default="false" />
+    <lightning:notificationsLibrary aura:id="notifLib"/>
+</aura:component>

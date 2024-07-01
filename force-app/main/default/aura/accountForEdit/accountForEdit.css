@@ -1,0 +1,118 @@
+/*
+.THIS .uiInputDate .datePicker-openIcon {
+    position: absolute;
+    left: 95%;
+    top:	 55%;
+}
+
+.THIS .slds_paragraph {
+
+	text-align: center;
+
+}
+
+.THIS .slds_thick {
+
+	 font-weight: 900;
+}
+
+.THIS .slds_small {
+
+	font-size: 90%;
+
+}
+
+.THIS .slds-spinner {
+    position: fixed;
+}
+*/
+
+/*
+.THIS .uiInputDate .datePicker-openIcon {
+    position: absolute;
+    left: 95%;
+    top:	 55%;
+}
+
+.THIS .slds_paragraph {
+
+	text-align: center;
+
+}
+
+.THIS .slds_thick {
+
+	 font-weight: 900;
+}
+
+.THIS .slds_small {
+
+	font-size: 90%;
+
+}
+
+.THIS .slds-spinner {
+    position: fixed;
+}
+
+.THIS .input{ 
+    min-height: 30px;
+    height: 30px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+
+.THIS .select{ 
+    min-height: 30px;
+    height: 30px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+
+.THIS .slds-form-element {
+    margin-top: 10px;
+}
+*/
+.THIS .uiInputDate .datePicker-openIcon {
+    position: absolute;
+    left: 95%;
+    top:	 55%;
+}
+
+.THIS .slds_paragraph {
+
+    text-align: center;
+
+}
+
+.THIS .slds_thick {
+
+    font-weight: 900;
+}
+
+.THIS .slds_small {
+
+    font-size: 90%;
+
+}
+
+.THIS .slds-spinner {
+    position: fixed;
+}
+
+
+.THIS .slds-scope .slds-input {
+    line-height: calc(1.5rem - 0.125rem);
+}
+.THIS .input {
+    line-height: calc(1.5rem - 0.125rem);
+}
+.THIS .select {
+    line-height: calc(1.5rem - 0.125rem);
+}
+.THIS .slds-form-element_label {
+    vertical-align: bottom !important;
+}
+.THIS .datePicker-openIcon {
+    top: 15% !important;
+}

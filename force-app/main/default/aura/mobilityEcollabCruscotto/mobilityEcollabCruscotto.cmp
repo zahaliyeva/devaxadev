@@ -1,0 +1,49 @@
+<aura:component implements="force:appHostable,force:hasRecordId,flexipage:availableForAllPageTypes" controller="MobilityDashboardUtility" access="global">
+    <aura:attribute name="params" type="Object" access="GLOBAL"/>
+    
+    <aura:attribute name="navigationHeight" type="Integer" default="950"/>
+    <aura:attribute name="dashboardId" type="String"/>
+    <aura:attribute name="dashboardIdOld" type="String"/>
+    <aura:attribute name="isCliccable" type="Boolean" default="false"/>
+    <aura:handler name="init" action="{!c.Init}" value="{!this}"/>
+    <aura:attribute name="iniziativaScelta" type="Object"/>
+    <aura:attribute name="tipologiaScelta" type="Object"/>
+    <aura:attribute name="targetScelta" type="Object"/>
+    <aura:attribute name="isAllowed" type="Boolean" default="true"/>
+    <ltng:require styles="{!$Resource.mobilityEngine+'/main.css'}" />
+    <aura:attribute name="ready" type="Boolean" default="true"/>
+    
+
+    <div class="slds-scope-removed">
+    <aura:if isTrue="{!!v.isAllowed}">
+        <div class = 'mobility_modal'>
+            <div class="mobility-modal__card">
+                <div class="mobility-modal__scroller">
+                    <div class="text-right sticky-top">
+                        <c:mobilityIcon name="close_push" width="36px" heigth="36px" onclick="{!c.closePostMessage}" class="closeButton overflow-hidden rounded-circle"></c:mobilityIcon>
+                    </div>
+                    <c:mobilityModalDinamicMessage nameLayout="ModalAbilitazioneProfilo"></c:mobilityModalDinamicMessage>
+                </div>
+            </div>
+        </div>
+    </aura:if>
+    <aura:if isTrue="{!v.isAllowed}">
+    <aura:if isTrue="{!v.ready}">
+        <c:mobilityBreadcrumb params="{!v.params}" current="mobilityEcollabCruscotto" currentIsClickable="{!v.isCliccable}" sameComponentFaultPreventCallback="{!c.resetDashboard}" oldDashboardId="{!v.dashboardIdOld}"></c:mobilityBreadcrumb>
+        <div style="{! 'height:'+v.navigationHeight+'px;'}">
+        <wave:waveDashboard developerName="{!v.dashboardId}" 
+                            height="{!v.navigationHeight}"
+                            aura:id="navigation"
+                            showTitle="false" 
+                            showSharing = "true" 
+                            enableSubscriptions="false" 
+                            enableNotifications="false" 
+                            openLinksInNewWindow="false"  
+                            showHeader = "false" 
+                            openLocation = "HIDE"/>
+        </div>
+        </aura:if>
+    </aura:if>
+    
+    </div>
+</aura:component>

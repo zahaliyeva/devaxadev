@@ -1,0 +1,177 @@
+<template>
+	<template if:true={_pagerData.hasLimitWarning}>
+		<div class="row">
+			<div class="col-12 datagrid-alert">
+				<div class="datagrid-alert-heading">
+					<span class="mr-1 align-bottom">
+						<c-mobility-icon name='alert-counter' width='18px' height='18px'></c-mobility-icon>
+					</span> Attenzione i filtri applicati non sono abbastanza stringenti
+				</div>
+			</div>
+		</div>
+	</template>
+
+	<template if:true={showFilter}>
+		<div class="row">
+			<div class="col-12">
+				<div class="row flex-wrap">
+					<template for:each={_pagerData.filtersVariables} for:item='filter'>
+						<div key={filter.DeveloperName} class="col-auto m-1 filterBox text-nowrap align-middle">
+							{filter.label}: {filter.filtersString}
+							<a onclick={onRemoveFilter} data-name={filter.DeveloperName} class="pl-2">
+								<span>
+									<c-mobility-icon name='close-tab' width='8px' height='8px'></c-mobility-icon>
+								</span>
+							</a>
+						</div>
+					</template>
+				</div>
+			</div>
+		</div>
+	</template>
+	<div class="row">
+		<div class="col-12 mt-2" style={tableStyle}>
+			<div class="row justify-content-between pt-3">
+				<div class="col-4">
+					<div class="table-pages">
+						{_pagerData.pagination.startPageString}-{_pagerData.pagination.endPageString}
+						<span class="dropdown mx-1">
+							<a class="dropdown" onclick={toggleTooltip} onmouseout={toggleOutTooltip}>
+								<c-mobility-icon name='chevron' width='10px' height='10px'></c-mobility-icon>
+							</a>
+							<div class={tooltipClass}>
+								<template for:each={_pagerData.perPages} for:item='perPage'>
+									<a class='dropdown-item text-center' key={perPage} data-value={perPage} onclick={changeNumberView}>{perPage}</a>
+								</template>
+							</div>
+						</span>
+						<span class="table-pages-result">{_label.dataGrid_of}
+							{_pagerData.pagination.total} {_label.dataGrid_results}
+						</span>
+						<template if:true={_pagerData.hasSelected}>
+							<span> {_pagerData.selectedLength} {_label.dataGrid_selected}</span>
+						</template>
+					</div>
+				</div>
+
+				<div class="col">
+					<form class="table-search" onsubmit={submitForm}>
+						<template if:true={_pagerData.isVisibleSearch}>
+							<span class="link-primary" onclick={onUpdatePage}>
+								<span class="align-middle">{_label.dataGrid_update} </span>
+								<span class="align-middle">
+									<c-mobility-icon name='reload' width='16px' height='16px'></c-mobility-icon>
+								</span>
+							</span>
+							<div class="form-group">
+								<div class="form-group has-search">
+									<div class='col'>
+										<input type="search" class="form-control" placeholder="Cerca"
+											oninput={changeSearch}>
+										<span class="form-control-feedback">
+											<c-mobility-icon name='search' width='12px' height='12px'></c-mobility-icon>
+										</span>
+									</div>
+								</div>
+							</div>
+						</template>
+					</form>
+				</div>
+			</div>
+			<div class="table">
+                <!-- NEW DATA -->
+                <template for:each={elements} for:item="record">
+                    <div key={record.Id} class="row campaign-item justify-content-between">
+                        <div class="col-md col-sm">
+                            <div class="row justify-content-start align-items-center">
+                                <div>
+                                    <div>
+                                        <h3>{record.Name}</h3>
+                                    </div>
+                                    <div class={record.closedStyle}>
+                                        <div class="progress-bar" role="progressbar" style={record.percentageClosedWidth}
+                                            aria-valuenow={record.percentageClosed} aria-valuemin="0"
+                                            aria-valuemax={record.NumberOfMembers}>
+                                            {record.NumberOfClosed}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='hSpace pl-2'>
+                                    <h5>{record.NumberOfMembersLabel}</h5>
+                                </div>
+                                <div class="pt-3 px-2">
+                                    <template if:true={record.priorityLabel}>
+                                        <span class="badge-green rounded py-1 px-2">
+                                            <span class="align-bottom">
+                                                <c-mobility-icon name="user-white" width="20px" height="20px">
+                                                </c-mobility-icon>
+                                            </span>
+                                            <span class="text-uppercase text-white text-center font-weight-bold">
+                                                {record.priorityNumber} {record.priorityLabel}
+                                            </span>
+                                        </span>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+        
+                        <div class='col-md-2 col-sm-3 hSpace ml-auto pr-0'>
+                            <div class="d-inline-block">
+                                <h6>
+                                    <template if:true={record.EndDateString}>
+                                        {_label.customerCampaign_endDate_expires}
+                                    </template>
+                                    &nbsp;{record.EndDateString}
+                                </h6>
+                            </div>
+                            <div if:false={hasNavigateCallback} class='arrow float-right' onclick={navigateToEvent} data-component="MobilityCampaignDetail" data-record-id={record.Id}>
+                                <c-mobility-icon name="icon-arrow-right" width="15px" height="15px">
+                                </c-mobility-icon>
+							</div>
+							<div if:true={hasNavigateCallback} class='arrow float-right' onclick={onNavigate} data-record-id={record.Id}>
+                                <c-mobility-icon name="icon-arrow-right" width="15px" height="15px">
+                                </c-mobility-icon>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+				<template if:false={noData}>
+					<div class="legend justify-content-start">
+						<!--<div class="legend-item">
+							<span class="circle axa p-1 d-inline-block mr-2"></span>{_label.campaign_legend_managementAXA}
+						</div>
+						<div class="legend-item">
+							<span class="circle agency p-1 d-inline-block mr-2"></span>{_label.campaign_legend_agency}
+						</div>-->
+						<div class="legend-item">
+							<span class="circle Amministrativa p-1 d-inline-block mr-2"></span> Campagna Amministrativa
+						</div>
+
+						
+
+						<div class="legend-item">
+							<span class="circle Commerciale p-1 d-inline-block mr-2"></span>Campagna Commerciale
+						</div>
+					
+						<div class="legend-item">
+							<span class="circle Informativa p-1 d-inline-block mr-2"></span>Campagna Informativa
+						</div>
+						<div class="legend-item">
+							<span class="circle Altro p-1 d-inline-block mr-2"></span>Altro
+						</div>
+					
+					</div>
+				</template>
+				<c-mobility-no-data show={noData} no-image='true'></c-mobility-no-data>
+			</div>
+			<template if:false={noData}>
+				<div class="row">
+					<div class="col-12">
+						<c-mobility-pagination pagination={_pagerData.pagination} change-page={changePage}>
+						</c-mobility-pagination>
+					</div>
+				</div>
+			</template>
+		</div>
+	</div>
+</template>

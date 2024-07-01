@@ -1,0 +1,68 @@
+.THIS .select {
+min-height: 10px;
+height:20px;
+margin-bottom: 1px;
+margin-top: 1px;
+}
+
+
+
+.THIS .slds-form-element_label{
+ 
+    vertical-align: top;
+    opacity: 0.4;
+}
+
+
+
+.THIS .uiOutputText{
+    
+     opacity:0.4;
+     min-height: 10px;
+     height:20px;
+    
+}
+
+.THIS .uiOutputDate{
+     opacity:0.4;
+    
+}
+
+.THIS .uiOutputNumber{
+     
+       opacity:0.4;
+    
+}
+
+
+.THIS .uiInputCheckbox {
+	
+    background: transparent;
+    height: 17px;
+    width: 17px;
+}
+
+.THIS :disabled {
+
+    opacity:0.4;
+}
+
+.THIS .slds_icon_close{
+  
+    align-content: center;
+
+   
+   padding-top: 2px;
+   padding-bottom: 2px;
+   padding-left: 2px;
+   padding-right: 2px;
+  
+    background-color: red;
+}
+
+.THIS .slds-form-element__control{
+ 
+   padding-left: 3% !important; 
+   clear: none;
+   text-align: left;
+}

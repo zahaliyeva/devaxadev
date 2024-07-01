@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>57.0</apiVersion>
+    <isExposed>true</isExposed>
+    
+    <targets>
+		<target>analytics__Dashboard</target>
+	</targets>
+	
+    <targetConfigs>
+        <targetConfig targets="analytics__Dashboard">
+            <hasStep>true</hasStep>
+            <property name="pageName" type="String" label="Page name" description="Current page name" />
+            <property name="stepName" type="String" label="Metadata Type" description="Metadata Type" />
+            <property name="dashboardName" type="String" label="Dashboard name" description="Developername of the current dashboard" />
+            <property name="targetPageName" type="String" label="Target Page" description="Name of page to navigate to on selection." />
+        </targetConfig>
+    </targetConfigs>
+
+</LightningComponentBundle>

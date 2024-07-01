@@ -1,0 +1,76 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:hasRecordId"
+				controller="LightningProponiSoluzioneCTRL">
+	<aura:attribute name="record" type="Object" />
+    <aura:attribute name="simpleRecord" type="Object" />
+    <aura:attribute name="recordError" type="String" />
+    <aura:attribute name="attributes" type="Object" />
+    <aura:attribute name="attributesNCA" type="Object" />  <!-- OAVERSANO 18/10/2018 : Nuovo Modello di Assistenza Biz -->
+    <aura:attribute name="ShowProponiSoluzione" type="Boolean" default="false" />
+    <aura:attribute name="showAllButton" type="Boolean" default="false" />
+    <aura:attribute name="ShowNewCommentAndAttachment" type="Boolean" default="false" /> <!-- OAVERSANO 18/10/2018 : Caring Angel -->
+	<aura:attribute name="ShowChiudiCase" type="Boolean" default="false" />	<!-- OAVERSANO 18/10/2018 : Caring Angel -->
+	<aura:attribute name="ShowSendSMS" type="Boolean" default ="true" />
+   	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    
+    <force:recordData aura:id="recordEditor"
+                      layoutType="FULL"
+                      recordId="{!v.recordId}"
+                      targetError="{!v.recordError}"
+                      targetRecord="{!v.record}"
+                      targetFields ="{!v.simpleRecord}"
+                      mode="EDIT" />
+    <aura:if isTrue="{! v.showAllButton }">
+	    <div class="Record Details slds-align_absolute-center" style="width: 100%; margin: 0 auto;">
+					&nbsp;
+	            <c:PrendiInCaricoCmp record="{!v.record}" simpleRecord="{!v.simpleRecord}"/>
+	            <!-- OAVERSANO 18/10/2018 : Caring Angel - START -->
+                <aura:if isTrue="{!v.ShowNewCommentAndAttachment}"> 
+	                &nbsp;
+		            <c:NewCommentAndAttachmentLightning attributes="{!v.attributesNCA}" /> <!-- OAVERSANO 12/11/2018 : Nuovo Modello di Assistenza Biz -->
+	            </aura:if>
+	            <!-- OAVERSANO 18/10/2018 : Caring Angel - END -->
+	            <aura:if isTrue="{! v.ShowProponiSoluzione }">
+	            &nbsp;
+		            <c:ModalLightning CancelFooterButton="Annulla" ConfirmFooterButton="Conferma" modalContentBody="c:ProponiSoluzioneLightningCmp" labelButton="Proponi Soluzione" HeaderTitle="Inserisci il dettaglio della soluzione" 
+		            					attributes="{!v.attributes}" />
+				</aura:if>
+				<!-- OAVERSANO 18/10/2018 : Caring Angel - START -->
+				<aura:if isTrue="{!v.ShowChiudiCase}"> 
+	                &nbsp;
+		            <c:ChiudiCaseCmp record="{!v.record}" simpleRecord="{!v.simpleRecord}"/>
+	            </aura:if>
+	            <!-- OAVERSANO 18/10/2018 : Caring Angel - END -->
+	            <!-- OAVERSANO 04/01/2019 : Enhancement NMA Biz IV - START -->
+	            <aura:if isTrue="{! v.ShowNewCommentAndAttachment }">
+	            &nbsp;
+		            <lightning:button label="Stampa" onclick="{!c.stampaPagina}" />
+				</aura:if>
+				<!-- OAVERSANO 04/01/2019 : Enhancement NMA Biz IV - END -->
+
+				<!--Giorgio Bonifazi : Disallineamento Disallineamento Lightning  Line Of Business (LoB) Vita - START -->
+				&nbsp;
+				
+				<c:ViewDocument recordId="{!v.recordId}"/>
+				<aura:if isTrue="{! v.ShowSendSMS }">
+                 &nbsp;
+                 	<c:SendSMSCmp recordId="{!v.recordId}" isQuestionario="false"/>
+				</aura:if>
+				
+				<!--Giorgio Bonifazi : Disallineamento Disallineamento Lightning  Line Of Business (LoB) Vita - END -->
+	        
+	        <!--
+	        <div class="slds-p-horizontal_small" style="font-size:15px; padding-left:0; padding-right:0;" >
+	            <c:ModalLightning CancelFooterButton="Annulla" ConfirmFooterButton="Conferma" modalContentBody="c:NewCommentAndAttachmentLightning" labelButton="Inserisci nuovo commento/allegato" HeaderTitle="Inserisci nuovo commento/allegato" 
+	            					attributes="{!v.attributes}" />
+	        </div>
+	        <aura:if isTrue="{! v.ShowProponiSoluzione }">
+		        <div class="slds-p-horizontal_small" style="font-size:15px; padding-left:0; padding-right:0;" >
+		            <c:ModalLightning CancelFooterButton="Annulla" ConfirmFooterButton="Conferma" modalContentBody="c:ProponiSoluzioneLightningCmp" labelButton="Proponi Soluzione" HeaderTitle="Inserisci il dettaglio della soluzione" 
+		            					attributes="{!v.attributes}" />
+		        </div>
+	        </aura:if>
+	    -->
+	    </div>
+	</aura:if>
+</aura:component>

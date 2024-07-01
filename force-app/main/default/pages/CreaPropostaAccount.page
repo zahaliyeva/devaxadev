@@ -1,0 +1,161 @@
+<apex:page standardController="Account" lightningStylesheets="true" extensions="CreaPropostaAccountCTRL" sidebar="false" showHeader="false">
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+   
+        <style>
+            .bpageBlock {
+            background-color: white !important ;
+            border-colour: none !important;
+            stylesheet : none;
+            pbTitle: none !important;
+            Header: none !important;
+            padding: 0 0 0 0 !important;
+
+            }
+        </style>
+
+        <script>
+
+            function gotoNewOppPageAndOpenDaol(opportunityId, opportunityName, showError){
+                
+                if(showError == 'false')
+                {
+                    var myriamUsername = "{!currentUserNickname}";
+                    var agencyCode = "{!currentUserAgencyCode}";
+                    var profileName = "{!currentUserProfile}";
+                    var NDG = "{!accountNDG}";
+                    var urlForDaolPrefix = "{!urlForDaol}";
+
+                    //URL for the redirect on the Opportunity page
+                    var urlFromApex ="/"+opportunityId;
+                    var pathName = window.location.pathname;
+                    var agencyIndex = pathName.indexOf("agenzie");
+                    var myURL = "https://"+window.location.hostname;
+                    
+                    if (agencyIndex!= -1)
+                    {
+                        myURL = myURL+"/agenzie";
+                    }
+                    myURL = myURL+urlFromApex;
+                    if (urlFromApex!=""){
+                        window.parent.location = myURL;
+                    }
+     
+                    //URL for DAOL
+                    var TargetURL=urlForDaolPrefix+'ServletSalesForce?RGICommand=NewProp&utente='+myriamUsername+'&codiceAgenzia='+agencyCode+'&codiceNDG='+NDG+'&keySFDC='+opportunityId+'&descSFDC='+opportunityName; 
+                    
+                    window.open(TargetURL, "_blank");
+                }
+            }
+
+            function goToOppPageAndOpenDaol(oppId, oppName){
+                var myriamUsername = "{!currentUserNickname}";
+                var agencyCode = "{!currentUserAgencyCode}";
+                var profileName = "{!currentUserProfile}";
+                var NDG = "{!accountNDG}";
+                var urlForDaolPrefix = "{!urlForDaol}";
+
+                //URL for DAOL
+                var TargetURL=urlForDaolPrefix+'ServletSalesForce?RGICommand=NewProp&utente='+myriamUsername+'&codiceAgenzia='+agencyCode+'&codiceNDG='+NDG+'&keySFDC='+oppId+'&descSFDC='+oppName; 
+                
+                parent.closeJavaCP();
+                window.open(TargetURL, "_blank");
+                
+                //URL for the Opportunity Page
+                /*
+                var urlFromApex ="/"+oppId;
+                var pathName = window.location.pathname;
+                var agencyIndex = pathName.indexOf("agenzie");
+                var myURL = "https://"+window.location.hostname;
+                if (agencyIndex!= -1){
+                    myURL = myURL+"/agenzie";
+                }
+                myURL = myURL+urlFromApex;
+                if (urlFromApex!=""){
+                    window.parent.location = myURL;
+                }
+                */
+            }
+        </script>
+
+        <head>
+            <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+            <apex:stylesheet value="{!URLFOR($Resource.LDS, 'assets/styles/salesforce-lightning-design-system-vf.css')}" />
+            <apex:slds />
+        </head>
+
+        <body>
+            <div class="DD_LDS" >
+                <!-- error form panel -->
+                <apex:form id="msgform">
+                    <apex:outputPanel styleClass="myCustomMessage" rendered="{!showError}" id="msgs">
+                        <br/>            
+                        <div class="slds-notify slds-notify_alert slds-theme_error slds-theme_alert-texture" role="alert">                                    
+                            <span class="slds-assistive-text">Error</span>
+                            <h2>                                       
+                                <apex:outputtext value="{!errorMessage}" escape="false"/>
+                            </h2>                                
+                        </div>                            
+                    </apex:outputPanel>
+                </apex:form>
+
+                <!-- main panel -->
+                <apex:form id="theform">
+                    <div class="slds-grid">
+                        <div class="slds-col" >
+                            <div class="slds-box slds-theme_shade">
+                                <div class="slds-modal__header slds-theme_info slds-theme_alert-texture"> <!-- style="width:1036px; position: relative; left: 11px;" -->
+                                    <h2 class="slds-text-heading_medium" id="prompt-heading-id">Vuoi associare la proposta ad una delle Trattative in corso?</h2>
+                                </div>
+                                <apex:outputPanel layout="block" style="margin-top: 0px;">
+                                    <apex:pageBlock mode="maindetail">
+                                        <!--<apex:pageBlockSection columns="1">
+                                            <div id="container_vuoto1" class="slds-container_large slds-form_horizontal slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">    
+                                                <div class="slds-form-element__control"></div>
+                                            </div>                                      
+                                            <div class="slds-text-align_center">{!pageMessage}</div>
+                                            <div id="container_vuoto1" class="slds-container_large slds-form_horizontal slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">    
+                                                <div class="slds-form-element__control"></div>
+                                            </div>
+                                        </apex:pageBlockSection> -->
+                                        <apex:pageBlockSection columns="3"> 
+                                            <div id="container_vuoto1" class="slds-container_large slds-form_horizontal slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">    
+                                                <div class="slds-form-element__control"></div>
+                                            </div>                              
+                                            <apex:commandButton styleclass="slds-align_absolute-center" value="No, procedi con la creazione di una nuova Trattativa" action="{!createOpportunita}" rerender="oppVariables,msgform" oncomplete="gotoNewOppPageAndOpenDaol('{!oppId}','{!oppName}','{!showError}');" />
+                                            <div id="container_vuoto1" class="slds-container_large slds-form_horizontal slds-col_padded slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">    
+                                                <div class="slds-form-element__control"></div>
+                                            </div>
+                                        </apex:pageBlockSection>
+                                        <apex:pageBlockSection id="Opportunita" columns="1">
+                                            <apex:pageBlockTable var="opp" value="{!listOpp}" styleClass="slds-table slds-table_bordered slds-table" >
+                                                <apex:column style="width:10vw" styleClass="slds-col_padded slds-size_1-of-1">
+                                                    <apex:commandButton style="position: relative; left: 25px;" value="Seleziona" action="{!addOpptoCM}" onclick="goToOppPageAndOpenDaol('{!opp.Id}','{!opp.Name}')" reRender="Opportunita">
+                                                        <apex:param name="currentOpp" value="{!opp.Id}" assignTo="{!currentOpp}"/>
+                                                    </apex:commandButton>
+                                                </apex:column>
+                                                <apex:column style="width:10vw" value="{!opp.Name}" styleClass="slds-col_padded slds-size_1-of-1"/>
+                                                <apex:column style="width:10vw" value="{!opp.ASA_Description__c}" styleClass="slds-col_padded slds-size_1-of-1"/>
+                                                <apex:column style="width:10vw" value="{!opp.StageName}" styleClass="slds-col_padded slds-size_1-of-1"/>
+                                                <apex:column style="width:10vw" value="{!opp.Prodotto__c}" styleClass="slds-col_padded slds-size_1-of-1" />
+                                                <apex:column style="width:10vw" value="{!opp.CreatedDate}" styleClass="slds-col_padded slds-size_1-of-1"/>
+                                                <apex:column style="width:10vw" value="{!opp.Amount}" styleClass="slds-col_padded slds-size_1-of-1"/>
+                                                <br/>
+                                            </apex:pageBlockTable>                          
+                                        </apex:pageBlockSection>
+                                    </apex:pageBlock>
+                                </apex:outputPanel>
+                                <!-- Panel to be rerender needed to get the updated values of the CTRL variables -->
+                                <apex:outputPanel id="oppVariables" rendered="false">
+                                    <apex:outputText >{!oppId}</apex:outputText>
+                                    <apex:outputText >{!oppName}</apex:outputText>
+                                    <apex:outputText >{!showError}</apex:outputText>
+                                    <apex:outputPanel >{!errorMessage}</apex:outputPanel>
+                                </apex:outputPanel>
+                            </div>
+                        </div>
+                    </div>
+                </apex:form>
+            </div>
+        </body>
+    </html>
+</apex:page>

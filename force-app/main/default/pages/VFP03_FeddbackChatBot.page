@@ -1,0 +1,180 @@
+<apex:page Controller="VFC03_FeedbackBot" cache="false" sidebar="false" showHeader="false">
+
+    <apex:param name="chatDetails" value="{!$CurrentPage.parameters.chatDetails}" />
+    <apex:param name="transcript" value="{!$CurrentPage.parameters.transcript}" />
+    <apex:param name="attachedRecords" value="{!$CurrentPage.parameters.attachedRecords}" />
+    <apex:param name="chatKey" value="{!$CurrentPage.parameters.chatKey}" />
+
+    <apex:slds />
+    
+    <div style="margin-top: 10px;"></div>
+
+    <apex:outputPanel rendered="{!showErrorGenerale}">
+        <div style="margin-top: 100px;"></div>
+            <p class="slds-text-heading_small slds-m-horizontal_medium texto">
+                Si è verificato un problema. Riprova più tardi.
+            </p>
+    </apex:outputPanel>
+    
+    <apex:outputPanel rendered="{!showInfoEnd}">
+        <div style="margin-top: 100px;"></div>
+            <p class="slds-text-heading_small slds-m-horizontal_medium texto">
+            Grazie per aver chattato con Letizia, l'assistente virtuale di AXA.
+            </p>
+            <div style="margin-top: 30px;"></div>
+            <p class="slds-text-heading_small texto slds-m-horizontal_medium">
+            Se hai bisogno di ulteriori informazioni, avvia una nuova richiesta di Chat.
+            </p>
+    </apex:outputPanel>
+
+   <apex:outputPanel rendered="{!showInfoEndFeedback}">
+        <div style="margin-top: 100px;"></div>
+            <p class="slds-text-heading_small slds-m-horizontal_medium texto">
+            Grazie per averci lasciato un Feedback.
+            </p>
+            <div style="margin-top: 30px;"></div>
+            <p class="slds-text-heading_small texto slds-m-horizontal_medium">
+            Se hai bisogno di ulteriori informazioni, avvia una nuova richiesta di Chat.
+            </p>
+    </apex:outputPanel>
+
+    <apex:outputPanel rendered="{!showFeedback}">
+        <div class="slds-scope">
+            <p class="slds-text-heading_small slds-m-horizontal_medium texto">
+                &nbsp;Su una scala da 1 a 10, dove 1 è "per niente soddisfatto" e 10 è "molto soddisfatto", quanto sei soddisfatto dell’esperienza
+                con la nostra chat?”
+            </p>
+            <div style="margin-top: 10px;"></div>
+            <apex:form >
+                <apex:commandLink action="{!vota}" id="starWar_10">
+                    <apex:param assignTo="{!NPS}" value="10" />
+                    <div class="slds-box slds-box_x-small" title="😊">
+                        ⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐
+                    </div>
+                </apex:commandLink>
+                <apex:commandLink action="{!vota}" id="starWar_9">
+                    <apex:param assignTo="{!NPS}" value="9" />
+                    <div class="slds-box slds-box_x-small" title="😊">
+                        ⭐⭐⭐⭐⭐⭐⭐⭐⭐
+                    </div>
+                </apex:commandLink>
+                <apex:commandLink action="{!vota}" id="starWar_8">
+                    <apex:param assignTo="{!NPS}" value="8" />
+                    <div class="slds-box slds-box_x-small" title="😊">
+                        ⭐⭐⭐⭐⭐⭐⭐⭐
+                    </div>
+                </apex:commandLink>
+                <apex:commandLink action="{!vota}" id="starWar_7">
+                    <apex:param assignTo="{!NPS}" value="7" />
+                    <div class="slds-box slds-box_x-small" title="😊">
+                        ⭐⭐⭐⭐⭐⭐⭐
+                    </div>
+                </apex:commandLink>
+                <apex:commandLink action="{!vota}" id="starWar_6">
+                    <apex:param assignTo="{!NPS}" value="6" />
+                    <div class="slds-box slds-box_x-small" title="😊">
+                        ⭐⭐⭐⭐⭐⭐
+                    </div>
+                </apex:commandLink>
+                <apex:commandLink action="{!vota}" id="starWar_5">
+                    <apex:param assignTo="{!NPS}" value="5" />
+                    <div class="slds-box slds-box_x-small" title="😡">
+                        ⭐⭐⭐⭐⭐
+                    </div>
+                </apex:commandLink>
+                <apex:commandLink action="{!vota}" id="starWar_4">
+                    <apex:param assignTo="{!NPS}" value="4" />
+                    <div class="slds-box slds-box_x-small" title="😡">
+                        ⭐⭐⭐⭐
+                    </div>
+                </apex:commandLink>
+                <apex:commandLink action="{!vota}" id="starWar_3">
+                    <apex:param assignTo="{!NPS}" value="3" />
+                    <div class="slds-box slds-box_x-small" title="😡">
+                        ⭐⭐⭐
+                    </div>
+                </apex:commandLink>
+                <apex:commandLink action="{!vota}" id="starWar_2">
+                    <apex:param assignTo="{!NPS}" value="2" />
+                    <div class="slds-box slds-box_x-small" title="😡">
+                        ⭐⭐
+                    </div>
+                </apex:commandLink>
+                <apex:commandLink action="{!vota}" id="starWar_1">
+                    <apex:param assignTo="{!NPS}" value="1" />
+                    <div class="slds-box slds-box_x-small" title="😡">
+                        ⭐
+                    </div>
+                </apex:commandLink>
+            </apex:form>
+        </div>
+    </apex:outputPanel>
+
+    <div style="margin-top: 100px;"></div>
+
+    <apex:outputPanel rendered="{!showComment}">
+        <div class="slds-text-heading_small slds-m-horizontal_medium texto">
+            <apex:outputText >{!feedbackRisposta}</apex:outputText>
+            <div style="margin-top: 10px;"></div>
+
+            <apex:form >
+                <apex:inputTextarea style="width: 100%;" value="{!textdata}" id="textComment">
+                </apex:inputTextarea>
+                <div style="margin-top: 10px;"></div>
+                <apex:commandLink action="{!commenta}" >
+                    <div id="divCommenta" class="slds-box slds-box_x-small slds-m-horizontal_medium " title="Commenta" onclick="cambClass();">
+                        Invia Feedback
+                    </div>
+                </apex:commandLink>
+                <div style="margin-top: 10px;"></div>
+                <apex:outputText value="Il commento non pùo essere vuoto" style="color:red;align: center;" rendered="{!showError}">
+                </apex:outputText>
+            </apex:form>
+        </div>
+    </apex:outputPanel>
+
+
+    <div class="sticky">
+        <apex:outputLink value="data:text/plain;charset=utf-8;base64,{!FileContents}" html-download="Chat-Letizia.txt">
+            <div class="slds-box slds-box_x-small slds-m-horizontal_medium ">Salva conversazione</div>
+        </apex:outputLink>
+    </div>
+
+    <style>
+        .slds-box {
+            text-align: center;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 16px;
+
+        }
+
+        .slds-box:hover {
+            background-color: #00008F;
+            color: #FFFFFF;
+        }
+
+        .texto {
+            text-align: left;
+            border-radius: 2px;
+            color: #000000;
+        }
+
+        .sticky {
+            position: fixed;
+            /* Set the navbar to fixed position */
+            bottom: 5px;
+            /* Position the navbar at the top of the page */
+            width: 100%;
+            background-color: #FFFFFF;
+        }
+        .NoneCam {
+            display: none;
+        }
+    </style>
+    <script>
+        function cambClass(){
+            document.getElementById('divCommenta').className = "NoneCam";
+        }
+    </script>
+
+</apex:page>
