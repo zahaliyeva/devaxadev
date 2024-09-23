@@ -1,0 +1,30 @@
+<apex:page >
+
+    <!--
+    <script src=”../../soap/ajax/55.0/connection.js” type=”text/javascript”></script>
+    -->
+    
+    <script type="text/javascript">window.onload = setupPage;
+        function setupPage() {
+            <!-- var result = sforce.connection.login("myloginmailid", "pwd+security token"); -->
+            <!-- sforce.connection.init(result.sessionId, 'Service URL'); -->
+            <!-- Salesforce Remote Connection-->
+            
+            sforce.connection.remoteFunction({
+                url : "https://axaitalia--pre.sandbox.my.salesforce.com/services/data/v50.0/sobjects/ContentVersion/0680800000ePVSDAA4/VersionData",
+                requestHeaders: {"Authorization":"Bearer 00D7a000000HWcx!AQEAQK2c4egQQfKrugG5D5Z4m6.XR2xjvcy2lRbnp3BD.OgVtcieGHsUJOOwcWz_sovtQn.zuzHcBG7ks6GA0Be4EgaMDiKX", "Content-Type":"application/json", "Connection":"Keep-Alive" },
+                method: "GET",
+                onSuccess : function(response) {
+                  alert("Success" +response);  
+               },
+               onFailure : function(response) {
+                  alert("Failed" + response)
+                }
+           });    
+    </script>
+
+      <!-- Begin Default Content REMOVE THIS -->
+          <h1>Congratulations</h1>
+          This is your new Page
+      <!-- End Default Content REMOVE THIS -->
+</apex:page>
