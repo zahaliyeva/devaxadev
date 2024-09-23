@@ -32,7 +32,7 @@ public class EmailDelivery_Test {
     );
 
     insert userAdmin;
-
+//
     System.runAs(new User(Id=UserInfo.getUserId()))
         {
             Group g = new Group(DeveloperName='Coda_Agenzia_006345',Name='Coda_Agenzia_006345',Type='Queue');
